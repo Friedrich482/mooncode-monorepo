@@ -1,6 +1,6 @@
-# mooncode README
+# MoonCode README
 
-This is the README for your extension "mooncode". After writing up a brief description, we recommend including the following sections.
+This is the README for your extension "MoonCode". After writing up a brief description, we recommend including the following sections.
 
 ## Features
 

@@ -1,6 +1,6 @@
 {
   "name": "mooncode",
-  "displayName": "mooncode",
+  "displayName": "MoonCode",
   "description": "",
   "version": "0.0.1",
   "engines": {
@@ -9,13 +9,15 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "mooncode.helloWorld",
-        "title": "Hello World"
+        "command": "MoonCode.start",
+        "title": "MoonCode: Start"
       }
     ]
   },
