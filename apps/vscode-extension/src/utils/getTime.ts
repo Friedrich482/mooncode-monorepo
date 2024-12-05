@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 
 type LanguageData = {
-  language: string;
   elapsedTime: number;
   startTime: number;
   lastActivityTime: number;
@@ -13,12 +12,11 @@ type LanguagesData = {
   [key: string]: LanguageData;
 };
 const languagesData: LanguagesData = {};
-const MAX_IDLE_TIME = 10; // 15 minutes
+const MAX_IDLE_TIME = 60;
 
 const updateLanguageData = (language: string) => {
   if (!languagesData[language]) {
     languagesData[language] = {
-      language: language,
       elapsedTime: 0,
       startTime: performance.now(),
       lastActivityTime: performance.now(),
@@ -31,9 +29,9 @@ const updateLanguageData = (language: string) => {
 };
 
 const getTime = (): (() => LanguagesData) => {
-  // const disposables: vscode.Disposable[] = [];
+  const disposables: vscode.Disposable[] = [];
 
-  setInterval(() => {
+  const idleCheckInterval = setInterval(() => {
     const now = performance.now();
 
     Object.keys(languagesData).forEach((language) => {
@@ -58,9 +56,9 @@ const getTime = (): (() => LanguagesData) => {
     });
   }, 1000);
 
-  // disposables.push({
-  //   dispose: () => clearInterval(idleCheckInterval),
-  // });
+  disposables.push({
+    dispose: () => clearInterval(idleCheckInterval),
+  });
 
   const activityListeners = [
     vscode.workspace.onDidChangeTextDocument((event) => {
@@ -84,7 +82,7 @@ const getTime = (): (() => LanguagesData) => {
     }),
   ];
 
-  // disposables.push(...activityListeners);
+  disposables.push(...activityListeners);
 
   // Time getter function
   const timeGetter = () => {
@@ -102,10 +100,9 @@ const getTime = (): (() => LanguagesData) => {
     return languagesData;
   };
 
-  // Disposal method
-  // (timeGetter as any).dispose = () => {
-  //   disposables.forEach((d) => d.dispose());
-  // };
+  (timeGetter as any).dispose = () => {
+    disposables.forEach((d) => d.dispose());
+  };
 
   return timeGetter;
 };

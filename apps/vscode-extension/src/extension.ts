@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showInformationMessage(
         `Index ${Object.keys(languagesData).indexOf(key)}; Time : ${
           languagesData[key].elapsedTime
-        }, Language: ${languagesData[key].language}`
+        }, Language: ${key}`
       );
     });
   });
