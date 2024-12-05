@@ -6,22 +6,22 @@ export function activate(context: vscode.ExtensionContext) {
     "MoonCode starts now tracking your code time"
   );
 
-  const currentElapsedTime = getTime();
+  const timeGetter = getTime();
 
-  const disposable_1 = vscode.commands.registerCommand("MoonCode.start", () => {
-    const timeArray = currentElapsedTime();
-    timeArray.forEach((data) =>
+  const disposable = vscode.commands.registerCommand("MoonCode.start", () => {
+    const languagesData = timeGetter();
+    vscode.window.showInformationMessage(`${JSON.stringify(languagesData)}`);
+    Object.keys(languagesData).forEach((key) => {
       vscode.window.showInformationMessage(
-        `Index ${timeArray.indexOf(data)} Time : ${data.time}, Language: ${
-          data.language
-        }`
-      )
-    );
+        `Index ${Object.keys(languagesData).indexOf(key)}; Time : ${
+          languagesData[key].elapsedTime
+        }, Language: ${languagesData[key].language}`
+      );
+    });
   });
 
-  context.subscriptions.push(disposable_1);
+  context.subscriptions.push(disposable);
 
-  // Optional: Trigger the command immediately for demonstration
   vscode.commands.executeCommand("MoonCode.start");
 }
 

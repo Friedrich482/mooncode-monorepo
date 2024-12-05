@@ -1,66 +1,113 @@
 import * as vscode from "vscode";
 
-type TimePerLanguage = {
+type LanguageData = {
   language: string;
-  time: number;
+  elapsedTime: number;
+  startTime: number;
+  lastActivityTime: number;
+  frozenTime: number | null;
+  freezeStartTime: number | null;
+  isFrozen: boolean;
+};
+type LanguagesData = {
+  [key: string]: LanguageData;
+};
+const languagesData: LanguagesData = {};
+const MAX_IDLE_TIME = 10; // 15 minutes
+
+const updateLanguageData = (language: string) => {
+  if (!languagesData[language]) {
+    languagesData[language] = {
+      language: language,
+      elapsedTime: 0,
+      startTime: performance.now(),
+      lastActivityTime: performance.now(),
+      frozenTime: null,
+      freezeStartTime: null,
+      isFrozen: false,
+    };
+  }
+  return languagesData[language];
 };
 
-const getTime = (): (() => TimePerLanguage[]) => {
-  const MAX_IDLE_TIME = 60; // 15 minutes
-  const timePerLanguage: TimePerLanguage[] = [];
-  let startTime = performance.now();
-  let lastActivityTime = performance.now();
-  let frozenTime: number | null = null;
-  let freezeStartTime: number | null = null;
-  let isFrozen = false;
+const getTime = (): (() => LanguagesData) => {
+  // const disposables: vscode.Disposable[] = [];
 
   setInterval(() => {
     const now = performance.now();
-    const idleDuration = (now - lastActivityTime) / 1000;
 
-    if (idleDuration >= MAX_IDLE_TIME && !isFrozen) {
-      frozenTime = (now - startTime) / 1000;
-      freezeStartTime = now;
-      isFrozen = true;
-    } else if (idleDuration < MAX_IDLE_TIME && isFrozen && freezeStartTime) {
-      const freezeDuration = (now - freezeStartTime) / 1000;
-      //  we set the start time to the time when we unfroze to account for the time that passed while we were frozen
-      startTime += freezeDuration * 1000;
-      frozenTime = null;
-      freezeStartTime = null;
-      isFrozen = false;
-    }
+    Object.keys(languagesData).forEach((language) => {
+      const languageData = languagesData[language];
+      const idleDuration = (now - languageData.lastActivityTime) / 1000;
+
+      if (idleDuration >= MAX_IDLE_TIME && !languageData.isFrozen) {
+        languageData.frozenTime = (now - languageData.startTime) / 1000;
+        languageData.freezeStartTime = now;
+        languageData.isFrozen = true;
+      } else if (
+        idleDuration < MAX_IDLE_TIME &&
+        languageData.isFrozen &&
+        languageData.freezeStartTime
+      ) {
+        const freezeDuration = (now - languageData.freezeStartTime) / 1000;
+        languageData.startTime += freezeDuration * 1000;
+        languageData.frozenTime = null;
+        languageData.freezeStartTime = null;
+        languageData.isFrozen = false;
+      }
+    });
   }, 1000);
 
-  vscode.workspace.onDidChangeTextDocument(() => {
-    lastActivityTime = performance.now();
-  });
-  vscode.window.onDidChangeActiveTextEditor(() => {
-    lastActivityTime = performance.now();
-  });
-  vscode.window.onDidChangeVisibleTextEditors(() => {
-    lastActivityTime = performance.now();
-  });
-  // vscode.workspace.on
+  // disposables.push({
+  //   dispose: () => clearInterval(idleCheckInterval),
+  // });
 
-  return () => {
-    const now = performance.now();
-    const latestTimeLanguageData = {
-      time:
-        isFrozen && frozenTime
-          ? frozenTime
-          : parseInt(((now - startTime) / 1000).toFixed(0)),
-      language: vscode.window.activeTextEditor?.document.languageId || "Other",
-    };
+  const activityListeners = [
+    vscode.workspace.onDidChangeTextDocument((event) => {
+      const language = event.document.languageId || "Other";
+      const languageData = updateLanguageData(language);
+      languageData.lastActivityTime = performance.now();
+    }),
+    vscode.window.onDidChangeActiveTextEditor((editor) => {
+      if (editor) {
+        const language = editor.document.languageId || "Other";
+        const languageData = updateLanguageData(language);
+        languageData.lastActivityTime = performance.now();
+      }
+    }),
+    vscode.window.onDidChangeVisibleTextEditors((editors) => {
+      if (editors.length > 0) {
+        const language = editors[0].document.languageId || "Other";
+        const languageData = updateLanguageData(language);
+        languageData.lastActivityTime = performance.now();
+      }
+    }),
+  ];
 
-    const isLanguageInTheArray = timePerLanguage.find(
-      ({ language }) => language === latestTimeLanguageData.language
-    );
+  // disposables.push(...activityListeners);
 
-    isLanguageInTheArray
-      ? (isLanguageInTheArray.time = latestTimeLanguageData.time)
-      : timePerLanguage.push(latestTimeLanguageData);
-    return timePerLanguage;
+  // Time getter function
+  const timeGetter = () => {
+    // Update all language times
+    Object.keys(languagesData).forEach((language) => {
+      const languageData = languagesData[language];
+      const now = performance.now();
+
+      languageData.elapsedTime =
+        languageData.isFrozen && languageData.frozenTime
+          ? languageData.frozenTime
+          : parseInt(((now - languageData.startTime) / 1000).toFixed(0));
+    });
+
+    return languagesData;
   };
+
+  // Disposal method
+  // (timeGetter as any).dispose = () => {
+  //   disposables.forEach((d) => d.dispose());
+  // };
+
+  return timeGetter;
 };
+
 export default getTime;
