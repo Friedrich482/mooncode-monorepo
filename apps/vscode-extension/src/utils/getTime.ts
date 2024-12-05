@@ -1,7 +1,13 @@
 import * as vscode from "vscode";
 
-const getTime = (): (() => number) => {
-  const MAX_IDLE_TIME = 900; // 15 minutes
+type TimePerLanguage = {
+  language: string;
+  time: number;
+};
+
+const getTime = (): (() => TimePerLanguage[]) => {
+  const MAX_IDLE_TIME = 60; // 15 minutes
+  const timePerLanguage: TimePerLanguage[] = [];
   let startTime = performance.now();
   let lastActivityTime = performance.now();
   let frozenTime: number | null = null;
@@ -16,8 +22,8 @@ const getTime = (): (() => number) => {
       frozenTime = (now - startTime) / 1000;
       freezeStartTime = now;
       isFrozen = true;
-    } else if (idleDuration < MAX_IDLE_TIME && isFrozen) {
-      const freezeDuration = (now - freezeStartTime!) / 1000;
+    } else if (idleDuration < MAX_IDLE_TIME && isFrozen && freezeStartTime) {
+      const freezeDuration = (now - freezeStartTime) / 1000;
       //  we set the start time to the time when we unfroze to account for the time that passed while we were frozen
       startTime += freezeDuration * 1000;
       frozenTime = null;
@@ -26,24 +32,35 @@ const getTime = (): (() => number) => {
     }
   }, 1000);
 
-  const activityListeners = [
-    vscode.workspace.onDidChangeTextDocument(() => {
-      lastActivityTime = performance.now();
-    }),
-    vscode.window.onDidChangeActiveTextEditor(() => {
-      lastActivityTime = performance.now();
-    }),
-    vscode.window.onDidChangeVisibleTextEditors(() => {
-      lastActivityTime = performance.now();
-    }),
-  ];
+  vscode.workspace.onDidChangeTextDocument(() => {
+    lastActivityTime = performance.now();
+  });
+  vscode.window.onDidChangeActiveTextEditor(() => {
+    lastActivityTime = performance.now();
+  });
+  vscode.window.onDidChangeVisibleTextEditors(() => {
+    lastActivityTime = performance.now();
+  });
+  // vscode.workspace.on
 
   return () => {
     const now = performance.now();
-    if (isFrozen) {
-      return frozenTime!;
-    }
-    return parseInt(((now - startTime) / 1000).toFixed(2));
+    const latestTimeLanguageData = {
+      time:
+        isFrozen && frozenTime
+          ? frozenTime
+          : parseInt(((now - startTime) / 1000).toFixed(0)),
+      language: vscode.window.activeTextEditor?.document.languageId || "Other",
+    };
+
+    const isLanguageInTheArray = timePerLanguage.find(
+      ({ language }) => language === latestTimeLanguageData.language
+    );
+
+    isLanguageInTheArray
+      ? (isLanguageInTheArray.time = latestTimeLanguageData.time)
+      : timePerLanguage.push(latestTimeLanguageData);
+    return timePerLanguage;
   };
 };
 export default getTime;
