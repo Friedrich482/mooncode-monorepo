@@ -7,22 +7,17 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   const timeGetter = getTime();
+  let languagesData = timeGetter();
 
-  const disposable = vscode.commands.registerCommand("MoonCode.start", () => {
-    const languagesData = timeGetter();
-    vscode.window.showInformationMessage(`${JSON.stringify(languagesData)}`);
-    Object.keys(languagesData).forEach((key) => {
-      vscode.window.showInformationMessage(
-        `Index ${Object.keys(languagesData).indexOf(key)}; Time : ${
-          languagesData[key].elapsedTime
-        }, Language: ${key}`
-      );
-    });
-  });
+  const disposable = vscode.commands.registerCommand(
+    "MoonCode.showData",
+    () => {
+      languagesData = timeGetter();
+      vscode.window.showInformationMessage(`${JSON.stringify(languagesData)}`);
+    }
+  );
 
   context.subscriptions.push(disposable);
-
-  vscode.commands.executeCommand("MoonCode.start");
 }
 
 export async function deactivate() {

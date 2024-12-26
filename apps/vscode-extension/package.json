@@ -16,8 +16,9 @@
   "contributes": {
     "commands": [
       {
-        "command": "MoonCode.start",
-        "title": "MoonCode: Start"
+        "command": "MoonCode.showData",
+        "title": "MoonCode: Show Data",
+        "icon": "e"
       }
     ]
   },

@@ -1,18 +1,7 @@
 import * as vscode from "vscode";
+import { LanguagesData, MAX_IDLE_TIME } from "../constants";
 
-type LanguageData = {
-  elapsedTime: number;
-  startTime: number;
-  lastActivityTime: number;
-  frozenTime: number | null;
-  freezeStartTime: number | null;
-  isFrozen: boolean;
-};
-type LanguagesData = {
-  [key: string]: LanguageData;
-};
 const languagesData: LanguagesData = {};
-const MAX_IDLE_TIME = 60;
 
 const updateLanguageData = (language: string) => {
   if (!languagesData[language]) {
