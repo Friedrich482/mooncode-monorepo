@@ -1,4 +1,6 @@
 import { integer, pgTable, text } from "drizzle-orm/pg-core";
+import { dailyData } from "./dailyData";
+import { relations } from "drizzle-orm";
 import { timestamps } from "../columns.helpers";
 
 export const users = pgTable("users", {
@@ -9,3 +11,7 @@ export const users = pgTable("users", {
   profilePicture: text("profile_picture").notNull(),
   ...timestamps,
 });
+
+export const usersRelations = relations(users, ({ many }) => ({
+  dailyData: many(dailyData),
+}));
