@@ -1,37 +1,69 @@
+import * as bcrypt from "bcrypt";
+import { Inject, Injectable, NotFoundException } from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
-import { Injectable } from "@nestjs/common";
+import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
+import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { UpdateUserDto } from "./dto/update-user.dto";
-
-export type User = {
-  userId: number;
-  username: string;
-  password: string;
-};
+import { eq } from "drizzle-orm";
+import { users } from "src/drizzle/schema/users";
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [
-    {
-      userId: 1,
-      username: "john",
-      password: "changeme",
-    },
-    {
-      userId: 2,
-      username: "maria",
-      password: "guess",
-    },
-  ];
-  create(createUserDto: CreateUserDto) {
-    return "This action adds a new user";
+  constructor(
+    @Inject(DrizzleAsyncProvider)
+    private db: NodePgDatabase,
+    private readonly saltRounds = 10,
+  ) {}
+  async create(createUserDto: CreateUserDto) {
+    const { email, password, username } = createUserDto;
+    const hashedPassword = await bcrypt.hash(password, this.saltRounds);
+
+    const [userCreated] = await this.db
+      .insert(users)
+      .values({
+        username,
+        email,
+        password: hashedPassword,
+        profilePicture: "picture",
+      })
+      .returning({
+        email: users.email,
+        username: users.username,
+        profilePicture: users.profilePicture,
+      });
+
+    return userCreated;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findOne(id: number) {
+    const [user] = await this.db
+      .select({
+        email: users.email,
+        username: users.username,
+        id: users.id,
+        profilePicture: users.profilePicture,
+        password: users.password,
+      })
+      .from(users)
+      .where(eq(users.id, id))
+      .limit(1);
+    if (!user) throw new NotFoundException("User not found");
+    return user;
   }
+  async findByUsername(username: string) {
+    const [user] = await this.db
+      .select({
+        email: users.email,
+        username: users.username,
+        id: users.id,
+        profilePicture: users.profilePicture,
+        password: users.password,
+      })
+      .from(users)
+      .where(eq(users.username, username))
+      .limit(1);
 
-  async findOne(username: string) {
-    return this.users.find((user) => user.username === username);
+    return user;
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

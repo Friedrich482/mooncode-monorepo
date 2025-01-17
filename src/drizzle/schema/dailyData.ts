@@ -1,6 +1,6 @@
+import { InferSelectModel, relations } from "drizzle-orm";
 import { date, integer, pgTable } from "drizzle-orm/pg-core";
 import { languages } from "./languages";
-import { relations } from "drizzle-orm";
 import { timestamps } from "../columns.helpers";
 import { users } from "./users";
 
@@ -19,3 +19,5 @@ export const dailyDataRelations = relations(dailyData, ({ many, one }) => ({
     references: [users.id],
   }),
 }));
+
+export type DailyData = InferSelectModel<typeof dailyData>;

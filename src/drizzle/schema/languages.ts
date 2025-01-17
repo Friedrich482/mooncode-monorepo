@@ -1,6 +1,6 @@
+import { InferSelectModel, relations } from "drizzle-orm";
 import { integer, pgTable, text } from "drizzle-orm/pg-core";
 import { dailyData } from "./dailyData";
-import { relations } from "drizzle-orm";
 import { timestamps } from "../columns.helpers";
 
 export const languages = pgTable("languages", {
@@ -17,3 +17,5 @@ export const languagesRelations = relations(languages, ({ one }) => ({
     references: [dailyData.id],
   }),
 }));
+
+export type Language = InferSelectModel<typeof languages>;
