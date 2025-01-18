@@ -6,6 +6,8 @@ import {
 import { JwtService } from "@nestjs/jwt";
 import { SignInDto } from "./dto/sign-in-dto";
 import { UsersService } from "src/users/users.service";
+import { compare } from "bcrypt";
+import { Request } from "express";
 @Injectable()
 export class AuthService {
   constructor(
@@ -18,8 +20,8 @@ export class AuthService {
     const user = await this.usersService.findByUsername(username);
 
     if (!user) throw new NotFoundException();
-
-    if (user.password !== pass) {
+    const isPasswordCorrect = await compare(pass, user.password);
+    if (!isPasswordCorrect) {
       throw new UnauthorizedException();
     }
 

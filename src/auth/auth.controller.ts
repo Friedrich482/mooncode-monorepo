@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Injectable,
   Post,
   Request,
   UseGuards,
@@ -11,10 +12,15 @@ import {
 import { AuthGuard } from "./auth.guard";
 import { AuthService } from "./auth.service";
 import { SignInDto } from "./dto/sign-in-dto";
+import { UsersService } from "src/users/users.service";
 
+@Injectable()
 @Controller("auth")
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private usersService: UsersService,
+  ) {}
 
   @HttpCode(HttpStatus.OK)
   @Post("login")
@@ -25,6 +31,6 @@ export class AuthController {
   @UseGuards(AuthGuard)
   @Get("profile")
   getProfile(@Request() req: any) {
-    return req.user;
+    return this.usersService.findOne(req.user.sub);
   }
 }

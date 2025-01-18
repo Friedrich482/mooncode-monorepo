@@ -9,10 +9,11 @@ import { users } from "src/drizzle/schema/users";
 
 @Injectable()
 export class UsersService {
+  private readonly saltRounds = 10;
+
   constructor(
     @Inject(DrizzleAsyncProvider)
     private db: NodePgDatabase,
-    private readonly saltRounds = 10,
   ) {}
   async create(createUserDto: CreateUserDto) {
     const { email, password, username } = createUserDto;
@@ -42,7 +43,6 @@ export class UsersService {
         username: users.username,
         id: users.id,
         profilePicture: users.profilePicture,
-        password: users.password,
       })
       .from(users)
       .where(eq(users.id, id))
@@ -63,6 +63,7 @@ export class UsersService {
       .where(eq(users.username, username))
       .limit(1);
 
+    if (!user) throw new NotFoundException("User not found");
     return user;
   }
 
