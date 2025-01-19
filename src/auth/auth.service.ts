@@ -7,7 +7,6 @@ import { JwtService } from "@nestjs/jwt";
 import { SignInDto } from "./dto/sign-in-dto";
 import { UsersService } from "src/users/users.service";
 import { compare } from "bcrypt";
-import { Request } from "express";
 @Injectable()
 export class AuthService {
   constructor(

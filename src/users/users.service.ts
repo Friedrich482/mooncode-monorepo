@@ -1,5 +1,10 @@
 import * as bcrypt from "bcrypt";
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import {
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from "@nestjs/common";
 import { CreateUserDto } from "./dto/create-user.dto";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
@@ -17,8 +22,19 @@ export class UsersService {
   ) {}
   async create(createUserDto: CreateUserDto) {
     const { email, password, username } = createUserDto;
-    const hashedPassword = await bcrypt.hash(password, this.saltRounds);
 
+    // check if a user with the username already exists
+    const [existingUser] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.username, username))
+      .limit(1);
+
+    if (existingUser) {
+      throw new ConflictException("This username is already used");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, this.saltRounds);
     const [userCreated] = await this.db
       .insert(users)
       .values({
@@ -32,10 +48,8 @@ export class UsersService {
         username: users.username,
         profilePicture: users.profilePicture,
       });
-
     return userCreated;
   }
-
   async findOne(id: number) {
     const [user] = await this.db
       .select({

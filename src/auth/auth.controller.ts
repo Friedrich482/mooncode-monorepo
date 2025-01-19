@@ -11,9 +11,16 @@ import {
 } from "@nestjs/common";
 import { AuthGuard } from "./auth.guard";
 import { AuthService } from "./auth.service";
+import { RegisterDto } from "./dto/registerDto";
 import { SignInDto } from "./dto/sign-in-dto";
 import { UsersService } from "src/users/users.service";
 
+type getProfileRequest = Request & {
+  user: {
+    sub: number;
+    username: string;
+  };
+};
 @Injectable()
 @Controller("auth")
 export class AuthController {
@@ -28,9 +35,14 @@ export class AuthController {
     return this.authService.signIn(signInDto);
   }
 
+  @Post("register")
+  register(@Body() registerDto: RegisterDto) {
+    return this.usersService.create(registerDto);
+  }
+
   @UseGuards(AuthGuard)
   @Get("profile")
-  getProfile(@Request() req: any) {
+  getProfile(@Request() req: getProfileRequest) {
     return this.usersService.findOne(req.user.sub);
   }
 }
