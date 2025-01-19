@@ -1,5 +1,6 @@
 import * as bcrypt from "bcrypt";
 import {
+  BadRequestException,
   ConflictException,
   Inject,
   Injectable,
@@ -81,10 +82,32 @@ export class UsersService {
     return user;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    if (Object.keys(updateUserDto).length === 0) {
+      throw new BadRequestException("You need to specify at least one field");
+    }
 
+    const [user] = await this.db.select().from(users).where(eq(users.id, id));
+    if (!user) throw new NotFoundException("User not found");
+
+    const updateData = { ...updateUserDto };
+    if (updateData.password) {
+      updateData.password = await bcrypt.hash(
+        updateData.password,
+        this.saltRounds,
+      );
+    }
+
+    return await this.db
+      .update(users)
+      .set(updateData)
+      .where(eq(users.id, id))
+      .returning({
+        username: users.username,
+        email: users.email,
+        profilePicture: users.profilePicture,
+      });
+  }
   remove(id: number) {
     return `This action removes a #${id} user`;
   }

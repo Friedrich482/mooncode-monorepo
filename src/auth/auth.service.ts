@@ -21,7 +21,7 @@ export class AuthService {
     if (!user) throw new NotFoundException();
     const isPasswordCorrect = await compare(pass, user.password);
     if (!isPasswordCorrect) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException("Incorrect password");
     }
 
     const payload = { sub: user.id, username: user.username };

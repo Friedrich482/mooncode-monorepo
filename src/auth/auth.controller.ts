@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Injectable,
+  Patch,
   Post,
   Request,
   UseGuards,
@@ -13,9 +14,10 @@ import { AuthGuard } from "./auth.guard";
 import { AuthService } from "./auth.service";
 import { RegisterDto } from "./dto/registerDto";
 import { SignInDto } from "./dto/sign-in-dto";
+import { UpdateUserDto } from "src/users/dto/update-user.dto";
 import { UsersService } from "src/users/users.service";
 
-type getProfileRequest = Request & {
+type ExtendedRequest = Request & {
   user: {
     sub: number;
     username: string;
@@ -42,7 +44,15 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get("profile")
-  getProfile(@Request() req: getProfileRequest) {
+  getProfile(@Request() req: ExtendedRequest) {
     return this.usersService.findOne(req.user.sub);
+  }
+  @UseGuards(AuthGuard)
+  @Patch("profile")
+  updateProfile(
+    @Body() updateUserDto: UpdateUserDto,
+    @Request() req: ExtendedRequest,
+  ) {
+    return this.usersService.update(req.user.sub, updateUserDto);
   }
 }
