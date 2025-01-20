@@ -1,8 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { CodingDataController } from './coding-data.controller';
-import { CodingDataService } from './coding-data.service';
+import { Test, TestingModule } from "@nestjs/testing";
+import { CodingDataController } from "./coding-data.controller";
+import { CodingDataService } from "./coding-data.service";
 
-describe('CodingDataController', () => {
+describe("CodingDataController", () => {
   let controller: CodingDataController;
 
   beforeEach(async () => {
@@ -14,7 +14,7 @@ describe('CodingDataController', () => {
     controller = module.get<CodingDataController>(CodingDataController);
   });
 
-  it('should be defined', () => {
+  it("should be defined", () => {
     expect(controller).toBeDefined();
   });
 });

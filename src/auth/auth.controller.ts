@@ -12,17 +12,12 @@ import {
 } from "@nestjs/common";
 import { AuthGuard } from "./auth.guard";
 import { AuthService } from "./auth.service";
+import { ExtendedRequest } from "src/types";
 import { RegisterDto } from "./dto/registerDto";
 import { SignInDto } from "./dto/sign-in-dto";
 import { UpdateUserDto } from "src/users/dto/update-user.dto";
 import { UsersService } from "src/users/users.service";
 
-type ExtendedRequest = Request & {
-  user: {
-    sub: number;
-    username: string;
-  };
-};
 @Injectable()
 @Controller("auth")
 export class AuthController {
