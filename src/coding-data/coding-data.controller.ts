@@ -19,7 +19,7 @@ export class CodingDataController {
 
   @Post()
   @UseGuards(AuthGuard)
-  update(
+  upsert(
     @Body() updateCodingDataDto: CodingDataDto,
     @Request() req: ExtendedRequest,
   ) {

@@ -6,6 +6,8 @@ import { ConfigModule } from "@nestjs/config";
 import { DrizzleModule } from "./drizzle/drizzle.module";
 import { Module } from "@nestjs/common";
 import { UsersModule } from "./users/users.module";
+import { DailyDataModule } from './daily-data/daily-data.module';
+import { LanguagesModule } from './languages/languages.module';
 
 @Module({
   imports: [
@@ -14,6 +16,8 @@ import { UsersModule } from "./users/users.module";
     AuthModule,
     DrizzleModule,
     CodingDataModule,
+    DailyDataModule,
+    LanguagesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
