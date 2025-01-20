@@ -4,28 +4,26 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
   Request,
   UseGuards,
 } from "@nestjs/common";
 import { AuthGuard } from "src/auth/auth.guard";
+import { CodingDataDto } from "./dto/coding-data.dto";
 import { CodingDataService } from "./coding-data.service";
-import { CreateCodingDataDto } from "./dto/create-coding-data.dto";
 import { ExtendedRequest } from "src/types";
-import { UpdateCodingDatumDto } from "./dto/update-coding-data.dto";
 
 @Controller("coding-data")
 export class CodingDataController {
   constructor(private readonly codingDataService: CodingDataService) {}
 
-  @Post("create")
+  @Post()
   @UseGuards(AuthGuard)
-  create(
-    @Body() CreateCodingDataDto: CreateCodingDataDto,
+  update(
+    @Body() updateCodingDataDto: CodingDataDto,
     @Request() req: ExtendedRequest,
   ) {
-    return this.codingDataService.create(req.user.sub, CreateCodingDataDto);
+    return this.codingDataService.upsert(req.user.sub, updateCodingDataDto);
   }
 
   @Get()
@@ -36,14 +34,6 @@ export class CodingDataController {
   @Get(":id")
   findOne(@Param("id") id: string) {
     return this.codingDataService.findOne(+id);
-  }
-
-  @Patch(":id")
-  update(
-    @Param("id") id: string,
-    @Body() updateCodingDatumDto: UpdateCodingDatumDto,
-  ) {
-    return this.codingDataService.update(+id, updateCodingDatumDto);
   }
 
   @Delete(":id")

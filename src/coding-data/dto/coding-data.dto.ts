@@ -1,7 +1,7 @@
 import { IsNotEmpty, IsNumber, IsObject } from "class-validator";
 import { codingData } from "src/types";
 
-export class CreateCodingDataDto implements codingData {
+export class CodingDataDto implements codingData {
   @IsNotEmpty()
   @IsNumber()
   readonly timeSpentToday!: number;
