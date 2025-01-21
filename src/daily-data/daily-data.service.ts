@@ -42,11 +42,8 @@ export class DailyDataService {
     return oneDailyData;
   }
 
-  async updateDailyData(
-    userId: number,
-    updateDailyDataDto: UpdateDailyDataDto,
-  ) {
-    const { timeSpent } = updateDailyDataDto;
+  async updateDailyData(updateDailyDataDto: UpdateDailyDataDto) {
+    const { timeSpent, userId } = updateDailyDataDto;
     const [updatedDailyData] = await this.db
       .update(dailyData)
       .set({

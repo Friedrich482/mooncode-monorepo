@@ -1,16 +1,15 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq } from "drizzle-orm";
 import { CodingDataDto } from "./dto/coding-data.dto";
+import { DailyDataService } from "src/daily-data/daily-data.service";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
-import { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { dailyData } from "src/drizzle/schema/dailyData";
-import { languages } from "src/drizzle/schema/languages";
+import { LanguagesService } from "src/languages/languages.service";
 
 @Injectable()
 export class CodingDataService {
   constructor(
     @Inject(DrizzleAsyncProvider)
-    private db: NodePgDatabase,
+    private dailyDataService: DailyDataService,
+    private languagesService: LanguagesService,
   ) {}
 
   findAll() {
@@ -28,39 +27,21 @@ export class CodingDataService {
       timeSpentToday: 0,
     };
 
-    const [existingTimeSpentToday] = await this.db
-      .select({ timeSpent: dailyData.timeSpent, id: dailyData.id })
-      .from(dailyData)
-      .where(eq(dailyData.userId, id));
+    const existingTimeSpentToday =
+      await this.dailyDataService.findOneDailyData(id);
 
     if (!existingTimeSpentToday.id) {
       // create daily time if it doesn't exists
-      const [dat] = await this.db
-        .insert(dailyData)
-        .values({
-          date: new Date().toISOString(),
-          timeSpent: timeSpentToday,
-          userId: id,
-        })
-        .returning({
-          timeSpent: dailyData.timeSpent,
-          date: dailyData.date,
-          id: dailyData.id,
-        });
-      returningDailyData.dailyDataId = dat.id;
-      returningDailyData.timeSpentToday = dat.timeSpent;
+      const createdTimeSpentToday = await this.dailyDataService.createDailyData(
+        { timeSpent: timeSpentToday, userId: id },
+      );
+      returningDailyData.dailyDataId = createdTimeSpentToday.id;
+      returningDailyData.timeSpentToday = createdTimeSpentToday.timeSpent;
     } else {
       // else update it
-      const [updatedTimeSpentToday] = await this.db
-        .update(dailyData)
-        .set({
-          timeSpent: timeSpentToday,
-        })
-        .where(eq(dailyData.userId, id))
-        .returning({
-          timeSpent: dailyData.timeSpent,
-          id: dailyData.id,
-        });
+      const updatedTimeSpentToday = await this.dailyDataService.updateDailyData(
+        { timeSpent: timeSpentToday, userId: id },
+      );
       returningDailyData.dailyDataId = updatedTimeSpentToday.id;
       returningDailyData.timeSpentToday = updateCodingDataDto.timeSpentToday;
     }
@@ -71,49 +52,25 @@ export class CodingDataService {
     }[] = [];
 
     for (const [key, value] of Object.entries(timeSpentPerLanguage)) {
-      const [existingLanguageData] = await this.db
-        .select({
-          timeSpent: languages.timeSpent,
-          languageName: languages.languageName,
-        })
-        .from(languages)
-        .where(
-          and(
-            eq(languages.dailyDataId, returningDailyData.dailyDataId),
-            eq(languages.languageName, key),
-          ),
-        );
+      const existingLanguageData = await this.languagesService.findOneLanguage(
+        returningDailyData.dailyDataId,
+        key,
+      );
       if (!existingLanguageData.languageName) {
         // if it doesn't exists, create it
-        const [languageData] = await this.db
-          .insert(languages)
-          .values({
-            languageName: key,
-            timeSpent: value,
-            dailyDataId: returningDailyData.dailyDataId,
-          })
-          .returning({
-            languageName: languages.languageName,
-            timeSpent: languages.timeSpent,
-          });
-        languagesData.push(languageData);
+        const createdLanguageData = await this.languagesService.createLanguage({
+          dailyDataId: returningDailyData.dailyDataId,
+          timeSpent: value,
+          languageName: key,
+        });
+        languagesData.push(createdLanguageData);
       } else {
         // else update it
-        const [updatedLanguageData] = await this.db
-          .update(languages)
-          .set({
-            timeSpent: value,
-          })
-          .where(
-            and(
-              eq(languages.dailyDataId, dailyData),
-              eq(languages.languageName, key),
-            ),
-          )
-          .returning({
-            languageName: languages.languageName,
-            timeSpent: languages.timeSpent,
-          });
+        const updatedLanguageData = await this.languagesService.updateLanguage(
+          returningDailyData.dailyDataId,
+          { timeSpent: value },
+          key,
+        );
         languagesData.push(updatedLanguageData);
       }
     }

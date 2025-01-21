@@ -1,15 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { LanguagesService } from './languages.service';
-import { CreateLanguageDto } from './dto/create-language.dto';
-import { UpdateLanguageDto } from './dto/update-language.dto';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from "@nestjs/common";
+import { CreateLanguageDto } from "./dto/create-language.dto";
+import { LanguagesService } from "./languages.service";
+import { UpdateLanguageDto } from "./dto/update-language.dto";
 
-@Controller('languages')
+@Controller("languages")
 export class LanguagesController {
   constructor(private readonly languagesService: LanguagesService) {}
 
   @Post()
   create(@Body() createLanguageDto: CreateLanguageDto) {
-    return this.languagesService.create(createLanguageDto);
+    return this.languagesService.createLanguage(createLanguageDto);
   }
 
   @Get()
@@ -17,18 +25,26 @@ export class LanguagesController {
     return this.languagesService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.languagesService.findOne(+id);
+  @Get(":id")
+  findOne(@Body() dailyDataId: number, languageName: string) {
+    return this.languagesService.findOneLanguage(dailyDataId, languageName);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateLanguageDto: UpdateLanguageDto) {
-    return this.languagesService.update(+id, updateLanguageDto);
+  @Patch(":id")
+  update(
+    @Body() updateLanguageDto: UpdateLanguageDto,
+    dailyDataId: number,
+    languageName: string,
+  ) {
+    return this.languagesService.updateLanguage(
+      dailyDataId,
+      updateLanguageDto,
+      languageName,
+    );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
+  @Delete(":id")
+  remove(@Param("id") id: string) {
     return this.languagesService.remove(+id);
   }
 }

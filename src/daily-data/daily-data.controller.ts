@@ -1,15 +1,17 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Request,
 } from "@nestjs/common";
-import { DailyDataService } from "./daily-data.service";
 import { CreateDailyDataDto } from "./dto/create-daily-data.dto";
-import { UpdateDailyDataDto } from "./dto/update-daily-datum.dto";
+import { DailyDataService } from "./daily-data.service";
+import { ExtendedRequest } from "src/types";
+import { UpdateDailyDataDto } from "./dto/update-daily-data.dto";
 
 @Controller("daily-data")
 export class DailyDataController {
@@ -17,7 +19,7 @@ export class DailyDataController {
 
   @Post()
   create(@Body() CreateDailyDataDto: CreateDailyDataDto) {
-    return this.dailyDataService.create(CreateDailyDataDto);
+    return this.dailyDataService.createDailyData(CreateDailyDataDto);
   }
 
   @Get()
@@ -26,16 +28,13 @@ export class DailyDataController {
   }
 
   @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.dailyDataService.findOne(+id);
+  findOne(@Request() req: ExtendedRequest) {
+    return this.dailyDataService.findOneDailyData(req.user.sub);
   }
 
   @Patch(":id")
-  update(
-    @Param("id") id: string,
-    @Body() UpdateDailyDataDto: UpdateDailyDataDto,
-  ) {
-    return this.dailyDataService.update(+id, UpdateDailyDataDto);
+  update(@Body() updateDailyDataDto: UpdateDailyDataDto) {
+    return this.dailyDataService.updateDailyData(updateDailyDataDto);
   }
 
   @Delete(":id")
