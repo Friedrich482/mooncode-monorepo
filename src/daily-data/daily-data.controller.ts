@@ -29,7 +29,10 @@ export class DailyDataController {
 
   @Get(":id")
   findOne(@Request() req: ExtendedRequest) {
-    return this.dailyDataService.findOneDailyData(req.user.sub);
+    return this.dailyDataService.findOneDailyData(
+      req.user.sub,
+      new Date().toISOString(),
+    );
   }
 
   @Patch(":id")

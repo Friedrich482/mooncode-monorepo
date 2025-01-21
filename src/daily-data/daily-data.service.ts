@@ -1,10 +1,10 @@
 import { Inject, Injectable } from "@nestjs/common";
+import { and, eq } from "drizzle-orm";
 import { CreateDailyDataDto } from "./dto/create-daily-data.dto";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { UpdateDailyDataDto } from "./dto/update-daily-data.dto";
 import { dailyData } from "src/drizzle/schema/dailyData";
-import { eq } from "drizzle-orm";
 
 @Injectable()
 export class DailyDataService {
@@ -34,25 +34,27 @@ export class DailyDataService {
     return `This action returns all dailyData`;
   }
 
-  async findOneDailyData(userId: number) {
+  async findOneDailyData(userId: number, date: string) {
     const [oneDailyData] = await this.db
       .select({ timeSpent: dailyData.timeSpent, id: dailyData.id })
       .from(dailyData)
-      .where(eq(dailyData.userId, userId));
+      .where(and(eq(dailyData.userId, userId), eq(dailyData.date, date)));
     return oneDailyData;
   }
 
   async updateDailyData(updateDailyDataDto: UpdateDailyDataDto) {
-    const { timeSpent, userId } = updateDailyDataDto;
+    const { timeSpent, userId, date } = updateDailyDataDto;
     const [updatedDailyData] = await this.db
       .update(dailyData)
       .set({
+        date: new Date().toISOString(),
         timeSpent,
       })
-      .where(eq(dailyData.userId, userId))
+      .where(and(eq(dailyData.userId, userId), eq(dailyData.date, date)))
       .returning({
         timeSpent: dailyData.timeSpent,
         id: dailyData.id,
+        date: dailyData.date,
       });
     return updatedDailyData;
   }
