@@ -48,12 +48,8 @@ export class LanguagesService {
     return languageData;
   }
 
-  async updateLanguage(
-    dailyDataId: number,
-    updateLanguageDto: UpdateLanguageDto,
-    languageName: string,
-  ) {
-    const { timeSpent } = updateLanguageDto;
+  async updateLanguage(updateLanguageDto: UpdateLanguageDto) {
+    const { timeSpent, dailyDataId, languageName } = updateLanguageDto;
     const [updatedLanguageData] = await this.db
       .update(languages)
       .set({

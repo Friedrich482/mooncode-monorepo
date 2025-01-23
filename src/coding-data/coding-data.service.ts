@@ -71,11 +71,11 @@ export class CodingDataService {
         languagesData.push(createdLanguageData);
       } else {
         // else update it
-        const updatedLanguageData = await this.languagesService.updateLanguage(
-          returningDailyData.dailyDataId,
-          { timeSpent: value },
-          key,
-        );
+        const updatedLanguageData = await this.languagesService.updateLanguage({
+          timeSpent: value,
+          dailyDataId: returningDailyData.dailyDataId,
+          languageName: key,
+        });
         languagesData.push(updatedLanguageData);
       }
     }
