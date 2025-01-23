@@ -25,10 +25,14 @@ const getTime = (): (() => LanguagesData) => {
 
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];
-      const idleDuration = (now - languageData.lastActivityTime) / 1000;
+      const idleDuration = Math.floor(
+        (now - languageData.lastActivityTime) / 1000
+      );
 
       if (idleDuration >= MAX_IDLE_TIME && !languageData.isFrozen) {
-        languageData.frozenTime = (now - languageData.startTime) / 1000;
+        languageData.frozenTime = Math.floor(
+          (now - languageData.startTime) / 1000
+        );
         languageData.freezeStartTime = now;
         languageData.isFrozen = true;
       } else if (
@@ -36,8 +40,10 @@ const getTime = (): (() => LanguagesData) => {
         languageData.isFrozen &&
         languageData.freezeStartTime
       ) {
-        const freezeDuration = (now - languageData.freezeStartTime) / 1000;
-        languageData.startTime += freezeDuration * 1000;
+        const freezeDuration = Math.floor(
+          (now - languageData.freezeStartTime) / 1000
+        );
+        languageData.startTime += Math.floor(freezeDuration * 1000);
         languageData.frozenTime = null;
         languageData.freezeStartTime = null;
         languageData.isFrozen = false;
