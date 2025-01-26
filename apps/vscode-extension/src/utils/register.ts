@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import createUser from "./createUser";
 import login from "./login";
+
 const register = async (context: vscode.ExtensionContext) => {
   const username = await vscode.window.showInputBox({
     prompt: "Enter your username",
@@ -24,12 +25,28 @@ const register = async (context: vscode.ExtensionContext) => {
     },
   });
 
-  if (!username || !password || !email) {
-    vscode.window.showErrorMessage("Email, username and password are required");
+  const confirmPassword = await vscode.window.showInputBox({
+    prompt: "Confirm the password",
+    password: true,
+    placeHolder: "********",
+    title: "confirmPassword",
+    validateInput: (input) => {
+      if (input && input !== password) {
+        return "The passwords don't match";
+      }
+      return null;
+    },
+  });
+
+  if (!username || !password || !email || password !== confirmPassword) {
     vscode.window
-      .showInformationMessage("Try again", "Register", "Cancel")
+      .showErrorMessage(
+        "Both email, username and password are required. And both password should match",
+        "Try again",
+        "Cancel"
+      )
       .then((selection) => {
-        if (selection === "Register") {
+        if (selection === "Try again") {
           register(context);
         } else {
           vscode.window.showInformationMessage("Registration cancelled.");
@@ -38,12 +55,12 @@ const register = async (context: vscode.ExtensionContext) => {
     return;
   }
   const res = await createUser(username, password, email);
+
   if (typeof res === "string") {
-    vscode.window.showErrorMessage(`Registering failed ${res}`);
     vscode.window
-      .showInformationMessage("Try again", "Register", "Cancel")
+      .showErrorMessage(`Registering failed: ${res}`, "Try again", "Cancel")
       .then((selection) => {
-        if (selection === "Register") {
+        if (selection === "Try again") {
           register(context);
         } else {
           vscode.window.showInformationMessage("Registration cancelled.");
@@ -51,8 +68,9 @@ const register = async (context: vscode.ExtensionContext) => {
       });
     return;
   }
-  vscode.window.showInformationMessage("Now,login");
-  await login(context);
+  vscode.window
+    .showInformationMessage("Registered successfully", "Login")
+    .then((selection) => (selection === "Login" ? login(context) : undefined));
 };
 
 export default register;
