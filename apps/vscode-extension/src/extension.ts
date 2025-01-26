@@ -7,7 +7,7 @@ import register from "./utils/register";
 
 export function activate(context: vscode.ExtensionContext) {
   vscode.window.showInformationMessage(
-    "MoonCode starts now tracking your code time"
+    "MoonCode starts now tracking your coding time"
   );
 
   const timeGetter = getTime();
