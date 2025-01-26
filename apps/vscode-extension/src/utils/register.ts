@@ -14,10 +14,16 @@ const register = async (context: vscode.ExtensionContext) => {
   const password = await vscode.window.showInputBox({
     prompt: "Enter your password",
     password: true,
-    placeHolder: "**********",
-    // validateInput: () => "Password should be at least 8 characters",
+    placeHolder: "********",
     title: "Password",
+    validateInput: (input) => {
+      if (input && input.length < 8) {
+        return "Password should be at least 8 characters long.";
+      }
+      return null;
+    },
   });
+
   if (!username || !password || !email) {
     vscode.window.showErrorMessage("Email, username and password are required");
     vscode.window

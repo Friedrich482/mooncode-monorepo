@@ -24,6 +24,16 @@
         "command": "MoonCode.login",
         "title": "MoonCode: Login",
         "icon": "lol"
+      },
+      {
+        "command": "MoonCode.register",
+        "title": "MoonCode: Register",
+        "icon": "lol"
+      },
+      {
+        "command": "MoonCode.logout",
+        "title": "MoonCode: Logout",
+        "icon": "lol"
       }
     ]
   },

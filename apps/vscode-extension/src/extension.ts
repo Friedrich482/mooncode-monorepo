@@ -2,6 +2,8 @@ import * as vscode from "vscode";
 import getTime from "./utils/getTime";
 import getToken from "./utils/getToken";
 import login from "./utils/login";
+import logout from "./utils/logout";
+import register from "./utils/register";
 
 export function activate(context: vscode.ExtensionContext) {
   vscode.window.showInformationMessage(
@@ -24,6 +26,20 @@ export function activate(context: vscode.ExtensionContext) {
     "MoonCode.login",
     async () => {
       await login(context);
+    }
+  );
+  // ! this command(register) is only for tests purpose, remove it after development
+  const disposable3 = vscode.commands.registerCommand(
+    "MoonCode.register",
+    async () => {
+      await register(context);
+    }
+  );
+
+  const disposable4 = vscode.commands.registerCommand(
+    "MoonCode.logout",
+    async () => {
+      await logout(context);
     }
   );
 
@@ -60,7 +76,7 @@ export function activate(context: vscode.ExtensionContext) {
     body = await res.json();
   }, 60000);
 
-  context.subscriptions.push(disposable, disposable2);
+  context.subscriptions.push(disposable, disposable2, disposable3, disposable4);
 }
 
 export async function deactivate() {
