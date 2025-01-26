@@ -15,24 +15,44 @@ const login = async (context: vscode.ExtensionContext) => {
   });
 
   if (!username || !password) {
-    vscode.window.showErrorMessage("Username and password are required");
-    return;
-  }
-
-  const res = await fetchToken(username, password);
-  if (typeof res === "string") {
-    vscode.window.showErrorMessage(`Login failed: ${res}`);
     vscode.window
-      .showInformationMessage("Do you want to register?", "Register")
+      .showErrorMessage(
+        "Both username and password are required",
+        "Try again",
+        "Cancel"
+      )
       .then((selection) => {
-        if (selection === "Register") {
-          register(context);
+        if (selection === "Try again") {
+          login(context);
         } else {
-          vscode.window.showInformationMessage("Registration cancelled.");
+          vscode.window.showInformationMessage("Login cancelled");
         }
       });
     return;
   }
+
+  const res = await fetchToken(username, password);
+
+  if (typeof res === "string") {
+    vscode.window
+      .showErrorMessage(
+        `Login failed: ${res}`,
+        "Try again",
+        "Register",
+        "Cancel"
+      )
+      .then((selection) => {
+        if (selection === "Register") {
+          register(context);
+        } else if (selection === "Try again") {
+          login(context);
+        } else {
+          vscode.window.showInformationMessage("Login cancelled");
+        }
+      });
+    return;
+  }
+
   const { access_token } = res;
   await storeToken(context, access_token);
   vscode.window.showInformationMessage("Logged in successfully");
