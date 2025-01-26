@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
 import getTime from "./utils/getTime";
+import getToken from "./utils/getToken";
+import login from "./utils/login";
 
 export function activate(context: vscode.ExtensionContext) {
   vscode.window.showInformationMessage(
@@ -18,6 +20,12 @@ export function activate(context: vscode.ExtensionContext) {
       vscode.window.showInformationMessage(`${JSON.stringify(body)}`);
     }
   );
+  const disposable2 = vscode.commands.registerCommand(
+    "MoonCode.login",
+    async () => {
+      await login(context);
+    }
+  );
 
   setInterval(async () => {
     const timeSpentPerLanguage = Object.fromEntries(
@@ -30,12 +38,13 @@ export function activate(context: vscode.ExtensionContext) {
       (acc, value) => acc + value,
       0
     );
+    const authToken = await getToken(context);
 
     const res = await fetch("http://localhost:3000/api/coding-data", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.JWT_TOKEN}`,
+        Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({
         timeSpentToday,
@@ -51,7 +60,7 @@ export function activate(context: vscode.ExtensionContext) {
     body = await res.json();
   }, 60000);
 
-  context.subscriptions.push(disposable);
+  context.subscriptions.push(disposable, disposable2);
 }
 
 export async function deactivate() {
