@@ -1,8 +1,10 @@
 import * as vscode from "vscode";
+import addStatusBarItem from "./utils/addStatusBarItem";
 import getTime from "./utils/getTime";
 import getToken from "./utils/getToken";
 import login from "./utils/login";
 import logout from "./utils/logout";
+import openDashBoard from "./utils/openDashBoard";
 import register from "./utils/register";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -28,20 +30,24 @@ export function activate(context: vscode.ExtensionContext) {
       await login(context);
     }
   );
-  // ! this command(register) is only for tests purpose, remove it after development
   const disposable3 = vscode.commands.registerCommand(
     "MoonCode.register",
     async () => {
       await register(context);
     }
   );
-
   const disposable4 = vscode.commands.registerCommand(
     "MoonCode.logout",
     async () => {
       await logout(context);
     }
   );
+  const disposable5 = vscode.commands.registerCommand(
+    "MoonCode.openDashBoard",
+    openDashBoard
+  );
+
+  const statusBarItem = addStatusBarItem();
 
   setInterval(async () => {
     const timeSpentPerLanguage = Object.fromEntries(
@@ -74,9 +80,17 @@ export function activate(context: vscode.ExtensionContext) {
     });
 
     body = await res.json();
+    statusBarItem.text = `$(watch) ${timeSpentToday} secs`;
   }, 60000);
 
-  context.subscriptions.push(disposable, disposable2, disposable3, disposable4);
+  context.subscriptions.push(
+    disposable,
+    disposable2,
+    disposable3,
+    disposable4,
+    disposable5,
+    statusBarItem
+  );
 }
 
 export async function deactivate() {

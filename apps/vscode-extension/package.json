@@ -34,6 +34,11 @@
         "command": "MoonCode.logout",
         "title": "MoonCode: Logout",
         "icon": "lol"
+      },
+      {
+        "command": "MoonCode.openDashboard",
+        "title": "MoonCode: Open Dashboard",
+        "icon": "lol"
       }
     ]
   },

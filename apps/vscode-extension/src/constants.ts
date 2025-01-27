@@ -24,3 +24,6 @@ export const registerResponseSchema = z.object({
 export const failedOperationResponseSchema = z.object({
   message: z.string().min(1),
 });
+
+export const localUrlPort = 4208;
+export const localUrl = `http://localhost:${localUrlPort}`;
