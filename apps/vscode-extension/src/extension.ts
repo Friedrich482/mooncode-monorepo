@@ -1,10 +1,10 @@
 import * as vscode from "vscode";
 import addStatusBarItem from "./utils/addStatusBarItem";
 import getTime from "./utils/getTime";
-import getToken from "./utils/getToken";
 import login from "./utils/login";
 import logout from "./utils/logout";
 import openDashBoard from "./utils/openDashBoard";
+import periodicSyncData from "./periodicSyncData";
 import register from "./utils/register";
 
 export function activate(context: vscode.ExtensionContext) {
@@ -50,37 +50,7 @@ export function activate(context: vscode.ExtensionContext) {
   const statusBarItem = addStatusBarItem();
 
   setInterval(async () => {
-    const timeSpentPerLanguage = Object.fromEntries(
-      Object.entries(timeGetter()).map(([key, { elapsedTime }]) => [
-        key,
-        elapsedTime,
-      ])
-    );
-    const timeSpentToday = Object.values(timeSpentPerLanguage).reduce(
-      (acc, value) => acc + value,
-      0
-    );
-    const authToken = await getToken(context);
-
-    const res = await fetch("http://localhost:3000/api/coding-data", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({
-        timeSpentToday,
-        timeSpentPerLanguage: Object.fromEntries(
-          Object.entries(timeGetter()).map(([key, { elapsedTime }]) => [
-            key,
-            elapsedTime,
-          ])
-        ),
-      }),
-    });
-
-    body = await res.json();
-    statusBarItem.text = `$(watch) ${timeSpentToday} secs`;
+    body = await periodicSyncData(context, body, statusBarItem);
   }, 60000);
 
   context.subscriptions.push(
