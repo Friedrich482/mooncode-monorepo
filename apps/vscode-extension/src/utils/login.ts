@@ -15,41 +15,35 @@ const login = async (context: vscode.ExtensionContext) => {
   });
 
   if (!username || !password) {
-    vscode.window
-      .showErrorMessage(
-        "Both username and password are required",
-        "Try again",
-        "Cancel"
-      )
-      .then((selection) => {
-        if (selection === "Try again") {
-          login(context);
-        } else {
-          vscode.window.showInformationMessage("Login cancelled");
-        }
-      });
+    const selection = await vscode.window.showErrorMessage(
+      "Both username and password are required",
+      "Try again",
+      "Cancel"
+    );
+    if (selection === "Try again") {
+      await login(context);
+    } else {
+      vscode.window.showInformationMessage("Login cancelled");
+    }
     return;
   }
 
   const res = await fetchToken(username, password);
 
   if (typeof res === "string") {
-    vscode.window
-      .showErrorMessage(
-        `Login failed: ${res}`,
-        "Try again",
-        "Register",
-        "Cancel"
-      )
-      .then((selection) => {
-        if (selection === "Register") {
-          register(context);
-        } else if (selection === "Try again") {
-          login(context);
-        } else {
-          vscode.window.showInformationMessage("Login cancelled");
-        }
-      });
+    const selection = await vscode.window.showErrorMessage(
+      `Login failed: ${res}`,
+      "Try again",
+      "Register",
+      "Cancel"
+    );
+    if (selection === "Register") {
+      await register(context);
+    } else if (selection === "Try again") {
+      await login(context);
+    } else {
+      vscode.window.showInformationMessage("Login cancelled");
+    }
     return;
   }
 

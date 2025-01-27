@@ -39,38 +39,42 @@ const register = async (context: vscode.ExtensionContext) => {
   });
 
   if (!username || !password || !email || password !== confirmPassword) {
-    vscode.window
-      .showErrorMessage(
-        "Both email, username and password are required. And both password should match",
-        "Try again",
-        "Cancel"
-      )
-      .then((selection) => {
-        if (selection === "Try again") {
-          register(context);
-        } else {
-          vscode.window.showInformationMessage("Registration cancelled.");
-        }
-      });
+    const selection = await vscode.window.showErrorMessage(
+      "Both email, username and password are required. And both password should match",
+      "Try again",
+      "Cancel"
+    );
+    if (selection === "Try again") {
+      await register(context);
+    } else {
+      vscode.window.showInformationMessage("Registration cancelled.");
+    }
     return;
   }
   const res = await createUser(username, password, email);
 
   if (typeof res === "string") {
-    vscode.window
-      .showErrorMessage(`Registering failed: ${res}`, "Try again", "Cancel")
-      .then((selection) => {
-        if (selection === "Try again") {
-          register(context);
-        } else {
-          vscode.window.showInformationMessage("Registration cancelled.");
-        }
-      });
+    const selection = await vscode.window.showErrorMessage(
+      `Registering failed: ${res}`,
+      "Try again",
+      "Cancel"
+    );
+    if (selection === "Try again") {
+      await register(context);
+    } else {
+      vscode.window.showInformationMessage("Registration cancelled.");
+    }
     return;
   }
-  vscode.window
-    .showInformationMessage("Registered successfully", "Login")
-    .then((selection) => (selection === "Login" ? login(context) : undefined));
+  const selection = await vscode.window.showInformationMessage(
+    "Registered successfully",
+    "Login"
+  );
+  if (selection === "Login") {
+    await login(context);
+  } else {
+    return undefined;
+  }
 };
 
 export default register;
