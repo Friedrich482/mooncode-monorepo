@@ -18,6 +18,9 @@ const periodicSyncData = async (
     (acc, value) => acc + value,
     0
   );
+  const minutesSpentToday = Math.floor((timeSpentToday % 3600) / 60);
+  const hoursSpentToday = Math.floor(timeSpentToday / 3600);
+
   const authToken = await getToken(context);
 
   const res = await fetch("http://localhost:3000/api/coding-data", {
@@ -38,8 +41,12 @@ const periodicSyncData = async (
   });
 
   body = await res.json();
-  statusBarItem.text = `$(watch) ${timeSpentToday} secs`;
 
+  statusBarItem.text = `$(watch) ${
+    hoursSpentToday !== 0
+      ? `${hoursSpentToday} hr${hoursSpentToday !== 1 ? "s" : ""}`
+      : ""
+  } ${minutesSpentToday} min${minutesSpentToday !== 1 ? "s" : ""}`;
   return body;
 };
 
