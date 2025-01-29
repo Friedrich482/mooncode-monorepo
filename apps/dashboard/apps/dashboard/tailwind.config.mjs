@@ -9,6 +9,7 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       colors: {
+        moon: "#fefce8",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         card: {
