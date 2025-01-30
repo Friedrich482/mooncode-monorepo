@@ -4,6 +4,13 @@
 
 body {
   font-family: "Inter Variable", sans-serif;
+  height: 100dvh;
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 @layer base {

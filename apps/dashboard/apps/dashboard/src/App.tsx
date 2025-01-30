@@ -1,13 +1,16 @@
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Main from "./components/dashboard-page/Main";
+import { ThemeProvider } from "./components/themeProvider";
 
 function App() {
   return (
     <>
-      <Header />
-      <Main />
-      <Footer />
+      <ThemeProvider>
+        <Header />
+        <Main />
+        <Footer />
+      </ThemeProvider>
     </>
   );
 }
