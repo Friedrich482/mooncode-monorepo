@@ -9,7 +9,7 @@ import { Button } from "./ui/button";
 import { themeDropDownItems } from "@/utils/constants";
 import { useTheme } from "./themeProvider";
 
-const ToggleThemeSelect = () => {
+const ToggleThemeDropDown = () => {
   const { setTheme, resolvedTheme } = useTheme();
   return (
     <DropdownMenu>
@@ -41,4 +41,4 @@ const ToggleThemeSelect = () => {
   );
 };
 
-export default ToggleThemeSelect;
+export default ToggleThemeDropDown;

@@ -1,11 +1,11 @@
 import { Button } from "./ui/button";
-import ToggleThemeSelect from "./ToggleThemeSelect";
+import NavbarDropDowns from "./NavbarDropDowns";
 
 const Header = () => {
   return (
-    <header className="fixed top-0 flex w-dvw gap-3 border-b border-neutral-800 bg-neutral-100 pb-2 pt-2 text-3xl dark:bg-neutral-950">
+    <header className="fixed top-0 flex w-dvw gap-3 border-b border-neutral-800 bg-neutral-100 px-10 pb-2 pt-2 text-3xl dark:bg-neutral-950">
       <div>Logo here</div>
-      <nav className="flex flex-1 justify-end pr-4">
+      <nav className="flex flex-1 justify-end pr-12">
         <ul className="flex flex-1 items-center justify-end gap-4 pr-12">
           <li>
             <Button
@@ -17,8 +17,8 @@ const Header = () => {
             </Button>
           </li>
         </ul>
-        <ToggleThemeSelect />
       </nav>
+      <NavbarDropDowns />
     </header>
   );
 };
