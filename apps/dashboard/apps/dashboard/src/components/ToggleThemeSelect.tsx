@@ -23,7 +23,7 @@ const ToggleThemeSelect = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-32 translate-y-3 rounded-md border-[1px] border-neutral-700 bg-transparent p-2 hover:bg-transparent"
+        className="w-32 translate-y-3 rounded-md border-[1px] border-neutral-700 bg-neutral-100 p-2 dark:bg-neutral-950"
         align="end"
       >
         {themeDropDownItems.map(({ Icon, text, theme }) => (
