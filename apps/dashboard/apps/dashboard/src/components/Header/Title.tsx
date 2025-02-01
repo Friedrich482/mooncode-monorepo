@@ -10,7 +10,7 @@ const Title = () => {
         href="/"
       >
         <Logo />
-        <p className="max-small:hidden font-bold">Mooncode</p>
+        <p className="font-bold max-small:hidden">Mooncode</p>
       </a>
     </div>
   );

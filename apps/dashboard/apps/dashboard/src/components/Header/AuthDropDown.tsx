@@ -1,4 +1,4 @@
-import Icon from "./Icon";
+import Icon from "../ui/Icon";
 import { User } from "lucide-react";
 
 const AuthDropDown = () => {

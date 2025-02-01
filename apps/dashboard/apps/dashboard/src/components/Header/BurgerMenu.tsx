@@ -1,4 +1,4 @@
-import Icon from "./Icon";
+import Icon from "../ui/Icon";
 import { Menu } from "lucide-react";
 import VerticalNavbar from "./VerticalNavbar";
 import useOutsideClick from "@/hooks/useOutsideClick";
