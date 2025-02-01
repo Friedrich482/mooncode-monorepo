@@ -5,7 +5,7 @@ import {
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
 import { Moon, Sun } from "lucide-react";
-import { Button } from "./ui/button";
+import Icon from "./Icon";
 import { themeDropDownItems } from "@/utils/constants";
 import { useTheme } from "./themeProvider";
 
@@ -14,13 +14,13 @@ const ToggleThemeDropDown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button className="flex size-10 flex-shrink-0 items-center justify-center border-none border-transparent bg-transparent p-0 text-white shadow-none hover:bg-accent hover:text-white [&_svg]:size-auto">
+        <Icon>
           {resolvedTheme === "dark" ? (
             <Moon className="size-5" />
           ) : (
             <Sun className="size-5" stroke="black" />
           )}
-        </Button>
+        </Icon>
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-32 translate-y-3 rounded-md border-[1px] border-neutral-700 bg-neutral-100 p-2 dark:bg-neutral-950"

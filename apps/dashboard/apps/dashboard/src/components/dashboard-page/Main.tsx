@@ -1,6 +1,6 @@
 const Main = () => {
   return (
-    <main className="px-20 text-red-600">
+    <main className="px-20 text-black dark:text-white">
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium
       voluptates ipsa dolorum, minima rerum autem veniam blanditiis accusantium
       fugit? Ex cupiditate saepe consectetur assumenda, tempore accusantium.

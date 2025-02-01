@@ -1,11 +1,11 @@
-import { Button } from "./ui/button";
+import Icon from "./Icon";
 import { User } from "lucide-react";
 
 const AuthDropDown = () => {
   return (
-    <Button className="flex size-10 flex-shrink-0 items-center justify-center border-none border-transparent bg-transparent p-0 text-white shadow-none hover:bg-accent hover:text-white [&_svg]:size-auto">
+    <Icon>
       <User />
-    </Button>
+    </Icon>
   );
 };
 export default AuthDropDown;
