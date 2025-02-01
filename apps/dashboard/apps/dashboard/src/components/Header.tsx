@@ -1,11 +1,12 @@
 import { Button } from "./ui/button";
+import Logo from "./Logo";
 import NavbarDropDowns from "./NavbarDropDowns";
 
 const Header = () => {
   return (
     <header className="fixed top-0 flex w-dvw gap-3 border-b border-neutral-800 bg-neutral-100 px-10 pb-2 pt-2 dark:bg-neutral-950">
       <a className="flex items-center justify-center gap-2 text-3xl" href="/">
-        <img src="/public/moon.svg" className="size-8" />
+        <Logo />
         <p className="font-bold">Mooncode</p>
       </a>
       <nav className="flex flex-1 justify-end pr-12">

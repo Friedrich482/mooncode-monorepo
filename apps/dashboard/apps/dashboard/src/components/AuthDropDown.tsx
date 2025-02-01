@@ -3,7 +3,7 @@ import { User } from "lucide-react";
 
 const AuthDropDown = () => {
   return (
-    <Icon>
+    <Icon className="text-black dark:text-white">
       <User />
     </Icon>
   );
