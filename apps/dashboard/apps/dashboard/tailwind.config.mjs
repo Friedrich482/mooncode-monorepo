@@ -52,6 +52,10 @@ export default {
         },
       },
     },
+    screens: {
+      small: "600px",
+      "very-small": "350px",
+    },
   },
   plugins: [require("tailwindcss-animate")],
 };
