@@ -27,5 +27,5 @@ export default tseslint.config(
       "no-unused-vars": "error",
       "sort-imports": "error",
     },
-  }
+  },
 );
