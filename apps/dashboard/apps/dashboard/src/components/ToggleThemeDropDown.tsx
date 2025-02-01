@@ -14,13 +14,7 @@ const ToggleThemeDropDown = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Icon>
-          {resolvedTheme === "dark" ? (
-            <Moon className="size-5" />
-          ) : (
-            <Sun className="size-5" stroke="black" />
-          )}
-        </Icon>
+        <Icon Icon={resolvedTheme === "dark" ? Moon : Sun} />
       </DropdownMenuTrigger>
       <DropdownMenuContent
         className="w-32 translate-y-3 rounded-md border-[1px] border-neutral-700 bg-neutral-100 p-2 dark:bg-neutral-950"

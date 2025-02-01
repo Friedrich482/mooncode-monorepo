@@ -12,9 +12,11 @@ const BurgerMenu = () => {
   };
   return (
     <>
-      <Icon className="max-small:flex hidden" onClick={handleClick}>
-        <Menu />
-      </Icon>
+      <Icon
+        className="hidden max-small:flex"
+        onClick={handleClick}
+        Icon={Menu}
+      />
       <VerticalNavbar isOpen={isOpen} handleClick={handleClick} />
     </>
   );

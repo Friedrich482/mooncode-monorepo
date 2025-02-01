@@ -14,7 +14,7 @@ const VerticalNavbar = ({
   return (
     <nav
       className={cn(
-        "max-small:flex absolute left-0 top-0 hidden h-dvh w-64 -translate-x-64 flex-col items-center justify-start gap-10 border-r border-r-neutral-700 bg-neutral-100 px-3 py-6 transition duration-300 ease-in-out dark:bg-neutral-950",
+        "absolute left-0 top-0 hidden h-dvh w-64 -translate-x-64 flex-col items-center justify-start gap-10 border-r border-r-neutral-700 bg-neutral-100 px-3 py-6 transition duration-300 ease-in-out dark:bg-neutral-950 max-small:flex",
         isOpen && "translate-x-0",
       )}
     >
@@ -26,9 +26,7 @@ const VerticalNavbar = ({
           <Logo />
           <p className="font-bold">Mooncode</p>
         </a>
-        <Icon onClick={handleClick}>
-          <X />
-        </Icon>
+        <Icon onClick={handleClick} Icon={X} />
       </div>
 
       <ul className="">
