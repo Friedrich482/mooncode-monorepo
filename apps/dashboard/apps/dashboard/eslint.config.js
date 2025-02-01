@@ -23,6 +23,7 @@ export default tseslint.config(
         "warn",
         { allowConstantExport: true },
       ],
+      "react-hooks/exhaustive-deps": "off",
       "no-throw-literal": "warn",
       "no-unused-vars": "error",
       "sort-imports": "error",
