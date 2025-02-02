@@ -36,7 +36,7 @@ export class DailyDataService {
 
   async findOneDailyData(userId: number, date: string) {
     const [oneDailyData] = await this.db
-      .select({ timeSpent: dailyData.timeSpent, id: dailyData.id })
+      .select({ id: dailyData.id, timeSpent: dailyData.timeSpent })
       .from(dailyData)
       .where(and(eq(dailyData.userId, userId), eq(dailyData.date, date)));
     return oneDailyData;
