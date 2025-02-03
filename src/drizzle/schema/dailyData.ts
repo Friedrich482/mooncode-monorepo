@@ -1,11 +1,15 @@
 import { InferSelectModel, relations } from "drizzle-orm";
-import { date, integer, pgTable } from "drizzle-orm/pg-core";
+import { date, integer, pgTable, text } from "drizzle-orm/pg-core";
 import { languages } from "./languages";
 import { timestamps } from "../columns.helpers";
+import { ulid } from "ulid";
 import { users } from "./users";
 
 export const dailyData = pgTable("daily_data", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => ulid()),
+
   userId: integer("user_id").notNull(),
   date: date().notNull(),
   timeSpent: integer("time_spent").notNull(),
