@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Request,
   UseGuards,
 } from "@nestjs/common";
@@ -29,7 +30,7 @@ export class DailyDataController {
   @Get()
   findOne(
     @Request() req: ExtendedRequest,
-    @Body() findOneDailyDataDto: FindOneDailyDataDto,
+    @Query() findOneDailyDataDto: FindOneDailyDataDto,
   ) {
     return this.dailyDataService.findOneDailyData(
       req.user.sub,
