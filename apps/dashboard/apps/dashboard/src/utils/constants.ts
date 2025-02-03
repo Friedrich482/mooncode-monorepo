@@ -1,4 +1,5 @@
 import { LucideProps, Monitor, Moon, Sun } from "lucide-react";
+import { Period } from "./types-schemas";
 import { Theme } from "@/components/themeProvider";
 
 export const themeDropDownItems: {
@@ -12,4 +13,12 @@ export const themeDropDownItems: {
   { text: "Light", Icon: Sun, theme: "light" },
   { text: "Dark", Icon: Moon, theme: "dark", fill: "white" },
   { text: "System", Icon: Monitor, theme: "system" },
+];
+export const periodDropDownItems: Period[] = [
+  "Today",
+  "Yesterday",
+  "Last 3 days",
+  "Past week",
+  "Past two weeks",
+  "Previous month",
 ];
