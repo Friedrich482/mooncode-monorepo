@@ -17,7 +17,7 @@ export class LanguagesController {
     return this.languagesService.findAll();
   }
 
-  findOne(@Body() dailyDataId: number, languageName: string) {
+  findOne(@Body() dailyDataId: string, languageName: string) {
     return this.languagesService.findOneLanguage(dailyDataId, languageName);
   }
 

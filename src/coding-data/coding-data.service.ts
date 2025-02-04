@@ -18,12 +18,12 @@ export class CodingDataService {
     return `This action returns a #${id} codingDatum`;
   }
 
-  async upsert(id: number, updateCodingDataDto: CodingDataDto) {
+  async upsert(id: string, updateCodingDataDto: CodingDataDto) {
     const { timeSpentPerLanguage, timeSpentToday } = updateCodingDataDto;
     const todaySDate = new Date().toISOString();
 
     const returningDailyData = {
-      dailyDataId: 0,
+      dailyDataId: "",
       timeSpentToday: 0,
       date: todaySDate,
     };

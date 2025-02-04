@@ -8,9 +8,9 @@ import { users } from "./users";
 export const dailyData = pgTable("daily_data", {
   id: text("id")
     .primaryKey()
+    .notNull()
     .$defaultFn(() => ulid()),
-
-  userId: integer("user_id").notNull(),
+  userId: text("user_id").notNull(),
   date: date().notNull(),
   timeSpent: integer("time_spent").notNull(),
   ...timestamps,

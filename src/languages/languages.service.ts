@@ -32,7 +32,7 @@ export class LanguagesService {
     return `This action returns all languages`;
   }
 
-  async findOneLanguage(dailyDataId: number, languageName: string) {
+  async findOneLanguage(dailyDataId: string, languageName: string) {
     const [languageData] = await this.db
       .select({
         timeSpent: languages.timeSpent,

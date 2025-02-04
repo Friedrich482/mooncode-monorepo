@@ -7,8 +7,9 @@ import { ulid } from "ulid";
 export const languages = pgTable("languages", {
   id: text("id")
     .primaryKey()
+    .notNull()
     .$defaultFn(() => ulid()),
-  dailyDataId: integer("daily_time_id").notNull(),
+  dailyDataId: text("daily_time_id").notNull(),
   languageName: text("language_name").notNull(),
   timeSpent: integer("time_spent").notNull().default(0),
   ...timestamps,

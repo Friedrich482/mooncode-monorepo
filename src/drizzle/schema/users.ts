@@ -7,6 +7,7 @@ import { ulid } from "ulid";
 export const users = pgTable("users", {
   id: text("id")
     .primaryKey()
+    .notNull()
     .$defaultFn(() => ulid()),
   username: text("name").notNull().unique(),
   email: text("email").notNull().unique(),

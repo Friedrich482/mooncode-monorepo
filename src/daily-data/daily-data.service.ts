@@ -34,7 +34,7 @@ export class DailyDataService {
     return `This action returns all dailyData`;
   }
 
-  async findOneDailyData(userId: number, date: string) {
+  async findOneDailyData(userId: string, date: string) {
     const [oneDailyData] = await this.db
       .select({ id: dailyData.id, timeSpent: dailyData.timeSpent })
       .from(dailyData)

@@ -5,7 +5,7 @@ export type codingData = {
 
 export type ExtendedRequest = Request & {
   user: {
-    sub: number;
+    sub: string;
     username: string;
   };
 };

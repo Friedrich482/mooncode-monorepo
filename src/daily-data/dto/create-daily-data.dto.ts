@@ -5,7 +5,7 @@ export class CreateDailyDataDto
   implements Pick<DailyData, "userId" | "timeSpent">
 {
   @IsNumber()
-  readonly userId!: number;
+  readonly userId!: string;
 
   @IsNumber()
   readonly timeSpent!: number;

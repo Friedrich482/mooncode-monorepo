@@ -51,7 +51,7 @@ export class UsersService {
       });
     return userCreated;
   }
-  async findOne(id: number) {
+  async findOne(id: string) {
     const [user] = await this.db
       .select({
         email: users.email,
@@ -82,7 +82,7 @@ export class UsersService {
     return user;
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto) {
     if (Object.keys(updateUserDto).length === 0) {
       throw new BadRequestException("You need to specify at least one field");
     }

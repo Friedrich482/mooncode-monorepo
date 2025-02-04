@@ -5,7 +5,7 @@ export class CreateLanguageDto
   implements Pick<Language, "dailyDataId" | "languageName" | "timeSpent">
 {
   @IsNumber()
-  readonly dailyDataId!: number;
+  readonly dailyDataId!: string;
 
   @IsNumber()
   readonly timeSpent!: number;
