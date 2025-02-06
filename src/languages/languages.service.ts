@@ -28,8 +28,15 @@ export class LanguagesService {
     return createdLanguageData;
   }
 
-  findAll() {
-    return `This action returns all languages`;
+  async findAllLanguages(dailyDataId: string) {
+    const languagesData = await this.db
+      .select({
+        timeSpent: languages.timeSpent,
+        languageName: languages.languageName,
+      })
+      .from(languages)
+      .where(eq(languages.dailyDataId, dailyDataId));
+    return languagesData;
   }
 
   async findOneLanguage(dailyDataId: string, languageName: string) {

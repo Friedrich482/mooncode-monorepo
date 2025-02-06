@@ -26,9 +26,10 @@ export class CodingDataController {
     return this.codingDataService.upsert(req.user.sub, updateCodingDataDto);
   }
 
-  @Get()
-  findAll() {
-    return this.codingDataService.findAll();
+  @UseGuards(AuthGuard)
+  @Get("all/today")
+  findAll(@Request() req: ExtendedRequest) {
+    return this.codingDataService.findAllToday(req.user.sub);
   }
 
   @Get(":id")

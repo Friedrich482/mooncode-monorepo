@@ -10,8 +10,22 @@ export class CodingDataService {
     private languagesService: LanguagesService,
   ) {}
 
-  findAll() {
-    return `This action returns all codingData`;
+  async findAllToday(userId: string) {
+    const date = new Date().toISOString();
+    const todayDailyData = await this.dailyDataService.findOneDailyData(
+      userId,
+      date,
+    );
+    if (!todayDailyData?.id) {
+      return {
+        timeSpentToday: 0,
+        todayLanguages: [],
+      };
+    }
+    const todayLanguages = await this.languagesService.findAllLanguages(
+      todayDailyData.id,
+    );
+    return { timeSpentToday: todayDailyData.timeSpent, todayLanguages };
   }
 
   findOne(id: number) {
