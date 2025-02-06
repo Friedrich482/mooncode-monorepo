@@ -9,7 +9,7 @@ export type LanguageData = {
   isFrozen: boolean;
 };
 export type LanguagesData = Record<string, LanguageData>;
-export const MAX_IDLE_TIME = 60;
+export const MAX_IDLE_TIME = 600; //seconds
 
 export const loginResponseSchema = z.object({
   access_token: z.string().min(6),

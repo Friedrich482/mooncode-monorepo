@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
-import getTime from "./utils/getTime";
-import getToken from "./utils/getToken";
+import getTime from "./getTime";
+import getToken from "./getToken";
 
 const periodicSyncData = async (
   context: vscode.ExtensionContext,
@@ -9,10 +9,14 @@ const periodicSyncData = async (
 ) => {
   const timeGetter = getTime();
   const timeSpentPerLanguage = Object.fromEntries(
-    Object.entries(timeGetter()).map(([key, { elapsedTime }]) => [
-      key,
-      elapsedTime,
-    ])
+    Object.entries(timeGetter()).map(([key, { elapsedTime }]) => {
+      const now = new Date();
+      // check if it is 00:00
+      if (now.getHours() === 0 && now.getMinutes() === 0) {
+        return [key, 0];
+      }
+      return [key, elapsedTime];
+    })
   );
   const timeSpentToday = Object.values(timeSpentPerLanguage).reduce(
     (acc, value) => acc + value,
@@ -22,7 +26,7 @@ const periodicSyncData = async (
   const hoursSpentToday = Math.floor(timeSpentToday / 3600);
 
   const authToken = await getToken(context);
-
+  // all times are sent in minutes
   const res = await fetch("http://localhost:3000/api/coding-data", {
     method: "POST",
     headers: {
@@ -30,11 +34,11 @@ const periodicSyncData = async (
       Authorization: `Bearer ${authToken}`,
     },
     body: JSON.stringify({
-      timeSpentToday,
+      timeSpentToday: minutesSpentToday,
       timeSpentPerLanguage: Object.fromEntries(
         Object.entries(timeGetter()).map(([key, { elapsedTime }]) => [
           key,
-          elapsedTime,
+          Math.floor((elapsedTime % 3600) / 60),
         ])
       ),
     }),

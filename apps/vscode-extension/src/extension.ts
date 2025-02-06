@@ -4,7 +4,7 @@ import getTime from "./utils/getTime";
 import login from "./utils/login";
 import logout from "./utils/logout";
 import openDashBoard from "./utils/openDashBoard";
-import periodicSyncData from "./periodicSyncData";
+import periodicSyncData from "./utils/periodicSyncData";
 import register from "./utils/register";
 
 export function activate(context: vscode.ExtensionContext) {
