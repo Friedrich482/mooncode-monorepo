@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const timeSpentTodaySchema = z.object({
-  id: z.number().min(0),
+  id: z.string().min(6),
   timeSpent: z.number().min(0),
 });
 
