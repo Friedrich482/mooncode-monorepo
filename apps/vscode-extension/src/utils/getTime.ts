@@ -21,7 +21,7 @@ const getTime = (): (() => LanguagesData) => {
   const idleCheckInterval = setInterval(() => {
     const now = performance.now();
     const latestLanguage =
-      vscode.window.activeTextEditor?.document.languageId || "Other";
+      vscode.window.activeTextEditor?.document.languageId || "other";
 
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];
@@ -70,20 +70,20 @@ const getTime = (): (() => LanguagesData) => {
 
   const activityListeners = [
     vscode.workspace.onDidChangeTextDocument((event) => {
-      const language = event.document.languageId || "Other";
+      const language = event.document.languageId || "other";
       const languageData = updateLanguageData(language);
       languageData.lastActivityTime = performance.now();
     }),
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor) {
-        const language = editor.document.languageId || "Other";
+        const language = editor.document.languageId || "other";
         const languageData = updateLanguageData(language);
         languageData.lastActivityTime = performance.now();
       }
     }),
     vscode.window.onDidChangeVisibleTextEditors((editors) => {
       if (editors.length > 0) {
-        const language = editors[0].document.languageId || "Other";
+        const language = editors[0].document.languageId || "other";
         const languageData = updateLanguageData(language);
         languageData.lastActivityTime = performance.now();
       }
