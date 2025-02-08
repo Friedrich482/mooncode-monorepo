@@ -25,5 +25,14 @@ export const failedOperationResponseSchema = z.object({
   message: z.string().min(1),
 });
 
+export const fetchInitialLanguagesDataSchema = z.object({
+  timeSpentToday: z.number(),
+  todayLanguages: z.array(
+    z.object({ timeSpent: z.number(), languageName: z.string() })
+  ),
+});
+
 export const localUrlPort = 4208;
 export const localUrl = `http://localhost:${localUrlPort}`;
+
+export let languagesData: LanguagesData = {};

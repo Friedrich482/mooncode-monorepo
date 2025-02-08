@@ -1,8 +1,5 @@
 import * as vscode from "vscode";
-import { LanguagesData, MAX_IDLE_TIME } from "../constants";
-
-// get today's data from the server here
-const languagesData: LanguagesData = {};
+import { LanguagesData, MAX_IDLE_TIME, languagesData } from "../constants";
 
 const updateLanguageData = (language: string) => {
   if (!languagesData[language]) {

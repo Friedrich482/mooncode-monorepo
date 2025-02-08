@@ -12,6 +12,18 @@ export function activate(context: vscode.ExtensionContext) {
     "MoonCode starts now tracking your coding time"
   );
 
+  // const initialLanguagesData = await fetchInitialLanguagesData(context);
+  // initialLanguagesData.forEach(({ timeSpent, languageName }) => {
+  //   languagesData[languageName] = {
+  //     elapsedTime: timeSpent,
+  //     freezeStartTime: null,
+  //     frozenTime: null,
+  //     isFrozen: false,
+  //     lastActivityTime: 0,
+  //     startTime: 0,
+  //   };
+  // });
+
   const timeGetter = getTime();
   let languagesData = timeGetter();
   let body: unknown;
