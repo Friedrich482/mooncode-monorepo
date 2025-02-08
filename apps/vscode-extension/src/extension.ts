@@ -16,17 +16,18 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const initialLanguagesData = await fetchInitialLanguagesData(context);
   initialLanguagesData.forEach(({ timeSpent, languageName }) => {
+    const now = performance.now();
+    const elapsedTimeInSeconds = timeSpent * 60;
+
     languagesData[languageName] = {
-      elapsedTime: timeSpent * 60,
+      elapsedTime: elapsedTimeInSeconds,
       freezeStartTime: null,
       frozenTime: null,
       isFrozen: false,
-      lastActivityTime: performance.now(),
-      startTime: performance.now() + timeSpent * 60,
+      lastActivityTime: now,
+      startTime: now - elapsedTimeInSeconds * 1000,
     };
   });
-
-  vscode.window.showInformationMessage(JSON.stringify(languagesData));
 
   const timeGetter = getTime();
   let currentLanguagesData = timeGetter();
@@ -39,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
       vscode.window.showInformationMessage(
         `${JSON.stringify(currentLanguagesData)}`
       );
-      // vscode.window.showInformationMessage(`${JSON.stringify(body)}`);
+      vscode.window.showInformationMessage(`${JSON.stringify(body)}`);
     }
   );
   const disposable2 = vscode.commands.registerCommand(
