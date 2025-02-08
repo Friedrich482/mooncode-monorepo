@@ -20,13 +20,28 @@ const getTime = (): (() => LanguagesData) => {
 
   const idleCheckInterval = setInterval(() => {
     const now = performance.now();
+    const latestLanguage =
+      vscode.window.activeTextEditor?.document.languageId || "Other";
 
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];
+
+      if (language !== latestLanguage) {
+        // Immediately freeze non-active languages
+        if (!languageData.isFrozen) {
+          languageData.frozenTime = Math.floor(
+            (now - languageData.startTime) / 1000
+          );
+          languageData.freezeStartTime = now;
+          languageData.isFrozen = true;
+        }
+        return; // Skip the rest of the checks for non-active languages
+      }
+
+      // Only check idle time for the active language
       const idleDuration = Math.floor(
         (now - languageData.lastActivityTime) / 1000
       );
-
       if (idleDuration >= MAX_IDLE_TIME && !languageData.isFrozen) {
         languageData.frozenTime = Math.floor(
           (now - languageData.startTime) / 1000

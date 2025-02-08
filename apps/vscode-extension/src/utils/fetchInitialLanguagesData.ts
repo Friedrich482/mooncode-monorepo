@@ -11,11 +11,12 @@ const fetchInitialLanguagesData = async (context: vscode.ExtensionContext) => {
     },
   });
   const data = await res.json();
-  vscode.window.showErrorMessage(JSON.stringify(data));
+
   const parsedData = fetchInitialLanguagesDataSchema.safeParse(data);
   if (!parsedData.success) {
     throw new Error("Incorrect data type");
   }
+
   return parsedData.data.todayLanguages;
 };
 

@@ -1,39 +1,45 @@
 import * as vscode from "vscode";
 import addStatusBarItem from "./utils/addStatusBarItem";
+import fetchInitialLanguagesData from "./utils/fetchInitialLanguagesData";
 import getTime from "./utils/getTime";
+import { languagesData } from "./constants";
 import login from "./utils/login";
 import logout from "./utils/logout";
 import openDashBoard from "./utils/openDashBoard";
 import periodicSyncData from "./utils/periodicSyncData";
 import register from "./utils/register";
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
   vscode.window.showInformationMessage(
     "MoonCode starts now tracking your coding time"
   );
 
-  // const initialLanguagesData = await fetchInitialLanguagesData(context);
-  // initialLanguagesData.forEach(({ timeSpent, languageName }) => {
-  //   languagesData[languageName] = {
-  //     elapsedTime: timeSpent,
-  //     freezeStartTime: null,
-  //     frozenTime: null,
-  //     isFrozen: false,
-  //     lastActivityTime: 0,
-  //     startTime: 0,
-  //   };
-  // });
+  const initialLanguagesData = await fetchInitialLanguagesData(context);
+  initialLanguagesData.forEach(({ timeSpent, languageName }) => {
+    languagesData[languageName] = {
+      elapsedTime: timeSpent * 60,
+      freezeStartTime: null,
+      frozenTime: null,
+      isFrozen: false,
+      lastActivityTime: performance.now(),
+      startTime: performance.now() + timeSpent * 60,
+    };
+  });
+
+  vscode.window.showInformationMessage(JSON.stringify(languagesData));
 
   const timeGetter = getTime();
-  let languagesData = timeGetter();
+  let currentLanguagesData = timeGetter();
   let body: unknown;
 
   const disposable = vscode.commands.registerCommand(
     "MoonCode.showData",
     () => {
-      languagesData = timeGetter();
-      vscode.window.showInformationMessage(`${JSON.stringify(languagesData)}`);
-      vscode.window.showInformationMessage(`${JSON.stringify(body)}`);
+      currentLanguagesData = timeGetter();
+      vscode.window.showInformationMessage(
+        `${JSON.stringify(currentLanguagesData)}`
+      );
+      // vscode.window.showInformationMessage(`${JSON.stringify(body)}`);
     }
   );
   const disposable2 = vscode.commands.registerCommand(
