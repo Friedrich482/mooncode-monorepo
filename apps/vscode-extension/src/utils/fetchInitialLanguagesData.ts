@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { fetchInitialLanguagesDataSchema } from "../constants";
+import { fetchInitialLanguagesDataSchema } from "../types-schemas";
 import getToken from "./getToken";
 
 const fetchInitialLanguagesData = async (context: vscode.ExtensionContext) => {

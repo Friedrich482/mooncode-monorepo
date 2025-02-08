@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
-import { LanguagesData, MAX_IDLE_TIME, languagesData } from "../constants";
+import { MAX_IDLE_TIME, languagesData } from "../constants";
+import { type LanguagesData } from "../types-schemas";
 
 const updateLanguageData = (language: string) => {
   if (!languagesData[language]) {

@@ -1,7 +1,8 @@
 import {
   failedOperationResponseSchema,
   registerResponseSchema,
-} from "../constants";
+} from "../types-schemas";
+
 const createUser = async (
   username: string,
   password: string,

@@ -1,7 +1,7 @@
 import {
   failedOperationResponseSchema,
   loginResponseSchema,
-} from "../constants";
+} from "../types-schemas";
 
 const fetchToken = async (username: string, password: string) => {
   const res = await fetch("http://localhost:3000/api/auth/login", {
