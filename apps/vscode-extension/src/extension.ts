@@ -17,15 +17,14 @@ export async function activate(context: vscode.ExtensionContext) {
   const initialLanguagesData = await fetchInitialLanguagesData(context);
   initialLanguagesData.forEach(({ timeSpent, languageName }) => {
     const now = performance.now();
-    const elapsedTimeInSeconds = timeSpent * 60;
 
     languagesData[languageName] = {
-      elapsedTime: elapsedTimeInSeconds,
+      elapsedTime: timeSpent,
       freezeStartTime: null,
       frozenTime: null,
       isFrozen: false,
       lastActivityTime: now,
-      startTime: now - elapsedTimeInSeconds * 1000,
+      startTime: now - timeSpent * 1000,
     };
   });
 

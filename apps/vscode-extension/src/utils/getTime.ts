@@ -27,6 +27,24 @@ const getTime = (): (() => LanguagesData) => {
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];
 
+      // check if it is 00:00
+      const date = new Date();
+      if (
+        date.getHours() === 0 &&
+        date.getMinutes() === 0 &&
+        date.getSeconds() === 0
+      ) {
+        languagesData[language] = {
+          elapsedTime: 0,
+          startTime: performance.now(),
+          lastActivityTime: performance.now(),
+          frozenTime: null,
+          freezeStartTime: null,
+          isFrozen: false,
+        };
+        return;
+      }
+
       if (language !== latestLanguage) {
         // Immediately freeze non-active languages
         if (!languageData.isFrozen) {
