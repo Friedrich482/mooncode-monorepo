@@ -17,7 +17,7 @@ const fetchInitialLanguagesData = async (context: vscode.ExtensionContext) => {
     throw new Error("Incorrect data type");
   }
 
-  return parsedData.data.todayLanguages;
+  return parsedData.data;
 };
 
 export default fetchInitialLanguagesData;

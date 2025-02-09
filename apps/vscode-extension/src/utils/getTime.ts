@@ -27,12 +27,12 @@ const getTime = (): (() => LanguagesData) => {
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];
 
-      // check if it is 00:00
+      // reset the timer at 00:00
       const date = new Date();
       if (
         date.getHours() === 0 &&
         date.getMinutes() === 0 &&
-        date.getSeconds() === 0
+        date.getSeconds() < 10
       ) {
         languagesData[language] = {
           elapsedTime: 0,

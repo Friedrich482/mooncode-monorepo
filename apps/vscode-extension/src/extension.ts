@@ -8,13 +8,20 @@ import logout from "./utils/logout";
 import openDashBoard from "./utils/openDashBoard";
 import periodicSyncData from "./utils/periodicSyncData";
 import register from "./utils/register";
+import setStatusBarItem from "./utils/setStatusBarItem";
 
 export async function activate(context: vscode.ExtensionContext) {
   vscode.window.showInformationMessage(
     "MoonCode starts now tracking your coding time"
   );
 
-  const initialLanguagesData = await fetchInitialLanguagesData(context);
+  const statusBarItem = addStatusBarItem();
+
+  const { timeSpentToday, todayLanguages: initialLanguagesData } =
+    await fetchInitialLanguagesData(context);
+
+  setStatusBarItem(timeSpentToday, statusBarItem);
+
   initialLanguagesData.forEach(({ timeSpent, languageName }) => {
     const now = performance.now();
 
@@ -64,8 +71,6 @@ export async function activate(context: vscode.ExtensionContext) {
     "MoonCode.openDashBoard",
     openDashBoard
   );
-
-  const statusBarItem = addStatusBarItem();
 
   setInterval(async () => {
     body = await periodicSyncData(context, body, statusBarItem);
