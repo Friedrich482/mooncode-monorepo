@@ -2,13 +2,14 @@ import {
   failedOperationResponseSchema,
   registerResponseSchema,
 } from "../types-schemas";
+import { REGISTER_URL } from "../constants";
 
 const createUser = async (
   username: string,
   password: string,
   email: string
 ) => {
-  const res = await fetch("http://localhost:3000/api/auth/register", {
+  const res = await fetch(REGISTER_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

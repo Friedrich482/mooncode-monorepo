@@ -2,9 +2,10 @@ import {
   failedOperationResponseSchema,
   loginResponseSchema,
 } from "../types-schemas";
+import { LOGIN_URL } from "../constants";
 
 const fetchToken = async (username: string, password: string) => {
-  const res = await fetch("http://localhost:3000/api/auth/login", {
+  const res = await fetch(LOGIN_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
