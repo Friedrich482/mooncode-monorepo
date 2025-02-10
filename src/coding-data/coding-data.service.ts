@@ -19,7 +19,7 @@ export class CodingDataService {
     if (!todayDailyData?.id) {
       return {
         timeSpentToday: 0,
-        todayLanguages: [],
+        todayLanguages: {},
       };
     }
     const todayLanguages = await this.languagesService.findAllLanguages(
@@ -65,10 +65,7 @@ export class CodingDataService {
       returningDailyData.date = updatedTimeSpentToday.date;
     }
 
-    const languagesData: {
-      timeSpent: number;
-      languageName: string;
-    }[] = [];
+    const languagesData: Record<string, number> = {};
 
     for (const [key, value] of Object.entries(timeSpentPerLanguage)) {
       const existingLanguageData = await this.languagesService.findOneLanguage(
@@ -82,7 +79,8 @@ export class CodingDataService {
           timeSpent: value,
           languageName: key,
         });
-        languagesData.push(createdLanguageData);
+        languagesData[createdLanguageData.languageName] =
+          createdLanguageData.timeSpent;
       } else {
         // else update it
         const updatedLanguageData = await this.languagesService.updateLanguage({
@@ -90,7 +88,8 @@ export class CodingDataService {
           dailyDataId: returningDailyData.dailyDataId,
           languageName: key,
         });
-        languagesData.push(updatedLanguageData);
+        languagesData[updatedLanguageData.languageName] =
+          updatedLanguageData.timeSpent;
       }
     }
     const { timeSpentToday: returningTimeSpentToday, date } =
