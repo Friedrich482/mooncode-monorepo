@@ -40,7 +40,7 @@ export async function activate(context: vscode.ExtensionContext) {
   let currentLanguagesData = timeGetter();
   let body: unknown;
 
-  const disposable = vscode.commands.registerCommand(
+  const showDataCommand = vscode.commands.registerCommand(
     "MoonCode.showData",
     () => {
       currentLanguagesData = timeGetter();
@@ -50,25 +50,25 @@ export async function activate(context: vscode.ExtensionContext) {
       vscode.window.showInformationMessage(`${JSON.stringify(body)}`);
     }
   );
-  const disposable2 = vscode.commands.registerCommand(
+  const loginCommand = vscode.commands.registerCommand(
     "MoonCode.login",
     async () => {
       await login(context);
     }
   );
-  const disposable3 = vscode.commands.registerCommand(
+  const registerCommand = vscode.commands.registerCommand(
     "MoonCode.register",
     async () => {
       await register(context);
     }
   );
-  const disposable4 = vscode.commands.registerCommand(
+  const logoutCommand = vscode.commands.registerCommand(
     "MoonCode.logout",
     async () => {
       await logout(context);
     }
   );
-  const disposable5 = vscode.commands.registerCommand(
+  const openDashBoardCommand = vscode.commands.registerCommand(
     "MoonCode.openDashBoard",
     openDashBoard
   );
@@ -78,11 +78,11 @@ export async function activate(context: vscode.ExtensionContext) {
   }, 60000);
 
   context.subscriptions.push(
-    disposable,
-    disposable2,
-    disposable3,
-    disposable4,
-    disposable5,
+    showDataCommand,
+    loginCommand,
+    registerCommand,
+    logoutCommand,
+    openDashBoardCommand,
     statusBarItem
   );
 }
