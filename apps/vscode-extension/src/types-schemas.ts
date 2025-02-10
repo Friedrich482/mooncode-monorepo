@@ -26,7 +26,5 @@ export const failedOperationResponseSchema = z.object({
 
 export const fetchInitialLanguagesDataSchema = z.object({
   timeSpentToday: z.number(),
-  todayLanguages: z.array(
-    z.object({ timeSpent: z.number(), languageName: z.string() })
-  ),
+  todayLanguages: z.record(z.string().min(1), z.number().min(0)),
 });

@@ -22,7 +22,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
   setStatusBarItem(timeSpentToday, statusBarItem);
 
-  initialLanguagesData.forEach(({ timeSpent, languageName }) => {
+  Object.keys(initialLanguagesData).forEach((languageName) => {
+    const timeSpent = initialLanguagesData[languageName];
     const now = performance.now();
 
     languagesData[languageName] = {
