@@ -1,11 +1,15 @@
-import { integer, pgTable, text } from "drizzle-orm/pg-core";
+import { InferSelectModel, relations } from "drizzle-orm";
+import { pgTable, text } from "drizzle-orm/pg-core";
 import { dailyData } from "./dailyData";
-import { relations } from "drizzle-orm";
 import { timestamps } from "../columns.helpers";
+import { ulid } from "ulid";
 
 export const users = pgTable("users", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  pseudo: text("name").notNull(),
+  id: text("id")
+    .primaryKey()
+    .notNull()
+    .$defaultFn(() => ulid()),
+  username: text("name").notNull().unique(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   profilePicture: text("profile_picture").notNull(),
@@ -15,3 +19,5 @@ export const users = pgTable("users", {
 export const usersRelations = relations(users, ({ many }) => ({
   dailyData: many(dailyData),
 }));
+
+export type User = InferSelectModel<typeof users>;
