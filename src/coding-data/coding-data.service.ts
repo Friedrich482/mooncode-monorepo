@@ -13,23 +13,24 @@ export class CodingDataService {
   ) {}
 
   async findDaily(userId: string, offset: number = 0) {
-    // TODO change the timeSpentToday to timeSpent
     const targetDate = getDayWithOffset(offset);
 
-    const todayDailyData = await this.dailyDataService.findOneDailyData(
+    const dayData = await this.dailyDataService.findOneDailyData(
       userId,
       targetDate,
     );
-    if (!todayDailyData?.id) {
+
+    if (!dayData?.id) {
       return {
-        timeSpentToday: 0,
-        todayLanguages: {},
+        timeSpent: 0,
+        dayLanguages: {},
       };
     }
-    const todayLanguages = await this.languagesService.findAllLanguages(
-      todayDailyData.id,
+
+    const dayLanguages = await this.languagesService.findAllLanguages(
+      dayData.id,
     );
-    return { timeSpentToday: todayDailyData.timeSpent, todayLanguages };
+    return { timeSpent: dayData.timeSpent, dayLanguages };
   }
 
   async findWeekly(userId: string, offset: number = 0) {
@@ -39,12 +40,23 @@ export class CodingDataService {
       start,
       end,
     );
+
     const timeSpent = weekData
       .map((day) => day.timeSpent)
       .reduce((acc, curr) => acc + curr, 0);
 
-    // const weekLanguagesTime = await this.languagesService.findAllLanguages()
-    return timeSpent;
+    const weekLanguagesTime = (
+      await Promise.all(
+        weekData.map(({ id }) => this.languagesService.findAllLanguages(id)),
+      )
+    ).reduce((acc, dayStats) => {
+      Object.keys(dayStats).forEach((language) => {
+        acc[language] = (acc[language] || 0) + dayStats[language];
+      });
+      return acc;
+    }, {});
+
+    return { timeSpent, weekLanguagesTime };
   }
 
   findOne(id: number) {
