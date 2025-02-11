@@ -2,6 +2,8 @@ import { CodingDataDto } from "./dto/coding-data.dto";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
+import getDayWithOffset from "src/utils/getDayWithOffset";
+import getWeekWithOffset from "src/utils/getWeekWithOffset";
 
 @Injectable()
 export class CodingDataService {
@@ -10,11 +12,13 @@ export class CodingDataService {
     private languagesService: LanguagesService,
   ) {}
 
-  async findAllToday(userId: string) {
-    const date = new Date().toISOString();
+  async findDaily(userId: string, offset: number = 0) {
+    // TODO change the timeSpentToday to timeSpent
+    const targetDate = getDayWithOffset(offset);
+
     const todayDailyData = await this.dailyDataService.findOneDailyData(
       userId,
-      date,
+      targetDate,
     );
     if (!todayDailyData?.id) {
       return {
@@ -26,6 +30,21 @@ export class CodingDataService {
       todayDailyData.id,
     );
     return { timeSpentToday: todayDailyData.timeSpent, todayLanguages };
+  }
+
+  async findWeekly(userId: string, offset: number = 0) {
+    const { start, end } = getWeekWithOffset(offset);
+    const weekData = await this.dailyDataService.findRangeDailyData(
+      userId,
+      start,
+      end,
+    );
+    const timeSpent = weekData
+      .map((day) => day.timeSpent)
+      .reduce((acc, curr) => acc + curr, 0);
+
+    // const weekLanguagesTime = await this.languagesService.findAllLanguages()
+    return timeSpent;
   }
 
   findOne(id: number) {

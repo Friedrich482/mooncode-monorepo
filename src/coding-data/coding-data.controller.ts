@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Request,
   UseGuards,
 } from "@nestjs/common";
@@ -12,6 +13,7 @@ import { AuthGuard } from "src/auth/auth.guard";
 import { CodingDataDto } from "./dto/coding-data.dto";
 import { CodingDataService } from "./coding-data.service";
 import { ExtendedRequest } from "src/types";
+import { TimeOffsetDto } from "./dto/time-offset-dto";
 
 @Controller("coding-data")
 export class CodingDataController {
@@ -27,9 +29,15 @@ export class CodingDataController {
   }
 
   @UseGuards(AuthGuard)
-  @Get("all/today")
-  findAll(@Request() req: ExtendedRequest) {
-    return this.codingDataService.findAllToday(req.user.sub);
+  @Get("daily")
+  findDaily(@Request() req: ExtendedRequest, @Query() query: TimeOffsetDto) {
+    return this.codingDataService.findDaily(req.user.sub, query.offset);
+  }
+
+  @UseGuards(AuthGuard)
+  @Get("weekly")
+  findWeekly(@Request() req: ExtendedRequest, @Query() query: TimeOffsetDto) {
+    return this.codingDataService.findWeekly(req.user.sub, query.offset);
   }
 
   @Get(":id")

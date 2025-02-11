@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq } from "drizzle-orm";
+import { and, between, eq } from "drizzle-orm";
 import { CreateDailyDataDto } from "./dto/create-daily-data.dto";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
@@ -40,6 +40,17 @@ export class DailyDataService {
       .from(dailyData)
       .where(and(eq(dailyData.userId, userId), eq(dailyData.date, date)));
     return oneDailyData;
+  }
+  async findRangeDailyData(userId: string, start: string, end: string) {
+    return await this.db
+      .select({
+        id: dailyData.id,
+        timeSpent: dailyData.timeSpent,
+      })
+      .from(dailyData)
+      .where(
+        and(eq(dailyData.userId, userId), between(dailyData.date, start, end)),
+      );
   }
 
   async updateDailyData(updateDailyDataDto: UpdateDailyDataDto) {
