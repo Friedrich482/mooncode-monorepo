@@ -9,3 +9,5 @@ export type ExtendedRequest = Request & {
     username: string;
   };
 };
+
+export type Date = string;

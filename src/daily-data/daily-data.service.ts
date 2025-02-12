@@ -46,6 +46,7 @@ export class DailyDataService {
       .select({
         id: dailyData.id,
         timeSpent: dailyData.timeSpent,
+        date: dailyData.date,
       })
       .from(dailyData)
       .where(

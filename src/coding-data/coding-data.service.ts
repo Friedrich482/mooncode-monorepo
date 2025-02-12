@@ -1,5 +1,6 @@
 import { CodingDataDto } from "./dto/coding-data.dto";
 import { DailyDataService } from "src/daily-data/daily-data.service";
+import { Date } from "src/types";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
 import getDayWithOffset from "src/utils/getDayWithOffset";
@@ -45,6 +46,23 @@ export class CodingDataService {
       .map((day) => day.timeSpent)
       .reduce((acc, curr) => acc + curr, 0);
 
+    const daysOfWeekStats: Record<
+      Date,
+      {
+        timeSpent: number;
+        languages: Record<string, number>;
+      }
+    > = {};
+
+    await Promise.all(
+      weekData.map(async ({ id, timeSpent, date }) => {
+        daysOfWeekStats[date] = {
+          timeSpent,
+          languages: await this.languagesService.findAllLanguages(id),
+        };
+      }),
+    );
+
     const weekLanguagesTime = (
       await Promise.all(
         weekData.map(({ id }) => this.languagesService.findAllLanguages(id)),
@@ -56,7 +74,7 @@ export class CodingDataService {
       return acc;
     }, {});
 
-    return { timeSpent, weekLanguagesTime };
+    return { timeSpent, weekLanguagesTime, daysOfWeekStats };
   }
 
   findOne(id: number) {
