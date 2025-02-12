@@ -8,7 +8,7 @@ export const localUrl = `http://localhost:${localUrlPort}`;
 export let languagesData: LanguagesData = {};
 
 export const INITIAL_DATA_URL =
-  "http://localhost:3000/api/coding-data/all/today";
+  "http://localhost:3000/api/coding-data/daily?offset=0";
 
 export const PERIODIC_DATA_SYNC_URL = "http://localhost:3000/api/coding-data";
 

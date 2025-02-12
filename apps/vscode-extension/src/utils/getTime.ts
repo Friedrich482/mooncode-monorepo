@@ -30,9 +30,9 @@ const getTime = (): (() => LanguagesData) => {
       // reset the timer at 00:00
       const date = new Date();
       if (
-        date.getHours() === 0 &&
-        date.getMinutes() === 0 &&
-        date.getSeconds() < 10
+        date.getUTCHours() === 0 &&
+        date.getUTCMinutes() === 0 &&
+        date.getUTCSeconds() < 10
       ) {
         languagesData[language] = {
           elapsedTime: 0,
