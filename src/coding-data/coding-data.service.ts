@@ -28,10 +28,10 @@ export class CodingDataService {
       };
     }
 
-    const dayLanguages = await this.languagesService.findAllLanguages(
+    const dayLanguagesTime = await this.languagesService.findAllLanguages(
       dayData.id,
     );
-    return { timeSpent: dayData.timeSpent, dayLanguages };
+    return { timeSpent: dayData.timeSpent, dayLanguagesTime };
   }
 
   async findWeekly(userId: string, offset: number = 0) {
