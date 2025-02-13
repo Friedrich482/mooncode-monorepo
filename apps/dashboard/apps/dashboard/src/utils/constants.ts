@@ -18,7 +18,8 @@ export const periodDropDownItems: Period[] = [
   "Today",
   "Yesterday",
   "Last 3 days",
+  "This week",
   "Past week",
-  "Past two weeks",
+  "Past 2 weeks",
   "Previous month",
 ];

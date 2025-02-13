@@ -1,16 +1,9 @@
-import {
-  type Period,
-  offsets,
-  routes,
-  timeSpentDailySchema,
-} from "./types-schemas";
+import { type Period, periodConfig } from "./types-schemas";
 import getAuthToken from "./getAuthToken";
 
-const fetchTimeSpentToday = async (period: Period) => {
+const fetchTimeSpentOnPeriod = async (period: Period) => {
   const authToken = getAuthToken();
-
-  const offset = offsets[period];
-  const route = routes[period];
+  const { offset, route, schema } = periodConfig[period];
 
   const res = await fetch(
     `http://localhost:3000/api/coding-data/${route}?offset=${offset}`,
@@ -24,7 +17,8 @@ const fetchTimeSpentToday = async (period: Period) => {
   );
 
   const data = await res.json();
-  const parsedData = timeSpentDailySchema.safeParse(data);
+
+  const parsedData = schema.safeParse(data);
 
   if (!parsedData.success) {
     let errorMessage = "";
@@ -36,4 +30,4 @@ const fetchTimeSpentToday = async (period: Period) => {
   return parsedData.data.timeSpent;
 };
 
-export default fetchTimeSpentToday;
+export default fetchTimeSpentOnPeriod;
