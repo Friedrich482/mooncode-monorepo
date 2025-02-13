@@ -1,5 +1,6 @@
 import { CodingDataDto } from "./dto/coding-data.dto";
 import { DailyDataService } from "src/daily-data/daily-data.service";
+import { Date } from "src/types";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
 import getDayWithOffset from "src/utils/getDayWithOffset";
@@ -13,23 +14,24 @@ export class CodingDataService {
   ) {}
 
   async findDaily(userId: string, offset: number = 0) {
-    // TODO change the timeSpentToday to timeSpent
     const targetDate = getDayWithOffset(offset);
 
-    const todayDailyData = await this.dailyDataService.findOneDailyData(
+    const dayData = await this.dailyDataService.findOneDailyData(
       userId,
       targetDate,
     );
-    if (!todayDailyData?.id) {
+
+    if (!dayData?.id) {
       return {
-        timeSpentToday: 0,
-        todayLanguages: {},
+        timeSpent: 0,
+        dayLanguages: {},
       };
     }
-    const todayLanguages = await this.languagesService.findAllLanguages(
-      todayDailyData.id,
+
+    const dayLanguagesTime = await this.languagesService.findAllLanguages(
+      dayData.id,
     );
-    return { timeSpentToday: todayDailyData.timeSpent, todayLanguages };
+    return { timeSpent: dayData.timeSpent, dayLanguagesTime };
   }
 
   async findWeekly(userId: string, offset: number = 0) {
@@ -39,12 +41,40 @@ export class CodingDataService {
       start,
       end,
     );
+
     const timeSpent = weekData
       .map((day) => day.timeSpent)
       .reduce((acc, curr) => acc + curr, 0);
 
-    // const weekLanguagesTime = await this.languagesService.findAllLanguages()
-    return timeSpent;
+    const daysOfWeekStats: Record<
+      Date,
+      {
+        timeSpent: number;
+        languages: Record<string, number>;
+      }
+    > = {};
+
+    await Promise.all(
+      weekData.map(async ({ id, timeSpent, date }) => {
+        daysOfWeekStats[date] = {
+          timeSpent,
+          languages: await this.languagesService.findAllLanguages(id),
+        };
+      }),
+    );
+
+    const weekLanguagesTime = (
+      await Promise.all(
+        weekData.map(({ id }) => this.languagesService.findAllLanguages(id)),
+      )
+    ).reduce((acc, dayStats) => {
+      Object.keys(dayStats).forEach((language) => {
+        acc[language] = (acc[language] || 0) + dayStats[language];
+      });
+      return acc;
+    }, {});
+
+    return { timeSpent, weekLanguagesTime, daysOfWeekStats };
   }
 
   findOne(id: number) {
