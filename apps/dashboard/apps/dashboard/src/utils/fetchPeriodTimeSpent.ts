@@ -7,7 +7,7 @@ import {
 import fetchAndParseTime from "./fetchAndParseTime";
 import getAuthToken from "./getAuthToken";
 
-const fetchTimeSpentOnPeriod = async (period: Period) => {
+const fetchPeriodTimeSpent = async (period: Period) => {
   const authToken = getAuthToken();
   const { offset, route, schema } = periodConfig[period];
 
@@ -25,4 +25,4 @@ const fetchTimeSpentOnPeriod = async (period: Period) => {
   return timeSpent;
 };
 
-export default fetchTimeSpentOnPeriod;
+export default fetchPeriodTimeSpent;

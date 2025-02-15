@@ -2,8 +2,9 @@ import { WeeklyPeriod, weeklyPeriodConfig } from "./types-schemas";
 import fetchAndParseTime from "./fetchAndParseTime";
 import getAuthToken from "./getAuthToken";
 
-const fetchWeeklyTimeChart = async (period: WeeklyPeriod) => {
+const fetchTimeByDayOfWeek = async (period: WeeklyPeriod) => {
   const authToken = getAuthToken();
+  await new Promise((resolve) => setTimeout(resolve, 50000));
   const { offset, route, schema } = weeklyPeriodConfig[period];
 
   const { daysOfWeekStats } = await fetchAndParseTime(
@@ -15,4 +16,4 @@ const fetchWeeklyTimeChart = async (period: WeeklyPeriod) => {
   return daysOfWeekStats;
 };
 
-export default fetchWeeklyTimeChart;
+export default fetchTimeByDayOfWeek;

@@ -6,29 +6,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import WeekTimeChartSkeleton from "../ui/skeleton/WeekTimeChartSkeleton";
 import { WeeklyPeriod } from "@/utils/types-schemas";
 import { chartConfig } from "@/utils/constants";
-import fetchWeeklyTimeChart from "@/utils/fetchWeeklyTimePerDay";
+import fetchTimeByDayOfWeek from "@/utils/fetchTimeByDayOfWeek";
+import formatWeekChartData from "@/utils/formatWeekChartData";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-
-const transformData = (
-  data: Awaited<ReturnType<typeof fetchWeeklyTimeChart>> | undefined,
-) => {
-  if (!data) return [];
-
-  return Object.entries(data)
-    .map(([date, values]) => ({
-      originalDate: date,
-      date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
-      timeSpent: values.timeSpent,
-    }))
-    .sort((a, b) => {
-      return (
-        new Date(a.originalDate).getTime() - new Date(b.originalDate).getTime()
-      );
-    });
-};
 
 const WeekTimeChart = () => {
   const [chartPeriod] = useState<WeeklyPeriod>("This week");
@@ -36,11 +20,19 @@ const WeekTimeChart = () => {
   const { data, error, isPending } = useQuery({
     queryKey: ["weeklyTime"],
     queryFn: () => {
-      return fetchWeeklyTimeChart(chartPeriod);
+      return fetchTimeByDayOfWeek(chartPeriod);
     },
     refetchOnWindowFocus: true,
   });
-  const chartData = transformData(data);
+
+  const chartData = formatWeekChartData(data);
+
+  if (error) {
+    return <span>An error occurred: ${error.message}</span>;
+  }
+  if (isPending) {
+    return <WeekTimeChartSkeleton />;
+  }
 
   return (
     <ChartContainer

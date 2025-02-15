@@ -2,7 +2,7 @@ import { Period } from "@/utils/types-schemas";
 import PeriodDropDown from "./PeriodDropDown";
 import TimeSpentTodaySkeleton from "../ui/skeleton/TimeSpentTodaySkeleton";
 import { cn } from "@/lib/utils";
-import fetchTimeSpentOnPeriod from "@/utils/fetchTimeSpentOnPeriod";
+import fetchPeriodTimeSpent from "@/utils/fetchPeriodTimeSpent";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -14,7 +14,7 @@ const TimeSpentOnPeriod = () => {
   const { isPending, error, data } = useQuery({
     queryKey: [`timeSpent ${period}`],
     queryFn: () => {
-      return fetchTimeSpentOnPeriod(period);
+      return fetchPeriodTimeSpent(period);
     },
     refetchOnWindowFocus: true,
   });
