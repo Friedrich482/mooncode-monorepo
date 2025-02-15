@@ -1,4 +1,5 @@
 import { LucideProps, Monitor, Moon, Sun } from "lucide-react";
+import { ChartConfig } from "@/components/ui/chart";
 import { Period } from "./types-schemas";
 import { Theme } from "@/components/themeProvider";
 
@@ -23,3 +24,10 @@ export const periodDropDownItems: Period[] = [
   "Past 2 weeks",
   "Previous month",
 ];
+
+export const chartConfig = {
+  desktop: {
+    label: "Desktop",
+    color: "#FFDC67",
+  },
+} satisfies ChartConfig;

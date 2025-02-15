@@ -17,8 +17,6 @@ export const weeklyPeriodSchema = z.object({
   ),
 });
 
-export type Week = z.infer<typeof weeklyPeriodSchema>;
-
 export type Period =
   | "Today"
   | "Yesterday"
@@ -29,7 +27,14 @@ export type Period =
   | "Previous month"
   | "This month";
 
+export type WeeklyPeriod = "Past week" | "This week";
+
 export const periodConfig = {
+  "Past week": {
+    offset: 1,
+    route: "weekly",
+    schema: weeklyPeriodSchema,
+  },
   Today: {
     offset: 0,
     route: "daily",
@@ -44,11 +49,6 @@ export const periodConfig = {
     offset: 3,
     route: "daily",
     schema: dailyPeriodSchema,
-  },
-  "Past week": {
-    offset: 1,
-    route: "weekly",
-    schema: weeklyPeriodSchema,
   },
   "This week": {
     offset: 0,
@@ -70,4 +70,10 @@ export const periodConfig = {
     route: "monthly",
     schema: weeklyPeriodSchema,
   },
+} as const;
+
+// use the Object keyword to easily infer this one
+export const weeklyPeriodConfig = {
+  "This week": periodConfig["This week"],
+  "Past week": periodConfig["Past week"],
 } as const;

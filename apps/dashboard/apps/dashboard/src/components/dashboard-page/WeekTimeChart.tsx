@@ -1,18 +1,73 @@
-import { Period } from "@/utils/types-schemas";
-import fetchTimeSpentOnPeriod from "@/utils/fetchTimeSpentOnPeriod";
+import { Bar, BarChart, CartesianGrid, LineChart, XAxis } from "recharts";
+import {
+  ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { WeeklyPeriod } from "@/utils/types-schemas";
+import { chartConfig } from "@/utils/constants";
+import fetchWeeklyTimeChart from "@/utils/fetchWeeklyTimePerDay";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
+const transformData = (
+  data: Awaited<ReturnType<typeof fetchWeeklyTimeChart>> | undefined,
+) => {
+  if (!data) return [];
+
+  return Object.entries(data)
+    .map(([date, values]) => ({
+      originalDate: date,
+      date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
+      timeSpent: values.timeSpent,
+    }))
+    .sort((a, b) => {
+      return (
+        new Date(a.originalDate).getTime() - new Date(b.originalDate).getTime()
+      );
+    });
+};
+
 const WeekTimeChart = () => {
-  const [chartPeriod, setchartPeriod] = useState<Period>("This week");
+  const [chartPeriod] = useState<WeeklyPeriod>("This week");
+
   const { data, error, isPending } = useQuery({
     queryKey: ["weeklyTime"],
     queryFn: () => {
-      return fetchTimeSpentOnPeriod(chartPeriod);
+      return fetchWeeklyTimeChart(chartPeriod);
     },
     refetchOnWindowFocus: true,
   });
-  return <div>WeekTimeChart</div>;
+  const chartData = transformData(data);
+
+  return (
+    <ChartContainer
+      config={chartConfig}
+      className="max-md:w-full z-0 min-h-96 w-1/2"
+    >
+      <BarChart data={chartData} accessibilityLayer>
+        <CartesianGrid vertical={false} />
+        <XAxis
+          dataKey="date"
+          tickLine={false}
+          tickMargin={10}
+          axisLine={false}
+          tickFormatter={(value) => value.slice(0, 3)}
+        />
+        <ChartTooltip content={<ChartTooltipContent />} />
+        <ChartLegend content={<ChartLegendContent />} />
+        <LineChart accessibilityLayer />
+        <Bar
+          dataKey="timeSpent"
+          fill="var(--color-desktop)"
+          radius={4}
+          className="cursor-pointer"
+        />
+      </BarChart>
+    </ChartContainer>
+  );
 };
 
 export default WeekTimeChart;
