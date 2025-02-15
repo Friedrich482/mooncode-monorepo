@@ -10,12 +10,12 @@ const formatWeekChartData = (
       originalDate: date,
       date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
       timeSpent: values.timeSpent,
+      label: "time spent",
     }))
-    .sort((a, b) => {
-      return (
-        new Date(a.originalDate).getTime() - new Date(b.originalDate).getTime()
-      );
-    });
+    .sort(
+      (a, b) =>
+        new Date(a.originalDate).getTime() - new Date(b.originalDate).getTime(),
+    );
 };
 
 export default formatWeekChartData;

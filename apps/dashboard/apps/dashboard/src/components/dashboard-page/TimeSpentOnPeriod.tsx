@@ -24,9 +24,9 @@ const TimeSpentOnPeriod = () => {
   const hours = Math.floor(seconds / 3600);
 
   return (
-    <h1 className="flex items-center justify-start gap-4 text-2xl">
+    <h1 className="flex items-start justify-start gap-4 pt-2 text-2xl max-[450px]:flex-col">
       <PeriodDropDown period={period} handleClick={handleClick} />{" "}
-      <div className="flex gap-2">
+      <div className="flex gap-2 text-center">
         <span className="font-bold">{period}: </span>
         <span className={cn("", error && "text-red-600")}>
           {isPending && <TimeSpentTodaySkeleton />}

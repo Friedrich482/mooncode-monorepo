@@ -37,7 +37,7 @@ const WeekTimeChart = () => {
   return (
     <ChartContainer
       config={chartConfig}
-      className="max-md:w-full z-0 min-h-96 w-1/2"
+      className="max-md:w-full z-0 min-h-96 w-[45%]"
     >
       <BarChart data={chartData} accessibilityLayer>
         <CartesianGrid vertical={false} />
@@ -48,7 +48,7 @@ const WeekTimeChart = () => {
           axisLine={false}
           tickFormatter={(value) => value.slice(0, 3)}
         />
-        <ChartTooltip content={<ChartTooltipContent />} />
+        <ChartTooltip content={<ChartTooltipContent indicator="dot" />} />
         <ChartLegend content={<ChartLegendContent />} />
         <LineChart accessibilityLayer />
         <Bar

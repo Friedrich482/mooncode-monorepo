@@ -4,7 +4,6 @@ import getAuthToken from "./getAuthToken";
 
 const fetchTimeByDayOfWeek = async (period: WeeklyPeriod) => {
   const authToken = getAuthToken();
-  await new Promise((resolve) => setTimeout(resolve, 50000));
   const { offset, route, schema } = weeklyPeriodConfig[period];
 
   const { daysOfWeekStats } = await fetchAndParseTime(
