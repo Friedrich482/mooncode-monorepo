@@ -11,6 +11,7 @@ import { WeeklyPeriod } from "@/utils/types-schemas";
 import { chartConfig } from "@/utils/constants";
 import fetchTimeByDayOfWeek from "@/utils/fetchTimeByDayOfWeek";
 import formatWeekChartData from "@/utils/formatWeekChartData";
+import timeFormatter from "../ui/time-formatter";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -33,7 +34,6 @@ const WeekTimeChart = () => {
   if (isPending) {
     return <WeekTimeChartSkeleton />;
   }
-
   return (
     <ChartContainer
       config={chartConfig}
@@ -48,14 +48,18 @@ const WeekTimeChart = () => {
           axisLine={false}
           tickFormatter={(value) => value.slice(0, 3)}
         />
-        <ChartTooltip content={<ChartTooltipContent indicator="dot" />} />
+        <ChartTooltip
+          content={<ChartTooltipContent labelClassName="font-semibold" />}
+          formatter={timeFormatter}
+        />
         <ChartLegend content={<ChartLegendContent />} />
         <LineChart accessibilityLayer />
         <Bar
           dataKey="timeSpent"
-          fill="var(--color-desktop)"
+          fill="var(--color-time)"
           radius={4}
           className="cursor-pointer"
+          name="Time"
         />
       </BarChart>
     </ChartContainer>

@@ -26,8 +26,8 @@ export const periodDropDownItems: Period[] = [
 ];
 
 export const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  time: {
+    label: "Time spent",
     color: "#FFDC67",
   },
 } satisfies ChartConfig;
