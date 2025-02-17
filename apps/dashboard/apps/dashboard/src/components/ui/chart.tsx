@@ -298,13 +298,13 @@ const ChartLegendContent = React.forwardRef<
                 <itemConfig.icon />
               ) : (
                 <div
-                  className="h-2 w-2 shrink-0 rounded-[2px]"
+                  className="size-3 shrink-0 rounded-[2px]"
                   style={{
                     backgroundColor: item.color,
                   }}
                 />
               )}
-              {itemConfig?.label}
+              {item.value}
             </div>
           );
         })}
