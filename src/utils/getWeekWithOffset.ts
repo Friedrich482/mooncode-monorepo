@@ -1,11 +1,13 @@
-import { endOfWeek, startOfWeek, subWeeks } from "date-fns";
+import { endOfDay, startOfDay, subDays } from "date-fns";
 
-const getWeekWithOffset = (offset: number) => {
-  const targetDate = subWeeks(new Date(), offset);
+const getWeekWithOffset = (offset: number = 0) => {
+  const today = new Date();
+  const endDate = subDays(today, offset * 7);
+  const startDate = subDays(endDate, 6);
+
   return {
-    start: startOfWeek(targetDate, { weekStartsOn: 1 }).toISOString(),
-    end: endOfWeek(targetDate, { weekStartsOn: 1 }).toISOString(),
+    start: startOfDay(startDate).toISOString(),
+    end: endOfDay(endDate).toISOString(),
   };
 };
-
 export default getWeekWithOffset;
