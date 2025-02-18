@@ -54,15 +54,17 @@ const WeekLanguagesChart = () => {
             (key) =>
               key !== "date" && key !== "timeSpent" && key !== "originalDate",
           )
-          .map((language) => (
-            <Bar
-              key={language}
-              dataKey={language}
-              stackId="a"
-              fill="red"
-              radius={[0, 0, 4, 4]}
-            />
-          ))}
+          .map((language) => {
+            return (
+              <Bar
+                key={language}
+                dataKey={language}
+                stackId="a"
+                fill={"yellow"}
+                radius={[0, 0, 4, 4]}
+              />
+            );
+          })}
       </BarChart>
     </ChartContainer>
   );
