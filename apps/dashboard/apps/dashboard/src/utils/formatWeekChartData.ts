@@ -21,7 +21,8 @@ const formatWeekChartData = (
     .sort(
       (a, b) =>
         new Date(a.originalDate).getTime() - new Date(b.originalDate).getTime(),
-    );
+    )
+    .map((elt) => ({ ...elt, timeSpentLine: elt.timeSpent }));
 };
 
 export default formatWeekChartData;

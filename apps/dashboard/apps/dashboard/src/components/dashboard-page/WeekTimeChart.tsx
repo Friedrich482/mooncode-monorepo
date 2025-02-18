@@ -1,19 +1,17 @@
 import { Bar, CartesianGrid, ComposedChart, Line, XAxis } from "recharts";
 import {
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import WeekTimeChartSkeleton from "../ui/skeleton/WeekTimeChartSkeleton";
 import { WeeklyPeriod } from "@/utils/types-schemas";
+import { chartConfig } from "@/utils/constants";
 import fetchTimeByDayOfWeek from "@/utils/fetchTimeByDayOfWeek";
 import formatWeekChartData from "@/utils/formatWeekChartData";
 import timeFormatter from "../ui/time-formatter";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { chartConfig } from "@/utils/constants";
 
 const WeekTimeChart = () => {
   const [chartPeriod] = useState<WeeklyPeriod>("This week");
@@ -51,10 +49,9 @@ const WeekTimeChart = () => {
         <ChartTooltip
           content={<ChartTooltipContent labelClassName="font-semibold" />}
           formatter={(value, name) =>
-            name === "Time" ? timeFormatter(value as number) : null
+            name === "Time" ? timeFormatter(Number(value)) : null
           }
         />
-        <ChartLegend content={<ChartLegendContent />} />
 
         <Bar
           dataKey="timeSpent"
@@ -64,12 +61,12 @@ const WeekTimeChart = () => {
         />
 
         <Line
-          dataKey="timeSpent"
-          stroke="red"
+          dataKey="timeSpentLine"
+          stroke="#dc2626"
           strokeWidth={2}
-          dot={{ r: 5 }}
+          dot={{ r: 4 }}
+          type="monotone"
           className="cursor-pointer"
-          legendType="none"
         />
       </ComposedChart>
     </ChartContainer>
