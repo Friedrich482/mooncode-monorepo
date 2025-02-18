@@ -12,6 +12,7 @@ import { chartConfig } from "@/utils/constants";
 import fetchWeekLanguagesData from "@/utils/fetchWeekLanguagesData";
 import formatWeekLangByDayChart from "@/utils/formatWeekLangByDayChart";
 import formatWeekLanguagesData from "@/utils/formatWeekLanguagesData";
+import languagesColor from "@/colors.json";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -60,7 +61,7 @@ const WeekLanguagesChart = () => {
                 key={language}
                 dataKey={language}
                 stackId="a"
-                fill={"yellow"}
+                fill={languagesColor[language]}
                 radius={[0, 0, 4, 4]}
               />
             );
