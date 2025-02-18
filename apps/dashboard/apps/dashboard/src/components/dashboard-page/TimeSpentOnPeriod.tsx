@@ -8,7 +8,7 @@ import { useState } from "react";
 
 const TimeSpentOnPeriod = () => {
   // TODO  this should also be an url state
-  const [period, setPeriod] = useState<Period>("Today");
+  const [period, setPeriod] = useState<Period>("This week");
   const handleClick = (item: Period) => setPeriod(item);
 
   const { isPending, error, data } = useQuery({
