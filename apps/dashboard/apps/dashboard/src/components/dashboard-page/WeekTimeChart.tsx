@@ -24,18 +24,19 @@ const WeekTimeChart = () => {
     refetchOnWindowFocus: true,
   });
 
-  const chartData = formatWeekChartData(data);
-
   if (error) {
     return <span>An error occurred: ${error.message}</span>;
   }
   if (isPending) {
     return <WeekTimeChartSkeleton />;
   }
+  // TODO remove the originalDate from this array
+  const chartData = formatWeekChartData(data);
+
   return (
     <ChartContainer
       config={chartConfig}
-      className="max-md:w-full z-0 min-h-96 w-[45%]"
+      className="z-0 min-h-96 w-[45%] max-md:w-full"
     >
       <ComposedChart data={chartData}>
         <CartesianGrid vertical={false} />
