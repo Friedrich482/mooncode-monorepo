@@ -8,15 +8,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 const TimeSpentOnPeriod = () => {
-  // TODO  this should also be an url state
+  // TODO  this should be an url state
   const [period, setPeriod] = useState<Period>("This week");
   const handleClick = (item: Period) => setPeriod(item);
 
   const { isPending, error, data } = useQuery({
-    queryKey: [`timeSpent ${period}`],
-    queryFn: () => {
-      return fetchPeriodTimeSpent(period);
-    },
+    queryKey: ["total time", period],
+    queryFn: () => fetchPeriodTimeSpent(period),
     refetchOnWindowFocus: true,
   });
 

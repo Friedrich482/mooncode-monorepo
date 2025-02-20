@@ -17,10 +17,9 @@ const WeekTimeChart = () => {
   const [chartPeriod] = useState<WeeklyPeriod>("This week");
 
   const { data, error, isPending } = useQuery({
-    queryKey: ["weeklyTime"],
-    queryFn: () => {
-      return fetchTimeByDayOfWeek(chartPeriod);
-    },
+    queryKey: ["week-full-data", "total time"],
+    queryFn: () => fetchTimeByDayOfWeek(chartPeriod),
+
     refetchOnWindowFocus: true,
   });
 
@@ -49,8 +48,8 @@ const WeekTimeChart = () => {
         />
         <ChartTooltip
           content={<ChartTooltipContent labelClassName="font-semibold" />}
-          formatter={(value, name) =>
-            name === "Time" ? CustomChartToolTip(Number(value)) : null
+          formatter={(value: string, name) =>
+            name === "Time" ? CustomChartToolTip(parseInt(value)) : null
           }
         />
 

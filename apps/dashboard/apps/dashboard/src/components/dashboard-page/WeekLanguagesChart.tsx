@@ -6,6 +6,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../ui/chart";
+import CustomChartToolTip from "../ui/custom-chart-tool-tip";
 import WeekLanguagesChartSkeleton from "../ui/skeleton/WeekLanguagesChartSkeleton";
 import { WeeklyPeriod } from "@/types-schemas";
 import { chartConfig } from "@/constants";
@@ -20,10 +21,8 @@ const WeekLanguagesChart = () => {
   const [chartPeriod] = useState<WeeklyPeriod>("This week");
 
   const { data, error, isPending } = useQuery({
-    queryKey: ["week Languages"],
-    queryFn: () => {
-      return fetchWeekLanguagesData(chartPeriod);
-    },
+    queryKey: ["week-full-data", chartPeriod, "languages"],
+    queryFn: () => fetchWeekLanguagesData(chartPeriod),
     refetchOnWindowFocus: true,
   });
   if (error) {
@@ -48,7 +47,15 @@ const WeekLanguagesChart = () => {
           axisLine={false}
           tickFormatter={(value) => value.slice(0, 3)}
         />
-        <ChartTooltip content={<ChartTooltipContent />} />
+        <ChartTooltip
+          content={<ChartTooltipContent labelClassName="font-semibold" />}
+          formatter={(value: string, language) =>
+            CustomChartToolTip(
+              parseInt(value),
+              languagesColor[language as keyof typeof languagesColor],
+            )
+          }
+        />
         <ChartLegend
           content={<ChartLegendContent className="flex-wrap justify-start" />}
         />
@@ -63,7 +70,11 @@ const WeekLanguagesChart = () => {
                 key={language}
                 dataKey={language}
                 stackId="a"
-                fill={languagesColor[language as keyof typeof languagesColor]!}
+                fill={
+                  languagesColor[
+                    language as keyof typeof languagesColor
+                  ] as string
+                }
                 className="cursor-pointer"
               />
             );
