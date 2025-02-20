@@ -1,4 +1,4 @@
-import fetchTimeByDayOfWeek from "./fetchTimeByDayOfWeek";
+import fetchTimeByDayOfWeek from "../fetch/fetchTimeByDayOfWeek";
 
 const formatWeekChartData = (
   data: Awaited<ReturnType<typeof fetchTimeByDayOfWeek>> | undefined,

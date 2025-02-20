@@ -3,9 +3,9 @@ import {
   dailyPeriodSchema,
   periodConfig,
   weeklyPeriodSchema,
-} from "./types-schemas";
+} from "../../types-schemas";
 import fetchAndParseTime from "./fetchAndParseTime";
-import getAuthToken from "./getAuthToken";
+import getAuthToken from "../getAuthToken";
 
 const fetchPeriodTimeSpent = async (period: Period) => {
   const authToken = getAuthToken();

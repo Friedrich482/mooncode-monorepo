@@ -6,7 +6,7 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { Moon, Sun } from "lucide-react";
 import Icon from "../ui/Icon";
-import { themeDropDownItems } from "@/utils/constants";
+import { themeDropDownItems } from "@/constants";
 import { useTheme } from "../themeProvider";
 
 const ToggleThemeDropDown = () => {

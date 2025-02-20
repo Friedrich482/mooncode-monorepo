@@ -6,8 +6,8 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
-import { Period } from "@/utils/types-schemas";
-import { periodDropDownItems } from "@/utils/constants";
+import { Period } from "@/types-schemas";
+import { periodDropDownItems } from "@/constants";
 
 const PeriodDropDown = ({
   period,

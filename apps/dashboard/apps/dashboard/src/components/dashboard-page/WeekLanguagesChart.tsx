@@ -7,11 +7,11 @@ import {
   ChartTooltipContent,
 } from "../ui/chart";
 import WeekLanguagesChartSkeleton from "../ui/skeleton/WeekLanguagesChartSkeleton";
-import { WeeklyPeriod } from "@/utils/types-schemas";
-import { chartConfig } from "@/utils/constants";
-import fetchWeekLanguagesData from "@/utils/fetchWeekLanguagesData";
-import formatWeekLangByDayChart from "@/utils/formatWeekLangByDayChart";
-import formatWeekLanguagesData from "@/utils/formatWeekLanguagesData";
+import { WeeklyPeriod } from "@/types-schemas";
+import { chartConfig } from "@/constants";
+import fetchWeekLanguagesData from "@/utils/fetch/fetchWeekLanguagesData";
+import formatWeekLangByDayChart from "@/utils/format/formatWeekLangByDayChart";
+import formatWeekLanguagesData from "@/utils/format/formatWeekLanguagesData";
 import languagesColor from "@/colors.json";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -49,7 +49,9 @@ const WeekLanguagesChart = () => {
           tickFormatter={(value) => value.slice(0, 3)}
         />
         <ChartTooltip content={<ChartTooltipContent />} />
-        <ChartLegend content={<ChartLegendContent />} />
+        <ChartLegend
+          content={<ChartLegendContent className="flex-wrap justify-start" />}
+        />
         {[...new Set(barChartData.flatMap((day) => Object.keys(day)))]
           .filter(
             (key) =>
@@ -61,8 +63,8 @@ const WeekLanguagesChart = () => {
                 key={language}
                 dataKey={language}
                 stackId="a"
-                fill={languagesColor[language]}
-                radius={[0, 0, 4, 4]}
+                fill={languagesColor[language as keyof typeof languagesColor]!}
+                className="cursor-pointer"
               />
             );
           })}

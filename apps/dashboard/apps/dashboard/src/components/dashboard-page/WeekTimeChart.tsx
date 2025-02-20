@@ -5,10 +5,10 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import WeekTimeChartSkeleton from "../ui/skeleton/WeekTimeChartSkeleton";
-import { WeeklyPeriod } from "@/utils/types-schemas";
-import { chartConfig } from "@/utils/constants";
-import fetchTimeByDayOfWeek from "@/utils/fetchTimeByDayOfWeek";
-import formatWeekChartData from "@/utils/formatWeekChartData";
+import { WeeklyPeriod } from "@/types-schemas";
+import { chartConfig } from "@/constants";
+import fetchTimeByDayOfWeek from "@/utils/fetch/fetchTimeByDayOfWeek";
+import formatWeekChartData from "@/utils/format/formatWeekChartData";
 import timeFormatter from "../ui/time-formatter";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";

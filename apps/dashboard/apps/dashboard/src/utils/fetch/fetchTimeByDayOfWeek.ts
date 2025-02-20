@@ -1,6 +1,6 @@
-import { WeeklyPeriod, weeklyPeriodConfig } from "./types-schemas";
+import { WeeklyPeriod, weeklyPeriodConfig } from "../../types-schemas";
 import fetchAndParseTime from "./fetchAndParseTime";
-import getAuthToken from "./getAuthToken";
+import getAuthToken from "../getAuthToken";
 
 const fetchTimeByDayOfWeek = async (period: WeeklyPeriod) => {
   const authToken = getAuthToken();

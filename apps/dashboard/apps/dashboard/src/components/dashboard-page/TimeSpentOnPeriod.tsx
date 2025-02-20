@@ -1,8 +1,8 @@
-import { Period } from "@/utils/types-schemas";
+import { Period } from "@/types-schemas";
 import PeriodDropDown from "./PeriodDropDown";
 import TimeSpentTodaySkeleton from "../ui/skeleton/TimeSpentTodaySkeleton";
 import { cn } from "@/lib/utils";
-import fetchPeriodTimeSpent from "@/utils/fetchPeriodTimeSpent";
+import fetchPeriodTimeSpent from "@/utils/fetch/fetchPeriodTimeSpent";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 

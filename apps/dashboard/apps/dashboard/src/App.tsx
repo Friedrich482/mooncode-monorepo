@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Footer from "./components/Footer";
-import Header from "./components/Header/Header";
+import Header from "./components/header/Header";
 import Main from "./components/dashboard-page/Main";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "./components/themeProvider";
