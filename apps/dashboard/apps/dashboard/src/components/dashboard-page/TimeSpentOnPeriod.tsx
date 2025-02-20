@@ -3,6 +3,7 @@ import PeriodDropDown from "./PeriodDropDown";
 import TimeSpentTodaySkeleton from "../ui/skeleton/TimeSpentTodaySkeleton";
 import { cn } from "@/lib/utils";
 import fetchPeriodTimeSpent from "@/utils/fetch/fetchPeriodTimeSpent";
+import formatDuration from "@/utils/formatDuration";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -19,10 +20,6 @@ const TimeSpentOnPeriod = () => {
     refetchOnWindowFocus: true,
   });
 
-  const seconds = data!;
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const hours = Math.floor(seconds / 3600);
-
   return (
     <h1 className="flex items-start justify-start gap-4 pt-2 text-2xl max-[450px]:flex-col">
       <PeriodDropDown period={period} handleClick={handleClick} />{" "}
@@ -31,8 +28,7 @@ const TimeSpentOnPeriod = () => {
         <span className={cn("", error && "text-red-600")}>
           {isPending && <TimeSpentTodaySkeleton />}
           {error && `An error occurred: ${error.message}`}
-          {data != null &&
-            `${hours ? `${hours} hr${hours !== 1 ? "s" : ""} ` : ""}${minutes} min${minutes !== 1 ? "s" : ""}`}{" "}
+          {data != null && formatDuration(data)}
         </span>
       </div>
     </h1>

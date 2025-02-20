@@ -4,12 +4,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import CustomChartToolTip from "../ui/custom-chart-tool-tip";
 import WeekTimeChartSkeleton from "../ui/skeleton/WeekTimeChartSkeleton";
 import { WeeklyPeriod } from "@/types-schemas";
 import { chartConfig } from "@/constants";
 import fetchTimeByDayOfWeek from "@/utils/fetch/fetchTimeByDayOfWeek";
 import formatWeekChartData from "@/utils/format/formatWeekChartData";
-import timeFormatter from "../ui/time-formatter";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -30,7 +30,7 @@ const WeekTimeChart = () => {
   if (isPending) {
     return <WeekTimeChartSkeleton />;
   }
-  // TODO remove the originalDate from this array
+
   const chartData = formatWeekChartData(data);
 
   return (
@@ -50,12 +50,12 @@ const WeekTimeChart = () => {
         <ChartTooltip
           content={<ChartTooltipContent labelClassName="font-semibold" />}
           formatter={(value, name) =>
-            name === "Time" ? timeFormatter(Number(value)) : null
+            name === "Time" ? CustomChartToolTip(Number(value)) : null
           }
         />
 
         <Bar
-          dataKey="timeSpent"
+          dataKey="timeSpentBar"
           fill="var(--color-time)"
           className="cursor-pointer"
           name="Time"

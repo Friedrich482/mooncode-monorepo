@@ -11,7 +11,7 @@ import { WeeklyPeriod } from "@/types-schemas";
 import { chartConfig } from "@/constants";
 import fetchWeekLanguagesData from "@/utils/fetch/fetchWeekLanguagesData";
 import formatWeekLangByDayChart from "@/utils/format/formatWeekLangByDayChart";
-import formatWeekLanguagesData from "@/utils/format/formatWeekLanguagesData";
+import formatWeekLanguagesData from "@/utils/format/formatWeekLanguagesChartData";
 import languagesColor from "@/colors.json";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
