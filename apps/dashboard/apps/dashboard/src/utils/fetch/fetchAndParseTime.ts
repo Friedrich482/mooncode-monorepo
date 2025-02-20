@@ -1,11 +1,13 @@
 import { ZodSchema } from "zod";
+import getAuthToken from "../getAuthToken";
 
 const fetchAndParseTime = async <T>(
-  authToken: string,
   route: string,
   offset: number,
   schema: ZodSchema<T>,
 ) => {
+  const authToken = getAuthToken();
+
   const res = await fetch(
     `http://localhost:3000/api/coding-data/${route}?offset=${offset}`,
     {

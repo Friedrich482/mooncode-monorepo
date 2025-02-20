@@ -5,10 +5,8 @@ import {
   weeklyPeriodSchema,
 } from "../../types-schemas";
 import fetchAndParseTime from "./fetchAndParseTime";
-import getAuthToken from "../getAuthToken";
 
 const fetchPeriodTimeSpent = async (period: Period) => {
-  const authToken = getAuthToken();
   const { offset, route, schema } = periodConfig[period];
 
   const commonSchema =
@@ -16,12 +14,7 @@ const fetchPeriodTimeSpent = async (period: Period) => {
       ? schema.pick({ timeSpent: true })
       : weeklyPeriodSchema.pick({ timeSpent: true });
 
-  const { timeSpent } = await fetchAndParseTime(
-    authToken,
-    route,
-    offset,
-    commonSchema,
-  );
+  const { timeSpent } = await fetchAndParseTime(route, offset, commonSchema);
   return timeSpent;
 };
 
