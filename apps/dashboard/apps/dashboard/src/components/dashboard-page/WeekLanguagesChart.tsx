@@ -1,12 +1,7 @@
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
-import {
-  ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "../ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "../ui/chart";
 import CustomChartToolTip from "../ui/custom-chart-tool-tip";
+import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import WeekLanguagesChartSkeleton from "../ui/skeleton/WeekLanguagesChartSkeleton";
 import { WeeklyPeriod } from "@/types-schemas";
 import { chartConfig } from "@/constants";
@@ -26,7 +21,7 @@ const WeekLanguagesChart = () => {
     refetchOnWindowFocus: true,
   });
   if (error) {
-    return <span>An error occurred: ${error.message}</span>;
+    return <span>An error occurred: {error.message}</span>;
   }
   if (isPending) {
     return <WeekLanguagesChartSkeleton />;
@@ -49,15 +44,19 @@ const WeekLanguagesChart = () => {
         />
         <ChartTooltip
           content={<ChartTooltipContent labelClassName="font-semibold" />}
+          labelFormatter={(
+            date: string,
+            payload: Payload<string, string>[],
+          ) => (
+            <div>{`${date.slice(0, 3)} ${payload[0].payload.originalDate}`}</div>
+          )}
           formatter={(value: string, language) =>
             CustomChartToolTip(
               parseInt(value),
               languagesColor[language as keyof typeof languagesColor],
+              language,
             )
           }
-        />
-        <ChartLegend
-          content={<ChartLegendContent className="flex-wrap justify-start" />}
         />
         {[...new Set(barChartData.flatMap((day) => Object.keys(day)))]
           .filter(

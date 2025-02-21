@@ -13,7 +13,9 @@ const formatWeekLangByDayChart = (
 
       date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
       timeSpent,
-      ...languages,
+      ...Object.fromEntries(
+        Object.entries(languages).sort(([, a], [, b]) => a - b),
+      ),
     }))
     .sort(
       (a, b) =>

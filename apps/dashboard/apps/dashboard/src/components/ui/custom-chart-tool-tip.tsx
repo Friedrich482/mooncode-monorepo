@@ -4,6 +4,7 @@ import { z } from "zod";
 const CustomChartToolTip = (
   value: number,
   color: unknown = "var(--color-time)",
+  languageId?: string,
 ) => {
   const safeColor = (() => {
     try {
@@ -22,6 +23,7 @@ const CustomChartToolTip = (
           backgroundColor: safeColor,
         }}
       />
+      {languageId && <span>{languageId}</span>}
       <span className="flex-1 text-muted-foreground">
         {!Number.isNaN(value) ? formatDuration(value) : "######"}
       </span>

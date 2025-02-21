@@ -24,7 +24,7 @@ const WeekTimeChart = () => {
   });
 
   if (error) {
-    return <span>An error occurred: ${error.message}</span>;
+    return <span>An error occurred: {error.message}</span>;
   }
   if (isPending) {
     return <WeekTimeChartSkeleton />;
