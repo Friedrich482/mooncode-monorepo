@@ -4,8 +4,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import CustomChartToolTip from "../ui/custom-chart-tool-tip";
-import WeekTimeChartSkeleton from "../ui/skeleton/WeekTimeChartSkeleton";
+import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
+import WeekTimeChartSkeleton from "../../ui/skeleton/WeekTimeChartSkeleton";
 import { WeeklyPeriod } from "@/types-schemas";
 import { chartConfig } from "@/constants";
 import fetchTimeByDayOfWeek from "@/utils/fetch/fetchTimeByDayOfWeek";

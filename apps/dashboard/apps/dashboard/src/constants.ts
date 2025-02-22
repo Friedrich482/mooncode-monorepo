@@ -31,3 +31,10 @@ export const chartConfig = {
     color: "#FFDC67",
   },
 } satisfies ChartConfig;
+
+export const pieChartConfig = {
+  time: {
+    label: "typescript",
+    color: "#3178c6",
+  },
+} satisfies ChartConfig;
