@@ -3,7 +3,7 @@ import { z } from "zod";
 
 const CustomChartToolTip = (
   value: number,
-  color: unknown = "var(--color-time)",
+  color?: unknown,
   languageId?: string,
 ) => {
   const safeColor = (() => {
@@ -17,12 +17,14 @@ const CustomChartToolTip = (
 
   return (
     <div className="flex flex-1 items-center justify-center gap-2 leading-none">
-      <div
-        className="size-3 rounded-sm"
-        style={{
-          backgroundColor: safeColor,
-        }}
-      />
+      {color ? (
+        <div
+          className="size-3 rounded-sm"
+          style={{
+            backgroundColor: safeColor,
+          }}
+        />
+      ) : null}
       {languageId && <span>{languageId}</span>}
       <span className="flex-1 text-muted-foreground">
         {!Number.isNaN(value) ? formatDuration(value) : "######"}

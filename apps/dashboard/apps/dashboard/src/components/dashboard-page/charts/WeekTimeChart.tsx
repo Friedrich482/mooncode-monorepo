@@ -49,7 +49,9 @@ const WeekTimeChart = () => {
         <ChartTooltip
           content={<ChartTooltipContent labelClassName="font-semibold" />}
           formatter={(value: string, name) =>
-            name === "Time" ? CustomChartToolTip(parseInt(value)) : null
+            name === "Time"
+              ? CustomChartToolTip(parseInt(value), "var(--color-time)")
+              : null
           }
         />
 
