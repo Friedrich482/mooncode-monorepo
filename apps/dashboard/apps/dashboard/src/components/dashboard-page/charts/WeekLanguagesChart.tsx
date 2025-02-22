@@ -38,7 +38,7 @@ const WeekLanguagesChart = () => {
     return <WeekLanguagesChartSkeleton />;
   }
   const pieChartData = formatWeekLanguagesData(data);
-  const barChartData = formatWeekLangByDayChart(data.daysOfWeekStats);
+  const barChartData = formatWeekLangByDayChart(data);
 
   return (
     <div className="relative w-[45%] max-md:w-full">
@@ -49,7 +49,7 @@ const WeekLanguagesChart = () => {
       />
       <ChartContainer config={chartConfig} className="z-0 min-h-96 w-full">
         {isPieChartVisible ? (
-          <PieChart accessibilityLayer>
+          <PieChart accessibilityLayer className="rounded-md bg-accent p-4">
             <ChartTooltip
               content={<ChartTooltipContent labelClassName="font-semibold" />}
               labelFormatter={() => <div className="font-semibold">Time</div>}
@@ -58,6 +58,7 @@ const WeekLanguagesChart = () => {
                   parseInt(value),
                   payload.fill,
                   language.toString(),
+                  payload.percentage,
                 )
               }
             />

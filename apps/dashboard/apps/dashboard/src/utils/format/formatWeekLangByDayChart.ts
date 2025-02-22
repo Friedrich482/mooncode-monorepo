@@ -1,13 +1,9 @@
+import fetchWeekLanguagesData from "../fetch/fetchWeekLanguagesData";
+
 const formatWeekLangByDayChart = (
-  data: Record<
-    string,
-    {
-      timeSpent: number;
-      languages: Record<string, number>;
-    }
-  >,
+  data: Awaited<ReturnType<typeof fetchWeekLanguagesData>>,
 ) => {
-  return Object.entries(data)
+  return Object.entries(data.daysOfWeekStats)
     .map(([date, { timeSpent, languages }]) => ({
       originalDate: date,
 

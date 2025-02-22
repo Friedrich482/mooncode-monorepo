@@ -263,6 +263,7 @@ const ChartLegendContent = React.forwardRef<
       hideIcon?: boolean;
       nameKey?: string;
       order?: "ASC" | "DESC";
+      percentage?: number;
     }
 >(
   (
@@ -273,6 +274,7 @@ const ChartLegendContent = React.forwardRef<
       verticalAlign = "bottom",
       nameKey,
       order = "ASC",
+      percentage,
     },
     ref,
   ) => {
@@ -315,7 +317,7 @@ const ChartLegendContent = React.forwardRef<
                   }}
                 />
               )}
-              {item.value}
+              {item.value} {percentage && `${percentage}%`}
             </div>
           );
         })}

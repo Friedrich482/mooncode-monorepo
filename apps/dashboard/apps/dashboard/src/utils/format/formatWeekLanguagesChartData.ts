@@ -5,6 +5,7 @@ import languagesColor from "@/colors.json";
 const formatWeekLanguagesData = (
   data: Awaited<ReturnType<typeof fetchWeekLanguagesData>>,
 ) => {
+  const { timeSpent } = data;
   return Object.entries(data.weekLanguagesTime)
     .map(([languageName, time]) => ({
       languageName,
@@ -13,6 +14,7 @@ const formatWeekLanguagesData = (
       fill: languagesColor[
         languageName as keyof typeof languagesColor
       ] as string,
+      percentage: ((time * 100) / timeSpent).toFixed(2),
     }))
     .sort((a, b) => a.time - b.time);
 };
