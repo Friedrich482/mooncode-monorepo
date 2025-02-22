@@ -262,10 +262,18 @@ const ChartLegendContent = React.forwardRef<
     Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
       hideIcon?: boolean;
       nameKey?: string;
+      order?: "ASC" | "DESC";
     }
 >(
   (
-    { className, hideIcon = false, payload, verticalAlign = "bottom", nameKey },
+    {
+      className,
+      hideIcon = false,
+      payload,
+      verticalAlign = "bottom",
+      nameKey,
+      order = "ASC",
+    },
     ref,
   ) => {
     const { config } = useChart();
@@ -273,6 +281,9 @@ const ChartLegendContent = React.forwardRef<
     if (!payload?.length) {
       return null;
     }
+
+    let itemsToRender = [...(payload || [])];
+    itemsToRender = order === "DESC" ? itemsToRender.reverse() : itemsToRender;
 
     return (
       <div
@@ -283,7 +294,7 @@ const ChartLegendContent = React.forwardRef<
           className,
         )}
       >
-        {payload.map((item) => {
+        {itemsToRender.map((item) => {
           const key = `${nameKey || item.dataKey || "value"}`;
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
 

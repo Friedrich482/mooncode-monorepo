@@ -1,15 +1,9 @@
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  XAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, Pie, PieChart, XAxis } from "recharts";
 import { BarChartIcon, PieChartIcon } from "lucide-react";
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "../../ui/chart";
@@ -55,27 +49,31 @@ const WeekLanguagesChart = () => {
       />
       <ChartContainer config={chartConfig} className="z-0 min-h-96 w-full">
         {isPieChartVisible ? (
-          <ResponsiveContainer>
-            <PieChart accessibilityLayer>
-              <ChartTooltip
-                content={<ChartTooltipContent labelClassName="font-semibold" />}
-                labelFormatter={() => <div className="font-semibold">Time</div>}
-                formatter={(value: string, language, { payload }) =>
-                  CustomChartToolTip(
-                    parseInt(value),
-                    payload.fill,
-                    language.toString(),
-                  )
-                }
-              />
-              <Pie
-                data={pieChartData}
-                dataKey="time"
-                fill="fill"
-                nameKey="languageName"
-              />
-            </PieChart>
-          </ResponsiveContainer>
+          <PieChart accessibilityLayer>
+            <ChartTooltip
+              content={<ChartTooltipContent labelClassName="font-semibold" />}
+              labelFormatter={() => <div className="font-semibold">Time</div>}
+              formatter={(value: string, language, { payload }) =>
+                CustomChartToolTip(
+                  parseInt(value),
+                  payload.fill,
+                  language.toString(),
+                )
+              }
+            />
+            <ChartLegend
+              content={<ChartLegendContent order="DESC" />}
+              className="w-full flex-wrap justify-normal"
+              align="right"
+            />
+            <Pie
+              data={pieChartData}
+              dataKey="time"
+              fill="fill"
+              nameKey="languageName"
+              className="cursor-pointer"
+            />
+          </PieChart>
         ) : (
           <BarChart accessibilityLayer data={barChartData}>
             <CartesianGrid vertical={false} />
