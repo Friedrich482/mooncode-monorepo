@@ -1,12 +1,14 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 
+import { Payload } from "recharts/types/component/DefaultLegendContent";
 import { cn } from "@/lib/utils";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
 
 export type ChartConfig = {
+  // eslint-disable-next-line no-unused-vars
   [k in string]: {
     label?: React.ReactNode;
     icon?: React.ComponentType;
@@ -50,7 +52,7 @@ const ChartContainer = React.forwardRef<
         data-chart={chartId}
         ref={ref}
         className={cn(
-          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
+          "flex aspect-video justify-center rounded-md border border-neutral-600/50 text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-none [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-sector]:outline-none [&_.recharts-surface]:outline-none",
           className,
         )}
         {...props}
@@ -259,13 +261,22 @@ const ChartLegend = RechartsPrimitive.Legend;
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> &
-    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+    Pick<RechartsPrimitive.LegendProps, "verticalAlign"> & {
       hideIcon?: boolean;
       nameKey?: string;
+      order?: "ASC" | "DESC";
+      payload?: (Omit<Payload, "payload"> & { payload: Payload })[];
     }
 >(
   (
-    { className, hideIcon = false, payload, verticalAlign = "bottom", nameKey },
+    {
+      className,
+      hideIcon = false,
+      payload,
+      verticalAlign = "bottom",
+      nameKey,
+      order = "ASC",
+    },
     ref,
   ) => {
     const { config } = useChart();
@@ -274,19 +285,21 @@ const ChartLegendContent = React.forwardRef<
       return null;
     }
 
+    let itemsToRender = [...(payload || [])];
+    itemsToRender = order === "DESC" ? itemsToRender.reverse() : itemsToRender;
+
     return (
       <div
         ref={ref}
         className={cn(
-          "flex items-center justify-center gap-4",
+          "items-center justify-center gap-4",
           verticalAlign === "top" ? "pb-3" : "pt-3",
           className,
         )}
       >
-        {payload.map((item) => {
+        {itemsToRender.map((item) => {
           const key = `${nameKey || item.dataKey || "value"}`;
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
-
           return (
             <div
               key={item.value}
@@ -305,6 +318,8 @@ const ChartLegendContent = React.forwardRef<
                 />
               )}
               {item.value}
+              {" - "}
+              {item.payload.payload?.value && `${item.payload.payload.value}`}
             </div>
           );
         })}

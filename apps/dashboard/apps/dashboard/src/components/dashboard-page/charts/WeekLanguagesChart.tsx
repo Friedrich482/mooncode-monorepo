@@ -1,15 +1,9 @@
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  XAxis,
-} from "recharts";
+import { Bar, BarChart, CartesianGrid, Pie, PieChart, XAxis } from "recharts";
 import { BarChartIcon, PieChartIcon } from "lucide-react";
 import {
   ChartContainer,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
 } from "../../ui/chart";
@@ -25,6 +19,7 @@ import formatWeekLanguagesData from "@/utils/format/formatWeekLanguagesChartData
 import languagesColor from "@/colors.json";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 const WeekLanguagesChart = () => {
   const [isPieChartVisible, setIsPieChartVisible] = useState(true);
@@ -44,41 +39,48 @@ const WeekLanguagesChart = () => {
     return <WeekLanguagesChartSkeleton />;
   }
   const pieChartData = formatWeekLanguagesData(data);
-  const barChartData = formatWeekLangByDayChart(data.daysOfWeekStats);
+  const barChartData = formatWeekLangByDayChart(data);
 
   return (
-    <div className="relative w-[45%] max-md:w-full">
+    <div className="relative w-[45%] max-[900px]:w-full">
       <Icon
         Icon={isPieChartVisible ? PieChartIcon : BarChartIcon}
         className="absolute -top-12 right-0 z-50"
         onClick={handleClick}
       />
-      <ChartContainer config={chartConfig} className="z-0 min-h-96 w-full">
+      <ChartContainer config={chartConfig} className="min-h-96 w-full">
         {isPieChartVisible ? (
-          <ResponsiveContainer>
-            <PieChart accessibilityLayer>
-              <ChartTooltip
-                content={<ChartTooltipContent labelClassName="font-semibold" />}
-                labelFormatter={() => <div className="font-semibold">Time</div>}
-                formatter={(value: string, language, { payload }) =>
-                  CustomChartToolTip(
-                    parseInt(value),
-                    payload.fill,
-                    language.toString(),
-                  )
-                }
-              />
-              <Pie
-                data={pieChartData}
-                dataKey="time"
-                fill="fill"
-                nameKey="languageName"
-              />
-            </PieChart>
-          </ResponsiveContainer>
+          <PieChart accessibilityLayer>
+            <ChartTooltip
+              labelFormatter={() => <div className="font-semibold">Time</div>}
+              content={<ChartTooltipContent labelClassName="font-semibold" />}
+              formatter={(value: string, language, { payload }) =>
+                CustomChartToolTip(
+                  parseInt(value),
+                  payload.fill,
+                  language.toString(),
+                  payload.percentage,
+                )
+              }
+            />
+            <ChartLegend
+              content={<ChartLegendContent order="DESC" className="text-xs" />}
+              className="flex-wrap justify-end max-small:hidden"
+              layout="vertical"
+              verticalAlign="middle"
+              align="right"
+            />
+            <Pie
+              data={pieChartData}
+              dataKey="time"
+              fill="fill"
+              nameKey="languageName"
+              className="cursor-pointer"
+            />
+          </PieChart>
         ) : (
           <BarChart accessibilityLayer data={barChartData}>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} horizontal={false} />
             <XAxis
               dataKey="date"
               tickLine={false}

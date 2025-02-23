@@ -5,6 +5,7 @@ const CustomChartToolTip = (
   value: number,
   color?: unknown,
   languageId?: string,
+  percentage?: number,
 ) => {
   const safeColor = (() => {
     try {
@@ -27,7 +28,8 @@ const CustomChartToolTip = (
       ) : null}
       {languageId && <span>{languageId}</span>}
       <span className="flex-1 text-muted-foreground">
-        {!Number.isNaN(value) ? formatDuration(value) : "######"}
+        {!Number.isNaN(value) ? formatDuration(value) : "######"}{" "}
+        {percentage && `(${percentage}%)`}
       </span>
     </div>
   );

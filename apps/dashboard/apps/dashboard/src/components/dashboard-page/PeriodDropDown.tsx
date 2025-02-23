@@ -29,7 +29,7 @@ const PeriodDropDown = ({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="w-40 translate-y-3 cursor-pointer rounded-md border-[1px] border-neutral-700 bg-neutral-100 p-2 dark:bg-neutral-950"
+        className="z-10 w-40 translate-y-3 cursor-pointer rounded-md border-[1px] border-neutral-700 bg-neutral-100 p-2 dark:bg-neutral-950"
         align="start"
       >
         {periodDropDownItems.map((item) => (
