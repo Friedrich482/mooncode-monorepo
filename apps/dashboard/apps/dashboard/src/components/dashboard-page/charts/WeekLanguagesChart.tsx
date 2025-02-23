@@ -42,13 +42,13 @@ const WeekLanguagesChart = () => {
   const barChartData = formatWeekLangByDayChart(data);
 
   return (
-    <div className="relative w-[45%] max-md:w-full">
+    <div className="relative w-[45%] max-[900px]:w-full">
       <Icon
         Icon={isPieChartVisible ? PieChartIcon : BarChartIcon}
         className="absolute -top-12 right-0 z-50"
         onClick={handleClick}
       />
-      <ChartContainer config={chartConfig} className="z-0 min-h-96 w-full">
+      <ChartContainer config={chartConfig} className="min-h-96 w-full">
         {isPieChartVisible ? (
           <PieChart accessibilityLayer>
             <ChartTooltip
@@ -65,7 +65,7 @@ const WeekLanguagesChart = () => {
             />
             <ChartLegend
               content={<ChartLegendContent order="DESC" className="text-xs" />}
-              className="flex-wrap justify-end"
+              className="flex-wrap justify-end max-small:hidden"
               layout="vertical"
               verticalAlign="middle"
               align="right"

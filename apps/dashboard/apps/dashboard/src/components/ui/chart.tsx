@@ -1,12 +1,14 @@
 import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 
+import { Payload } from "recharts/types/component/DefaultLegendContent";
 import { cn } from "@/lib/utils";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
 
 export type ChartConfig = {
+  // eslint-disable-next-line no-unused-vars
   [k in string]: {
     label?: React.ReactNode;
     icon?: React.ComponentType;
@@ -259,10 +261,11 @@ const ChartLegend = RechartsPrimitive.Legend;
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
   React.ComponentProps<"div"> &
-    Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+    Pick<RechartsPrimitive.LegendProps, "verticalAlign"> & {
       hideIcon?: boolean;
       nameKey?: string;
       order?: "ASC" | "DESC";
+      payload?: (Omit<Payload, "payload"> & { payload: Payload })[];
     }
 >(
   (
@@ -316,7 +319,7 @@ const ChartLegendContent = React.forwardRef<
               )}
               {item.value}
               {" - "}
-              {item.payload.payload.value && `${item.payload.payload.value}`}
+              {item.payload.payload?.value && `${item.payload.payload.value}`}
             </div>
           );
         })}

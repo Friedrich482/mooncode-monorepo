@@ -35,7 +35,7 @@ const WeekTimeChart = () => {
   return (
     <ChartContainer
       config={chartConfig}
-      className="z-0 min-h-96 w-[45%] max-md:w-full"
+      className="z-0 min-h-96 w-[45%] max-[900px]:w-full"
     >
       <ComposedChart data={chartData}>
         <CartesianGrid vertical={false} horizontal={false} />
