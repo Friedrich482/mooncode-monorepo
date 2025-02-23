@@ -5,7 +5,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
-import WeekTimeChartSkeleton from "../../ui/skeleton/WeekTimeChartSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { WeeklyPeriod } from "@/types-schemas";
 import { chartConfig } from "@/constants";
 import fetchTimeByDayOfWeek from "@/utils/fetch/fetchTimeByDayOfWeek";
@@ -27,7 +27,7 @@ const WeekTimeChart = () => {
     return <span>An error occurred: {error.message}</span>;
   }
   if (isPending) {
-    return <WeekTimeChartSkeleton />;
+    return <Skeleton className="h-[24rem] w-[45%] max-[900px]:w-full" />;
   }
 
   const chartData = formatWeekChartData(data);

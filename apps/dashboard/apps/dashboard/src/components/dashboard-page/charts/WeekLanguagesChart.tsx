@@ -10,7 +10,7 @@ import {
 import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
 import Icon from "../../ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
-import WeekLanguagesChartSkeleton from "../../ui/skeleton/WeekLanguagesChartSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { WeeklyPeriod } from "@/types-schemas";
 import { chartConfig } from "@/constants";
 import fetchWeekLanguagesData from "@/utils/fetch/fetchWeekLanguagesData";
@@ -35,7 +35,7 @@ const WeekLanguagesChart = () => {
     return <span>An error occurred: {error.message}</span>;
   }
   if (isPending) {
-    return <WeekLanguagesChartSkeleton />;
+    return <Skeleton className="h-[24rem] w-[45%] max-[900px]:w-full" />;
   }
   const pieChartData = formatWeekLanguagesData(data);
   const barChartData = formatWeekLangByDayChart(data);
