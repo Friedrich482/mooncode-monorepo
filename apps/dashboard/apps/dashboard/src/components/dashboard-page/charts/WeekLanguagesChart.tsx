@@ -19,7 +19,6 @@ import formatWeekLanguagesData from "@/utils/format/formatWeekLanguagesChartData
 import languagesColor from "@/colors.json";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 const WeekLanguagesChart = () => {
   const [isPieChartVisible, setIsPieChartVisible] = useState(true);

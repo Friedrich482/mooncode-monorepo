@@ -19,14 +19,14 @@ const TimeSpentOnPeriod = () => {
   });
 
   return (
-    <h1 className="flex items-start justify-start gap-4 pt-2 text-2xl max-[450px]:flex-col">
+    <h1 className="flex flex-row items-start justify-start gap-4 pt-2 text-2xl max-[550px]:flex-col max-[410px]:text-base">
       <PeriodDropDown period={period} handleClick={handleClick} />{" "}
       <div className="flex gap-2 text-center">
-        <span className="font-bold">{period}: </span>
-        <span className={cn("", error && "text-red-600")}>
+        <span className="text-nowrap font-bold">{period}: </span>
+        <span className={cn("text-nowrap", error && "text-red-600")}>
           {isPending && <TimeSpentTodaySkeleton />}
           {error && `An error occurred: ${error.message}`}
-          {data != null && formatDuration(data)}
+          {data !== undefined && formatDuration(data)}
         </span>
       </div>
     </h1>
