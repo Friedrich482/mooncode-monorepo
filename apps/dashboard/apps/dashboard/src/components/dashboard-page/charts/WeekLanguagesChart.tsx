@@ -19,6 +19,7 @@ import formatWeekLanguagesData from "@/utils/format/formatWeekLanguagesChartData
 import languagesColor from "@/colors.json";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 const WeekLanguagesChart = () => {
   const [isPieChartVisible, setIsPieChartVisible] = useState(true);
@@ -49,10 +50,10 @@ const WeekLanguagesChart = () => {
       />
       <ChartContainer config={chartConfig} className="z-0 min-h-96 w-full">
         {isPieChartVisible ? (
-          <PieChart accessibilityLayer className="rounded-md bg-accent p-4">
+          <PieChart accessibilityLayer>
             <ChartTooltip
-              content={<ChartTooltipContent labelClassName="font-semibold" />}
               labelFormatter={() => <div className="font-semibold">Time</div>}
+              content={<ChartTooltipContent labelClassName="font-semibold" />}
               formatter={(value: string, language, { payload }) =>
                 CustomChartToolTip(
                   parseInt(value),
@@ -63,8 +64,10 @@ const WeekLanguagesChart = () => {
               }
             />
             <ChartLegend
-              content={<ChartLegendContent order="DESC" />}
-              className="w-full flex-wrap justify-normal"
+              content={<ChartLegendContent order="DESC" className="text-xs" />}
+              className="flex-wrap justify-end"
+              layout="vertical"
+              verticalAlign="middle"
               align="right"
             />
             <Pie
@@ -77,7 +80,7 @@ const WeekLanguagesChart = () => {
           </PieChart>
         ) : (
           <BarChart accessibilityLayer data={barChartData}>
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={false} horizontal={false} />
             <XAxis
               dataKey="date"
               tickLine={false}

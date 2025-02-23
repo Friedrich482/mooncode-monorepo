@@ -38,7 +38,7 @@ const WeekTimeChart = () => {
       className="z-0 min-h-96 w-[45%] max-md:w-full"
     >
       <ComposedChart data={chartData}>
-        <CartesianGrid vertical={false} />
+        <CartesianGrid vertical={false} horizontal={false} />
         <XAxis
           dataKey="date"
           tickLine={false}
