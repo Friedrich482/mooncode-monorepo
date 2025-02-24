@@ -27,7 +27,7 @@ const WeekTimeChart = () => {
     return <span>An error occurred: {error.message}</span>;
   }
   if (isPending) {
-    return <Skeleton className="h-[24rem] w-[45%] max-[900px]:w-full" />;
+    return <Skeleton className="max-chart:w-full h-[24rem] w-[45%]" />;
   }
 
   const chartData = formatWeekChartData(data);
@@ -35,7 +35,7 @@ const WeekTimeChart = () => {
   return (
     <ChartContainer
       config={chartConfig}
-      className="z-0 min-h-96 w-[45%] max-[900px]:w-full"
+      className="max-chart:w-full z-0 min-h-96 w-[45%]"
     >
       <ComposedChart data={chartData}>
         <CartesianGrid vertical={false} horizontal={false} />

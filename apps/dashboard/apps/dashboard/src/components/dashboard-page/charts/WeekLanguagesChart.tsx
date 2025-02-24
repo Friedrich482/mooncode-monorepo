@@ -35,16 +35,16 @@ const WeekLanguagesChart = () => {
     return <span>An error occurred: {error.message}</span>;
   }
   if (isPending) {
-    return <Skeleton className="h-[24rem] w-[45%] max-[900px]:w-full" />;
+    return <Skeleton className="max-chart:w-full h-[24rem] w-[45%]" />;
   }
   const pieChartData = formatWeekLanguagesData(data);
   const barChartData = formatWeekLangByDayChart(data);
 
   return (
-    <div className="relative w-[45%] max-[900px]:w-full">
+    <div className="max-chart:w-full relative w-[45%]">
       <Icon
         Icon={isPieChartVisible ? PieChartIcon : BarChartIcon}
-        className="absolute -top-12 right-0 z-50"
+        className="absolute -top-12 right-0 z-0"
         onClick={handleClick}
       />
       <ChartContainer config={chartConfig} className="min-h-96 w-full">
