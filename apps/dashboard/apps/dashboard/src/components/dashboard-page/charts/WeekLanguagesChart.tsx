@@ -16,7 +16,7 @@ import { chartConfig } from "@/constants";
 import fetchWeekLanguagesData from "@/utils/fetch/fetchWeekLanguagesData";
 import formatWeekLangByDayChart from "@/utils/format/formatWeekLangByDayChart";
 import formatWeekLanguagesData from "@/utils/format/formatWeekLanguagesChartData";
-import languagesColor from "@/colors.json";
+import languagesAttributes from "@/colors.json";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -39,6 +39,9 @@ const WeekLanguagesChart = () => {
   }
   const pieChartData = formatWeekLanguagesData(data);
   const barChartData = formatWeekLangByDayChart(data);
+
+  // ! Don't try to refactor the two charts and put them in their own
+  // ! component, it is not supported by recharts
 
   return (
     <div className="max-chart:w-full relative w-[45%]">
@@ -98,7 +101,9 @@ const WeekLanguagesChart = () => {
               formatter={(value: string, language) =>
                 CustomChartToolTip(
                   parseInt(value),
-                  languagesColor[language as keyof typeof languagesColor],
+                  languagesAttributes[
+                    language as keyof typeof languagesAttributes
+                  ].color,
                   language,
                 )
               }
@@ -117,9 +122,9 @@ const WeekLanguagesChart = () => {
                     dataKey={language}
                     stackId="a"
                     fill={
-                      languagesColor[
-                        language as keyof typeof languagesColor
-                      ] as string
+                      languagesAttributes[
+                        language as keyof typeof languagesAttributes
+                      ].color as string
                     }
                     className="cursor-pointer"
                   />

@@ -2,6 +2,7 @@ import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 
 import { Payload } from "recharts/types/component/DefaultLegendContent";
+import languagesAttributes from "@/colors.json";
 import { cn } from "@/lib/utils";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
@@ -317,7 +318,9 @@ const ChartLegendContent = React.forwardRef<
                   }}
                 />
               )}
-              {item.value}
+              {languagesAttributes[
+                item.value as keyof typeof languagesAttributes
+              ].name || item.value}
               {" - "}
               {item.payload.payload?.value && `${item.payload.payload.value}`}
             </div>

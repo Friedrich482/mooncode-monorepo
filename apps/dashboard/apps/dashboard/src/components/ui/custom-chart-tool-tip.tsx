@@ -1,4 +1,5 @@
 import formatDuration from "@/utils/formatDuration";
+import languagesAttributes from "@/colors.json";
 import { z } from "zod";
 
 const CustomChartToolTip = (
@@ -26,7 +27,14 @@ const CustomChartToolTip = (
           }}
         />
       ) : null}
-      {languageId && <span>{languageId}</span>}
+      {languageId && (
+        <span>
+          {
+            languagesAttributes[languageId as keyof typeof languagesAttributes]
+              .name
+          }
+        </span>
+      )}
       <span className="flex-1 text-muted-foreground">
         {!Number.isNaN(value) ? formatDuration(value) : "######"}{" "}
         {percentage && `(${percentage}%)`}
