@@ -24,7 +24,7 @@ export class CodingDataService {
     if (!dayData?.id) {
       return {
         timeSpent: 0,
-        dayLanguages: {},
+        dayLanguagesTime: {},
       };
     }
 
