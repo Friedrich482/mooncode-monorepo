@@ -17,7 +17,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const statusBarItem = addStatusBarItem();
 
-  const { timeSpent, dayLanguages: initialLanguagesData } =
+  const { timeSpent, dayLanguagesTime: initialLanguagesData } =
     await fetchInitialLanguagesData(context);
 
   setStatusBarItem(timeSpent, statusBarItem);
