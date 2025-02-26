@@ -89,7 +89,7 @@ body {
 
 ::-webkit-scrollbar-thumb {
   background: rgb(163 163 163 / var(--tw-bg-opacity, 1));
-  border-radius: 4px;
+  border-radius: 0.25rem;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -113,8 +113,6 @@ body {
     --chart-5: 340 75% 55%;
   }
 }
-
-
 
 @layer base {
   * {
