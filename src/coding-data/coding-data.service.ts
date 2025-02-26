@@ -24,7 +24,7 @@ export class CodingDataService {
     if (!dayData?.id) {
       return {
         timeSpent: 0,
-        dayLanguages: {},
+        dayLanguagesTime: {},
       };
     }
 
@@ -34,7 +34,7 @@ export class CodingDataService {
     return { timeSpent: dayData.timeSpent, dayLanguagesTime };
   }
 
-  async findWeekly(userId: string, offset: number = 0) {
+  async findWeekly(userId: string, offset = 0) {
     const { start, end } = getWeekWithOffset(offset);
     const weekData = await this.dailyDataService.findRangeDailyData(
       userId,
