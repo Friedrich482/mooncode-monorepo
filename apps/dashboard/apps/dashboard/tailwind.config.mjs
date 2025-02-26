@@ -57,6 +57,7 @@ export default {
       "very-small": "350px",
       sm: "640px",
       md: "768px",
+      chart: "900px",
       lg: "1024px",
       xl: "1280px",
       "2xl": "1536px",

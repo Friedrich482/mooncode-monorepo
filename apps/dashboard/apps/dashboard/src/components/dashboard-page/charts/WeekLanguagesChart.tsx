@@ -10,16 +10,15 @@ import {
 import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
 import Icon from "../../ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
-import WeekLanguagesChartSkeleton from "../../ui/skeleton/WeekLanguagesChartSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { WeeklyPeriod } from "@/types-schemas";
 import { chartConfig } from "@/constants";
 import fetchWeekLanguagesData from "@/utils/fetch/fetchWeekLanguagesData";
 import formatWeekLangByDayChart from "@/utils/format/formatWeekLangByDayChart";
 import formatWeekLanguagesData from "@/utils/format/formatWeekLanguagesChartData";
-import languagesColor from "@/colors.json";
+import languagesAttributes from "@/colors.json";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 const WeekLanguagesChart = () => {
   const [isPieChartVisible, setIsPieChartVisible] = useState(true);
@@ -36,16 +35,19 @@ const WeekLanguagesChart = () => {
     return <span>An error occurred: {error.message}</span>;
   }
   if (isPending) {
-    return <WeekLanguagesChartSkeleton />;
+    return <Skeleton className="max-chart:w-full h-[24rem] w-[45%]" />;
   }
   const pieChartData = formatWeekLanguagesData(data);
   const barChartData = formatWeekLangByDayChart(data);
 
+  // ! Don't try to refactor the two charts and put them in their own
+  // ! component, it is not supported by recharts
+
   return (
-    <div className="relative w-[45%] max-[900px]:w-full">
+    <div className="max-chart:w-full relative w-[45%]">
       <Icon
         Icon={isPieChartVisible ? PieChartIcon : BarChartIcon}
-        className="absolute -top-12 right-0 z-50"
+        className="absolute -top-12 right-0 z-0"
         onClick={handleClick}
       />
       <ChartContainer config={chartConfig} className="min-h-96 w-full">
@@ -99,7 +101,9 @@ const WeekLanguagesChart = () => {
               formatter={(value: string, language) =>
                 CustomChartToolTip(
                   parseInt(value),
-                  languagesColor[language as keyof typeof languagesColor],
+                  languagesAttributes[
+                    language as keyof typeof languagesAttributes
+                  ].color,
                   language,
                 )
               }
@@ -118,9 +122,9 @@ const WeekLanguagesChart = () => {
                     dataKey={language}
                     stackId="a"
                     fill={
-                      languagesColor[
-                        language as keyof typeof languagesColor
-                      ] as string
+                      languagesAttributes[
+                        language as keyof typeof languagesAttributes
+                      ].color as string
                     }
                     className="cursor-pointer"
                   />

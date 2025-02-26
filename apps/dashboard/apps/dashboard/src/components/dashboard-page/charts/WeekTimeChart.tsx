@@ -5,7 +5,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
-import WeekTimeChartSkeleton from "../../ui/skeleton/WeekTimeChartSkeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 import { WeeklyPeriod } from "@/types-schemas";
 import { chartConfig } from "@/constants";
 import fetchTimeByDayOfWeek from "@/utils/fetch/fetchTimeByDayOfWeek";
@@ -27,7 +27,7 @@ const WeekTimeChart = () => {
     return <span>An error occurred: {error.message}</span>;
   }
   if (isPending) {
-    return <WeekTimeChartSkeleton />;
+    return <Skeleton className="max-chart:w-full h-[24rem] w-[45%]" />;
   }
 
   const chartData = formatWeekChartData(data);
@@ -35,7 +35,7 @@ const WeekTimeChart = () => {
   return (
     <ChartContainer
       config={chartConfig}
-      className="z-0 min-h-96 w-[45%] max-[900px]:w-full"
+      className="max-chart:w-full z-0 min-h-96 w-[45%]"
     >
       <ComposedChart data={chartData}>
         <CartesianGrid vertical={false} horizontal={false} />
