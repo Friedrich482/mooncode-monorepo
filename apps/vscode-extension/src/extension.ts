@@ -12,7 +12,7 @@ import setStatusBarItem from "./utils/setStatusBarItem";
 
 export async function activate(context: vscode.ExtensionContext) {
   vscode.window.showInformationMessage(
-    "MoonCode starts now tracking your coding time"
+    "MoonCode starts now tracking your coding time",
   );
 
   const statusBarItem = addStatusBarItem();
@@ -45,32 +45,32 @@ export async function activate(context: vscode.ExtensionContext) {
     () => {
       currentLanguagesData = timeGetter();
       vscode.window.showInformationMessage(
-        `${JSON.stringify(currentLanguagesData)}`
+        `${JSON.stringify(currentLanguagesData)}`,
       );
       vscode.window.showInformationMessage(`${JSON.stringify(body)}`);
-    }
+    },
   );
   const loginCommand = vscode.commands.registerCommand(
     "MoonCode.login",
     async () => {
       await login(context);
-    }
+    },
   );
   const registerCommand = vscode.commands.registerCommand(
     "MoonCode.register",
     async () => {
       await register(context);
-    }
+    },
   );
   const logoutCommand = vscode.commands.registerCommand(
     "MoonCode.logout",
     async () => {
       await logout(context);
-    }
+    },
   );
   const openDashBoardCommand = vscode.commands.registerCommand(
     "MoonCode.openDashBoard",
-    openDashBoard
+    openDashBoard,
   );
 
   setInterval(async () => {
@@ -83,7 +83,7 @@ export async function activate(context: vscode.ExtensionContext) {
     registerCommand,
     logoutCommand,
     openDashBoardCommand,
-    statusBarItem
+    statusBarItem,
   );
 }
 
