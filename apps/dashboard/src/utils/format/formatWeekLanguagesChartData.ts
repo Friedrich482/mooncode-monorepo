@@ -12,7 +12,7 @@ const formatWeekLanguagesData = (
       value: formatDuration(time),
       time: time,
       fill: languagesColor[languageName as keyof typeof languagesColor]
-        .color as string,
+        ?.color as string,
       percentage: ((time * 100) / timeSpent).toFixed(2),
     }))
     .sort((a, b) => a.time - b.time);
