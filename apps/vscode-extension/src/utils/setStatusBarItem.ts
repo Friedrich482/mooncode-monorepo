@@ -1,17 +1,11 @@
 import * as vscode from "vscode";
+import formatDuration from "@repo/utils/formatDuration";
 
 const setStatusBarItem = (
   timeSpentToday: number,
-  statusBarItem: vscode.StatusBarItem
+  statusBarItem: vscode.StatusBarItem,
 ) => {
-  const minutesSpentToday = Math.floor((timeSpentToday % 3600) / 60);
-  const hoursSpentToday = Math.floor(timeSpentToday / 3600);
-
-  statusBarItem.text = `$(watch) ${
-    hoursSpentToday !== 0
-      ? `${hoursSpentToday} hr${hoursSpentToday !== 1 ? "s" : ""}`
-      : ""
-  } ${minutesSpentToday} min${minutesSpentToday !== 1 ? "s" : ""}`;
+  statusBarItem.text = `$(watch) ${formatDuration(timeSpentToday)}`;
 };
 
 export default setStatusBarItem;

@@ -3,7 +3,7 @@ import PeriodDropDown from "./PeriodDropDown";
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
 import fetchPeriodTimeSpent from "@/utils/fetch/fetchPeriodTimeSpent";
-import formatDuration from "@/utils/formatDuration";
+import formatDuration from "@repo/utils/formatDuration";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 

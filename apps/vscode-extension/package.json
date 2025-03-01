@@ -3,6 +3,7 @@
   "displayName": "MoonCode",
   "description": "",
   "version": "0.0.1",
+  "type": "module",
   "engines": {
     "vscode": "^1.95.0"
   },
@@ -12,7 +13,7 @@
   "activationEvents": [
     "onStartupFinished"
   ],
-  "main": "./dist/extension.js",
+  "main": "./dist/extension.cjs",
   "contributes": {
     "commands": [
       {
@@ -68,6 +69,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "@repo/utils": "*",
     "zod": "^3.24.1"
   }
 }

@@ -1,5 +1,5 @@
 import fetchTimeByDayOfWeek from "../fetch/fetchTimeByDayOfWeek";
-import formatDuration from "../formatDuration";
+import formatDuration from "@repo/utils/formatDuration";
 
 const formatWeekChartData = (
   data: Awaited<ReturnType<typeof fetchTimeByDayOfWeek>> | undefined,

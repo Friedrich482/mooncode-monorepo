@@ -1,5 +1,5 @@
 import fetchWeekLanguagesData from "../fetch/fetchWeekLanguagesData";
-import formatDuration from "../formatDuration";
+import formatDuration from "@repo/utils/formatDuration";
 import languagesColor from "@/colors.json";
 
 const formatWeekLanguagesData = (

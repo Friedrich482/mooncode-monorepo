@@ -1,4 +1,4 @@
-import formatDuration from "@/utils/formatDuration";
+import formatDuration from "@repo/utils/formatDuration";
 import languagesAttributes from "@/colors.json";
 import { z } from "zod";
 
