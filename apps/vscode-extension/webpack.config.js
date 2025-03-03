@@ -16,7 +16,7 @@ const extensionConfig = {
   output: {
     // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
     path: path.resolve(__dirname, "dist"),
-    filename: "extension.cjs",
+    filename: "extension.js",
     libraryTarget: "commonjs2",
   },
   externals: {
@@ -26,6 +26,9 @@ const extensionConfig = {
   resolve: {
     // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
     extensions: [".ts", ".cjs"],
+    alias: {
+      "@repo/utils": path.resolve(__dirname, "../../packages/utils/src"),
+    },
   },
   module: {
     rules: [
@@ -35,6 +38,16 @@ const extensionConfig = {
         use: [
           {
             loader: "ts-loader",
+            options: {
+              // This is important - tells ts-loader not to use rootDir constraint
+              // when importing from outside the project
+              transpileOnly: false,
+              configFile: path.resolve(__dirname, "./tsconfig.json"),
+              compilerOptions: {
+                // Override the rootDir setting during webpack build
+                rootDir: undefined,
+              },
+            },
           },
         ],
       },
