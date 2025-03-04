@@ -26,7 +26,6 @@ const getTime = (): (() => LanguagesData) => {
 
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];
-
       // reset the timer at 00:00
       const date = new Date();
       if (
@@ -92,22 +91,22 @@ const getTime = (): (() => LanguagesData) => {
 
   const activityListeners = [
     vscode.workspace.onDidChangeTextDocument((event) => {
-      const language = event.document.languageId || "other";
-      const languageData = updateLanguageData(language);
-      languageData.lastActivityTime = performance.now();
+      const currentLanguage = event.document.languageId || "other";
+      const currentLanguageData = updateLanguageData(currentLanguage);
+      currentLanguageData.lastActivityTime = performance.now();
     }),
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor) {
-        const language = editor.document.languageId || "other";
-        const languageData = updateLanguageData(language);
-        languageData.lastActivityTime = performance.now();
+        const currentLanguage = editor.document.languageId || "other";
+        const currentLanguageData = updateLanguageData(currentLanguage);
+        currentLanguageData.lastActivityTime = performance.now();
       }
     }),
     vscode.window.onDidChangeVisibleTextEditors((editors) => {
       if (editors.length > 0) {
-        const language = editors[0].document.languageId || "other";
-        const languageData = updateLanguageData(language);
-        languageData.lastActivityTime = performance.now();
+        const currentLanguage = editors[0].document.languageId || "other";
+        const currentLanguageData = updateLanguageData(currentLanguage);
+        currentLanguageData.lastActivityTime = performance.now();
       }
     }),
   ];
