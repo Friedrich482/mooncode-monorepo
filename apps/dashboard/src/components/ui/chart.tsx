@@ -2,8 +2,8 @@ import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 
 import { Payload } from "recharts/types/component/DefaultLegendContent";
-import languagesAttributes from "@/colors.json";
 import { cn } from "@/lib/utils";
+import languagesAttributes from "@/colors.json";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
