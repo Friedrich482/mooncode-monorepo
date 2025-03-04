@@ -48,7 +48,6 @@
     "compile": "webpack",
     "build": "tsc --build",
     "watch": "webpack --watch --mode development",
-    "dev": "code --verbose --extensionDevelopmentPath=${PWD}",
     "package": "webpack --mode production --devtool hidden-source-map",
     "compile-tests": "tsc -p . --outDir out",
     "watch-tests": "tsc -p . -w --outDir out",
