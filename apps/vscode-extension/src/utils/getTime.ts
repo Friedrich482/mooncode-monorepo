@@ -32,7 +32,7 @@ const getTime = (): (() => LanguagesData) => {
       if (
         date.getUTCHours() === 0 &&
         date.getUTCMinutes() === 0 &&
-        date.getUTCSeconds() < 10
+        date.getUTCSeconds() === 0
       ) {
         languagesData[language] = {
           elapsedTime: 0,
@@ -49,7 +49,7 @@ const getTime = (): (() => LanguagesData) => {
         // Immediately freeze non-active languages
         if (!languageData.isFrozen) {
           languageData.frozenTime = Math.floor(
-            (now - languageData.startTime) / 1000
+            (now - languageData.startTime) / 1000,
           );
           languageData.freezeStartTime = now;
           languageData.isFrozen = true;
@@ -58,27 +58,30 @@ const getTime = (): (() => LanguagesData) => {
       }
 
       // Only check idle time for the active language
+      const latestLanguageObj = languagesData[latestLanguage];
+
       const idleDuration = Math.floor(
-        (now - languageData.lastActivityTime) / 1000
+        (now - latestLanguageObj.lastActivityTime) / 1000,
       );
-      if (idleDuration >= MAX_IDLE_TIME && !languageData.isFrozen) {
-        languageData.frozenTime = Math.floor(
-          (now - languageData.startTime) / 1000
+
+      if (idleDuration >= MAX_IDLE_TIME && !latestLanguageObj.isFrozen) {
+        latestLanguageObj.frozenTime = Math.floor(
+          (now - latestLanguageObj.startTime) / 1000,
         );
-        languageData.freezeStartTime = now;
-        languageData.isFrozen = true;
+        latestLanguageObj.freezeStartTime = now;
+        latestLanguageObj.isFrozen = true;
       } else if (
         idleDuration < MAX_IDLE_TIME &&
-        languageData.isFrozen &&
-        languageData.freezeStartTime
+        latestLanguageObj.isFrozen &&
+        latestLanguageObj.freezeStartTime
       ) {
         const freezeDuration = Math.floor(
-          (now - languageData.freezeStartTime) / 1000
+          (now - latestLanguageObj.freezeStartTime) / 1000,
         );
-        languageData.startTime += Math.floor(freezeDuration * 1000);
-        languageData.frozenTime = null;
-        languageData.freezeStartTime = null;
-        languageData.isFrozen = false;
+        latestLanguageObj.startTime += Math.floor(freezeDuration * 1000);
+        latestLanguageObj.frozenTime = null;
+        latestLanguageObj.freezeStartTime = null;
+        latestLanguageObj.isFrozen = false;
       }
     });
   }, 1000);
