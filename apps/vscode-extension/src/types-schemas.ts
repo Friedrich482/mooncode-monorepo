@@ -28,3 +28,10 @@ export const fetchInitialLanguagesDataSchema = z.object({
   timeSpent: z.number(),
   dayLanguagesTime: z.record(z.string().min(1), z.number().min(0)),
 });
+
+export const JWTPayloadSchema = z.object({
+  sub: z.string().ulid(),
+  username: z.string().min(2),
+  iat: z.number().int(),
+  exp: z.number().int(),
+});

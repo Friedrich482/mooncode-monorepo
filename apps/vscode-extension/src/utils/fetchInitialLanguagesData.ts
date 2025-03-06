@@ -5,13 +5,19 @@ import getToken from "./getToken";
 
 const fetchInitialLanguagesData = async (context: vscode.ExtensionContext) => {
   const authToken = await getToken(context);
+
   const res = await fetch(INITIAL_DATA_URL, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${authToken}`,
     },
   });
+  // const statusCode = res.status;
   const data = await res.json();
+
+  // if (statusCode === 401) {
+  //   await login(context);
+  // }
 
   const parsedData = fetchInitialLanguagesDataSchema.safeParse(data);
   if (!parsedData.success) {

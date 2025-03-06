@@ -29,8 +29,8 @@ const getTime = (): (() => LanguagesData) => {
       // reset the timer at 00:00
       const date = new Date();
       if (
-        date.getUTCHours() === 0 &&
-        date.getUTCMinutes() === 0 &&
+        date.getUTCHours() === 22 &&
+        date.getUTCMinutes() === 47 &&
         date.getUTCSeconds() === 0
       ) {
         languagesData[language] = {
@@ -47,11 +47,11 @@ const getTime = (): (() => LanguagesData) => {
       if (language !== latestLanguage) {
         // Immediately freeze non-active languages
         if (!languageData.isFrozen) {
+          languageData.freezeStartTime = now;
+          languageData.isFrozen = true;
           languageData.frozenTime = Math.floor(
             (now - languageData.startTime) / 1000,
           );
-          languageData.freezeStartTime = now;
-          languageData.isFrozen = true;
         }
         return; // Skip the rest of the checks for non-active languages
       }
@@ -116,10 +116,11 @@ const getTime = (): (() => LanguagesData) => {
   // Time getter function
   const timeGetter = () => {
     // Update all language times
+
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];
       const now = performance.now();
-
+      // this line is suspect
       languageData.elapsedTime =
         languageData.isFrozen && languageData.frozenTime
           ? languageData.frozenTime
