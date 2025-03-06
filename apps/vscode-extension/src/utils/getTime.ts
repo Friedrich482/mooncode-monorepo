@@ -29,18 +29,11 @@ const getTime = (): (() => LanguagesData) => {
       // reset the timer at 00:00
       const date = new Date();
       if (
-        date.getUTCHours() === 22 &&
-        date.getUTCMinutes() === 47 &&
+        date.getUTCHours() === 0 &&
+        date.getUTCMinutes() === 0 &&
         date.getUTCSeconds() === 0
       ) {
-        languagesData[language] = {
-          elapsedTime: 0,
-          startTime: performance.now(),
-          lastActivityTime: performance.now(),
-          frozenTime: null,
-          freezeStartTime: null,
-          isFrozen: false,
-        };
+        delete languagesData[language];
         return;
       }
 

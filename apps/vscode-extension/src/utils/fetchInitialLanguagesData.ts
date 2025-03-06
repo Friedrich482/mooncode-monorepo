@@ -12,12 +12,7 @@ const fetchInitialLanguagesData = async (context: vscode.ExtensionContext) => {
       Authorization: `Bearer ${authToken}`,
     },
   });
-  // const statusCode = res.status;
   const data = await res.json();
-
-  // if (statusCode === 401) {
-  //   await login(context);
-  // }
 
   const parsedData = fetchInitialLanguagesDataSchema.safeParse(data);
   if (!parsedData.success) {
