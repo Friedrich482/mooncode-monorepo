@@ -2,10 +2,12 @@ import { LanguagesData } from "./types-schemas";
 
 export const MAX_IDLE_TIME = 600; //seconds
 
-export const forbiddenLanguages = ["scimput"];
-export const subsetLanguages: Record<string, string> = {
+export const forbiddenLanguages = ["scminput"];
+export const languageMapping: Record<string, string> = {
   dockercompose: "docker",
   dockerfile: "docker",
+  javascriptreact: "javascript",
+  typescriptreact: "typescript",
 };
 
 export const localUrlPort = 4208;

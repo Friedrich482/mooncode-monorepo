@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { MAX_IDLE_TIME, languagesData } from "../constants";
 import { type LanguagesData } from "../types-schemas";
+import getLanguageId from "./getLanguageId";
 import updateCurrentLanguage from "./updateCurrentLanguage";
 
 export const updateLanguageData = (language: string) => {
@@ -22,8 +23,9 @@ const getTime = (): (() => LanguagesData) => {
 
   const idleCheckInterval = setInterval(() => {
     const now = performance.now();
-    const latestLanguage =
-      vscode.window.activeTextEditor?.document.languageId || "other";
+    const latestLanguage = getLanguageId(
+      vscode.window.activeTextEditor?.document.languageId || "other",
+    );
 
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];

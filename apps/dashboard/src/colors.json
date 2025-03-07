@@ -152,8 +152,6 @@
   },
   "directx3dfile": { "name": "DirectX 3D File", "color": "#aace60" },
   "dm": { "name": "DM", "color": "#447265" },
-  "dockerfile": { "name": "Dockerfile", "color": "#384d54" },
-  "dockercompose": { "name": "Docker Compose", "color": "#384d54" },
   "docker": { "name": "Docker", "color": "#384d54" },
   "dogescript": { "name": "Dogescript", "color": "#cca760" },
   "dotenv": { "name": "Dotenv", "color": "#e5d559" },
