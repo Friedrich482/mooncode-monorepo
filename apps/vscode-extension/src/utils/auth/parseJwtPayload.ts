@@ -1,4 +1,4 @@
-import { JWTPayloadSchema } from "../types-schemas";
+import { JWTPayloadSchema } from "../../types-schemas";
 import { SafeParseSuccess } from "zod";
 
 const parseJwtPayload = (

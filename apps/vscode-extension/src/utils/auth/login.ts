@@ -18,7 +18,7 @@ const login = async (context: vscode.ExtensionContext) => {
     const selection = await vscode.window.showErrorMessage(
       "Both username and password are required",
       "Try again",
-      "Cancel"
+      "Cancel",
     );
     if (selection === "Try again") {
       await login(context);
@@ -35,7 +35,7 @@ const login = async (context: vscode.ExtensionContext) => {
       `Login failed: ${res}`,
       "Try again",
       "Register",
-      "Cancel"
+      "Cancel",
     );
     if (selection === "Register") {
       await register(context);

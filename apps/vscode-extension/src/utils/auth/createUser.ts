@@ -1,13 +1,13 @@
 import {
   failedOperationResponseSchema,
   registerResponseSchema,
-} from "../types-schemas";
-import { REGISTER_URL } from "../constants";
+} from "../../types-schemas";
+import { REGISTER_URL } from "../../constants";
 
 const createUser = async (
   username: string,
   password: string,
-  email: string
+  email: string,
 ) => {
   const res = await fetch(REGISTER_URL, {
     method: "POST",

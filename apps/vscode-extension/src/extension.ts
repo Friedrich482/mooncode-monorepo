@@ -3,11 +3,11 @@ import addStatusBarItem from "./utils/addStatusBarItem";
 import fetchInitialLanguagesData from "./utils/fetchInitialLanguagesData";
 import getTime from "./utils/getTime";
 import { languagesData } from "./constants";
-import login from "./utils/login";
-import logout from "./utils/logout";
+import login from "./utils/auth/login";
+import logout from "./utils/auth/logout";
 import openDashBoard from "./utils/openDashBoard";
 import periodicSyncData from "./utils/periodicSyncData";
-import register from "./utils/register";
+import register from "./utils/auth/register";
 import setStatusBarItem from "./utils/setStatusBarItem";
 
 export async function activate(context: vscode.ExtensionContext) {

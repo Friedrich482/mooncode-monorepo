@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { PERIODIC_DATA_SYNC_URL } from "../constants";
 import getTime from "./getTime";
-import getToken from "./getToken";
+import getToken from "./auth/getToken";
 import setStatusBarItem from "./setStatusBarItem";
 
 const periodicSyncData = async (

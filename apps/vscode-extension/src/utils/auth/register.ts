@@ -42,7 +42,7 @@ const register = async (context: vscode.ExtensionContext) => {
     const selection = await vscode.window.showErrorMessage(
       "Both email, username and password are required. And both password should match",
       "Try again",
-      "Cancel"
+      "Cancel",
     );
     if (selection === "Try again") {
       await register(context);
@@ -57,7 +57,7 @@ const register = async (context: vscode.ExtensionContext) => {
     const selection = await vscode.window.showErrorMessage(
       `Registering failed: ${res}`,
       "Try again",
-      "Cancel"
+      "Cancel",
     );
     if (selection === "Try again") {
       await register(context);
@@ -68,7 +68,7 @@ const register = async (context: vscode.ExtensionContext) => {
   }
   const selection = await vscode.window.showInformationMessage(
     "Registered successfully",
-    "Login"
+    "Login",
   );
   if (selection === "Login") {
     await login(context);
