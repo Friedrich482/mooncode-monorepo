@@ -6,8 +6,8 @@ const getWeekWithOffset = (offset: number = 0) => {
   const startDate = subDays(endDate, 6);
 
   return {
-    start: startOfDay(startDate).toISOString(),
-    end: endOfDay(endDate).toISOString(),
+    start: startOfDay(startDate).toLocaleString(),
+    end: endOfDay(endDate).toLocaleString(),
   };
 };
 export default getWeekWithOffset;
