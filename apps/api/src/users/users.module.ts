@@ -8,7 +8,9 @@ import { drizzleProvider } from "src/drizzle/drizzle.provider";
 @Module({
   imports: [ConfigModule, JwtModule],
   controllers: [UsersController],
-  providers: [...drizzleProvider, UsersService],
+  // we need to add UsersController in the providers
+  // to make the adapter generate the trpc router
+  providers: [...drizzleProvider, UsersService, UsersController],
   exports: [UsersService],
 })
 export class UsersModule {}
