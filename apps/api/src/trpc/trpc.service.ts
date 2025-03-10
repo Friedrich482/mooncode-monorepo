@@ -1,10 +1,12 @@
 import * as trpcExpress from "@trpc/server/adapters/express";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { TRPCError, initTRPC } from "@trpc/server";
+import { ConfigService } from "@nestjs/config";
 import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
-import { Injectable } from "@nestjs/common";
+import { JwtService } from "@nestjs/jwt";
 import { User } from "src/drizzle/schema/users";
 import { UsersService } from "src/users/users.service";
-import { initTRPC, TRPCError } from "@trpc/server";
-
+import { transformer } from "@repo/trpc/src/transformer";
 export type TrpcContext = CreateExpressContextOptions & {
   user?: User;
 };
@@ -19,7 +21,11 @@ export const createContext = async (
 @Injectable()
 export class TrpcService {
   trpc;
-  constructor(private readonly userService: UsersService) {
+  constructor(
+    private readonly userService: UsersService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+  ) {
     this.trpc = initTRPC.context<TrpcContext>().create({
       transformer,
     });
@@ -31,18 +37,13 @@ export class TrpcService {
   }
 
   // these routes requires authentication:
-  // if allowedRoles is empty, it requires an authenticated user (access token in the header)
-  // if allowedRoles is not empty, it requires an authenticated user with one of the allowed roles
-  protectedProcedure(allowedRoles?: string[]) {
+
+  protectedProcedure() {
     const procedure = this.trpc.procedure.use(async (opts) => {
       // get bearer from headers
       const userJwt = await this.getJwtUserFromHeader(opts.ctx);
       // throw error if user is unauthorized
-      if (
-        !userJwt ||
-        (allowedRoles?.length &&
-          !userJwt.user.roles?.some((role) => allowedRoles.includes(role.name)))
-      ) {
+      if (!userJwt) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       // user is authorized
@@ -60,8 +61,19 @@ export class TrpcService {
     // get bearer from headers
     const accessToken =
       ctx.req.headers.authorization?.replace("Bearer ", "") || "";
+
     if (!accessToken) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
+    }
+
+    try {
+      const payload = await this.jwtService.verifyAsync(accessToken, {
+        secret: this.configService.get<string>("JWT_SECRET"),
+      });
+      return payload;
+    } catch (error) {
+      console.error(error);
+      throw new UnauthorizedException(error);
     }
   }
 }

@@ -11,5 +11,3 @@ export type ExtendedRequest = Request & {
 };
 
 export type Date = string;
-
-export type { AppRouter } from "./@generated/server";
