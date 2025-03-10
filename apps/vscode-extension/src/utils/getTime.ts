@@ -1,8 +1,10 @@
 import * as vscode from "vscode";
 import { MAX_IDLE_TIME, languagesData } from "../constants";
 import { type LanguagesData } from "../types-schemas";
+import getLanguageId from "./getLanguageId";
+import updateCurrentLanguage from "./updateCurrentLanguage";
 
-const updateLanguageData = (language: string) => {
+export const updateLanguageData = (language: string) => {
   if (!languagesData[language]) {
     languagesData[language] = {
       elapsedTime: 0,
@@ -21,37 +23,31 @@ const getTime = (): (() => LanguagesData) => {
 
   const idleCheckInterval = setInterval(() => {
     const now = performance.now();
-    const latestLanguage =
-      vscode.window.activeTextEditor?.document.languageId || "other";
+    const latestLanguage = getLanguageId(
+      vscode.window.activeTextEditor?.document.languageId || "other",
+    );
 
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];
-      // reset the timer at 00:00
+      // reset the timer at 00:00 (local midnight)
       const date = new Date();
       if (
-        date.getUTCHours() === 0 &&
-        date.getUTCMinutes() === 0 &&
-        date.getUTCSeconds() === 0
+        date.getHours() === 0 &&
+        date.getMinutes() === 0 &&
+        date.getSeconds() === 0
       ) {
-        languagesData[language] = {
-          elapsedTime: 0,
-          startTime: performance.now(),
-          lastActivityTime: performance.now(),
-          frozenTime: null,
-          freezeStartTime: null,
-          isFrozen: false,
-        };
+        delete languagesData[language];
         return;
       }
 
       if (language !== latestLanguage) {
         // Immediately freeze non-active languages
         if (!languageData.isFrozen) {
+          languageData.freezeStartTime = now;
+          languageData.isFrozen = true;
           languageData.frozenTime = Math.floor(
             (now - languageData.startTime) / 1000,
           );
-          languageData.freezeStartTime = now;
-          languageData.isFrozen = true;
         }
         return; // Skip the rest of the checks for non-active languages
       }
@@ -91,22 +87,19 @@ const getTime = (): (() => LanguagesData) => {
 
   const activityListeners = [
     vscode.workspace.onDidChangeTextDocument((event) => {
-      const currentLanguage = event.document.languageId || "other";
-      const currentLanguageData = updateLanguageData(currentLanguage);
-      currentLanguageData.lastActivityTime = performance.now();
+      const currentLanguageId = event.document.languageId || "other";
+      updateCurrentLanguage(currentLanguageId);
     }),
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor) {
-        const currentLanguage = editor.document.languageId || "other";
-        const currentLanguageData = updateLanguageData(currentLanguage);
-        currentLanguageData.lastActivityTime = performance.now();
+        const currentLanguageId = editor.document.languageId || "other";
+        updateCurrentLanguage(currentLanguageId);
       }
     }),
     vscode.window.onDidChangeVisibleTextEditors((editors) => {
       if (editors.length > 0) {
-        const currentLanguage = editors[0].document.languageId || "other";
-        const currentLanguageData = updateLanguageData(currentLanguage);
-        currentLanguageData.lastActivityTime = performance.now();
+        const currentLanguageId = editors[0].document.languageId || "other";
+        updateCurrentLanguage(currentLanguageId);
       }
     }),
   ];
@@ -116,10 +109,10 @@ const getTime = (): (() => LanguagesData) => {
   // Time getter function
   const timeGetter = () => {
     // Update all language times
+
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];
       const now = performance.now();
-
       languageData.elapsedTime =
         languageData.isFrozen && languageData.frozenTime
           ? languageData.frozenTime

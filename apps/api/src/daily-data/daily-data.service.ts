@@ -18,7 +18,7 @@ export class DailyDataService {
     const [createdDailyData] = await this.db
       .insert(dailyData)
       .values({
-        date: new Date().toISOString(),
+        date: new Date().toLocaleString(),
         timeSpent: timeSpent,
         userId,
       })
@@ -84,7 +84,7 @@ export class DailyDataService {
     const [updatedDailyData] = await this.db
       .update(dailyData)
       .set({
-        date: new Date().toISOString(),
+        date: new Date().toLocaleString(),
         timeSpent,
       })
       .where(and(eq(dailyData.userId, userId), eq(dailyData.date, date)))

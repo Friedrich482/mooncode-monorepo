@@ -3,11 +3,11 @@ import addStatusBarItem from "./utils/addStatusBarItem";
 import fetchInitialLanguagesData from "./utils/fetchInitialLanguagesData";
 import getTime from "./utils/getTime";
 import { languagesData } from "./constants";
-import login from "./utils/login";
-import logout from "./utils/logout";
+import login from "./utils/auth/login";
+import logout from "./utils/auth/logout";
 import openDashBoard from "./utils/openDashBoard";
 import periodicSyncData from "./utils/periodicSyncData";
-import register from "./utils/register";
+import register from "./utils/auth/register";
 import setStatusBarItem from "./utils/setStatusBarItem";
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -45,9 +45,9 @@ export async function activate(context: vscode.ExtensionContext) {
     () => {
       currentLanguagesData = timeGetter();
       vscode.window.showInformationMessage(
-        `${JSON.stringify(currentLanguagesData)}`,
+        `currentLanguagesData: ${JSON.stringify(Object.entries(currentLanguagesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}\n\n
+        initialLanguagesData: ${JSON.stringify(Object.entries(initialLanguagesData).map(([key, elapsedTime]) => `${key}: ${elapsedTime} seconds`))}`,
       );
-      vscode.window.showInformationMessage(`${JSON.stringify(body)}`);
     },
   );
   const loginCommand = vscode.commands.registerCommand(

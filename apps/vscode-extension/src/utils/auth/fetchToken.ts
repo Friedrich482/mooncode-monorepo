@@ -1,8 +1,8 @@
 import {
   failedOperationResponseSchema,
   loginResponseSchema,
-} from "../types-schemas";
-import { LOGIN_URL } from "../constants";
+} from "../../types-schemas";
+import { LOGIN_URL } from "../../constants";
 
 const fetchToken = async (username: string, password: string) => {
   const res = await fetch(LOGIN_URL, {
@@ -26,7 +26,8 @@ const fetchToken = async (username: string, password: string) => {
 
   const parsedBody = loginResponseSchema.safeParse(body);
   if (!parsedBody.success) {
-    return "Incorrect body type";
+    const errorMessage = parsedBody.error.message;
+    return `Incorrect body type,${errorMessage}`;
   }
 
   return parsedBody.data;

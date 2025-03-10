@@ -5,6 +5,9 @@
   "author": "",
   "private": true,
   "license": "UNLICENSED",
+  "exports": {
+    "./types": "./src/types"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
@@ -32,11 +35,13 @@
     "class-validator": "^0.14.1",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.38.4",
+    "nestjs-trpc": "^1.6.1",
     "passport-jwt": "^4.0.1",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "ulid": "^2.3.0"
+    "ulid": "^2.3.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

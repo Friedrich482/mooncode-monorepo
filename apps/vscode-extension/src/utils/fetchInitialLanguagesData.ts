@@ -1,10 +1,11 @@
 import * as vscode from "vscode";
 import { INITIAL_DATA_URL } from "../constants";
 import { fetchInitialLanguagesDataSchema } from "../types-schemas";
-import getToken from "./getToken";
+import getToken from "./auth/getToken";
 
 const fetchInitialLanguagesData = async (context: vscode.ExtensionContext) => {
   const authToken = await getToken(context);
+
   const res = await fetch(INITIAL_DATA_URL, {
     method: "GET",
     headers: {

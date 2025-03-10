@@ -83,7 +83,7 @@ export class CodingDataService {
 
   async upsert(id: string, updateCodingDataDto: CodingDataDto) {
     const { timeSpentPerLanguage, timeSpentToday } = updateCodingDataDto;
-    const todaySDate = new Date().toISOString();
+    const todaySDate = new Date().toLocaleString();
 
     const returningDailyData = {
       dailyDataId: "",
