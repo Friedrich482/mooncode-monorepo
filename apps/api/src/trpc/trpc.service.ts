@@ -6,7 +6,6 @@ import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import { JwtService } from "@nestjs/jwt";
 import { User } from "src/drizzle/schema/users";
 import { UsersService } from "src/users/users.service";
-import { transformer } from "@repo/trpc/src/transformer";
 export type TrpcContext = CreateExpressContextOptions & {
   user?: User;
 };
@@ -27,7 +26,7 @@ export class TrpcService {
     private readonly configService: ConfigService,
   ) {
     this.trpc = initTRPC.context<TrpcContext>().create({
-      transformer,
+      // transformer,
     });
   }
 

@@ -1,16 +1,14 @@
 import { ConfigModule } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { Module } from "@nestjs/common";
-import { UsersController } from "./users.controller";
+import { TrpcService } from "src/trpc/trpc.service";
+import { UsersRouter } from "./users.router";
 import { UsersService } from "./users.service";
 import { drizzleProvider } from "src/drizzle/drizzle.provider";
 
 @Module({
   imports: [ConfigModule, JwtModule],
-  controllers: [UsersController],
-  // we need to add UsersController in the providers
-  // to make the adapter generate the trpc router
-  providers: [...drizzleProvider, UsersService, UsersController],
-  exports: [UsersService],
+  providers: [...drizzleProvider, UsersService, UsersRouter, TrpcService],
+  exports: [UsersService, UsersRouter],
 })
 export class UsersModule {}
