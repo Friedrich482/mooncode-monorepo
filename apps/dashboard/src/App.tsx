@@ -1,36 +1,55 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import { AppRouter } from "../../api/src/@generated/server";
 import Footer from "./components/Footer";
 import Header from "./components/header/Header";
 import Main from "./components/dashboard-page/Main";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { TRPCProvider } from "./utils/trpc";
 import { ThemeProvider } from "./components/themeProvider";
-import { httpBatchLink } from "@trpc/client";
-import { trpc } from "./utils/trpc";
 import { useState } from "react";
 
+function makeQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        staleTime: 60 * 1000,
+      },
+    },
+  });
+}
+let browserQueryClient: QueryClient | undefined = undefined;
+function getQueryClient() {
+  if (typeof window === "undefined") {
+    return makeQueryClient();
+  } else {
+    if (!browserQueryClient) browserQueryClient = makeQueryClient();
+    return browserQueryClient;
+  }
+}
+
 function App() {
-  const [queryClient] = useState(() => new QueryClient());
+  const queryClient = getQueryClient();
   const [trpcClient] = useState(() =>
-    trpc.createClient({
+    createTRPCClient<AppRouter>({
       links: [
         httpBatchLink({
-          url: "http://localhost:3000/trpc",
+          url: "http://localhost:2022",
         }),
       ],
     }),
   );
   return (
     <>
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
-        <QueryClientProvider client={queryClient}>
-          <ReactQueryDevtools />
+      <QueryClientProvider client={queryClient}>
+        <ReactQueryDevtools />
+        <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
           <ThemeProvider>
             <Header />
             <Main />
             <Footer />
           </ThemeProvider>
-        </QueryClientProvider>
-      </trpc.Provider>
+        </TRPCProvider>
+      </QueryClientProvider>
     </>
   );
 }

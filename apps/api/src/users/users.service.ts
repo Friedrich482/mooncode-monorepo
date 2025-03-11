@@ -6,10 +6,9 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { CreateUserDto } from "./dto/create-user.dto";
+import { CreateUserDtoType, UpdateUserDtoType } from "./users.dto";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { UpdateUserDto } from "./dto/update-user.dto";
 import { eq } from "drizzle-orm";
 import { users } from "src/drizzle/schema/users";
 
@@ -21,7 +20,7 @@ export class UsersService {
     @Inject(DrizzleAsyncProvider)
     private db: NodePgDatabase,
   ) {}
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDtoType) {
     const { email, password, username } = createUserDto;
 
     // check if a user with the username already exists
@@ -82,11 +81,11 @@ export class UsersService {
     return user;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(updateUserDto: UpdateUserDtoType) {
     if (Object.keys(updateUserDto).length === 0) {
       throw new BadRequestException("You need to specify at least one field");
     }
-
+    const { id } = updateUserDto;
     const [user] = await this.db.select().from(users).where(eq(users.id, id));
     if (!user) throw new NotFoundException("User not found");
 
@@ -108,7 +107,7 @@ export class UsersService {
         profilePicture: users.profilePicture,
       });
   }
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} user`;
   }
 }

@@ -1,4 +1,10 @@
+import { useQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/utils/trpc";
+
 const Footer = () => {
+  const trpc = useTRPC();
+  const userQuery = useQuery(trpc.users);
+  console.log(userQuery);
   return (
     <footer className="mt-auto flex items-center justify-center border-t px-3 pb-3 pt-4 text-center dark:border-neutral-800">
       <p>
