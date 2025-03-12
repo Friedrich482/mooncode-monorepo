@@ -7,16 +7,12 @@ import { DailyDataModule } from "./daily-data/daily-data.module";
 import { DrizzleModule } from "./drizzle/drizzle.module";
 import { LanguagesModule } from "./languages/languages.module";
 import { Module } from "@nestjs/common";
-import { TRPCModule } from "nestjs-trpc";
+import { TrpcModule } from "./trpc/trpc.module";
 import { UsersModule } from "./users/users.module";
-import { TrpcModule } from './trpc/trpc.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: ".env" }),
-    TRPCModule.forRoot({
-      autoSchemaFile: "./src/@generated",
-    }),
     UsersModule,
     AuthModule,
     DrizzleModule,

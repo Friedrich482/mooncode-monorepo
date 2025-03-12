@@ -1,5 +1,4 @@
 import {
-  CreateUserDto,
   DeleteUserDto,
   FindByIdDto,
   FindByUsernameDto,
@@ -18,11 +17,6 @@ export class UsersRouter {
   apply() {
     return {
       usersRouter: this.trpcService.trpc.router({
-        create: this.trpcService
-          .publicProcedure()
-          .input(CreateUserDto)
-          .mutation(async ({ input }) => this.usersService.create(input)),
-
         getProfile: this.trpcService
           .protectedProcedure()
           .query(async ({ ctx }) => this.usersService.findOne(ctx.user)),
