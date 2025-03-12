@@ -10,4 +10,11 @@ export type ExtendedRequest = Request & {
   };
 };
 
+export type JwtPayload = {
+  sub: string;
+  username: string;
+  iat: number;
+  exp: number;
+};
+
 export type Date = string;

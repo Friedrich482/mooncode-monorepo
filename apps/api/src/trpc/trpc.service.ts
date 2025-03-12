@@ -3,6 +3,7 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { TRPCError, initTRPC } from "@trpc/server";
 import { ConfigService } from "@nestjs/config";
 import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
+import { JwtPayload } from "src/types";
 import { JwtService } from "@nestjs/jwt";
 import { User } from "src/drizzle/schema/users";
 export type TrpcContext = CreateExpressContextOptions & {
@@ -36,24 +37,23 @@ export class TrpcService {
 
   protectedProcedure() {
     const procedure = this.trpc.procedure.use(async (opts) => {
-      // get bearer from headers
-      const userJwt = await this.getJwtUserFromHeader(opts.ctx);
-      // throw error if user is unauthorized
-      if (!userJwt) {
+      const payload = await this.getPayload(opts.ctx);
+
+      if (!payload) {
         throw new TRPCError({ code: "UNAUTHORIZED" });
       }
       // user is authorized
       return opts.next({
         ctx: {
           ...opts.ctx,
-          user: userJwt.user,
+          user: { sub: payload.sub, username: payload.username },
         },
       });
     });
     return procedure;
   }
 
-  async getJwtUserFromHeader(ctx: TrpcContext) {
+  async getPayload(ctx: TrpcContext) {
     // get bearer from headers
     const accessToken =
       ctx.req.headers.authorization?.replace("Bearer ", "") || "";
@@ -63,9 +63,12 @@ export class TrpcService {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(accessToken, {
-        secret: this.configService.get<string>("JWT_SECRET"),
-      });
+      const payload: JwtPayload = await this.jwtService.verifyAsync(
+        accessToken,
+        {
+          secret: this.configService.get<string>("JWT_SECRET"),
+        },
+      );
       return payload;
     } catch (error) {
       console.error(error);

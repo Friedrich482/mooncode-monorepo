@@ -19,19 +19,23 @@ export class UsersRouter {
       usersRouter: this.trpcService.trpc.router({
         getProfile: this.trpcService
           .protectedProcedure()
-          .query(async ({ ctx }) => this.usersService.findOne(ctx.user)),
+          .query(async ({ ctx }) =>
+            this.usersService.findOne({ id: ctx.user.sub }),
+          ),
 
         updateProfile: this.trpcService
           .protectedProcedure()
           .input(UpdateProfileDto)
           .mutation(async ({ ctx, input }) =>
-            this.usersService.update({ id: ctx.user, ...input }),
+            this.usersService.update({ id: ctx.user.sub, ...input }),
           ),
 
         getUserById: this.trpcService
           .protectedProcedure()
           .input(FindByIdDto)
-          .query(async ({ input }) => this.usersService.findOne(input.id)),
+          .query(async ({ input }) =>
+            this.usersService.findOne({ id: input.id }),
+          ),
 
         getUserByUsername: this.trpcService
           .protectedProcedure()
