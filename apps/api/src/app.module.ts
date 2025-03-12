@@ -9,7 +9,7 @@ import { LanguagesModule } from "./languages/languages.module";
 import { Module } from "@nestjs/common";
 import { TRPCModule } from "nestjs-trpc";
 import { UsersModule } from "./users/users.module";
-import { TrpcModule } from './trpc/trpc.module';
+import { TrpcModule } from "./trpc/trpc.module";
 
 @Module({
   imports: [

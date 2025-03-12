@@ -1,4 +1,5 @@
 import { Global, Module } from "@nestjs/common";
+import { AuthModule } from "src/auth/auth.module";
 import { CodingDataModule } from "src/coding-data/coding-data.module";
 import { DailyDataModule } from "src/daily-data/daily-data.module";
 import { JwtService } from "@nestjs/jwt";
@@ -9,7 +10,13 @@ import { UsersModule } from "src/users/users.module";
 
 @Global()
 @Module({
-  imports: [UsersModule, DailyDataModule, CodingDataModule, LanguagesModule],
+  imports: [
+    UsersModule,
+    DailyDataModule,
+    CodingDataModule,
+    LanguagesModule,
+    AuthModule,
+  ],
   controllers: [],
   providers: [TrpcService, TrpcRouter, JwtService],
   exports: [TrpcService],

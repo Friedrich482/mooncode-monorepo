@@ -1,12 +1,7 @@
+import { RegisterUserDto } from "src/auth/auth.dto";
 import { z } from "zod";
 
-export const CreateUserDto = z.object({
-  email: z.string().email({ message: "Invalid email format" }),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-  username: z.string().min(3, "Username must be at least 3 characters"),
-});
-
-export const UpdateProfileDto = CreateUserDto.partial();
+export const UpdateProfileDto = RegisterUserDto.partial();
 
 export const FindByIdDto = z.object({
   id: z.string().ulid(),
@@ -33,6 +28,6 @@ export const DeleteUserDto = z.object({
   id: z.string().ulid(),
 });
 
-export type CreateUserDtoType = z.infer<typeof CreateUserDto>;
+export type CreateUserDtoType = z.infer<typeof RegisterUserDto>;
 
 export type UpdateUserDtoType = z.infer<typeof UpdateUserDto>;
