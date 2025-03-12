@@ -18,7 +18,7 @@ export class UsersRouter {
   apply() {
     return {
       usersRouter: this.trpcService.trpc.router({
-        create: this.trpcService
+        createUser: this.trpcService
           .publicProcedure()
           .input(CreateUserDto)
           .mutation(async ({ input }) => this.usersService.create(input)),

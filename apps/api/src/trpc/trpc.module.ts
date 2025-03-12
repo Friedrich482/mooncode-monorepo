@@ -12,6 +12,6 @@ import { UsersModule } from "src/users/users.module";
   imports: [UsersModule, DailyDataModule, CodingDataModule, LanguagesModule],
   controllers: [],
   providers: [TrpcService, TrpcRouter, JwtService],
-  exports: [TrpcRouter],
+  exports: [TrpcService],
 })
 export class TrpcModule {}
