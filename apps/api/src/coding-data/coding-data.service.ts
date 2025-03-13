@@ -1,4 +1,4 @@
-import { CodingDataDto } from "./dto/coding-data.dto";
+import { CodingDataDtoType } from "./coding-data.dto";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Date } from "src/types";
 import { Injectable } from "@nestjs/common";
@@ -13,7 +13,13 @@ export class CodingDataService {
     private languagesService: LanguagesService,
   ) {}
 
-  async findDaily(userId: string, offset: number = 0) {
+  async findDaily({
+    userId,
+    offset = 0,
+  }: {
+    userId: string;
+    offset: number | undefined;
+  }) {
     const targetDate = getDayWithOffset(offset);
 
     const dayData = await this.dailyDataService.findOneDailyData(
@@ -34,7 +40,13 @@ export class CodingDataService {
     return { timeSpent: dayData.timeSpent, dayLanguagesTime };
   }
 
-  async findWeekly(userId: string, offset = 0) {
+  async findWeekly({
+    userId,
+    offset = 0,
+  }: {
+    userId: string;
+    offset: number | undefined;
+  }) {
     const { start, end } = getWeekWithOffset(offset);
     const weekData = await this.dailyDataService.findRangeDailyData(
       userId,
@@ -81,7 +93,13 @@ export class CodingDataService {
     return `This action returns a #${id} codingDatum`;
   }
 
-  async upsert(id: string, updateCodingDataDto: CodingDataDto) {
+  async upsert({
+    id,
+    updateCodingDataDto,
+  }: {
+    id: string;
+    updateCodingDataDto: CodingDataDtoType;
+  }) {
     const { timeSpentPerLanguage, timeSpentToday } = updateCodingDataDto;
     const todaySDate = new Date().toLocaleString();
 
