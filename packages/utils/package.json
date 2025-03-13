@@ -1,15 +1,19 @@
 {
   "name": "@repo/utils",
-  "type": "module",
-  "scripts": {
-    "dev": "tsc --watch",
-    "build": "tsc"
-  },
+  "version": "0.0.0",
+  "private": "true",
   "exports": {
     "./*": "./src/*.ts"
   },
+  "files": [
+    "./dist/**"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "eslint ."
+  },
   "devDependencies": {
     "@repo/typescript-config": "*",
-    "typescript": "latest"
+    "typescript": "5.7.3"
   }
 }
