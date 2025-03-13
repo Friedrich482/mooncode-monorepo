@@ -5,9 +5,10 @@ import { ConfigService } from "@nestjs/config";
 import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import { JwtPayload } from "src/types";
 import { JwtService } from "@nestjs/jwt";
-import { User } from "src/drizzle/schema/users";
+import { transformer } from "@repo/trpc/transformer";
+
 export type TrpcContext = CreateExpressContextOptions & {
-  user?: User;
+  user?: Pick<JwtPayload, "sub" | "username">;
 };
 export const createContext = async (
   opts: trpcExpress.CreateExpressContextOptions,
@@ -24,8 +25,7 @@ export class TrpcService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {
-    // TODO add the transformer here
-    this.trpc = initTRPC.context<TrpcContext>().create();
+    this.trpc = initTRPC.context<TrpcContext>().create({ transformer });
   }
 
   // these routes are publicly accessible to everyone

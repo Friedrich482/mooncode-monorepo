@@ -10,6 +10,8 @@ export type ExtendedRequest = Request & {
   };
 };
 
+// TODO there is already a JwtPayload type in the extension,
+// TODO try to share both
 export type JwtPayload = {
   sub: string;
   username: string;
