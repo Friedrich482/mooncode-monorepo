@@ -1,9 +1,8 @@
+import { CreateLanguageDtoType, UpdateLanguageDtoType } from "./languages.dto";
 import { Inject, Injectable } from "@nestjs/common";
 import { and, eq } from "drizzle-orm";
-import { CreateLanguageDto } from "./dto/create-language.dto";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { UpdateLanguageDto } from "./dto/update-language.dto";
 import { languages } from "src/drizzle/schema/languages";
 
 @Injectable()
@@ -12,7 +11,7 @@ export class LanguagesService {
     @Inject(DrizzleAsyncProvider)
     private db: NodePgDatabase,
   ) {}
-  async createLanguage(createLanguageDto: CreateLanguageDto) {
+  async createLanguage(createLanguageDto: CreateLanguageDtoType) {
     const { dailyDataId, languageName, timeSpent } = createLanguageDto;
     const [createdLanguageData] = await this.db
       .insert(languages)
@@ -62,7 +61,7 @@ export class LanguagesService {
     return languageData;
   }
 
-  async updateLanguage(updateLanguageDto: UpdateLanguageDto) {
+  async updateLanguage(updateLanguageDto: UpdateLanguageDtoType) {
     const { timeSpent, dailyDataId, languageName } = updateLanguageDto;
     const [updatedLanguageData] = await this.db
       .update(languages)
