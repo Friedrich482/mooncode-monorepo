@@ -1,15 +1,31 @@
 {
   "name": "@repo/trpc",
-  "type": "module",
-  "scripts": {
-    "dev": "tsc --watch",
-    "build": "tsc"
+  "version": "0.0.0",
+  "private": true,
+  "license": "MIT",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "./dist/**"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
   },
   "exports": {
-    "./*": "./src/*.ts"
-  },
-  "devDependencies": {
-    "@repo/typescript-config": "*",
-    "typescript": "latest"
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./*": {
+      "import": "./dist/*.js",
+      "require": "./dist/*.js"
+    }
   }
 }

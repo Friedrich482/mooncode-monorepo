@@ -50,7 +50,7 @@ export class UsersService {
       });
     return userCreated;
   }
-  async findOne(id: string) {
+  async findOne({ id }: { id: string }) {
     const [user] = await this.db
       .select({
         email: users.email,

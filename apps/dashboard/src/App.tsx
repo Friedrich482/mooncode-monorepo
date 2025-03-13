@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
-import { AppRouter } from "../../api/src/@generated/server";
+import { AppRouter } from "../../api/src/trpc/trpc.router";
 import Footer from "./components/Footer";
 import Header from "./components/header/Header";
 import Main from "./components/dashboard-page/Main";
@@ -41,7 +41,6 @@ function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <ReactQueryDevtools />
         <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
           <ThemeProvider>
             <Header />
