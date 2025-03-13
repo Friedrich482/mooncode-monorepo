@@ -1,10 +1,12 @@
+import {
+  CreateDailyDataDtoType,
+  UpdateDailyDataDtoType,
+} from "./daily-data.dto";
 import { Inject, Injectable } from "@nestjs/common";
 import { and, between, eq } from "drizzle-orm";
 import { eachDayOfInterval, format } from "date-fns";
-import { CreateDailyDataDto } from "./dto/create-daily-data.dto";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
-import { UpdateDailyDataDto } from "./dto/update-daily-data.dto";
 import { dailyData } from "src/drizzle/schema/dailyData";
 
 @Injectable()
@@ -13,7 +15,7 @@ export class DailyDataService {
     @Inject(DrizzleAsyncProvider)
     private db: NodePgDatabase,
   ) {}
-  async createDailyData(createDailyDataDto: CreateDailyDataDto) {
+  async createDailyData(createDailyDataDto: CreateDailyDataDtoType) {
     const { timeSpent, userId } = createDailyDataDto;
     const [createdDailyData] = await this.db
       .insert(dailyData)
@@ -79,7 +81,7 @@ export class DailyDataService {
     });
   }
 
-  async updateDailyData(updateDailyDataDto: UpdateDailyDataDto) {
+  async updateDailyData(updateDailyDataDto: UpdateDailyDataDtoType) {
     const { timeSpent, userId, date } = updateDailyDataDto;
     const [updatedDailyData] = await this.db
       .update(dailyData)
