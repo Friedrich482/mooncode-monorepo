@@ -10,3 +10,5 @@ export const RegisterUserDto = z.object({
   password: z.string().min(8, "Password must be at least 8 characters"),
   username: z.string().min(3, "Username must be at least 3 characters"),
 });
+
+export type SignInUserDtoType = z.infer<typeof SignInUserDto>;
