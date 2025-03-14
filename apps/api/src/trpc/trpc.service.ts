@@ -7,7 +7,7 @@ import { JwtPayload } from "src/types";
 import { JwtService } from "@nestjs/jwt";
 import { transformer } from "@repo/trpc/transformer";
 
-export type TrpcContext = CreateExpressContextOptions & {
+type TrpcContext = CreateExpressContextOptions & {
   user?: Pick<JwtPayload, "sub" | "username">;
 };
 export const createContext = async (

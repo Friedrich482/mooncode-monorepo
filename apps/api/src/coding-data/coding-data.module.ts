@@ -1,4 +1,4 @@
-import { CodingDataController } from "./coding-data.controller";
+import { CodingDataRouter } from "./coding-data.router";
 import { CodingDataService } from "./coding-data.service";
 import { ConfigModule } from "@nestjs/config";
 import { DailyDataService } from "src/daily-data/daily-data.service";
@@ -9,12 +9,13 @@ import { drizzleProvider } from "src/drizzle/drizzle.provider";
 
 @Module({
   imports: [ConfigModule, JwtModule],
-  controllers: [CodingDataController],
   providers: [
     CodingDataService,
+    CodingDataRouter,
     ...drizzleProvider,
     DailyDataService,
     LanguagesService,
   ],
+  exports: [CodingDataService, CodingDataRouter],
 })
 export class CodingDataModule {}

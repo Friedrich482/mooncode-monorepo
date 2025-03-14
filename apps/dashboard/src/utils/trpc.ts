@@ -1,5 +1,4 @@
-import type { AppRouter } from "../../../api/src/@generated/server";
-import { createTRPCContext } from "@trpc/tanstack-react-query";
+import type { AppRouter } from "@repo/trpc/router";
+import { createTRPCReact } from "@trpc/react-query";
 
-export const { TRPCProvider, useTRPC, useTRPCClient } =
-  createTRPCContext<AppRouter>();
+export const trpc = createTRPCReact<AppRouter>();
