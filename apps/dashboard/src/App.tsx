@@ -1,53 +1,35 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { createTRPCClient, httpBatchLink } from "@trpc/client";
-import { AppRouter } from "../../api/src/trpc/trpc.router";
 import Footer from "./components/Footer";
 import Header from "./components/header/Header";
 import Main from "./components/dashboard-page/Main";
-import { TRPCProvider } from "./utils/trpc";
 import { ThemeProvider } from "./components/themeProvider";
+import { httpBatchLink } from "@trpc/client";
+import { transformer } from "@repo/trpc/transformer";
+import { trpc } from "./utils/trpc";
 import { useState } from "react";
 
-function makeQueryClient() {
-  return new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 60 * 1000,
-      },
-    },
-  });
-}
-let browserQueryClient: QueryClient | undefined = undefined;
-function getQueryClient() {
-  if (typeof window === "undefined") {
-    return makeQueryClient();
-  } else {
-    if (!browserQueryClient) browserQueryClient = makeQueryClient();
-    return browserQueryClient;
-  }
-}
-
 function App() {
-  const queryClient = getQueryClient();
+  const [queryClient] = useState(() => new QueryClient());
   const [trpcClient] = useState(() =>
-    createTRPCClient<AppRouter>({
+    trpc.createClient({
       links: [
         httpBatchLink({
-          url: "http://localhost:2022",
+          url: "http://localhost:3000/trpc",
         }),
       ],
+      transformer,
     }),
   );
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
+        <trpc.Provider client={trpcClient} queryClient={queryClient}>
           <ThemeProvider>
             <Header />
             <Main />
             <Footer />
           </ThemeProvider>
-        </TRPCProvider>
+        </trpc.Provider>
       </QueryClientProvider>
     </>
   );
