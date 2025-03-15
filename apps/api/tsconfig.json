@@ -20,5 +20,4 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
   }
-  // "include": ["src/*/**"]
 }

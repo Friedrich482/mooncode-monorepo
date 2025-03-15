@@ -15,6 +15,18 @@ function App() {
       links: [
         httpBatchLink({
           url: "http://localhost:3000/trpc",
+          headers() {
+            let authHeaders: { Authorization?: string } = {};
+            // TODO use cookies instead of localStorage
+            const token = localStorage.getItem("auth-token") ?? "";
+            if (token) {
+              authHeaders = {
+                Authorization: `Bearer ${token}`,
+              };
+            }
+
+            return authHeaders;
+          },
         }),
       ],
       transformer,
@@ -22,15 +34,15 @@ function App() {
   );
   return (
     <>
-      <QueryClientProvider client={queryClient}>
-        <trpc.Provider client={trpcClient} queryClient={queryClient}>
-          <ThemeProvider>
+      <ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <trpc.Provider client={trpcClient} queryClient={queryClient}>
             <Header />
             <Main />
             <Footer />
-          </ThemeProvider>
-        </trpc.Provider>
-      </QueryClientProvider>
+          </trpc.Provider>
+        </QueryClientProvider>
+      </ThemeProvider>
     </>
   );
 }
