@@ -27,7 +27,7 @@ export class CodingDataRouter {
           .input(TimeOffsetDto)
           .query(async ({ ctx, input }) =>
             this.codingDataService.findDaily({
-              offset: input,
+              offset: input.offset,
               userId: ctx.user.sub,
             }),
           ),
@@ -38,7 +38,7 @@ export class CodingDataRouter {
           .query(async ({ ctx, input }) =>
             this.codingDataService.findWeekly({
               userId: ctx.user.sub,
-              offset: input,
+              offset: input.offset,
             }),
           ),
       }),

@@ -11,26 +11,24 @@ import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
 import Icon from "../../ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { Skeleton } from "@/components/ui/skeleton";
-import { WeeklyPeriod } from "@/types-schemas";
 import { chartConfig } from "@/constants";
-import fetchWeekLanguagesData from "@/utils/fetch/fetchWeekLanguagesData";
 import formatWeekLangByDayChart from "@/utils/format/formatWeekLangByDayChart";
 import formatWeekLanguagesData from "@/utils/format/formatWeekLanguagesChartData";
 import languagesAttributes from "@/colors.json";
-import { useQuery } from "@tanstack/react-query";
+import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 
 const WeekLanguagesChart = () => {
   const [isPieChartVisible, setIsPieChartVisible] = useState(true);
   const handleClick = () => setIsPieChartVisible((prev) => !prev);
 
-  const [chartPeriod] = useState<WeeklyPeriod>("This week");
-
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["week-full-data", chartPeriod, "languages"],
-    queryFn: () => fetchWeekLanguagesData(chartPeriod),
-    refetchOnWindowFocus: true,
-  });
+  const { data, error, isLoading } =
+    trpc.codingDataRouter.getWeeklyStats.useQuery(
+      { offset: 1 },
+      {
+        refetchOnWindowFocus: true,
+      },
+    );
 
   if (error && error instanceof Error) {
     return <span>An error occurred: {error.message}</span>;

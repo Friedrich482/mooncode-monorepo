@@ -4,38 +4,40 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { WeeklyPeriod, periodConfig } from "@/types-schemas";
 import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
 import { Skeleton } from "@/components/ui/skeleton";
-import { WeeklyPeriod } from "@/types-schemas";
 import { chartConfig } from "@/constants";
-import fetchTimeByDayOfWeek from "@/utils/fetch/fetchTimeByDayOfWeek";
 import formatWeekChartData from "@/utils/format/formatWeekChartData";
-import { useQuery } from "@tanstack/react-query";
+import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 
 const WeekTimeChart = () => {
-  const [chartPeriod] = useState<WeeklyPeriod>("This week");
+  const [chartPeriod] = useState<WeeklyPeriod>("Past week");
 
-  const { data, error, isPending } = useQuery({
-    queryKey: ["week-full-data", "total time"],
-    queryFn: () => fetchTimeByDayOfWeek(chartPeriod),
-
-    refetchOnWindowFocus: true,
-  });
+  const { data, error, isLoading } =
+    trpc.codingDataRouter.getWeeklyStats.useQuery(
+      {
+        offset: periodConfig[chartPeriod].offset,
+      },
+      {
+        refetchOnWindowFocus: true,
+      },
+    );
 
   if (error) {
     return <span>An error occurred: {error.message}</span>;
   }
-  if (isPending) {
-    return <Skeleton className="max-chart:w-full h-[24rem] w-[45%]" />;
+  if (isLoading) {
+    return <Skeleton className="h-[24rem] w-[45%] max-chart:w-full" />;
   }
 
-  const chartData = formatWeekChartData(data);
+  const chartData = formatWeekChartData(data.daysOfWeekStats);
 
   return (
     <ChartContainer
       config={chartConfig}
-      className="max-chart:w-full z-0 min-h-96 w-[45%]"
+      className="z-0 min-h-96 w-[45%] max-chart:w-full"
     >
       <ComposedChart data={chartData}>
         <CartesianGrid vertical={false} horizontal={false} />
