@@ -5,6 +5,8 @@ export const CodingDataDto = z.object({
   timeSpentPerLanguage: z.record(z.string(), z.number()),
 });
 
-export const TimeOffsetDto = z.number().int().positive().optional();
+export const TimeOffsetDto = z.object({
+  offset: z.number().int().min(0, "Value must be at least 0").optional(),
+});
 
 export type CodingDataDtoType = z.infer<typeof CodingDataDto>;
