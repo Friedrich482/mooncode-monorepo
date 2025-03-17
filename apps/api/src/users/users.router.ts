@@ -48,11 +48,6 @@ export class UsersRouter {
         .protectedProcedure()
         .input(UpdateUserDto)
         .query(async ({ input }) => this.usersService.update(input)),
-
-      deleteUser: this.trpcService
-        .protectedProcedure()
-        .input(DeleteUserDto)
-        .query(async ({ input }) => this.usersService.remove(input.id)),
     }),
   };
 }
