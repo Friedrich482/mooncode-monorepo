@@ -80,8 +80,4 @@ export class LanguagesService {
       });
     return updatedLanguageData;
   }
-
-  remove(id: number) {
-    return `This action removes a #${id} language`;
-  }
 }

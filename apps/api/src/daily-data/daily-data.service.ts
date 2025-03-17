@@ -33,10 +33,6 @@ export class DailyDataService {
     return createdDailyData;
   }
 
-  findAll() {
-    return `This action returns all dailyData`;
-  }
-
   async findOneDailyData(userId: string, date: string) {
     const [oneDailyData] = await this.db
       .select({ id: dailyData.id, timeSpent: dailyData.timeSpent })
@@ -96,9 +92,5 @@ export class DailyDataService {
         date: dailyData.date,
       });
     return updatedDailyData;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} dailyDatum`;
   }
 }

@@ -9,39 +9,37 @@ export class CodingDataRouter {
     private readonly trpcService: TrpcService,
     private readonly codingDataService: CodingDataService,
   ) {}
-  apply() {
-    return {
-      codingDataRouter: this.trpcService.trpc.router({
-        upsert: this.trpcService
-          .protectedProcedure()
-          .input(CodingDataDto)
-          .mutation(async ({ ctx, input }) => {
-            this.codingDataService.upsert({
-              id: ctx.user.sub,
-              updateCodingDataDto: input,
-            });
+  procedures = {
+    codingData: this.trpcService.trpc.router({
+      upsert: this.trpcService
+        .protectedProcedure()
+        .input(CodingDataDto)
+        .mutation(async ({ ctx, input }) => {
+          this.codingDataService.upsert({
+            id: ctx.user.sub,
+            updateCodingDataDto: input,
+          });
+        }),
+
+      getDailyStats: this.trpcService
+        .protectedProcedure()
+        .input(TimeOffsetDto)
+        .query(async ({ ctx, input }) =>
+          this.codingDataService.findDaily({
+            offset: input.offset,
+            userId: ctx.user.sub,
           }),
+        ),
 
-        getDailyStats: this.trpcService
-          .protectedProcedure()
-          .input(TimeOffsetDto)
-          .query(async ({ ctx, input }) =>
-            this.codingDataService.findDaily({
-              offset: input.offset,
-              userId: ctx.user.sub,
-            }),
-          ),
-
-        getWeeklyStats: this.trpcService
-          .protectedProcedure()
-          .input(TimeOffsetDto)
-          .query(async ({ ctx, input }) =>
-            this.codingDataService.findWeekly({
-              userId: ctx.user.sub,
-              offset: input.offset,
-            }),
-          ),
-      }),
-    };
-  }
+      getWeeklyStats: this.trpcService
+        .protectedProcedure()
+        .input(TimeOffsetDto)
+        .query(async ({ ctx, input }) =>
+          this.codingDataService.findWeekly({
+            userId: ctx.user.sub,
+            offset: input.offset,
+          }),
+        ),
+    }),
+  };
 }

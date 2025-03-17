@@ -107,7 +107,4 @@ export class UsersService {
         profilePicture: users.profilePicture,
       });
   }
-  remove(id: string) {
-    return `This action removes a #${id} user`;
-  }
 }

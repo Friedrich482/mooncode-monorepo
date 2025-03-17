@@ -89,10 +89,6 @@ export class CodingDataService {
     return { timeSpent, weekLanguagesTime, daysOfWeekStats };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} codingDatum`;
-  }
-
   async upsert({
     id,
     updateCodingDataDto,
@@ -162,9 +158,5 @@ export class CodingDataService {
     const { timeSpentToday: returningTimeSpentToday, date } =
       returningDailyData;
     return { date, timeSpentToday: returningTimeSpentToday, languagesData };
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} codingDatum`;
   }
 }

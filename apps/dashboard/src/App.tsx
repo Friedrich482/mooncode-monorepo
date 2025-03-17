@@ -2,7 +2,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Footer from "./components/Footer";
 import Header from "./components/header/Header";
 import Main from "./components/dashboard-page/Main";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "./components/themeProvider";
+import getAuthToken from "./utils/getAuthToken";
 import { httpBatchLink } from "@trpc/client";
 import { transformer } from "@repo/trpc/transformer";
 import { trpc } from "./utils/trpc";
@@ -18,7 +20,7 @@ function App() {
           headers() {
             let authHeaders: { Authorization?: string } = {};
             // TODO use cookies instead of localStorage
-            const token = localStorage.getItem("auth-token") ?? "";
+            const token = getAuthToken() ?? "";
             if (token) {
               authHeaders = {
                 Authorization: `Bearer ${token}`,
@@ -36,6 +38,7 @@ function App() {
     <>
       <ThemeProvider>
         <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
           <trpc.Provider client={trpcClient} queryClient={queryClient}>
             <Header />
             <Main />

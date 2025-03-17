@@ -11,13 +11,12 @@ const TimeSpentOnPeriod = () => {
   const [period, setPeriod] = useState<Period>("This week");
   const handleClick = (item: Period) => setPeriod(item);
 
-  const { isLoading, error, data } =
-    trpc.codingDataRouter.getWeeklyStats.useQuery(
-      {
-        offset: 1,
-      },
-      { refetchOnWindowFocus: true },
-    );
+  const { isLoading, error, data } = trpc.codingData.getWeeklyStats.useQuery(
+    {
+      offset: 1,
+    },
+    { refetchOnWindowFocus: true },
+  );
   return (
     <h1 className="flex flex-row items-start justify-start gap-4 pt-2 text-2xl max-[550px]:flex-col max-[410px]:text-base">
       <PeriodDropDown period={period} handleClick={handleClick} />{" "}

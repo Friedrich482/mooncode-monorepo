@@ -14,46 +14,40 @@ export class UsersRouter {
     private readonly trpcService: TrpcService,
     private readonly usersService: UsersService,
   ) {}
-  apply() {
-    return {
-      usersRouter: this.trpcService.trpc.router({
-        getProfile: this.trpcService
-          .protectedProcedure()
-          .query(async ({ ctx }) =>
-            this.usersService.findOne({ id: ctx.user.sub }),
-          ),
 
-        updateProfile: this.trpcService
-          .protectedProcedure()
-          .input(UpdateProfileDto)
-          .mutation(async ({ ctx, input }) =>
-            this.usersService.update({ id: ctx.user.sub, ...input }),
-          ),
+  procedures = {
+    users: this.trpcService.trpc.router({
+      getProfile: this.trpcService
+        .protectedProcedure()
+        .query(async ({ ctx }) =>
+          this.usersService.findOne({ id: ctx.user.sub }),
+        ),
 
-        getUserById: this.trpcService
-          .protectedProcedure()
-          .input(FindByIdDto)
-          .query(async ({ input }) =>
-            this.usersService.findOne({ id: input.id }),
-          ),
+      updateProfile: this.trpcService
+        .protectedProcedure()
+        .input(UpdateProfileDto)
+        .mutation(async ({ ctx, input }) =>
+          this.usersService.update({ id: ctx.user.sub, ...input }),
+        ),
 
-        getUserByUsername: this.trpcService
-          .protectedProcedure()
-          .input(FindByUsernameDto)
-          .query(async ({ input }) =>
-            this.usersService.findByUsername(input.username),
-          ),
+      getUserById: this.trpcService
+        .protectedProcedure()
+        .input(FindByIdDto)
+        .query(async ({ input }) =>
+          this.usersService.findOne({ id: input.id }),
+        ),
 
-        updateUser: this.trpcService
-          .protectedProcedure()
-          .input(UpdateUserDto)
-          .query(async ({ input }) => this.usersService.update(input)),
+      getUserByUsername: this.trpcService
+        .protectedProcedure()
+        .input(FindByUsernameDto)
+        .query(async ({ input }) =>
+          this.usersService.findByUsername(input.username),
+        ),
 
-        deleteUser: this.trpcService
-          .protectedProcedure()
-          .input(DeleteUserDto)
-          .query(async ({ input }) => this.usersService.remove(input.id)),
-      }),
-    };
-  }
+      updateUser: this.trpcService
+        .protectedProcedure()
+        .input(UpdateUserDto)
+        .query(async ({ input }) => this.usersService.update(input)),
+    }),
+  };
 }
