@@ -15,9 +15,9 @@ export class TrpcRouter {
   ) {}
 
   appRouter = this.trpcService.trpc.router({
-    ...this.usersRouter.apply(),
-    ...this.authRouter.apply(),
-    ...this.codingDataRouter.apply(),
+    ...this.usersRouter.procedures,
+    ...this.authRouter.procedures,
+    ...this.codingDataRouter.procedures,
   });
 
   async applyMiddleware(app: INestApplication) {

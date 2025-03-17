@@ -12,19 +12,17 @@ export class AuthRouter {
     private readonly usersService: UsersService,
   ) {}
 
-  apply() {
-    return {
-      authRouter: this.trpcService.trpc.router({
-        signInUser: this.trpcService
-          .publicProcedure()
-          .input(SignInUserDto)
-          .mutation(async ({ input }) => this.authService.signIn(input)),
+  procedures = {
+    auth: this.trpcService.trpc.router({
+      signInUser: this.trpcService
+        .publicProcedure()
+        .input(SignInUserDto)
+        .mutation(async ({ input }) => this.authService.signIn(input)),
 
-        registerUser: this.trpcService
-          .publicProcedure()
-          .input(RegisterUserDto)
-          .mutation(async ({ input }) => this.usersService.create(input)),
-      }),
-    };
-  }
+      registerUser: this.trpcService
+        .publicProcedure()
+        .input(RegisterUserDto)
+        .mutation(async ({ input }) => this.usersService.create(input)),
+    }),
+  };
 }

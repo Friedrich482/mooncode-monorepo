@@ -22,13 +22,12 @@ const WeekLanguagesChart = () => {
   const [isPieChartVisible, setIsPieChartVisible] = useState(true);
   const handleClick = () => setIsPieChartVisible((prev) => !prev);
 
-  const { data, error, isLoading } =
-    trpc.codingDataRouter.getWeeklyStats.useQuery(
-      { offset: 1 },
-      {
-        refetchOnWindowFocus: true,
-      },
-    );
+  const { data, error, isLoading } = trpc.codingData.getWeeklyStats.useQuery(
+    { offset: 1 },
+    {
+      refetchOnWindowFocus: true,
+    },
+  );
 
   if (error && error instanceof Error) {
     return <span>An error occurred: {error.message}</span>;

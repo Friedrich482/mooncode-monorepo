@@ -4,7 +4,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { WeeklyPeriod, periodConfig } from "@/types-schemas";
+import { WeeklyPeriod, offsets } from "@/types-schemas";
 import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { chartConfig } from "@/constants";
@@ -15,15 +15,14 @@ import { useState } from "react";
 const WeekTimeChart = () => {
   const [chartPeriod] = useState<WeeklyPeriod>("Past week");
 
-  const { data, error, isLoading } =
-    trpc.codingDataRouter.getWeeklyStats.useQuery(
-      {
-        offset: periodConfig[chartPeriod].offset,
-      },
-      {
-        refetchOnWindowFocus: true,
-      },
-    );
+  const { data, error, isLoading } = trpc.codingData.getWeeklyStats.useQuery(
+    {
+      offset: offsets[chartPeriod],
+    },
+    {
+      refetchOnWindowFocus: true,
+    },
+  );
 
   if (error) {
     return <span>An error occurred: {error.message}</span>;
