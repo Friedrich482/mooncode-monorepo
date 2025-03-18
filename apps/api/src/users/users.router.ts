@@ -1,5 +1,4 @@
 import {
-  DeleteUserDto,
   FindByIdDto,
   FindByUsernameDto,
   UpdateProfileDto,

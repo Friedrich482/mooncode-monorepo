@@ -8,14 +8,17 @@ import { WeeklyPeriod, offsets } from "@/types-schemas";
 import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
 import { Skeleton } from "@/components/ui/skeleton";
 import { chartConfig } from "@/constants";
-import formatWeekChartData from "@/utils/format/formatWeekChartData";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 
 const WeekTimeChart = () => {
-  const [chartPeriod] = useState<WeeklyPeriod>("Past week");
+  const [chartPeriod] = useState<WeeklyPeriod>("This week");
 
-  const { data, error, isLoading } = trpc.codingData.getWeeklyStats.useQuery(
+  const {
+    data: chartData,
+    error,
+    isLoading,
+  } = trpc.codingData.getDaysOfWeekStats.useQuery(
     {
       offset: offsets[chartPeriod],
     },
@@ -25,13 +28,13 @@ const WeekTimeChart = () => {
   );
 
   if (error) {
-    return <span>An error occurred: {error.message}</span>;
+    return (
+      <span className="text-red-500">An error occurred: {error.message}</span>
+    );
   }
   if (isLoading) {
     return <Skeleton className="h-[24rem] w-[45%] max-chart:w-full" />;
   }
-
-  const chartData = formatWeekChartData(data.daysOfWeekStats);
 
   return (
     <ChartContainer
@@ -45,7 +48,7 @@ const WeekTimeChart = () => {
           tickLine={false}
           tickMargin={10}
           axisLine={false}
-          tickFormatter={(value) => value.slice(0, 3)}
+          tickFormatter={(date) => date.slice(0, 3)}
         />
         <ChartTooltip
           content={<ChartTooltipContent labelClassName="font-semibold" />}

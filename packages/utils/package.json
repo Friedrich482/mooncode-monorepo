@@ -2,15 +2,34 @@
   "name": "@repo/utils",
   "version": "0.0.0",
   "private": "true",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    "./*": "./src/*.ts"
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    },
+    "./*": {
+      "import": "./dist/*.js",
+      "require": "./dist/*.js"
+    }
+  },
+  "scripts": {
+    "dev": "tsc --watch",
+    "lint": "eslint ."
   },
   "files": [
     "./dist/**"
   ],
-  "scripts": {
-    "build": "tsc",
-    "lint": "eslint ."
+  "publishConfig": {
+    "access": "public"
+  },
+  "typesVersions": {
+    "*": {
+      "*": [
+        "src/*"
+      ]
+    }
   },
   "devDependencies": {
     "@repo/typescript-config": "*",

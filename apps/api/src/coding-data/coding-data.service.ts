@@ -3,8 +3,9 @@ import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Date } from "src/types";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
+import findDailyDataForWeek from "src/utils/findDailyDataForWeek";
+import formatDuration from "@repo/utils/formatDuration";
 import getDayWithOffset from "src/utils/getDayWithOffset";
-import getWeekWithOffset from "src/utils/getWeekWithOffset";
 
 @Injectable()
 export class CodingDataService {
@@ -13,7 +14,7 @@ export class CodingDataService {
     private languagesService: LanguagesService,
   ) {}
 
-  async findDaily({
+  async getDailyStats({
     userId,
     offset = 0,
   }: {
@@ -40,44 +41,64 @@ export class CodingDataService {
     return { timeSpent: dayData.timeSpent, dayLanguagesTime };
   }
 
-  async findWeekly({
+  async getTimeSpentOnWeek({
     userId,
     offset = 0,
   }: {
     userId: string;
     offset: number | undefined;
   }) {
-    const { start, end } = getWeekWithOffset(offset);
-    const weekData = await this.dailyDataService.findRangeDailyData(
+    const dailyDataForWeek = await findDailyDataForWeek(
       userId,
-      start,
-      end,
+      offset,
+      this.dailyDataService,
     );
 
-    const timeSpent = weekData
+    const timeSpent = dailyDataForWeek
       .map((day) => day.timeSpent)
       .reduce((acc, curr) => acc + curr, 0);
 
-    const daysOfWeekStats: Record<
-      Date,
-      {
-        timeSpent: number;
-        languages: Record<string, number>;
-      }
-    > = {};
+    return { rawTime: timeSpent, formattedTime: formatDuration(timeSpent) };
+  }
 
-    await Promise.all(
-      weekData.map(async ({ id, timeSpent, date }) => {
-        daysOfWeekStats[date] = {
-          timeSpent,
-          languages: await this.languagesService.findAllLanguages(id),
-        };
-      }),
+  async getDaysOfWeekStats({
+    userId,
+    offset = 0,
+  }: {
+    userId: string;
+    offset: number | undefined;
+  }) {
+    const dailyDataForWeek = await findDailyDataForWeek(
+      userId,
+      offset,
+      this.dailyDataService,
     );
 
-    const weekLanguagesTime = (
+    return dailyDataForWeek.map(({ timeSpent, date }) => ({
+      timeSpentLine: timeSpent,
+      date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
+      timeSpentBar: timeSpent,
+      value: formatDuration(timeSpent),
+    }));
+  }
+  async getWeekLanguagesTime({
+    userId,
+    offset = 0,
+  }: {
+    userId: string;
+    offset: number | undefined;
+  }) {
+    const dailyDataForWeek = await findDailyDataForWeek(
+      userId,
+      offset,
+      this.dailyDataService,
+    );
+
+    return (
       await Promise.all(
-        weekData.map(({ id }) => this.languagesService.findAllLanguages(id)),
+        dailyDataForWeek.map(({ id }) =>
+          this.languagesService.findAllLanguages(id),
+        ),
       )
     ).reduce((acc, dayStats) => {
       Object.keys(dayStats).forEach((language) => {
@@ -85,8 +106,23 @@ export class CodingDataService {
       });
       return acc;
     }, {});
+  }
+  async getAllWeeklyStats({
+    userId,
+    offset = 0,
+  }: {
+    userId: string;
+    offset: number | undefined;
+  }) {
+    const timeSpentOnWeek = await this.getTimeSpentOnWeek({ userId, offset });
+    const daysOfWeekStats = await this.getDaysOfWeekStats({ userId, offset });
 
-    return { timeSpent, weekLanguagesTime, daysOfWeekStats };
+    const weekLanguagesTime = await this.getWeekLanguagesTime({
+      userId,
+      offset,
+    });
+
+    return { timeSpentOnWeek, weekLanguagesTime, daysOfWeekStats };
   }
 
   async upsert({
