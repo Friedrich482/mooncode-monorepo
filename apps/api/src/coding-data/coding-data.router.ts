@@ -25,17 +25,47 @@ export class CodingDataRouter {
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingDataService.findDaily({
+          this.codingDataService.getDailyStats({
             offset: input.offset,
             userId: ctx.user.sub,
           }),
         ),
 
-      getWeeklyStats: this.trpcService
+      getTimeSpentOnWeek: this.trpcService
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingDataService.findWeekly({
+          this.codingDataService.getTimeSpentOnWeek({
+            userId: ctx.user.sub,
+            offset: input.offset,
+          }),
+        ),
+
+      getDaysOfWeekStats: this.trpcService
+        .protectedProcedure()
+        .input(TimeOffsetDto)
+        .query(async ({ ctx, input }) =>
+          this.codingDataService.getDaysOfWeekStats({
+            userId: ctx.user.sub,
+            offset: input.offset,
+          }),
+        ),
+
+      getWeekLanguagesTime: this.trpcService
+        .protectedProcedure()
+        .input(TimeOffsetDto)
+        .query(async ({ ctx, input }) =>
+          this.codingDataService.getWeekLanguagesTime({
+            userId: ctx.user.sub,
+            offset: input.offset,
+          }),
+        ),
+
+      getAllWeeklyStats: this.trpcService
+        .protectedProcedure()
+        .input(TimeOffsetDto)
+        .query(async ({ ctx, input }) =>
+          this.codingDataService.getAllWeeklyStats({
             userId: ctx.user.sub,
             offset: input.offset,
           }),
