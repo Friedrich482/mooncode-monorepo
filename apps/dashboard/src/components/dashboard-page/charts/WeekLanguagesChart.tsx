@@ -6,38 +6,39 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "../../ui/chart";
-import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
-import Icon from "../../ui/Icon";
+} from "@/components/ui/chart";
+import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
+import Icon from "@/components/ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { Skeleton } from "@/components/ui/skeleton";
 import { chartConfig } from "@/constants";
-import formatWeekLangByDayChart from "@/utils/format/formatWeekLangByDayChart";
-import formatWeekLanguagesData from "@/utils/format/formatWeekLanguagesChartData";
 import languagesAttributes from "@/colors.json";
-import { trpc } from "@/utils/trpc";
+import useQueryWeekLangChart from "@/hooks/useQueryWeekLangChart";
 import { useState } from "react";
 
 const WeekLanguagesChart = () => {
   const [isPieChartVisible, setIsPieChartVisible] = useState(true);
   const handleClick = () => setIsPieChartVisible((prev) => !prev);
 
-  const { data, error, isLoading } = trpc.codingData.getWeeklyStats.useQuery(
-    { offset: 1 },
-    {
-      refetchOnWindowFocus: true,
-    },
-  );
+  const {
+    pieChartError,
+    barChartError,
+    isLoadingBar,
+    isLoadingPie,
+    pieChartData,
+    barChartData,
+  } = useQueryWeekLangChart();
 
-  if (error && error instanceof Error) {
-    return <span>An error occurred: {error.message}</span>;
+  if (pieChartError || barChartError) {
+    const error = pieChartError || barChartError;
+    return (
+      <span className="text-red-500">An error occurred: {error?.message}</span>
+    );
   }
-  if (isLoading) {
+
+  if (isLoadingPie || isLoadingBar) {
     return <Skeleton className="h-[24rem] w-[45%] max-chart:w-full" />;
   }
-
-  const pieChartData = formatWeekLanguagesData(data!);
-  const barChartData = formatWeekLangByDayChart(data!);
 
   // ! Don't try to refactor the two charts and put them in their own
   // ! component, it is not supported by recharts
@@ -45,7 +46,7 @@ const WeekLanguagesChart = () => {
   return (
     <div className="relative w-[45%] max-chart:w-full">
       <Icon
-        Icon={isPieChartVisible ? PieChartIcon : BarChartIcon}
+        Icon={isPieChartVisible ? BarChartIcon : PieChartIcon}
         className="absolute -top-12 right-0 z-0"
         onClick={handleClick}
       />
@@ -107,7 +108,7 @@ const WeekLanguagesChart = () => {
                 )
               }
             />
-            {[...new Set(barChartData.flatMap((day) => Object.keys(day)))]
+            {[...new Set(barChartData?.flatMap((day) => Object.keys(day)))]
               .filter(
                 (key) =>
                   key !== "date" &&
