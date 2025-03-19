@@ -1,3 +1,4 @@
+import { DEFAULT_COLOR } from "@/constants";
 import languagesAttributes from "@/colors.json";
 import { trpc } from "@/utils/trpc";
 
@@ -28,7 +29,7 @@ const useQueryWeekLangChart = () => {
     color:
       languagesAttributes[
         entry.languageName as keyof typeof languagesAttributes
-      ].color,
+      ].color || DEFAULT_COLOR,
   }));
 
   return {

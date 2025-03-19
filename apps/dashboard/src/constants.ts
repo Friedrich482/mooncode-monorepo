@@ -31,3 +31,5 @@ export const chartConfig = {
     color: "#FFDC67",
   },
 } satisfies ChartConfig;
+
+export const DEFAULT_COLOR = "HSL(46, 100%, 30%)";
