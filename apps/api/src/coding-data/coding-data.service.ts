@@ -94,7 +94,11 @@ export class CodingDataService {
       this.dailyDataService,
     );
 
-    return (
+    const totalTimeSpentInTheWeek = dailyDataForWeek
+      .map((day) => day.timeSpent)
+      .reduce((acc, curr) => acc + curr, 0);
+
+    const kVLangTime = (
       await Promise.all(
         dailyDataForWeek.map(({ id }) =>
           this.languagesService.findAllLanguages(id),
@@ -106,24 +110,42 @@ export class CodingDataService {
       });
       return acc;
     }, {});
+
+    const finalData = Object.entries(kVLangTime).map(
+      ([languageName, timeSpent]) => ({
+        languageName,
+        time: timeSpent,
+        value: formatDuration(timeSpent),
+        percentage: (timeSpent * 100) / totalTimeSpentInTheWeek,
+      }),
+    );
+
+    return finalData;
   }
-  async getAllWeeklyStats({
+  async getLanguagesWeekPerDay({
     userId,
     offset = 0,
   }: {
     userId: string;
     offset: number | undefined;
   }) {
-    const timeSpentOnWeek = await this.getTimeSpentOnWeek({ userId, offset });
-    const daysOfWeekStats = await this.getDaysOfWeekStats({ userId, offset });
-
-    const weekLanguagesTime = await this.getWeekLanguagesTime({
+    const dailyDataForWeek = await findDailyDataForWeek(
       userId,
       offset,
-    });
+      this.dailyDataService,
+    );
+    return await Promise.all(
+      dailyDataForWeek.map(async ({ id, date, timeSpent }) => ({
+        originalDate: date,
 
-    return { timeSpentOnWeek, weekLanguagesTime, daysOfWeekStats };
+        date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
+        timeSpent,
+
+        ...(await this.languagesService.findAllLanguages(id)),
+      })),
+    );
   }
+  // TODO remove that global method since we don't use it anywhere
 
   async upsert({
     id,

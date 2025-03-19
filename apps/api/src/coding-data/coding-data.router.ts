@@ -61,11 +61,11 @@ export class CodingDataRouter {
           }),
         ),
 
-      getAllWeeklyStats: this.trpcService
+      getLanguagesWeekPerDay: this.trpcService
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingDataService.getAllWeeklyStats({
+          this.codingDataService.getLanguagesWeekPerDay({
             userId: ctx.user.sub,
             offset: input.offset,
           }),
