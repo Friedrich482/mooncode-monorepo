@@ -28,6 +28,7 @@ const extensionConfig = {
     extensions: [".ts", ".cjs"],
     alias: {
       "@repo/utils": path.resolve(__dirname, "../../packages/utils/src"),
+      "@repo/trpc": path.resolve(__dirname, "../../packages/trpc/src"),
     },
   },
   module: {

@@ -145,7 +145,6 @@ export class CodingDataService {
       })),
     );
   }
-  // TODO remove that global method since we don't use it anywhere
 
   async upsert({
     id,

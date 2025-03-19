@@ -8,6 +8,9 @@ const getToken = async (context: vscode.ExtensionContext) => {
   const parsedPayload = parseJwtPayload(token);
 
   if (!parsedPayload.success) {
+    vscode.window.showInformationMessage(
+      "You're either logged out or your session has expired",
+    );
     await login(context);
     token = await context.secrets.get("authToken");
     return token;

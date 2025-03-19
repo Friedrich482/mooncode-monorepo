@@ -15,6 +15,7 @@ export const localUrl = `http://localhost:${localUrlPort}`;
 
 export let languagesData: LanguagesData = {};
 
+// those urls are going in the .env file if necessary
 export const INITIAL_DATA_URL =
   "http://localhost:3000/api/coding-data/daily?offset=0";
 
