@@ -14,7 +14,7 @@ const getToken = async () => {
     vscode.window.showInformationMessage(
       "You're either logged out or your session has expired",
     );
-    await login(context);
+    await login();
     token = await context.secrets.get("authToken");
     return token;
   }
@@ -31,7 +31,7 @@ const getToken = async () => {
       return undefined;
     }
 
-    await login(context);
+    await login();
     token = await context.secrets.get("authToken");
   }
 

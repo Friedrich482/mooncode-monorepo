@@ -1,9 +1,12 @@
 import * as vscode from "vscode";
-import fetchToken from "./fetchToken";
+import { TRPCClientError } from "@trpc/client";
+import { getExtensionContext } from "../../extension";
 import register from "./register";
 import storeToken from "./storeToken";
+import trpc from "../trpc/client";
 
-const login = async (context: vscode.ExtensionContext) => {
+const login = async () => {
+  const context = getExtensionContext();
   vscode.window.showInformationMessage("Logging in directly from vscode...");
 
   const username = await vscode.window.showInputBox({
@@ -23,34 +26,40 @@ const login = async (context: vscode.ExtensionContext) => {
       "Cancel",
     );
     if (selection === "Try again") {
-      await login(context);
+      await login();
     } else {
       vscode.window.showInformationMessage("Login cancelled");
     }
     return;
   }
 
-  const res = await fetchToken(username, password);
+  try {
+    const res = await trpc.auth.signInUser.mutate({ username, password });
+    const { access_token } = res;
 
-  if (typeof res === "string") {
+    await storeToken(context, access_token);
+    vscode.window.showInformationMessage("Logged in successfully");
+  } catch (error) {
+    let errorMessage;
+    if (error instanceof TRPCClientError || error instanceof Error) {
+      errorMessage = error.message;
+    }
+
     const selection = await vscode.window.showErrorMessage(
-      `Login failed: ${res}`,
+      `Login failed: ${errorMessage}`,
       "Try again",
       "Register",
       "Cancel",
     );
+
     if (selection === "Register") {
       await register(context);
     } else if (selection === "Try again") {
-      await login(context);
+      await login();
     } else {
       vscode.window.showInformationMessage("Login cancelled");
     }
     return;
   }
-
-  const { access_token } = res;
-  await storeToken(context, access_token);
-  vscode.window.showInformationMessage("Logged in successfully");
 };
 export default login;

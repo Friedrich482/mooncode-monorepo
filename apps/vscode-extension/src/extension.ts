@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import addStatusBarItem from "./utils/addStatusBarItem";
-import fetchInitialLanguagesData from "./utils/fetchInitialLanguagesData";
 import getTime from "./utils/getTime";
 import { languagesData } from "./constants";
 import login from "./utils/auth/login";
@@ -9,6 +8,7 @@ import openDashBoard from "./utils/openDashBoard";
 import periodicSyncData from "./utils/periodicSyncData";
 import register from "./utils/auth/register";
 import setStatusBarItem from "./utils/setStatusBarItem";
+import trpc from "./utils/trpc/client";
 
 let extensionContext: vscode.ExtensionContext;
 
@@ -22,7 +22,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const statusBarItem = addStatusBarItem();
 
   const { timeSpent, dayLanguagesTime: initialLanguagesData } =
-    await fetchInitialLanguagesData();
+    await trpc.codingData.getDailyStats.query({ offset: 0 });
 
   setStatusBarItem(timeSpent, statusBarItem);
 
@@ -57,7 +57,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const loginCommand = vscode.commands.registerCommand(
     "MoonCode.login",
     async () => {
-      await login(context);
+      await login();
     },
   );
   const registerCommand = vscode.commands.registerCommand(
