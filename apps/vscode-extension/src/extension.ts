@@ -10,7 +10,11 @@ import periodicSyncData from "./utils/periodicSyncData";
 import register from "./utils/auth/register";
 import setStatusBarItem from "./utils/setStatusBarItem";
 
+let extensionContext: vscode.ExtensionContext;
+
 export async function activate(context: vscode.ExtensionContext) {
+  extensionContext = context;
+
   vscode.window.showInformationMessage(
     "MoonCode starts now tracking your coding time",
   );
@@ -18,7 +22,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const statusBarItem = addStatusBarItem();
 
   const { timeSpent, dayLanguagesTime: initialLanguagesData } =
-    await fetchInitialLanguagesData(context);
+    await fetchInitialLanguagesData();
 
   setStatusBarItem(timeSpent, statusBarItem);
 
@@ -90,3 +94,10 @@ export async function activate(context: vscode.ExtensionContext) {
 export async function deactivate() {
   console.log("MoonCode deactivated");
 }
+
+export const getExtensionContext = () => {
+  if (!extensionContext) {
+    throw new Error("Extension context has not been initialized.");
+  }
+  return extensionContext;
+};

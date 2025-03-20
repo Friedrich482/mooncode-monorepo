@@ -1,14 +1,9 @@
-import * as vscode from "vscode";
 import { INITIAL_DATA_URL } from "../constants";
-import client from "./trpc/client";
 import { fetchInitialLanguagesDataSchema } from "../types-schemas";
 import getToken from "./auth/getToken";
 
-const fetchInitialLanguagesData = async (context: vscode.ExtensionContext) => {
-  const trpc = client(context);
-  const dat = await trpc.users.getProfile.query();
-  vscode.window.showInformationMessage(`${JSON.stringify(dat)}`);
-  const authToken = await getToken(context);
+const fetchInitialLanguagesData = async () => {
+  const authToken = await getToken();
 
   const res = await fetch(INITIAL_DATA_URL, {
     method: "GET",

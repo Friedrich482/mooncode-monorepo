@@ -5,7 +5,7 @@
     "lib": ["ES2022"],
     "sourceMap": true,
     "paths": {
-      "@repo/utils/*": ["../../packages/utils/src/*"]
+      "@/*": ["./src/"]
     },
     "moduleResolution": "bundler",
     "strict": true

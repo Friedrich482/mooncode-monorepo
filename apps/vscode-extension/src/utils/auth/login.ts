@@ -5,6 +5,7 @@ import storeToken from "./storeToken";
 
 const login = async (context: vscode.ExtensionContext) => {
   vscode.window.showInformationMessage("Logging in directly from vscode...");
+
   const username = await vscode.window.showInputBox({
     prompt: "Enter your username",
     title: "Username",

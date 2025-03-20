@@ -15,7 +15,7 @@ const periodicSyncData = async (
     0,
   );
 
-  const authToken = await getToken(context);
+  const authToken = await getToken();
   const res = await fetch(PERIODIC_DATA_SYNC_URL, {
     method: "POST",
     headers: {
