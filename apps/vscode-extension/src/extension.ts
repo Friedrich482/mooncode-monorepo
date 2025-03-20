@@ -1,6 +1,5 @@
 import * as vscode from "vscode";
 import addStatusBarItem from "./utils/addStatusBarItem";
-import fetchInitialLanguagesData from "./utils/fetchInitialLanguagesData";
 import getTime from "./utils/getTime";
 import { languagesData } from "./constants";
 import login from "./utils/auth/login";
@@ -9,8 +8,13 @@ import openDashBoard from "./utils/openDashBoard";
 import periodicSyncData from "./utils/periodicSyncData";
 import register from "./utils/auth/register";
 import setStatusBarItem from "./utils/setStatusBarItem";
+import trpc from "./utils/trpc/client";
+
+let extensionContext: vscode.ExtensionContext;
 
 export async function activate(context: vscode.ExtensionContext) {
+  extensionContext = context;
+
   vscode.window.showInformationMessage(
     "MoonCode starts now tracking your coding time",
   );
@@ -18,7 +22,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const statusBarItem = addStatusBarItem();
 
   const { timeSpent, dayLanguagesTime: initialLanguagesData } =
-    await fetchInitialLanguagesData(context);
+    await trpc.codingData.getDailyStats.query({ offset: 0 });
 
   setStatusBarItem(timeSpent, statusBarItem);
 
@@ -53,7 +57,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const loginCommand = vscode.commands.registerCommand(
     "MoonCode.login",
     async () => {
-      await login(context);
+      await login();
     },
   );
   const registerCommand = vscode.commands.registerCommand(
@@ -90,3 +94,10 @@ export async function activate(context: vscode.ExtensionContext) {
 export async function deactivate() {
   console.log("MoonCode deactivated");
 }
+
+export const getExtensionContext = () => {
+  if (!extensionContext) {
+    throw new Error("Extension context has not been initialized.");
+  }
+  return extensionContext;
+};

@@ -1,14 +1,20 @@
 import * as vscode from "vscode";
+import { getExtensionContext } from "../../extension";
 import login from "./login";
 import parseJwtPayload from "./parseJwtPayload";
 
-const getToken = async (context: vscode.ExtensionContext) => {
+const getToken = async () => {
+  const context = getExtensionContext();
+
   let token = await context.secrets.get("authToken");
 
   const parsedPayload = parseJwtPayload(token);
 
   if (!parsedPayload.success) {
-    await login(context);
+    vscode.window.showInformationMessage(
+      "You're either logged out or your session has expired",
+    );
+    await login();
     token = await context.secrets.get("authToken");
     return token;
   }
@@ -25,7 +31,7 @@ const getToken = async (context: vscode.ExtensionContext) => {
       return undefined;
     }
 
-    await login(context);
+    await login();
     token = await context.secrets.get("authToken");
   }
 

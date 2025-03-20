@@ -71,6 +71,9 @@
   },
   "dependencies": {
     "@repo/utils": "*",
+    "@repo/trpc": "*",
+    "@trpc/client": "^10.45.2",
+    "@trpc/server": "^10.45.2",
     "zod": "^3.24.1"
   }
 }

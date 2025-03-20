@@ -10,10 +10,6 @@ export type LanguageData = {
 };
 export type LanguagesData = Record<string, LanguageData>;
 
-export const loginResponseSchema = z.object({
-  access_token: z.string().min(6),
-});
-
 export const registerResponseSchema = z.object({
   email: z.string().email(),
   username: z.string().min(2),
@@ -22,11 +18,6 @@ export const registerResponseSchema = z.object({
 
 export const failedOperationResponseSchema = z.object({
   message: z.string().min(1),
-});
-
-export const fetchInitialLanguagesDataSchema = z.object({
-  timeSpent: z.number(),
-  dayLanguagesTime: z.record(z.string().min(1), z.number().min(0)),
 });
 
 export const JWTPayloadSchema = z.object({

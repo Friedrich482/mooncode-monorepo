@@ -20,7 +20,9 @@ const parseJwtPayload = (
     }
 
     const base64Payload = token.split(".")[1];
-    const decodedPayload = atob(base64Payload);
+    const decodedPayload = Buffer.from(base64Payload, "base64").toString(
+      "utf8",
+    );
     const jsonPayload = JSON.parse(decodedPayload);
 
     return JWTPayloadSchema.safeParse(jsonPayload);

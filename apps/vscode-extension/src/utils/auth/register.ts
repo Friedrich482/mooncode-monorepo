@@ -71,7 +71,7 @@ const register = async (context: vscode.ExtensionContext) => {
     "Login",
   );
   if (selection === "Login") {
-    await login(context);
+    await login();
   } else {
     return undefined;
   }
