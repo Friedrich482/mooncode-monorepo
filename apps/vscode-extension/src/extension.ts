@@ -63,13 +63,13 @@ export async function activate(context: vscode.ExtensionContext) {
   const registerCommand = vscode.commands.registerCommand(
     "MoonCode.register",
     async () => {
-      await register(context);
+      await register();
     },
   );
   const logoutCommand = vscode.commands.registerCommand(
     "MoonCode.logout",
     async () => {
-      await logout(context);
+      await logout();
     },
   );
   const openDashBoardCommand = vscode.commands.registerCommand(

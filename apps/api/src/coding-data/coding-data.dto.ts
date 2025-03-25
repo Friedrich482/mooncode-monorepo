@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const CodingDataDto = z.object({
-  timeSpentToday: z.number().positive(),
+  timeSpentToday: z.number().int(),
   timeSpentPerLanguage: z.record(z.string(), z.number()),
 });
 
