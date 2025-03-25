@@ -20,6 +20,10 @@ export const failedOperationResponseSchema = z.object({
   message: z.string().min(1),
 });
 
+export const loginResponseSchema = z.object({
+  access_token: z.string().min(6),
+});
+
 export const JWTPayloadSchema = z.object({
   sub: z.string().ulid(),
   username: z.string().min(2),

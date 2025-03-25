@@ -9,6 +9,7 @@ import {
 import { CreateUserDtoType, UpdateUserDtoType } from "./users.dto";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { TRPCError } from "@trpc/server";
 import { eq } from "drizzle-orm";
 import { users } from "src/drizzle/schema/users";
 
@@ -77,7 +78,11 @@ export class UsersService {
       .where(eq(users.username, username))
       .limit(1);
 
-    if (!user) throw new NotFoundException("User not found");
+    if (!user)
+      throw new TRPCError({
+        code: "NOT_FOUND",
+        message: "User not found",
+      });
     return user;
   }
 

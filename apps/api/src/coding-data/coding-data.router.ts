@@ -14,12 +14,12 @@ export class CodingDataRouter {
       upsert: this.trpcService
         .protectedProcedure()
         .input(CodingDataDto)
-        .mutation(async ({ ctx, input }) => {
+        .mutation(async ({ ctx, input }) =>
           this.codingDataService.upsert({
             id: ctx.user.sub,
             updateCodingDataDto: input,
-          });
-        }),
+          }),
+        ),
 
       getDailyStats: this.trpcService
         .protectedProcedure()

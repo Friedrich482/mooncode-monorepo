@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
-import { TRPCClientError } from "@trpc/client";
+import fetchJWTToken from "./fetchJWTToken";
 import { getExtensionContext } from "../../extension";
+import { loginResponseSchema } from "../../types-schemas";
 import register from "./register";
 import storeToken from "./storeToken";
-import trpc from "../trpc/client";
 
 const login = async () => {
   const context = getExtensionContext();
@@ -34,14 +34,24 @@ const login = async () => {
   }
 
   try {
-    const res = await trpc.auth.signInUser.mutate({ username, password });
-    const { access_token } = res;
+    vscode.window.showInformationMessage("Sending to endpoint...");
+
+    // we can't use trpc here because we need to get the token first and it is what we're doing
+    // using it will introduce a circular dependency problem :
+    // trpc => token => login => trpc
+
+    const res = await fetchJWTToken(username, password);
+
+    const body = loginResponseSchema.parse(await res.json());
+
+    const { access_token } = body;
 
     await storeToken(context, access_token);
     vscode.window.showInformationMessage("Logged in successfully");
   } catch (error) {
-    let errorMessage;
-    if (error instanceof TRPCClientError || error instanceof Error) {
+    let errorMessage = "An error occurred";
+
+    if (error instanceof Error) {
       errorMessage = error.message;
     }
 
@@ -53,7 +63,7 @@ const login = async () => {
     );
 
     if (selection === "Register") {
-      await register(context);
+      await register();
     } else if (selection === "Try again") {
       await login();
     } else {

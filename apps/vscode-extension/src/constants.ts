@@ -12,11 +12,6 @@ export const languageMapping: Record<string, string> = {
 
 export const localUrlPort = 4208;
 export const localUrl = `http://localhost:${localUrlPort}`;
+export const LOGIN_URL = "http://localhost:3000/trpc/auth.signInUser";
 
 export let languagesData: LanguagesData = {};
-
-// those urls are going in the .env file if necessary
-
-export const PERIODIC_DATA_SYNC_URL = "http://localhost:3000/api/coding-data";
-
-export const REGISTER_URL = "http://localhost:3000/api/auth/register";

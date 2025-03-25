@@ -1,17 +1,20 @@
 import * as vscode from "vscode";
-import createUser from "./createUser";
+import { TRPCClientError } from "@trpc/client";
 import login from "./login";
+import trpc from "../trpc/client";
 
-const register = async (context: vscode.ExtensionContext) => {
+const register = async () => {
   const username = await vscode.window.showInputBox({
     prompt: "Enter your username",
     title: "Username",
   });
+
   const email = await vscode.window.showInputBox({
     prompt: "Enter your email",
     title: "Email",
     placeHolder: "example@email.com",
   });
+
   const password = await vscode.window.showInputBox({
     prompt: "Enter your password",
     password: true,
@@ -45,36 +48,51 @@ const register = async (context: vscode.ExtensionContext) => {
       "Cancel",
     );
     if (selection === "Try again") {
-      await register(context);
+      await register();
     } else {
       vscode.window.showInformationMessage("Registration cancelled.");
     }
     return;
   }
-  const res = await createUser(username, password, email);
 
-  if (typeof res === "string") {
+  try {
+    await trpc.auth.registerUser.mutate({
+      email,
+      username,
+      password,
+    });
+
+    const selection = await vscode.window.showInformationMessage(
+      "Registered successfully",
+      "Login",
+    );
+
+    if (selection === "Login") {
+      await login();
+    } else {
+      return;
+    }
+  } catch (error) {
+    let errorMessage = "An error occurred";
+
+    if (error instanceof TRPCClientError || error instanceof Error) {
+      errorMessage = error.message;
+    }
+
     const selection = await vscode.window.showErrorMessage(
-      `Registering failed: ${res}`,
+      `Registering failed: ${errorMessage}`,
       "Try again",
       "Cancel",
     );
+
     if (selection === "Try again") {
-      await register(context);
+      await register();
     } else {
       vscode.window.showInformationMessage("Registration cancelled.");
     }
-    return;
   }
-  const selection = await vscode.window.showInformationMessage(
-    "Registered successfully",
-    "Login",
-  );
-  if (selection === "Login") {
-    await login();
-  } else {
-    return undefined;
-  }
+
+  return;
 };
 
 export default register;
