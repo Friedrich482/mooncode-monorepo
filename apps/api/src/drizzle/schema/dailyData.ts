@@ -1,15 +1,15 @@
-import { date, integer, pgTable, text } from "drizzle-orm/pg-core";
+import { date, integer, pgTable, varchar } from "drizzle-orm/pg-core";
 import { InferSelectModel } from "drizzle-orm";
 import { timestamps } from "../columns.helpers";
 import { ulid } from "ulid";
 import { users } from "./users";
 
 export const dailyData = pgTable("daily_data", {
-  id: text("id")
+  id: varchar("id", { length: 26 })
     .primaryKey()
     .notNull()
-    .$defaultFn(() => ulid()),
-  userId: text("user_id")
+    .$defaultFn(() => ulid().toLowerCase()),
+  userId: varchar("user_id", { length: 26 })
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   date: date().notNull(),
