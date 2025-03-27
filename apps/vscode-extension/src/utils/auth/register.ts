@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { TRPCClientError } from "@trpc/client";
 import login from "./login";
-import trpc from "../trpc/client";
+import registerUser from "./registerUser";
 
 const register = async () => {
   const username = await vscode.window.showInputBox({
@@ -56,11 +56,8 @@ const register = async () => {
   }
 
   try {
-    await trpc.auth.registerUser.mutate({
-      email,
-      username,
-      password,
-    });
+    // we can't use trpc here for the same reasons as the login function
+    await registerUser({ email, password, username });
 
     const selection = await vscode.window.showInformationMessage(
       "Registered successfully",
@@ -75,7 +72,7 @@ const register = async () => {
   } catch (error) {
     let errorMessage = "An error occurred";
 
-    if (error instanceof TRPCClientError || error instanceof Error) {
+    if (error instanceof TRPCClientError) {
       errorMessage = error.message;
     }
 
