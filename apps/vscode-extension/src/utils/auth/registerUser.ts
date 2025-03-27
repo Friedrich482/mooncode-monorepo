@@ -1,17 +1,25 @@
-import { LOGIN_URL } from "../../constants";
+import { REGISTER_URL } from "../../constants";
 
-const fetchJWTToken = async (username: string, password: string) => {
-  const res = await fetch(LOGIN_URL, {
+const registerUser = async ({
+  email,
+  password,
+  username,
+}: {
+  email: string;
+  username: string;
+  password: string;
+}) => {
+  const res = await fetch(REGISTER_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      email,
       username,
       password,
     }),
   });
-
   if (!res.ok) {
     const errorData = await res.json();
 
@@ -19,8 +27,6 @@ const fetchJWTToken = async (username: string, password: string) => {
       (errorData as { error: { message: string } }).error.message,
     );
   }
-
-  return res.json();
 };
 
-export default fetchJWTToken;
+export default registerUser;

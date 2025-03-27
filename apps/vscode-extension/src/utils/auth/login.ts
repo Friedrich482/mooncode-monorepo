@@ -40,11 +40,14 @@ const login = async () => {
     // using it will introduce a circular dependency problem :
     // trpc => token => login => trpc
 
-    const res = await fetchJWTToken(username, password);
+    const body = await fetchJWTToken(username, password);
+    const parsedBody = loginResponseSchema.parse(body);
 
-    const body = loginResponseSchema.parse(await res.json());
-
-    const { access_token } = body;
+    const {
+      result: {
+        data: { access_token },
+      },
+    } = parsedBody;
 
     await storeToken(context, access_token);
     vscode.window.showInformationMessage("Logged in successfully");

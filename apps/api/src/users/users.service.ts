@@ -1,7 +1,6 @@
 import * as bcrypt from "bcrypt";
 import {
   BadRequestException,
-  ConflictException,
   Inject,
   Injectable,
   NotFoundException,
@@ -32,7 +31,10 @@ export class UsersService {
       .limit(1);
 
     if (existingUser) {
-      throw new ConflictException("This username is already used");
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "This username is already used",
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, this.saltRounds);

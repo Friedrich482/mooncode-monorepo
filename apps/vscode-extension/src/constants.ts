@@ -13,5 +13,6 @@ export const languageMapping: Record<string, string> = {
 export const localUrlPort = 4208;
 export const localUrl = `http://localhost:${localUrlPort}`;
 export const LOGIN_URL = "http://localhost:3000/trpc/auth.signInUser";
+export const REGISTER_URL = "http://localhost:3000/trpc/auth.registerUser";
 
 export let languagesData: LanguagesData = {};
