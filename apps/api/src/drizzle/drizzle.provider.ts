@@ -1,5 +1,5 @@
 import * as schema from "./schema/users";
-import { ConfigService } from "@nestjs/config";
+import { EnvService } from "src/env/env.service";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { drizzle } from "drizzle-orm/node-postgres";
@@ -9,9 +9,9 @@ export const DrizzleAsyncProvider = "DrizzleAsyncProvider";
 export const drizzleProvider = [
   {
     provide: DrizzleAsyncProvider,
-    inject: [ConfigService],
-    useFactory: async (configService: ConfigService) => {
-      const connectionString = configService.get<string>("DATABASE_URL");
+    inject: [EnvService],
+    useFactory: async (envService: EnvService) => {
+      const connectionString = envService.get("DATABASE_URL");
       const pool = new Pool({
         connectionString,
       });
