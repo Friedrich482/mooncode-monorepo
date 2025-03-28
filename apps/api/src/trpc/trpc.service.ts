@@ -1,8 +1,8 @@
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { TRPCError, initTRPC } from "@trpc/server";
-import { ConfigService } from "@nestjs/config";
 import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
+import { EnvService } from "src/env/env.service";
 import { JwtPayload } from "src/types";
 import { JwtService } from "@nestjs/jwt";
 import { transformer } from "@repo/trpc/transformer";
@@ -23,7 +23,7 @@ export class TrpcService {
   trpc;
   constructor(
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    private readonly envService: EnvService,
   ) {
     this.trpc = initTRPC.context<TrpcContext>().create({ transformer });
   }
@@ -66,7 +66,7 @@ export class TrpcService {
       const payload: JwtPayload = await this.jwtService.verifyAsync(
         accessToken,
         {
-          secret: this.configService.get<string>("JWT_SECRET"),
+          secret: this.envService.get("JWT_SECRET"),
         },
       );
       return payload;

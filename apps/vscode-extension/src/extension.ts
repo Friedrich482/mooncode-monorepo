@@ -49,7 +49,7 @@ export async function activate(context: vscode.ExtensionContext) {
     () => {
       currentLanguagesData = timeGetter();
       vscode.window.showInformationMessage(
-        `currentLanguagesData: ${JSON.stringify(Object.entries(currentLanguagesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}\n\n
+        `currentLanguagesData: ${JSON.stringify(Object.entries(currentLanguagesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}
         initialLanguagesData: ${JSON.stringify(Object.entries(initialLanguagesData).map(([key, elapsedTime]) => `${key}: ${elapsedTime} seconds`))}`,
       );
     },
