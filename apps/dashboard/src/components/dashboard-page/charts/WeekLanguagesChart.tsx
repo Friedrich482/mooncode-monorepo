@@ -1,4 +1,12 @@
-import { Bar, BarChart, CartesianGrid, Pie, PieChart, XAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Pie,
+  PieChart,
+  XAxis,
+} from "recharts";
 import { BarChartIcon, PieChartIcon } from "lucide-react";
 import {
   ChartContainer,
@@ -7,11 +15,11 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { DEFAULT_COLOR, chartConfig } from "@/constants";
 import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
 import Icon from "@/components/ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { Skeleton } from "@/components/ui/skeleton";
-import { chartConfig } from "@/constants";
 import languagesAttributes from "@/colors.json";
 import useQueryWeekLangChart from "@/hooks/useQueryWeekLangChart";
 import { useState } from "react";
@@ -59,7 +67,7 @@ const WeekLanguagesChart = () => {
               formatter={(value: string, language, { payload }) =>
                 CustomChartToolTip(
                   parseInt(value),
-                  payload.fill,
+                  payload.color,
                   language.toString(),
                   payload.percentage,
                 )
@@ -75,10 +83,13 @@ const WeekLanguagesChart = () => {
             <Pie
               data={pieChartData}
               dataKey="time"
-              fill="fill"
               nameKey="languageName"
               className="cursor-pointer"
-            />
+            >
+              {pieChartData?.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
           </PieChart>
         ) : (
           <BarChart accessibilityLayer data={barChartData}>
@@ -103,7 +114,7 @@ const WeekLanguagesChart = () => {
                   parseInt(value),
                   languagesAttributes[
                     language as keyof typeof languagesAttributes
-                  ].color,
+                  ].color || DEFAULT_COLOR,
                   language,
                 )
               }
@@ -122,9 +133,9 @@ const WeekLanguagesChart = () => {
                     dataKey={language}
                     stackId="a"
                     fill={
-                      languagesAttributes[
+                      (languagesAttributes[
                         language as keyof typeof languagesAttributes
-                      ].color as string
+                      ].color as string) || DEFAULT_COLOR
                     }
                     className="cursor-pointer"
                   />
