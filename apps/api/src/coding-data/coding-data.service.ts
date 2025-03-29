@@ -116,7 +116,7 @@ export class CodingDataService {
         languageName,
         time: timeSpent,
         value: formatDuration(timeSpent),
-        percentage: (timeSpent * 100) / totalTimeSpentInTheWeek,
+        percentage: ((timeSpent * 100) / totalTimeSpentInTheWeek).toFixed(2),
       }),
     );
 

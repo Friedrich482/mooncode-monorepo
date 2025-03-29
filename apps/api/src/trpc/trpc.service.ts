@@ -5,7 +5,7 @@ import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import { EnvService } from "src/env/env.service";
 import { JwtPayload } from "src/types";
 import { JwtService } from "@nestjs/jwt";
-import { transformer } from "@repo/trpc/transformer";
+import superjson from "superjson";
 
 type TrpcContext = CreateExpressContextOptions & {
   user?: Pick<JwtPayload, "sub" | "username">;
@@ -25,7 +25,9 @@ export class TrpcService {
     private readonly jwtService: JwtService,
     private readonly envService: EnvService,
   ) {
-    this.trpc = initTRPC.context<TrpcContext>().create({ transformer });
+    this.trpc = initTRPC
+      .context<TrpcContext>()
+      .create({ transformer: superjson });
   }
 
   // these routes are publicly accessible to everyone

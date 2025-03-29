@@ -1,7 +1,7 @@
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "@repo/trpc/router";
 import getToken from "../auth/getToken";
-import { transformer } from "@repo/trpc/transformer";
+import superjson from "superjson";
 
 const trpc = createTRPCProxyClient<AppRouter>({
   links: [
@@ -14,7 +14,7 @@ const trpc = createTRPCProxyClient<AppRouter>({
       },
     }),
   ],
-  transformer,
+  transformer: superjson,
 });
 
 export default trpc;

@@ -31,5 +31,8 @@
       "import": "./dist/*.js",
       "require": "./dist/*.js"
     }
+  },
+  "dependencies": {
+    "superjson": "^2.2.2"
   }
 }
