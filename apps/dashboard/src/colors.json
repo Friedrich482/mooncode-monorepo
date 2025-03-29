@@ -474,6 +474,7 @@
   "overpassql": { "name": "OverpassQL", "color": "#cce2aa" },
   "ox": { "name": "Ox", "color": null },
   "oxygene": { "name": "Oxygene", "color": "#cdd0e3" },
+  "other": { "name": "Others", "color": "#ffdc67" },
   "oz": { "name": "Oz", "color": "#fab738" },
   "p4": { "name": "P4", "color": "#7055b5" },
   "pact": { "name": "Pact", "color": "#F7A8B8" },

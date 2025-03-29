@@ -6,7 +6,7 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ThemeProvider } from "./components/themeProvider";
 import getAuthToken from "./utils/getAuthToken";
 import { httpBatchLink } from "@trpc/client";
-import { transformer } from "@repo/trpc/transformer";
+import superjson from "superjson";
 import { trpc } from "./utils/trpc";
 import { useState } from "react";
 
@@ -31,7 +31,7 @@ function App() {
           },
         }),
       ],
-      transformer,
+      transformer: superjson,
     }),
   );
   return (

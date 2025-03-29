@@ -23,14 +23,17 @@ const useQueryWeekLangChart = () => {
     },
     { refetchOnWindowFocus: true },
   );
-  //   TODO put a default color
-  const pieChartData = pieChart?.map((entry) => ({
-    ...entry,
-    color:
+
+  const pieChartData = pieChart?.map((entry) => {
+    const color =
       languagesAttributes[
         entry.languageName as keyof typeof languagesAttributes
-      ].color || DEFAULT_COLOR,
-  }));
+      ]?.color;
+    return {
+      ...entry,
+      color: color || DEFAULT_COLOR,
+    };
+  });
 
   return {
     pieChartData,
