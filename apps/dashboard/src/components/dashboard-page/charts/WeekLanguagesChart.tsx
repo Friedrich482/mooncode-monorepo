@@ -58,92 +58,99 @@ const WeekLanguagesChart = () => {
         className="absolute -top-12 right-0 z-0"
         onClick={handleClick}
       />
-      <ChartContainer config={chartConfig} className="min-h-96 w-full">
-        {isPieChartVisible ? (
-          <PieChart accessibilityLayer>
-            <ChartTooltip
-              labelFormatter={() => <div className="font-semibold">Time</div>}
-              content={<ChartTooltipContent labelClassName="font-semibold" />}
-              formatter={(value: string, language, { payload }) =>
-                CustomChartToolTip(
-                  parseInt(value),
-                  payload.color,
-                  language.toString(),
-                  payload.percentage,
+      <div className="flex min-h-96 flex-col rounded-md border border-neutral-600/50">
+        <h2 className="text-center text-2xl font-bold">Languages</h2>
+        <ChartContainer
+          config={chartConfig}
+          className="w-full flex-1 border-none"
+        >
+          {isPieChartVisible ? (
+            <PieChart accessibilityLayer>
+              <ChartTooltip
+                labelFormatter={() => <div className="font-semibold">Time</div>}
+                content={<ChartTooltipContent labelClassName="font-semibold" />}
+                formatter={(value: string, language, { payload }) =>
+                  CustomChartToolTip(
+                    parseInt(value),
+                    payload.color,
+                    language.toString(),
+                    payload.percentage,
+                  )
+                }
+              />
+              <ChartLegend
+                content={
+                  <ChartLegendContent order="DESC" className="text-xs" />
+                }
+                className="flex-wrap justify-end pr-2 max-small:hidden"
+                layout="vertical"
+                verticalAlign="middle"
+                align="right"
+              />
+              <Pie
+                data={pieChartData}
+                dataKey="time"
+                nameKey="languageName"
+                className="cursor-pointer"
+              >
+                {pieChartData?.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+            </PieChart>
+          ) : (
+            <BarChart accessibilityLayer data={barChartData}>
+              <CartesianGrid vertical={false} horizontal={false} />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
+
+              <ChartTooltip
+                content={<ChartTooltipContent labelClassName="font-semibold" />}
+                labelFormatter={(
+                  _date: string,
+                  payload: Payload<string, string>[],
+                ) => <div>{payload[0].payload.originalDate}</div>}
+                formatter={(value: string, language) =>
+                  CustomChartToolTip(
+                    parseInt(value),
+                    languagesAttributes[
+                      language as keyof typeof languagesAttributes
+                    ].color || DEFAULT_COLOR,
+                    language,
+                  )
+                }
+              />
+              {[...new Set(barChartData?.flatMap((day) => Object.keys(day)))]
+                .filter(
+                  (key) =>
+                    key !== "date" &&
+                    key !== "timeSpent" &&
+                    key !== "originalDate",
                 )
-              }
-            />
-            <ChartLegend
-              content={<ChartLegendContent order="DESC" className="text-xs" />}
-              className="flex-wrap justify-end max-small:hidden"
-              layout="vertical"
-              verticalAlign="middle"
-              align="right"
-            />
-            <Pie
-              data={pieChartData}
-              dataKey="time"
-              nameKey="languageName"
-              className="cursor-pointer"
-            >
-              {pieChartData?.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-            </Pie>
-          </PieChart>
-        ) : (
-          <BarChart accessibilityLayer data={barChartData}>
-            <CartesianGrid vertical={false} horizontal={false} />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip
-              content={<ChartTooltipContent labelClassName="font-semibold" />}
-              labelFormatter={(
-                date: string,
-                payload: Payload<string, string>[],
-              ) => (
-                <div>{`${date.slice(0, 3)} ${payload[0].payload.originalDate}`}</div>
-              )}
-              formatter={(value: string, language) =>
-                CustomChartToolTip(
-                  parseInt(value),
-                  languagesAttributes[
-                    language as keyof typeof languagesAttributes
-                  ].color || DEFAULT_COLOR,
-                  language,
-                )
-              }
-            />
-            {[...new Set(barChartData?.flatMap((day) => Object.keys(day)))]
-              .filter(
-                (key) =>
-                  key !== "date" &&
-                  key !== "timeSpent" &&
-                  key !== "originalDate",
-              )
-              .map((language) => {
-                return (
-                  <Bar
-                    key={language}
-                    dataKey={language}
-                    stackId="a"
-                    fill={
-                      (languagesAttributes[
-                        language as keyof typeof languagesAttributes
-                      ].color as string) || DEFAULT_COLOR
-                    }
-                    className="cursor-pointer"
-                  />
-                );
-              })}
-          </BarChart>
-        )}
-      </ChartContainer>
+                .map((language) => {
+                  return (
+                    <Bar
+                      key={language}
+                      dataKey={language}
+                      stackId="a"
+                      fill={
+                        (languagesAttributes[
+                          language as keyof typeof languagesAttributes
+                        ].color as string) || DEFAULT_COLOR
+                      }
+                      className="cursor-pointer"
+                    />
+                  );
+                })}
+            </BarChart>
+          )}
+        </ChartContainer>
+      </div>
     </div>
   );
 };
