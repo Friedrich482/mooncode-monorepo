@@ -1,6 +1,6 @@
 import { CreateLanguageDtoType, UpdateLanguageDtoType } from "./languages.dto";
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { languages } from "src/drizzle/schema/languages";
@@ -34,7 +34,8 @@ export class LanguagesService {
         languageName: languages.languageName,
       })
       .from(languages)
-      .where(eq(languages.dailyDataId, dailyDataId));
+      .where(eq(languages.dailyDataId, dailyDataId))
+      .orderBy(asc(languages.timeSpent));
 
     const languagesDataObject = Object.fromEntries(
       languagesDataArray.map(({ languageName, timeSpent }) => [

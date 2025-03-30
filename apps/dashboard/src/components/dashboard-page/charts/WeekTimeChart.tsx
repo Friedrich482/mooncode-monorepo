@@ -4,10 +4,11 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { WeeklyPeriod, offsets } from "@/types-schemas";
+import { chartConfig, offsets } from "@/constants";
 import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
+import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { Skeleton } from "@/components/ui/skeleton";
-import { chartConfig } from "@/constants";
+import { WeeklyPeriod } from "@/types-schemas";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 
@@ -52,6 +53,10 @@ const WeekTimeChart = () => {
         />
         <ChartTooltip
           content={<ChartTooltipContent labelClassName="font-semibold" />}
+          labelFormatter={(
+            _date: string,
+            payload: Payload<string, string>[],
+          ) => <div>{payload[0].payload.originalDate}</div>}
           formatter={(value: string, name) =>
             name === "Time"
               ? CustomChartToolTip(parseInt(value), "var(--color-time)")

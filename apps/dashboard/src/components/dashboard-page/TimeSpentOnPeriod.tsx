@@ -2,6 +2,7 @@ import { Period } from "@/types-schemas";
 import PeriodDropDown from "./PeriodDropDown";
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
+import { offsets } from "@/constants";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 
@@ -14,7 +15,7 @@ const TimeSpentOnPeriod = () => {
   const { isLoading, error, data } =
     trpc.codingData.getTimeSpentOnWeek.useQuery(
       {
-        offset: 1,
+        offset: offsets[period],
       },
       { refetchOnWindowFocus: true },
     );

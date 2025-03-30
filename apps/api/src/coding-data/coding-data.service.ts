@@ -1,6 +1,5 @@
 import { CodingDataDtoType } from "./coding-data.dto";
 import { DailyDataService } from "src/daily-data/daily-data.service";
-import { Date } from "src/types";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
 import findDailyDataForWeek from "src/utils/findDailyDataForWeek";
@@ -76,6 +75,7 @@ export class CodingDataService {
 
     return dailyDataForWeek.map(({ timeSpent, date }) => ({
       timeSpentLine: timeSpent,
+      originalDate: new Date(date).toDateString(),
       date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
       timeSpentBar: timeSpent,
       value: formatDuration(timeSpent),
@@ -111,14 +111,16 @@ export class CodingDataService {
       return acc;
     }, {});
 
-    const finalData = Object.entries(kVLangTime).map(
-      ([languageName, timeSpent]) => ({
+    const finalData = Object.entries(kVLangTime)
+      .map(([languageName, timeSpent]) => ({
         languageName,
         time: timeSpent,
         value: formatDuration(timeSpent),
-        percentage: ((timeSpent * 100) / totalTimeSpentInTheWeek).toFixed(2),
-      }),
-    );
+        percentage: parseFloat(
+          ((timeSpent * 100) / totalTimeSpentInTheWeek).toFixed(2),
+        ),
+      }))
+      .sort((a, b) => a.time - b.time);
 
     return finalData;
   }
@@ -136,7 +138,7 @@ export class CodingDataService {
     );
     return await Promise.all(
       dailyDataForWeek.map(async ({ id, date, timeSpent }) => ({
-        originalDate: date,
+        originalDate: new Date(date).toDateString(),
 
         date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
         timeSpent,
