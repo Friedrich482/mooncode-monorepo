@@ -40,6 +40,46 @@ export class CodingDataService {
     return { timeSpent: dayData.timeSpent, dayLanguagesTime };
   }
 
+  async getDailyStatsForChart({
+    userId,
+    offset = 0,
+  }: {
+    userId: string;
+    offset: number | undefined;
+  }) {
+    const targetDate = getDayWithOffset(offset);
+
+    const dayData = await this.dailyDataService.findOneDailyData(
+      userId,
+      targetDate,
+    );
+
+    if (!dayData?.id) {
+      return {
+        formattedTotalTimeSpent: 0,
+        finalData: [],
+      };
+    }
+
+    const dayLanguagesTime = await this.languagesService.findAllLanguages(
+      dayData.id,
+    );
+
+    const totalTimeSpent = dayData.timeSpent;
+
+    const finalData = Object.entries(dayLanguagesTime)
+      .map(([languageId, timeSpent]) => ({
+        languageId,
+        timeSpent,
+        formattedValue: formatDuration(timeSpent),
+        percentage: parseFloat(((timeSpent * 100) / totalTimeSpent).toFixed(2)),
+      }))
+      .sort((a, b) => b.timeSpent - a.timeSpent);
+
+    const formattedTotalTimeSpent = formatDuration(totalTimeSpent);
+
+    return { finalData, formattedTotalTimeSpent };
+  }
   async getTimeSpentOnWeek({
     userId,
     offset = 0,

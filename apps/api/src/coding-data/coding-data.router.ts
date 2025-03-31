@@ -31,6 +31,16 @@ export class CodingDataRouter {
           }),
         ),
 
+      getDailyStatsForChart: this.trpcService
+        .protectedProcedure()
+        .input(TimeOffsetDto)
+        .query(async ({ ctx, input }) =>
+          this.codingDataService.getDailyStatsForChart({
+            offset: input.offset,
+            userId: ctx.user.sub,
+          }),
+        ),
+
       getTimeSpentOnWeek: this.trpcService
         .protectedProcedure()
         .input(TimeOffsetDto)
