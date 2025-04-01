@@ -5,15 +5,21 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { DEFAULT_COLOR, chartConfig } from "@/constants";
+import ChartTitle from "./ChartTitle";
 import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
 import { Skeleton } from "@/components/ui/skeleton";
 import languagesAttributes from "@/colors.json";
 import { trpc } from "@/utils/trpc";
+import { useState } from "react";
 
 const TodayLanguagesChart = () => {
+  const [offset, setOffset] = useState(0);
+  const handleChevronLeftClick = () => setOffset((prev) => prev - 1);
+  const handleChevronRightClick = () => setOffset((prev) => prev + 1);
+
   const { data, error, isLoading } =
     trpc.codingData.getDailyStatsForChart.useQuery({
-      offset: 0,
+      offset,
     });
 
   if (error) {
@@ -25,7 +31,7 @@ const TodayLanguagesChart = () => {
     return <Skeleton className="h-[24rem] w-[45%] max-chart:w-full" />;
   }
 
-  const { finalData, formattedTotalTimeSpent } = data;
+  const { finalData, formattedTotalTimeSpent, date } = data;
 
   const chartData = finalData.map((entry) => ({
     ...entry,
@@ -39,9 +45,13 @@ const TodayLanguagesChart = () => {
 
   return (
     <div className="flex min-h-96 w-[45%] flex-col gap-y-2 rounded-md border border-neutral-600/50 py-2 max-chart:w-full">
-      <h2 className="text-center text-2xl font-bold">
-        Today : {formattedTotalTimeSpent}
-      </h2>
+      <ChartTitle
+        date={date}
+        formattedTotalTimeSpent={formattedTotalTimeSpent}
+        handleChevronLeftClick={handleChevronLeftClick}
+        handleChevronRightClick={handleChevronRightClick}
+        offset={offset}
+      />{" "}
       {chartData.length === 0 ? (
         <p className="w-full pt-[25%] text-center text-2xl">
           No coding stats for the day

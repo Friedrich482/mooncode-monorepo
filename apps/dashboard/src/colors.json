@@ -637,7 +637,7 @@
   "tcsh": { "name": "Tcsh", "color": null },
   "templ": { "name": "Templ", "color": "#66D0DD" },
   "terra": { "name": "Terra", "color": "#00004c" },
-  "terraformtemplate": { "name": "Terraform Template", "color": "#7b42bb" },
+  "terraform": { "name": "Terraform", "color": "#7b42bb" },
   "tex": { "name": "TeX", "color": "#3D6117" },
   "textgrid": { "name": "TextGrid", "color": "#c8506d" },
   "textile": { "name": "Textile", "color": "#ffe7ac" },

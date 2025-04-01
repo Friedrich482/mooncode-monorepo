@@ -6,7 +6,7 @@ export const CodingDataDto = z.object({
 });
 
 export const TimeOffsetDto = z.object({
-  offset: z.number().int().min(0, "Value must be at least 0").optional(),
+  offset: z.number().int().max(0, "Value must be at most 0").optional(),
 });
 
 export type CodingDataDtoType = z.infer<typeof CodingDataDto>;

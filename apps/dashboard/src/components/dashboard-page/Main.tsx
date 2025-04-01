@@ -1,5 +1,5 @@
 import TimeSpentOnPeriod from "./TimeSpentOnPeriod";
-import TodayLanguagesChart from "./charts/TodayLanguagesChart";
+import TodayLanguagesChart from "./charts/todayLanguagesChart/TodayLanguagesChart";
 import WeekLanguagesChart from "./charts/WeekLanguagesChart";
 import WeekTimeChart from "./charts/WeekTimeChart";
 
