@@ -42,46 +42,52 @@ const TodayLanguagesChart = () => {
       <h2 className="text-center text-2xl font-bold">
         Today : {formattedTotalTimeSpent}
       </h2>
-      <ChartContainer
-        config={chartConfig}
-        className="w-full flex-1 border-none"
-      >
-        <BarChart
-          layout="vertical"
-          data={chartData}
-          margin={{ left: 20 }}
-          accessibilityLayer
+      {chartData.length === 0 ? (
+        <p className="w-full pt-[25%] text-center text-2xl">
+          No coding stats for the day
+        </p>
+      ) : (
+        <ChartContainer
+          config={chartConfig}
+          className="w-full flex-1 border-none"
         >
-          <CartesianGrid horizontal={false} />
-          <YAxis
-            dataKey="languageName"
-            type="category"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-          />
-          <XAxis dataKey="timeSpent" type="number" hide />
-          <ChartTooltip
-            cursor={false}
-            content={<ChartTooltipContent labelClassName="font-semibold" />}
-            // TODO use the appropriate period
-            labelFormatter={() => <div className="font-semibold">Today</div>}
-            formatter={(value: string, _, { payload }) => {
-              return CustomChartToolTip(
-                parseInt(value),
-                payload.color,
-                payload.languageId,
-                payload.percentage,
-              );
-            }}
-          />
-          <Bar dataKey="timeSpent" layout="vertical" radius={5}>
-            {chartData.map((entry) => (
-              <Cell fill={entry.color} min={0} key={entry.languageId} />
-            ))}
-          </Bar>
-        </BarChart>
-      </ChartContainer>
+          <BarChart
+            layout="vertical"
+            data={chartData}
+            margin={{ left: 20 }}
+            accessibilityLayer
+          >
+            <CartesianGrid horizontal={false} />
+            <YAxis
+              dataKey="languageName"
+              type="category"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+            />
+            <XAxis dataKey="timeSpent" type="number" hide />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent labelClassName="font-semibold" />}
+              // TODO use the appropriate period
+              labelFormatter={() => <div className="font-semibold">Today</div>}
+              formatter={(value: string, _, { payload }) => {
+                return CustomChartToolTip(
+                  parseInt(value),
+                  payload.color,
+                  payload.languageId,
+                  payload.percentage,
+                );
+              }}
+            />
+            <Bar dataKey="timeSpent" layout="vertical" radius={5}>
+              {chartData.map((entry) => (
+                <Cell fill={entry.color} min={0} key={entry.languageId} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ChartContainer>
+      )}
     </div>
   );
 };
