@@ -56,7 +56,7 @@ export class CodingDataService {
 
     if (!dayData?.id) {
       return {
-        formattedTotalTimeSpent: 0,
+        formattedTotalTimeSpent: formatDuration(0),
         finalData: [],
       };
     }
