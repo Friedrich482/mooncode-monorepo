@@ -12,7 +12,7 @@ import languagesAttributes from "@/colors.json";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 
-const TodayLanguagesChart = () => {
+const DayLanguagesChart = () => {
   const [offset, setOffset] = useState(0);
   const handleChevronLeftClick = () => setOffset((prev) => prev - 1);
   const handleChevronRightClick = () => setOffset((prev) => prev + 1);
@@ -79,8 +79,7 @@ const TodayLanguagesChart = () => {
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent labelClassName="font-semibold" />}
-              // TODO use the appropriate period
-              labelFormatter={() => <div className="font-semibold">Today</div>}
+              labelFormatter={() => <div className="font-semibold">{date}</div>}
               formatter={(value: string, _, { payload }) => {
                 return CustomChartToolTip(
                   parseInt(value),
@@ -102,4 +101,4 @@ const TodayLanguagesChart = () => {
   );
 };
 
-export default TodayLanguagesChart;
+export default DayLanguagesChart;
