@@ -48,6 +48,12 @@ export class CodingDataService {
     offset: number | undefined;
   }) {
     const targetDate = getDayWithOffset(offset);
+    const date =
+      offset === 0
+        ? "Today"
+        : offset === -1
+          ? "Yesterday"
+          : new Date(targetDate).toDateString();
 
     const dayData = await this.dailyDataService.findOneDailyData(
       userId,
@@ -58,6 +64,7 @@ export class CodingDataService {
       return {
         formattedTotalTimeSpent: formatDuration(0),
         finalData: [],
+        date,
       };
     }
 
@@ -78,7 +85,11 @@ export class CodingDataService {
 
     const formattedTotalTimeSpent = formatDuration(totalTimeSpent);
 
-    return { finalData, formattedTotalTimeSpent };
+    return {
+      finalData,
+      formattedTotalTimeSpent,
+      date,
+    };
   }
   async getTimeSpentOnWeek({
     userId,

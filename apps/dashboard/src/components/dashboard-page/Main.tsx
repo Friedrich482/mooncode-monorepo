@@ -1,5 +1,5 @@
+import DayLanguagesChart from "./charts/dayLanguagesChart/DayLanguagesChart";
 import TimeSpentOnPeriod from "./TimeSpentOnPeriod";
-import TodayLanguagesChart from "./charts/TodayLanguagesChart";
 import WeekLanguagesChart from "./charts/WeekLanguagesChart";
 import WeekTimeChart from "./charts/WeekTimeChart";
 
@@ -12,7 +12,7 @@ const Main = () => {
         <WeekLanguagesChart />
       </div>
       <div className="flex items-center justify-between gap-10 max-chart:flex-col max-chart:gap-20">
-        <TodayLanguagesChart />
+        <DayLanguagesChart />
       </div>
     </main>
   );
