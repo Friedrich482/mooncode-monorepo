@@ -5,17 +5,22 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { DEFAULT_COLOR, chartConfig } from "@/constants";
+import { useMemo, useState } from "react";
 import ChartTitle from "./ChartTitle";
 import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
 import { Skeleton } from "@/components/ui/skeleton";
+import getDateOffset from "@/utils/getDateOffset";
+import getNextDayDate from "@/utils/getNextDayDate";
+import getPrevDayDate from "@/utils/getPreviousDayDate";
 import languagesAttributes from "@/colors.json";
 import { trpc } from "@/utils/trpc";
-import { useState } from "react";
 
 const DayLanguagesChart = () => {
-  const [offset, setOffset] = useState(0);
-  const handleChevronLeftClick = () => setOffset((prev) => prev - 1);
-  const handleChevronRightClick = () => setOffset((prev) => prev + 1);
+  const [date, setDate] = useState(new Date());
+  const offset = useMemo(() => getDateOffset(date), [date]);
+
+  const handleChevronLeftClick = () => setDate((prev) => getPrevDayDate(prev));
+  const handleChevronRightClick = () => setDate((prev) => getNextDayDate(prev));
 
   const { data, error, isLoading } =
     trpc.codingData.getDailyStatsForChart.useQuery({
@@ -31,7 +36,7 @@ const DayLanguagesChart = () => {
     return <Skeleton className="h-[24rem] w-[45%] max-chart:w-full" />;
   }
 
-  const { finalData, formattedTotalTimeSpent, date } = data;
+  const { finalData, formattedTotalTimeSpent, date: displayDate } = data;
 
   const chartData = finalData.map((entry) => ({
     ...entry,
@@ -46,11 +51,13 @@ const DayLanguagesChart = () => {
   return (
     <div className="flex min-h-96 w-[45%] flex-col gap-y-2 rounded-md border border-neutral-600/50 py-2 max-chart:w-full">
       <ChartTitle
-        date={date}
+        displayDate={displayDate}
         formattedTotalTimeSpent={formattedTotalTimeSpent}
         handleChevronLeftClick={handleChevronLeftClick}
         handleChevronRightClick={handleChevronRightClick}
         offset={offset}
+        date={date}
+        setDate={setDate}
       />{" "}
       {chartData.length === 0 ? (
         <p className="w-full pt-[25%] text-center text-2xl">
@@ -79,7 +86,9 @@ const DayLanguagesChart = () => {
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent labelClassName="font-semibold" />}
-              labelFormatter={() => <div className="font-semibold">{date}</div>}
+              labelFormatter={() => (
+                <div className="font-semibold">{displayDate}</div>
+              )}
               formatter={(value: string, _, { payload }) => {
                 return CustomChartToolTip(
                   parseInt(value),
