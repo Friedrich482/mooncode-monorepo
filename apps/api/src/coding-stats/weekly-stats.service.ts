@@ -2,6 +2,7 @@ import { CommonMethodsService } from "./common-methods.service";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
+import { WeeklyStatsDtoType } from "./coding-stats.dto";
 import { differenceInDays } from "date-fns";
 import formatDuration from "@repo/utils/formatDuration";
 
@@ -13,15 +14,7 @@ export class WeeklyStatsService {
     private readonly commonMethodsService: CommonMethodsService,
   ) {}
 
-  async getDaysOfWeeklyPeriodStats({
-    userId,
-    start,
-    end,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-  }) {
+  async getDaysOfWeeklyPeriodStats({ userId, start, end }: WeeklyStatsDtoType) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
       start,
@@ -36,15 +29,7 @@ export class WeeklyStatsService {
       value: formatDuration(timeSpent),
     }));
   }
-  async getWeeklyLanguagesTime({
-    userId,
-    start,
-    end,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-  }) {
+  async getWeeklyLanguagesTime({ userId, start, end }: WeeklyStatsDtoType) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
       start,
@@ -81,15 +66,7 @@ export class WeeklyStatsService {
 
     return finalData;
   }
-  async getWeeklyLanguagesPerDay({
-    userId,
-    start,
-    end,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-  }) {
+  async getWeeklyLanguagesPerDay({ userId, start, end }: WeeklyStatsDtoType) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
       start,
@@ -108,15 +85,7 @@ export class WeeklyStatsService {
     );
   }
 
-  async getWeeklyGeneralStats({
-    userId,
-    start,
-    end,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-  }) {
+  async getWeeklyGeneralStats({ userId, start, end }: WeeklyStatsDtoType) {
     const numberOfDays = differenceInDays(end, start) + 1;
 
     const avgTimePerDay = formatDuration(

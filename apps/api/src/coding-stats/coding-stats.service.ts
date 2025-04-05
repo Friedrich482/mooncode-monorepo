@@ -1,4 +1,8 @@
-import { CodingStatsDefault, CodingStatsDtoType } from "./coding-stats.dto";
+import {
+  CodingStatsDefault,
+  CodingStatsDtoType,
+  WeeklyStatsDtoType,
+} from "./coding-stats.dto";
 import { CommonMethodsService } from "./common-methods.service";
 import { DayStatsService } from "./day-stats.service";
 import { Injectable } from "@nestjs/common";
@@ -28,15 +32,7 @@ export class CodingStatsService {
     return this.dayStatsService.upsert({ id, updateCodingStatsDto });
   }
 
-  async getTimeSpentOnPeriod({
-    userId,
-    start,
-    end,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-  }) {
+  async getTimeSpentOnPeriod({ userId, start, end }: WeeklyStatsDtoType) {
     return this.commonMethodsService.getTimeSpentOnPeriod({
       userId,
       start,
@@ -44,15 +40,7 @@ export class CodingStatsService {
     });
   }
 
-  async getDaysOfWeeklyPeriodStats({
-    userId,
-    start,
-    end,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-  }) {
+  async getDaysOfWeeklyPeriodStats({ userId, start, end }: WeeklyStatsDtoType) {
     return this.weeklyStatsService.getDaysOfWeeklyPeriodStats({
       userId,
       start,
@@ -60,30 +48,14 @@ export class CodingStatsService {
     });
   }
 
-  async getWeeklyLanguagesTime({
-    userId,
-    start,
-    end,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-  }) {
+  async getWeeklyLanguagesTime({ userId, start, end }: WeeklyStatsDtoType) {
     return this.weeklyStatsService.getWeeklyLanguagesTime({
       userId,
       start,
       end,
     });
   }
-  async getWeeklyLanguagesPerDay({
-    userId,
-    start,
-    end,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-  }) {
+  async getWeeklyLanguagesPerDay({ userId, start, end }: WeeklyStatsDtoType) {
     return this.weeklyStatsService.getWeeklyLanguagesPerDay({
       userId,
       start,
@@ -91,15 +63,7 @@ export class CodingStatsService {
     });
   }
 
-  async getWeeklyGeneralStats({
-    userId,
-    start,
-    end,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-  }) {
+  async getWeeklyGeneralStats({ userId, start, end }: WeeklyStatsDtoType) {
     return this.weeklyStatsService.getWeeklyGeneralStats({
       userId,
       start,

@@ -21,3 +21,5 @@ export const DatesDto = z.object({
   start: z.string(),
   end: z.string(),
 });
+
+export type WeeklyStatsDtoType = z.infer<typeof DatesDto> & { userId: string };
