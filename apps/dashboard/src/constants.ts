@@ -1,6 +1,14 @@
 import { LucideProps, Monitor, Moon, Sun } from "lucide-react";
+import {
+  endOfMonth,
+  endOfWeek,
+  startOfMonth,
+  startOfWeek,
+  subDays,
+  subMonths,
+  subWeeks,
+} from "date-fns";
 import { ChartConfig } from "@/components/ui/chart";
-import { Period } from "./types-schemas";
 import { Theme } from "@/components/themeProvider";
 
 export const themeDropDownItems: {
@@ -15,15 +23,16 @@ export const themeDropDownItems: {
   { text: "Dark", Icon: Moon, theme: "dark", fill: "white" },
   { text: "System", Icon: Monitor, theme: "system" },
 ];
-export const periodDropDownItems: Period[] = [
-  "Today",
-  "Yesterday",
-  "Last 3 days",
+export const PERIODS = [
+  "Last 7 days",
   "This week",
-  "Past week",
-  "Past 2 weeks",
-  "Previous month",
-];
+  "Last week",
+  "Last 14 days",
+  "Last 2 weeks",
+  "This month",
+  "Last month",
+  "Custom Range",
+] as const;
 
 export const chartConfig = {
   time: {
@@ -34,13 +43,53 @@ export const chartConfig = {
 
 export const DEFAULT_COLOR = "HSL(334, 90%, 51%)";
 
+export const PERIODS_CONFIG = {
+  "Last 7 days": {
+    start: subDays(new Date(), 6).toLocaleDateString(),
+    end: new Date().toLocaleDateString(),
+  },
+  "This week": {
+    start: startOfWeek(new Date()).toLocaleDateString(),
+    end: new Date().toLocaleDateString(),
+  },
+  "Last week": {
+    start: startOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(),
+    end: endOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(),
+  },
+  "Last 14 days": {
+    start: subDays(new Date(), 13).toLocaleDateString(),
+    end: new Date().toLocaleDateString(),
+  },
+  "Last 2 weeks": {
+    start: startOfWeek(subWeeks(new Date(), 2)).toLocaleDateString(),
+    end: endOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(),
+  },
+  "This month": {
+    start: startOfMonth(new Date()).toLocaleDateString(),
+    end: new Date().toLocaleDateString(),
+  },
+  "Last month": {
+    start: startOfMonth(subMonths(new Date(), 1)).toLocaleDateString(),
+    end: endOfMonth(subMonths(new Date(), 1)).toLocaleDateString(),
+  },
+  "Custom Range": {
+    start: "",
+    end: "",
+  },
+} as const;
+
+export const WEEKLY_PERIODS_CONFIG = {
+  "Last 7 days": PERIODS_CONFIG["Last 7 days"],
+  "This week": PERIODS_CONFIG["This week"],
+  "Last week": PERIODS_CONFIG["Last week"],
+  "Last 14 days": PERIODS_CONFIG["Last 14 days"],
+  "Last 2 weeks": PERIODS_CONFIG["Last 2 weeks"],
+};
+
 export const offsets = {
   "Past week": 1,
   Today: 0,
   Yesterday: 1,
   "Last 3 days": 3,
   "This week": 0,
-  "Past 2 weeks": 2,
-  "This month": 0,
-  "Previous month": 1,
-} as const;
+};

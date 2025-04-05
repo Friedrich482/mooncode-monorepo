@@ -4,7 +4,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { chartConfig, offsets } from "@/constants";
+import { WEEKLY_PERIODS_CONFIG, chartConfig } from "@/constants";
 import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -12,16 +12,17 @@ import { WeeklyPeriod } from "@/types-schemas";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 
-const WeekTimeChart = () => {
-  const [chartPeriod] = useState<WeeklyPeriod>("This week");
+const WeeklyPeriodTimeChart = () => {
+  const [chartPeriod] = useState<WeeklyPeriod>("Last 7 days");
 
   const {
     data: chartData,
     error,
     isLoading,
-  } = trpc.codingStats.getDaysOfWeekStats.useQuery(
+  } = trpc.codingStats.getDaysOfWeeklyPeriodStats.useQuery(
     {
-      offset: offsets[chartPeriod],
+      start: WEEKLY_PERIODS_CONFIG[chartPeriod].start,
+      end: WEEKLY_PERIODS_CONFIG[chartPeriod].end,
     },
     {
       refetchOnWindowFocus: true,
@@ -84,4 +85,4 @@ const WeekTimeChart = () => {
   );
 };
 
-export default WeekTimeChart;
+export default WeeklyPeriodTimeChart;

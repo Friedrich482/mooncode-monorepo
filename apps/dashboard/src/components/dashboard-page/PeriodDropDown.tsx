@@ -6,8 +6,8 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
+import { PERIODS } from "@/constants";
 import { Period } from "@/types-schemas";
-import { periodDropDownItems } from "@/constants";
 
 const PeriodDropDown = ({
   period,
@@ -32,7 +32,7 @@ const PeriodDropDown = ({
         className="z-10 w-40 translate-y-3 cursor-pointer rounded-md border-[1px] border-neutral-700 bg-neutral-100 p-2 dark:bg-neutral-950"
         align="start"
       >
-        {periodDropDownItems.map((item) => (
+        {PERIODS.map((item) => (
           <DropdownMenuItem
             key={item}
             className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-base outline-0 hover:bg-neutral-200 hover:text-black dark:text-white dark:hover:bg-accent dark:hover:text-white"

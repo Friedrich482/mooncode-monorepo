@@ -1,4 +1,4 @@
-import { CodingStatsDto, TimeOffsetDto } from "./coding-stats.dto";
+import { CodingStatsDto, DatesDto, TimeOffsetDto } from "./coding-stats.dto";
 import { CodingStatsService } from "./coding-stats.service";
 import { Injectable } from "@nestjs/common";
 import { TrpcService } from "src/trpc/trpc.service";
@@ -41,53 +41,58 @@ export class CodingStatsRouter {
           }),
         ),
 
-      getTimeSpentOnWeek: this.trpcService
+      getTimeSpentOnPeriod: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DatesDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getTimeSpentOnWeek({
+          this.codingStatsService.getTimeSpentOnPeriod({
             userId: ctx.user.sub,
-            offset: input.offset,
+            start: input.start,
+            end: input.end,
           }),
         ),
 
-      getDaysOfWeekStats: this.trpcService
+      getDaysOfWeeklyPeriodStats: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DatesDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getDaysOfWeekStats({
+          this.codingStatsService.getDaysOfWeeklyPeriodStats({
             userId: ctx.user.sub,
-            offset: input.offset,
+            start: input.start,
+            end: input.end,
           }),
         ),
 
-      getWeekLanguagesTime: this.trpcService
+      getWeeklyLanguagesTime: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DatesDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getWeekLanguagesTime({
+          this.codingStatsService.getWeeklyLanguagesTime({
             userId: ctx.user.sub,
-            offset: input.offset,
+            start: input.start,
+            end: input.end,
           }),
         ),
 
-      getLanguagesWeekPerDay: this.trpcService
+      getWeeklyLanguagesPerDay: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DatesDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getLanguagesWeekPerDay({
+          this.codingStatsService.getWeeklyLanguagesPerDay({
             userId: ctx.user.sub,
-            offset: input.offset,
+            start: input.start,
+            end: input.end,
           }),
         ),
 
-      getGeneralStatsPerWeek: this.trpcService
+      getWeeklyGeneralStats: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DatesDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getGeneralStatsPerWeek({
+          this.codingStatsService.getWeeklyGeneralStats({
             userId: ctx.user.sub,
-            offset: input.offset,
+            start: input.start,
+            end: input.end,
           }),
         ),
     }),

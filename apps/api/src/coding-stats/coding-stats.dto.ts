@@ -15,3 +15,11 @@ export type CodingStatsDefault = {
   userId: string;
   offset: number | undefined;
 };
+
+// TODO make the date validation more robust
+export const DatesDto = z.object({
+  start: z.string(),
+  end: z.string(),
+});
+
+export type WeeklyStatsDtoType = z.infer<typeof DatesDto> & { userId: string };

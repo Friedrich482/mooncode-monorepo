@@ -1,13 +1,19 @@
-import { CodingStatsDefault, CodingStatsDtoType } from "./coding-stats.dto";
+import {
+  CodingStatsDefault,
+  CodingStatsDtoType,
+  WeeklyStatsDtoType,
+} from "./coding-stats.dto";
+import { CommonMethodsService } from "./common-methods.service";
 import { DayStatsService } from "./day-stats.service";
 import { Injectable } from "@nestjs/common";
-import { WeekStatsService } from "./week-stats.service";
+import { WeeklyStatsService } from "./weekly-stats.service";
 
 @Injectable()
 export class CodingStatsService {
   constructor(
     private readonly dayStatsService: DayStatsService,
-    private readonly weekStatsService: WeekStatsService,
+    private readonly weeklyStatsService: WeeklyStatsService,
+    private readonly commonMethodsService: CommonMethodsService,
   ) {}
   async getDailyStats({ userId, offset = 0 }: CodingStatsDefault) {
     return this.dayStatsService.getDailyStats({ userId, offset });
@@ -26,22 +32,42 @@ export class CodingStatsService {
     return this.dayStatsService.upsert({ id, updateCodingStatsDto });
   }
 
-  async getTimeSpentOnWeek({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weekStatsService.getTimeSpentOnWeek({ userId, offset });
+  async getTimeSpentOnPeriod({ userId, start, end }: WeeklyStatsDtoType) {
+    return this.commonMethodsService.getTimeSpentOnPeriod({
+      userId,
+      start,
+      end,
+    });
   }
 
-  async getDaysOfWeekStats({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weekStatsService.getDaysOfWeekStats({ userId, offset });
+  async getDaysOfWeeklyPeriodStats({ userId, start, end }: WeeklyStatsDtoType) {
+    return this.weeklyStatsService.getDaysOfWeeklyPeriodStats({
+      userId,
+      start,
+      end,
+    });
   }
 
-  async getWeekLanguagesTime({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weekStatsService.getWeekLanguagesTime({ userId, offset });
+  async getWeeklyLanguagesTime({ userId, start, end }: WeeklyStatsDtoType) {
+    return this.weeklyStatsService.getWeeklyLanguagesTime({
+      userId,
+      start,
+      end,
+    });
   }
-  async getLanguagesWeekPerDay({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weekStatsService.getLanguagesWeekPerDay({ userId, offset });
+  async getWeeklyLanguagesPerDay({ userId, start, end }: WeeklyStatsDtoType) {
+    return this.weeklyStatsService.getWeeklyLanguagesPerDay({
+      userId,
+      start,
+      end,
+    });
   }
 
-  async getGeneralStatsPerWeek({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weekStatsService.getGeneralStatsPerWeek({ userId, offset });
+  async getWeeklyGeneralStats({ userId, start, end }: WeeklyStatsDtoType) {
+    return this.weeklyStatsService.getWeeklyGeneralStats({
+      userId,
+      start,
+      end,
+    });
   }
 }
