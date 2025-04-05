@@ -8,7 +8,7 @@ import { EnvService } from "src/env/env.service";
 import { JwtModule } from "@nestjs/jwt";
 import { LanguagesService } from "src/languages/languages.service";
 import { Module } from "@nestjs/common";
-import { WeekStatsService } from "./week-stats.service";
+import { WeeklyStatsService } from "./weekly-stats.service";
 import { drizzleProvider } from "src/drizzle/drizzle.provider";
 
 @Module({
@@ -21,7 +21,7 @@ import { drizzleProvider } from "src/drizzle/drizzle.provider";
     LanguagesService,
     EnvService,
     DayStatsService,
-    WeekStatsService,
+    WeeklyStatsService,
     CommonMethodsService,
   ],
   exports: [CodingStatsService, CodingStatsRouter],

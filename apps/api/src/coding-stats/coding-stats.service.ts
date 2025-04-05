@@ -2,13 +2,13 @@ import { CodingStatsDefault, CodingStatsDtoType } from "./coding-stats.dto";
 import { CommonMethodsService } from "./common-methods.service";
 import { DayStatsService } from "./day-stats.service";
 import { Injectable } from "@nestjs/common";
-import { WeekStatsService } from "./week-stats.service";
+import { WeeklyStatsService } from "./weekly-stats.service";
 
 @Injectable()
 export class CodingStatsService {
   constructor(
     private readonly dayStatsService: DayStatsService,
-    private readonly weekStatsService: WeekStatsService,
+    private readonly weeklyStatsService: WeeklyStatsService,
     private readonly commonMethodsService: CommonMethodsService,
   ) {}
   async getDailyStats({ userId, offset = 0 }: CodingStatsDefault) {
@@ -44,18 +44,30 @@ export class CodingStatsService {
     });
   }
 
-  async getDaysOfWeekStats({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weekStatsService.getDaysOfWeekStats({ userId, offset });
+  async getDaysOfWeeklyPeriodStats({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    return this.weeklyStatsService.getDaysOfWeeklyPeriodStats({
+      userId,
+      start,
+      end,
+    });
   }
 
-  async getWeekLanguagesTime({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weekStatsService.getWeekLanguagesTime({ userId, offset });
+  async getWeeklyLanguagesTime({ userId, offset = 0 }: CodingStatsDefault) {
+    return this.weeklyStatsService.getWeeklyLanguagesTime({ userId, offset });
   }
-  async getLanguagesWeekPerDay({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weekStatsService.getLanguagesWeekPerDay({ userId, offset });
+  async getWeeklyLanguagesPerDay({ userId, offset = 0 }: CodingStatsDefault) {
+    return this.weeklyStatsService.getWeeklyLanguagesPerDay({ userId, offset });
   }
 
-  async getGeneralStatsPerWeek({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weekStatsService.getGeneralStatsPerWeek({ userId, offset });
+  async getWeeklyGeneralStats({ userId, offset = 0 }: CodingStatsDefault) {
+    return this.weeklyStatsService.getWeeklyGeneralStats({ userId, offset });
   }
 }

@@ -5,7 +5,7 @@ import { trpc } from "@/utils/trpc";
 
 const GeneralStatsChart = () => {
   const { data, error, isLoading } =
-    trpc.codingStats.getGeneralStatsPerWeek.useQuery({ offset: 0 });
+    trpc.codingStats.getWeeklyGeneralStats.useQuery({ offset: 0 });
 
   if (error) {
     return (

@@ -7,7 +7,7 @@ const useQueryWeekLangChart = () => {
     data: pieChart,
     error: pieChartError,
     isLoading: isLoadingPie,
-  } = trpc.codingStats.getWeekLanguagesTime.useQuery(
+  } = trpc.codingStats.getWeeklyLanguagesTime.useQuery(
     { offset: 0 },
     {
       refetchOnWindowFocus: true,
@@ -17,7 +17,7 @@ const useQueryWeekLangChart = () => {
     data: barChartData,
     error: barChartError,
     isLoading: isLoadingBar,
-  } = trpc.codingStats.getLanguagesWeekPerDay.useQuery(
+  } = trpc.codingStats.getWeeklyLanguagesPerDay.useQuery(
     {
       offset: 0,
     },

@@ -52,41 +52,42 @@ export class CodingStatsRouter {
           }),
         ),
 
-      getDaysOfWeekStats: this.trpcService
+      getDaysOfWeeklyPeriodStats: this.trpcService
+        .protectedProcedure()
+        .input(DatesDto)
+        .query(async ({ ctx, input }) =>
+          this.codingStatsService.getDaysOfWeeklyPeriodStats({
+            userId: ctx.user.sub,
+            start: input.start,
+            end: input.end,
+          }),
+        ),
+
+      getWeeklyLanguagesTime: this.trpcService
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getDaysOfWeekStats({
+          this.codingStatsService.getWeeklyLanguagesTime({
             userId: ctx.user.sub,
             offset: input.offset,
           }),
         ),
 
-      getWeekLanguagesTime: this.trpcService
+      getWeeklyLanguagesPerDay: this.trpcService
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getWeekLanguagesTime({
+          this.codingStatsService.getWeeklyLanguagesPerDay({
             userId: ctx.user.sub,
             offset: input.offset,
           }),
         ),
 
-      getLanguagesWeekPerDay: this.trpcService
+      getWeeklyGeneralStats: this.trpcService
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getLanguagesWeekPerDay({
-            userId: ctx.user.sub,
-            offset: input.offset,
-          }),
-        ),
-
-      getGeneralStatsPerWeek: this.trpcService
-        .protectedProcedure()
-        .input(TimeOffsetDto)
-        .query(async ({ ctx, input }) =>
-          this.codingStatsService.getGeneralStatsPerWeek({
+          this.codingStatsService.getWeeklyGeneralStats({
             userId: ctx.user.sub,
             offset: input.offset,
           }),
