@@ -100,7 +100,12 @@ const DayLanguagesChart = () => {
             />
             <Bar dataKey="timeSpent" layout="vertical" radius={5}>
               {chartData.map((entry) => (
-                <Cell fill={entry.color} min={0} key={entry.languageId} />
+                <Cell
+                  fill={entry.color}
+                  min={0}
+                  key={entry.languageId}
+                  className="cursor-pointer"
+                />
               ))}
             </Bar>
           </BarChart>
