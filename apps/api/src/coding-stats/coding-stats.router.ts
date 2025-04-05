@@ -41,11 +41,11 @@ export class CodingStatsRouter {
           }),
         ),
 
-      getTimeSpentOnWeek: this.trpcService
+      getTimeSpentOnPeriod: this.trpcService
         .protectedProcedure()
         .input(DatesDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getTimeSpentOnWeek({
+          this.codingStatsService.getTimeSpentOnPeriod({
             userId: ctx.user.sub,
             start: input.start,
             end: input.end,

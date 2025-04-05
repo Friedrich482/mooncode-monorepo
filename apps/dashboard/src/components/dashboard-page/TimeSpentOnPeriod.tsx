@@ -12,7 +12,7 @@ const TimeSpentOnPeriod = () => {
   const handleClick = (item: Period) => setPeriod(item);
 
   const { isLoading, error, data } =
-    trpc.codingStats.getTimeSpentOnWeek.useQuery(
+    trpc.codingStats.getTimeSpentOnPeriod.useQuery(
       {
         start: PERIODS_CONFIG[period].start,
         end: PERIODS_CONFIG[period].end,

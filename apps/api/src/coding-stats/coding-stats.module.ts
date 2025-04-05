@@ -1,5 +1,6 @@
 import { CodingStatsRouter } from "./coding-stats.router";
 import { CodingStatsService } from "./coding-stats.service";
+import { CommonMethodsService } from "./common-methods.service";
 import { ConfigModule } from "@nestjs/config";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { DayStatsService } from "./day-stats.service";
@@ -21,6 +22,7 @@ import { drizzleProvider } from "src/drizzle/drizzle.provider";
     EnvService,
     DayStatsService,
     WeekStatsService,
+    CommonMethodsService,
   ],
   exports: [CodingStatsService, CodingStatsRouter],
 })

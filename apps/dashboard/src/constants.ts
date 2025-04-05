@@ -1,5 +1,13 @@
 import { LucideProps, Monitor, Moon, Sun } from "lucide-react";
-import { endOfWeek, startOfWeek, subDays, subWeeks } from "date-fns";
+import {
+  endOfMonth,
+  endOfWeek,
+  startOfMonth,
+  startOfWeek,
+  subDays,
+  subMonths,
+  subWeeks,
+} from "date-fns";
 import { ChartConfig } from "@/components/ui/chart";
 import { Theme } from "@/components/themeProvider";
 
@@ -56,8 +64,18 @@ export const PERIODS_CONFIG = {
     start: startOfWeek(subWeeks(new Date(), 2)).toLocaleDateString(),
     end: endOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(),
   },
-  // "This month": 0,
-  // "Previous month": 1,
+  "This month": {
+    start: startOfMonth(new Date()).toLocaleDateString(),
+    end: new Date().toLocaleDateString(),
+  },
+  "Last month": {
+    start: startOfMonth(subMonths(new Date(), 1)).toLocaleDateString(),
+    end: endOfMonth(subMonths(new Date(), 1)).toLocaleDateString(),
+  },
+  "Custom Range": {
+    start: "",
+    end: "",
+  },
 } as const;
 
 export const offsets = {

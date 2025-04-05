@@ -1,4 +1,5 @@
 import { CodingStatsDefault, CodingStatsDtoType } from "./coding-stats.dto";
+import { CommonMethodsService } from "./common-methods.service";
 import { DayStatsService } from "./day-stats.service";
 import { Injectable } from "@nestjs/common";
 import { WeekStatsService } from "./week-stats.service";
@@ -8,6 +9,7 @@ export class CodingStatsService {
   constructor(
     private readonly dayStatsService: DayStatsService,
     private readonly weekStatsService: WeekStatsService,
+    private readonly commonMethodsService: CommonMethodsService,
   ) {}
   async getDailyStats({ userId, offset = 0 }: CodingStatsDefault) {
     return this.dayStatsService.getDailyStats({ userId, offset });
@@ -26,7 +28,7 @@ export class CodingStatsService {
     return this.dayStatsService.upsert({ id, updateCodingStatsDto });
   }
 
-  async getTimeSpentOnWeek({
+  async getTimeSpentOnPeriod({
     userId,
     start,
     end,
@@ -35,7 +37,11 @@ export class CodingStatsService {
     start: string;
     end: string;
   }) {
-    return this.weekStatsService.getTimeSpentOnWeek({ userId, start, end });
+    return this.commonMethodsService.getTimeSpentOnPeriod({
+      userId,
+      start,
+      end,
+    });
   }
 
   async getDaysOfWeekStats({ userId, offset = 0 }: CodingStatsDefault) {

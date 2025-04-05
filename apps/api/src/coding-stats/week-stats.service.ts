@@ -11,27 +11,6 @@ export class WeekStatsService {
     private readonly dailyDataService: DailyDataService,
     private readonly languagesService: LanguagesService,
   ) {}
-  async getTimeSpentOnWeek({
-    userId,
-    start,
-    end,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-  }) {
-    const dailyDataForWeek = await this.dailyDataService.findRangeDailyData(
-      userId,
-      start,
-      end,
-    );
-
-    const timeSpent = dailyDataForWeek
-      .map((day) => day.timeSpent)
-      .reduce((acc, curr) => acc + curr, 0);
-
-    return { rawTime: timeSpent, formattedTime: formatDuration(timeSpent) };
-  }
 
   async getDaysOfWeekStats({ userId, offset = 0 }: CodingStatsDefault) {
     const dailyDataForWeek = await findDailyDataForWeek(
