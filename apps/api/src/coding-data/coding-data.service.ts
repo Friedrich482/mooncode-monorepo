@@ -91,6 +91,7 @@ export class CodingDataService {
       date,
     };
   }
+
   async getTimeSpentOnWeek({
     userId,
     offset = 0,
@@ -197,6 +198,49 @@ export class CodingDataService {
         ...(await this.languagesService.findAllLanguages(id)),
       })),
     );
+  }
+
+  async getGeneralStatsPerWeek({
+    userId,
+    offset = 0,
+  }: {
+    userId: string;
+    offset: number | undefined;
+  }) {
+    const avgTimePerDay = formatDuration(
+      (await this.getTimeSpentOnWeek({ userId, offset })).rawTime / 7,
+    );
+
+    const dailyDataForWeek = await findDailyDataForWeek(
+      userId,
+      offset,
+      this.dailyDataService,
+    );
+    const maxTimeSpentPerDay =
+      dailyDataForWeek.length > 0
+        ? Math.max(...dailyDataForWeek.map((day) => day.timeSpent))
+        : 0;
+    // TODO fix the fallback date
+    const mostActiveDate =
+      dailyDataForWeek.find((day) => day.timeSpent === maxTimeSpentPerDay)
+        ?.date || "";
+
+    const weekLanguagesTime = await this.getWeekLanguagesTime({
+      userId,
+      offset,
+    });
+    const mostUsedLanguageTime = weekLanguagesTime
+      .map((language) => language.time)
+      .reduce((max, curr) => (curr > max ? curr : max), 0);
+    const mostUsedLanguage = weekLanguagesTime.find(
+      (language) => language.time === mostUsedLanguageTime,
+    )?.languageName;
+
+    return {
+      avgTimePerDay,
+      mostActiveDate: new Date(mostActiveDate).toDateString(),
+      mostUsedLanguage,
+    };
   }
 
   async upsert({

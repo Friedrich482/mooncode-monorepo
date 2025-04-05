@@ -80,6 +80,16 @@ export class CodingDataRouter {
             offset: input.offset,
           }),
         ),
+
+      getGeneralStatsPerWeek: this.trpcService
+        .protectedProcedure()
+        .input(TimeOffsetDto)
+        .query(async ({ ctx, input }) =>
+          this.codingDataService.getGeneralStatsPerWeek({
+            userId: ctx.user.sub,
+            offset: input.offset,
+          }),
+        ),
     }),
   };
 }
