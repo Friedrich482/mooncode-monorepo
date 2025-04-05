@@ -26,8 +26,16 @@ export class CodingStatsService {
     return this.dayStatsService.upsert({ id, updateCodingStatsDto });
   }
 
-  async getTimeSpentOnWeek({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weekStatsService.getTimeSpentOnWeek({ userId, offset });
+  async getTimeSpentOnWeek({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    return this.weekStatsService.getTimeSpentOnWeek({ userId, start, end });
   }
 
   async getDaysOfWeekStats({ userId, offset = 0 }: CodingStatsDefault) {

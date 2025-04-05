@@ -11,11 +11,19 @@ export class WeekStatsService {
     private readonly dailyDataService: DailyDataService,
     private readonly languagesService: LanguagesService,
   ) {}
-  async getTimeSpentOnWeek({ userId, offset = 0 }: CodingStatsDefault) {
-    const dailyDataForWeek = await findDailyDataForWeek(
+  async getTimeSpentOnWeek({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    const dailyDataForWeek = await this.dailyDataService.findRangeDailyData(
       userId,
-      offset,
-      this.dailyDataService,
+      start,
+      end,
     );
 
     const timeSpent = dailyDataForWeek
@@ -96,9 +104,11 @@ export class WeekStatsService {
   }
 
   async getGeneralStatsPerWeek({ userId, offset = 0 }: CodingStatsDefault) {
-    const avgTimePerDay = formatDuration(
-      (await this.getTimeSpentOnWeek({ userId, offset })).rawTime / 7,
-    );
+    const avgTimePerDay = "something";
+    // TODO fix this when the new dto will be fully standardized
+    // formatDuration(
+    //   (await this.getTimeSpentOnWeek({ userId, offset })).rawTime / 7,
+    // );
 
     const dailyDataForWeek = await findDailyDataForWeek(
       userId,

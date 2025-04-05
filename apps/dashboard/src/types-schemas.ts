@@ -1,11 +1,8 @@
-export type Period =
-  | "Today"
-  | "Yesterday"
-  | "Last 3 days"
-  | "Past week"
-  | "This week"
-  | "Past 2 weeks"
-  | "Previous month"
-  | "This month";
+import { PERIODS } from "./constants";
 
-export type WeeklyPeriod = Extract<Period, "Past week" | "This week">;
+export type Period = (typeof PERIODS)[number];
+
+export type WeeklyPeriod = Extract<
+  Period,
+  "Last week" | "This week" | "Last 7 days"
+>;

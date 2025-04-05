@@ -1,4 +1,4 @@
-import { CodingStatsDto, TimeOffsetDto } from "./coding-stats.dto";
+import { CodingStatsDto, DatesDto, TimeOffsetDto } from "./coding-stats.dto";
 import { CodingStatsService } from "./coding-stats.service";
 import { Injectable } from "@nestjs/common";
 import { TrpcService } from "src/trpc/trpc.service";
@@ -43,11 +43,12 @@ export class CodingStatsRouter {
 
       getTimeSpentOnWeek: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DatesDto)
         .query(async ({ ctx, input }) =>
           this.codingStatsService.getTimeSpentOnWeek({
             userId: ctx.user.sub,
-            offset: input.offset,
+            start: input.start,
+            end: input.end,
           }),
         ),
 
