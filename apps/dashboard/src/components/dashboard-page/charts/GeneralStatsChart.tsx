@@ -1,11 +1,18 @@
-import { DEFAULT_COLOR } from "@/constants";
+import { DEFAULT_COLOR, WEEKLY_PERIODS_CONFIG } from "@/constants";
 import { Skeleton } from "@/components/ui/skeleton";
+import { WeeklyPeriod } from "@/types-schemas";
 import languagesAttributes from "@/colors.json";
 import { trpc } from "@/utils/trpc";
+import { useState } from "react";
 
 const GeneralStatsChart = () => {
+  const [chartPeriod] = useState<WeeklyPeriod>("Last 7 days");
+
   const { data, error, isLoading } =
-    trpc.codingStats.getWeeklyGeneralStats.useQuery({ offset: 0 });
+    trpc.codingStats.getWeeklyGeneralStats.useQuery({
+      start: WEEKLY_PERIODS_CONFIG[chartPeriod].start,
+      end: WEEKLY_PERIODS_CONFIG[chartPeriod].end,
+    });
 
   if (error) {
     return (

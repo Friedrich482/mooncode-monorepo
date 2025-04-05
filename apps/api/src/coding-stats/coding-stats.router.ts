@@ -87,11 +87,12 @@ export class CodingStatsRouter {
 
       getWeeklyGeneralStats: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DatesDto)
         .query(async ({ ctx, input }) =>
           this.codingStatsService.getWeeklyGeneralStats({
             userId: ctx.user.sub,
-            offset: input.offset,
+            start: input.start,
+            end: input.end,
           }),
         ),
     }),

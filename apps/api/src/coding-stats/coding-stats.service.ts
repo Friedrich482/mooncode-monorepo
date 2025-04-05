@@ -91,7 +91,19 @@ export class CodingStatsService {
     });
   }
 
-  async getWeeklyGeneralStats({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weeklyStatsService.getWeeklyGeneralStats({ userId, offset });
+  async getWeeklyGeneralStats({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    return this.weeklyStatsService.getWeeklyGeneralStats({
+      userId,
+      start,
+      end,
+    });
   }
 }

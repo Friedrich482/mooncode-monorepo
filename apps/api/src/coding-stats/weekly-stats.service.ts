@@ -1,8 +1,8 @@
-import { CodingStatsDefault } from "./coding-stats.dto";
+import { CommonMethodsService } from "./common-methods.service";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
-import findDailyDataForWeek from "src/utils/findDailyDataForWeek";
+import { differenceInDays } from "date-fns";
 import formatDuration from "@repo/utils/formatDuration";
 
 @Injectable()
@@ -10,6 +10,7 @@ export class WeeklyStatsService {
   constructor(
     private readonly dailyDataService: DailyDataService,
     private readonly languagesService: LanguagesService,
+    private readonly commonMethodsService: CommonMethodsService,
   ) {}
 
   async getDaysOfWeeklyPeriodStats({
@@ -107,42 +108,59 @@ export class WeeklyStatsService {
     );
   }
 
-  async getWeeklyGeneralStats({ userId, offset = 0 }: CodingStatsDefault) {
-    const avgTimePerDay = "something";
-    // TODO fix this when the new dto will be fully standardized
-    // formatDuration(
-    //   (await this.getTimeSpentOnWeek({ userId, offset })).rawTime / 7,
-    // );
+  async getWeeklyGeneralStats({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    const numberOfDays = differenceInDays(end, start) + 1;
 
-    const dailyDataForWeek = await findDailyDataForWeek(
-      userId,
-      offset,
-      this.dailyDataService,
+    const avgTimePerDay = formatDuration(
+      (
+        await this.commonMethodsService.getTimeSpentOnPeriod({
+          userId,
+          start,
+          end,
+        })
+      ).rawTime / numberOfDays,
     );
+
+    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
+      userId,
+      start,
+      end,
+    );
+
     const maxTimeSpentPerDay =
-      dailyDataForWeek.length > 0
-        ? Math.max(...dailyDataForWeek.map((day) => day.timeSpent))
+      dailyDataForPeriod.length > 0
+        ? Math.max(...dailyDataForPeriod.map((day) => day.timeSpent))
         : 0;
+
     // TODO fix the fallback date
     const mostActiveDate =
-      dailyDataForWeek.find((day) => day.timeSpent === maxTimeSpentPerDay)
+      dailyDataForPeriod.find((day) => day.timeSpent === maxTimeSpentPerDay)
         ?.date || "";
-    // TODO fix this as soon as the getWeeklyLanguageTime is stable
-    // const weeklyLanguagesTime = await this.getWeeklyLanguagesTime({
-    //   userId,
-    //   offset,
-    // });
-    // const mostUsedLanguageTime = weeklyLanguagesTime
-    //   .map((language) => language.time)
-    //   .reduce((max, curr) => (curr > max ? curr : max), 0);
-    // const mostUsedLanguage = weeklyLanguagesTime.find(
-    //   (language) => language.time === mostUsedLanguageTime,
-    // )?.languageName;
+
+    const weeklyLanguagesTime = await this.getWeeklyLanguagesTime({
+      userId,
+      start,
+      end,
+    });
+    const mostUsedLanguageTime = weeklyLanguagesTime
+      .map((language) => language.time)
+      .reduce((max, curr) => (curr > max ? curr : max), 0);
+    const mostUsedLanguage = weeklyLanguagesTime.find(
+      (language) => language.time === mostUsedLanguageTime,
+    )?.languageName;
 
     return {
       avgTimePerDay,
       mostActiveDate: new Date(mostActiveDate).toDateString(),
-      mostUsedLanguage: "typescript",
+      mostUsedLanguage,
     };
   }
 }
