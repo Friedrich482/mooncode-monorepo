@@ -13,7 +13,7 @@ import { dailyData } from "src/drizzle/schema/dailyData";
 export class DailyDataService {
   constructor(
     @Inject(DrizzleAsyncProvider)
-    private db: NodePgDatabase,
+    private readonly db: NodePgDatabase,
   ) {}
   async createDailyData(createDailyDataDto: CreateDailyDataDtoType) {
     const { timeSpent, userId } = createDailyDataDto;

@@ -9,7 +9,7 @@ import { languages } from "src/drizzle/schema/languages";
 export class LanguagesService {
   constructor(
     @Inject(DrizzleAsyncProvider)
-    private db: NodePgDatabase,
+    private readonly db: NodePgDatabase,
   ) {}
   async createLanguage(createLanguageDto: CreateLanguageDtoType) {
     const { dailyDataId, languageName, timeSpent } = createLanguageDto;
