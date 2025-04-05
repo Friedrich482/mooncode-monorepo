@@ -10,3 +10,8 @@ export const TimeOffsetDto = z.object({
 });
 
 export type CodingStatsDtoType = z.infer<typeof CodingStatsDto>;
+
+export type CodingStatsDefault = {
+  userId: string;
+  offset: number | undefined;
+};

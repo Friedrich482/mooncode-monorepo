@@ -18,7 +18,7 @@ export class UsersService {
 
   constructor(
     @Inject(DrizzleAsyncProvider)
-    private db: NodePgDatabase,
+    private readonly db: NodePgDatabase,
   ) {}
   async create(createUserDto: CreateUserDtoType) {
     const { email, password, username } = createUserDto;
