@@ -60,11 +60,35 @@ export class CodingStatsService {
     });
   }
 
-  async getWeeklyLanguagesTime({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weeklyStatsService.getWeeklyLanguagesTime({ userId, offset });
+  async getWeeklyLanguagesTime({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    return this.weeklyStatsService.getWeeklyLanguagesTime({
+      userId,
+      start,
+      end,
+    });
   }
-  async getWeeklyLanguagesPerDay({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.weeklyStatsService.getWeeklyLanguagesPerDay({ userId, offset });
+  async getWeeklyLanguagesPerDay({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    return this.weeklyStatsService.getWeeklyLanguagesPerDay({
+      userId,
+      start,
+      end,
+    });
   }
 
   async getWeeklyGeneralStats({ userId, offset = 0 }: CodingStatsDefault) {

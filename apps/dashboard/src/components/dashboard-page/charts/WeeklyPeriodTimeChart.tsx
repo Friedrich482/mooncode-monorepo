@@ -12,7 +12,7 @@ import { WeeklyPeriod } from "@/types-schemas";
 import { trpc } from "@/utils/trpc";
 import { useState } from "react";
 
-const WeekTimeChart = () => {
+const WeeklyPeriodTimeChart = () => {
   const [chartPeriod] = useState<WeeklyPeriod>("Last 7 days");
 
   const {
@@ -85,4 +85,4 @@ const WeekTimeChart = () => {
   );
 };
 
-export default WeekTimeChart;
+export default WeeklyPeriodTimeChart;

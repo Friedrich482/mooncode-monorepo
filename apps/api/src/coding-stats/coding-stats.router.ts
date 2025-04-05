@@ -65,21 +65,23 @@ export class CodingStatsRouter {
 
       getWeeklyLanguagesTime: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DatesDto)
         .query(async ({ ctx, input }) =>
           this.codingStatsService.getWeeklyLanguagesTime({
             userId: ctx.user.sub,
-            offset: input.offset,
+            start: input.start,
+            end: input.end,
           }),
         ),
 
       getWeeklyLanguagesPerDay: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DatesDto)
         .query(async ({ ctx, input }) =>
           this.codingStatsService.getWeeklyLanguagesPerDay({
             userId: ctx.user.sub,
-            offset: input.offset,
+            start: input.start,
+            end: input.end,
           }),
         ),
 

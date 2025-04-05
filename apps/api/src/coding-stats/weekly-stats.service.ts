@@ -35,20 +35,28 @@ export class WeeklyStatsService {
       value: formatDuration(timeSpent),
     }));
   }
-  async getWeeklyLanguagesTime({ userId, offset = 0 }: CodingStatsDefault) {
-    const dailyDataForWeek = await findDailyDataForWeek(
+  async getWeeklyLanguagesTime({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
-      offset,
-      this.dailyDataService,
+      start,
+      end,
     );
 
-    const totalTimeSpentInTheWeek = dailyDataForWeek
+    const totalTimeSpentInTheWeek = dailyDataForPeriod
       .map((day) => day.timeSpent)
       .reduce((acc, curr) => acc + curr, 0);
 
     const kVLangTime = (
       await Promise.all(
-        dailyDataForWeek.map(({ id }) =>
+        dailyDataForPeriod.map(({ id }) =>
           this.languagesService.findAllLanguages(id),
         ),
       )
@@ -72,14 +80,23 @@ export class WeeklyStatsService {
 
     return finalData;
   }
-  async getWeeklyLanguagesPerDay({ userId, offset = 0 }: CodingStatsDefault) {
-    const dailyDataForWeek = await findDailyDataForWeek(
+  async getWeeklyLanguagesPerDay({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
-      offset,
-      this.dailyDataService,
+      start,
+      end,
     );
+
     return await Promise.all(
-      dailyDataForWeek.map(async ({ id, date, timeSpent }) => ({
+      dailyDataForPeriod.map(async ({ id, date, timeSpent }) => ({
         originalDate: new Date(date).toDateString(),
 
         date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
@@ -110,22 +127,22 @@ export class WeeklyStatsService {
     const mostActiveDate =
       dailyDataForWeek.find((day) => day.timeSpent === maxTimeSpentPerDay)
         ?.date || "";
-
-    const weeklyLanguagesTime = await this.getWeeklyLanguagesTime({
-      userId,
-      offset,
-    });
-    const mostUsedLanguageTime = weeklyLanguagesTime
-      .map((language) => language.time)
-      .reduce((max, curr) => (curr > max ? curr : max), 0);
-    const mostUsedLanguage = weeklyLanguagesTime.find(
-      (language) => language.time === mostUsedLanguageTime,
-    )?.languageName;
+    // TODO fix this as soon as the getWeeklyLanguageTime is stable
+    // const weeklyLanguagesTime = await this.getWeeklyLanguagesTime({
+    //   userId,
+    //   offset,
+    // });
+    // const mostUsedLanguageTime = weeklyLanguagesTime
+    //   .map((language) => language.time)
+    //   .reduce((max, curr) => (curr > max ? curr : max), 0);
+    // const mostUsedLanguage = weeklyLanguagesTime.find(
+    //   (language) => language.time === mostUsedLanguageTime,
+    // )?.languageName;
 
     return {
       avgTimePerDay,
       mostActiveDate: new Date(mostActiveDate).toDateString(),
-      mostUsedLanguage,
+      mostUsedLanguage: "typescript",
     };
   }
 }

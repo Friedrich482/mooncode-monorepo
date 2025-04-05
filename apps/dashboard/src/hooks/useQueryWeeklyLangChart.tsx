@@ -1,14 +1,21 @@
-import { DEFAULT_COLOR } from "@/constants";
+import { DEFAULT_COLOR, WEEKLY_PERIODS_CONFIG } from "@/constants";
+import { WeeklyPeriod } from "@/types-schemas";
 import languagesAttributes from "@/colors.json";
 import { trpc } from "@/utils/trpc";
+import { useState } from "react";
 
-const useQueryWeekLangChart = () => {
+const useQueryWeeklyLangChart = () => {
+  const [chartPeriod] = useState<WeeklyPeriod>("Last 7 days");
+
   const {
     data: pieChart,
     error: pieChartError,
     isLoading: isLoadingPie,
   } = trpc.codingStats.getWeeklyLanguagesTime.useQuery(
-    { offset: 0 },
+    {
+      start: WEEKLY_PERIODS_CONFIG[chartPeriod].start,
+      end: WEEKLY_PERIODS_CONFIG[chartPeriod].end,
+    },
     {
       refetchOnWindowFocus: true,
     },
@@ -19,7 +26,8 @@ const useQueryWeekLangChart = () => {
     isLoading: isLoadingBar,
   } = trpc.codingStats.getWeeklyLanguagesPerDay.useQuery(
     {
-      offset: 0,
+      start: WEEKLY_PERIODS_CONFIG[chartPeriod].start,
+      end: WEEKLY_PERIODS_CONFIG[chartPeriod].end,
     },
     { refetchOnWindowFocus: true },
   );
@@ -45,4 +53,4 @@ const useQueryWeekLangChart = () => {
   };
 };
 
-export default useQueryWeekLangChart;
+export default useQueryWeeklyLangChart;
