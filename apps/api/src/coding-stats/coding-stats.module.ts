@@ -1,5 +1,5 @@
-import { CodingDataRouter } from "./coding-data.router";
-import { CodingDataService } from "./coding-data.service";
+import { CodingStatsRouter } from "./coding-stats.router";
+import { CodingStatsService } from "./coding-stats.service";
 import { ConfigModule } from "@nestjs/config";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { EnvService } from "src/env/env.service";
@@ -11,13 +11,13 @@ import { drizzleProvider } from "src/drizzle/drizzle.provider";
 @Module({
   imports: [ConfigModule, JwtModule],
   providers: [
-    CodingDataService,
-    CodingDataRouter,
+    CodingStatsService,
+    CodingStatsRouter,
     ...drizzleProvider,
     DailyDataService,
     LanguagesService,
     EnvService,
   ],
-  exports: [CodingDataService, CodingDataRouter],
+  exports: [CodingStatsService, CodingStatsRouter],
 })
-export class CodingDataModule {}
+export class CodingStatsModule {}

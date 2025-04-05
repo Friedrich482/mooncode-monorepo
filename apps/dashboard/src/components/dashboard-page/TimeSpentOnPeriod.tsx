@@ -13,7 +13,7 @@ const TimeSpentOnPeriod = () => {
 
   // TODO here we don't only want the data for the week but also for any period
   const { isLoading, error, data } =
-    trpc.codingData.getTimeSpentOnWeek.useQuery(
+    trpc.codingStats.getTimeSpentOnWeek.useQuery(
       {
         offset: offsets[period],
       },

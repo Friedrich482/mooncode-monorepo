@@ -23,7 +23,7 @@ const DayLanguagesChart = () => {
   const handleChevronRightClick = () => setDate((prev) => getNextDayDate(prev));
 
   const { data, error, isLoading } =
-    trpc.codingData.getDailyStatsForChart.useQuery({
+    trpc.codingStats.getDailyStatsForChart.useQuery({
       offset,
     });
 
