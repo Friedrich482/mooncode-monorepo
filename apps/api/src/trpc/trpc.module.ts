@@ -1,6 +1,6 @@
 import { Global, Module } from "@nestjs/common";
 import { AuthModule } from "src/auth/auth.module";
-import { CodingDataModule } from "src/coding-data/coding-data.module";
+import { CodingStatsModule } from "src/coding-stats/coding-stats.module";
 import { DailyDataModule } from "src/daily-data/daily-data.module";
 import { EnvService } from "src/env/env.service";
 import { JwtService } from "@nestjs/jwt";
@@ -14,7 +14,7 @@ import { UsersModule } from "src/users/users.module";
   imports: [
     UsersModule,
     DailyDataModule,
-    CodingDataModule,
+    CodingStatsModule,
     LanguagesModule,
     AuthModule,
   ],

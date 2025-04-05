@@ -14,7 +14,7 @@ const periodicSyncData = async (
     0,
   );
 
-  const res = await trpc.codingData.upsert.mutate({
+  const res = await trpc.codingStats.upsert.mutate({
     timeSpentToday,
     timeSpentPerLanguage: Object.fromEntries(
       Object.entries(timeGetter()).map(([key, { elapsedTime }]) => [

@@ -1,23 +1,23 @@
-import { CodingDataDto, TimeOffsetDto } from "./coding-data.dto";
-import { CodingDataService } from "./coding-data.service";
+import { CodingStatsDto, TimeOffsetDto } from "./coding-stats.dto";
+import { CodingStatsService } from "./coding-stats.service";
 import { Injectable } from "@nestjs/common";
 import { TrpcService } from "src/trpc/trpc.service";
 
 @Injectable()
-export class CodingDataRouter {
+export class CodingStatsRouter {
   constructor(
     private readonly trpcService: TrpcService,
-    private readonly codingDataService: CodingDataService,
+    private readonly codingStatsService: CodingStatsService,
   ) {}
   procedures = {
-    codingData: this.trpcService.trpc.router({
+    codingStats: this.trpcService.trpc.router({
       upsert: this.trpcService
         .protectedProcedure()
-        .input(CodingDataDto)
+        .input(CodingStatsDto)
         .mutation(async ({ ctx, input }) =>
-          this.codingDataService.upsert({
+          this.codingStatsService.upsert({
             id: ctx.user.sub,
-            updateCodingDataDto: input,
+            updateCodingStatsDto: input,
           }),
         ),
 
@@ -25,7 +25,7 @@ export class CodingDataRouter {
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingDataService.getDailyStats({
+          this.codingStatsService.getDailyStats({
             offset: input.offset,
             userId: ctx.user.sub,
           }),
@@ -35,7 +35,7 @@ export class CodingDataRouter {
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingDataService.getDailyStatsForChart({
+          this.codingStatsService.getDailyStatsForChart({
             offset: input.offset,
             userId: ctx.user.sub,
           }),
@@ -45,7 +45,7 @@ export class CodingDataRouter {
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingDataService.getTimeSpentOnWeek({
+          this.codingStatsService.getTimeSpentOnWeek({
             userId: ctx.user.sub,
             offset: input.offset,
           }),
@@ -55,7 +55,7 @@ export class CodingDataRouter {
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingDataService.getDaysOfWeekStats({
+          this.codingStatsService.getDaysOfWeekStats({
             userId: ctx.user.sub,
             offset: input.offset,
           }),
@@ -65,7 +65,7 @@ export class CodingDataRouter {
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingDataService.getWeekLanguagesTime({
+          this.codingStatsService.getWeekLanguagesTime({
             userId: ctx.user.sub,
             offset: input.offset,
           }),
@@ -75,7 +75,7 @@ export class CodingDataRouter {
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingDataService.getLanguagesWeekPerDay({
+          this.codingStatsService.getLanguagesWeekPerDay({
             userId: ctx.user.sub,
             offset: input.offset,
           }),
@@ -85,7 +85,7 @@ export class CodingDataRouter {
         .protectedProcedure()
         .input(TimeOffsetDto)
         .query(async ({ ctx, input }) =>
-          this.codingDataService.getGeneralStatsPerWeek({
+          this.codingStatsService.getGeneralStatsPerWeek({
             userId: ctx.user.sub,
             offset: input.offset,
           }),

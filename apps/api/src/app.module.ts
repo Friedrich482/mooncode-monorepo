@@ -1,7 +1,7 @@
 import { AppController } from "./app.controller";
 import { AppService } from "./app.service";
 import { AuthModule } from "./auth/auth.module";
-import { CodingDataModule } from "./coding-data/coding-data.module";
+import { CodingStatsModule } from "./coding-stats/coding-stats.module";
 import { ConfigModule } from "@nestjs/config";
 import { DailyDataModule } from "./daily-data/daily-data.module";
 import { DrizzleModule } from "./drizzle/drizzle.module";
@@ -22,7 +22,7 @@ import { envSchema } from "src/env";
     UsersModule,
     AuthModule,
     DrizzleModule,
-    CodingDataModule,
+    CodingStatsModule,
     DailyDataModule,
     LanguagesModule,
     TrpcModule,

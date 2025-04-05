@@ -19,7 +19,7 @@ const WeekTimeChart = () => {
     data: chartData,
     error,
     isLoading,
-  } = trpc.codingData.getDaysOfWeekStats.useQuery(
+  } = trpc.codingStats.getDaysOfWeekStats.useQuery(
     {
       offset: offsets[chartPeriod],
     },
