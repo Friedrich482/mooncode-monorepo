@@ -267,6 +267,7 @@ const ChartLegendContent = React.forwardRef<
       nameKey?: string;
       order?: "ASC" | "DESC";
       payload?: (Omit<Payload, "payload"> & { payload: Payload })[];
+      limit?: number;
     }
 >(
   (
@@ -277,6 +278,7 @@ const ChartLegendContent = React.forwardRef<
       verticalAlign = "bottom",
       nameKey,
       order = "ASC",
+      limit,
     },
     ref,
   ) => {
@@ -288,6 +290,7 @@ const ChartLegendContent = React.forwardRef<
 
     let itemsToRender = [...(payload || [])];
     itemsToRender = order === "DESC" ? itemsToRender.reverse() : itemsToRender;
+    itemsToRender = itemsToRender.slice(0, limit);
 
     return (
       <div
