@@ -7,16 +7,12 @@ import {
 import { Button } from "../ui/button";
 import { ChevronDown } from "lucide-react";
 import { PERIODS } from "@/constants";
-import { Period } from "@/types-schemas";
+import { usePeriodStore } from "@/hooks/store/periodStore";
 
-const PeriodDropDown = ({
-  period,
-  handleClick,
-}: {
-  period: Period;
-  // eslint-disable-next-line no-unused-vars
-  handleClick: (item: Period) => void;
-}) => {
+const PeriodDropDown = () => {
+  const period = usePeriodStore((state) => state.period);
+  const setPeriod = usePeriodStore((state) => state.setPeriod);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -36,7 +32,7 @@ const PeriodDropDown = ({
           <DropdownMenuItem
             key={item}
             className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-base outline-0 hover:bg-neutral-200 hover:text-black dark:text-white dark:hover:bg-accent dark:hover:text-white"
-            onClick={() => handleClick(item)}
+            onClick={() => setPeriod(item)}
           >
             {item}
           </DropdownMenuItem>
