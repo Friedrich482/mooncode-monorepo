@@ -1,15 +1,13 @@
 import { PERIODS_CONFIG } from "@/constants";
-import { Period } from "@/types-schemas";
 import PeriodDropDown from "./PeriodDropDown";
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
 import { trpc } from "@/utils/trpc";
-import { useState } from "react";
+import { usePeriodStore } from "@/hooks/store/periodStore";
 
 const TimeSpentOnPeriod = () => {
   // TODO  this should be an url state
-  const [period, setPeriod] = useState<Period>("Last 7 days");
-  const handleClick = (item: Period) => setPeriod(item);
+  const period = usePeriodStore((state) => state.period);
 
   const { isLoading, error, data } =
     trpc.codingStats.getTimeSpentOnPeriod.useQuery(
@@ -22,9 +20,8 @@ const TimeSpentOnPeriod = () => {
 
   return (
     <h1 className="flex flex-row items-start justify-start gap-4 pt-2 text-2xl max-[550px]:flex-col max-[410px]:text-base">
-      <PeriodDropDown period={period} handleClick={handleClick} />{" "}
+      <PeriodDropDown />{" "}
       <div className="flex items-center gap-2 text-center">
-        <span className="text-nowrap font-bold">{period}: </span>
         <span
           className={cn(
             "text-nowrap",

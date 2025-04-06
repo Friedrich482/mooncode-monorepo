@@ -80,7 +80,11 @@ const WeeklyPeriodLanguagesChart = () => {
               />
               <ChartLegend
                 content={
-                  <ChartLegendContent order="DESC" className="text-xs" />
+                  <ChartLegendContent
+                    order="DESC"
+                    className="text-xs"
+                    limit={20}
+                  />
                 }
                 className="flex-wrap justify-end pr-2 max-small:hidden"
                 layout="vertical"
