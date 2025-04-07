@@ -1,3 +1,5 @@
+import animate from "tailwindcss-animate";
+
 export default {
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
@@ -63,5 +65,5 @@ export default {
       "2xl": "1536px",
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [animate],
 };

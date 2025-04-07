@@ -8,7 +8,7 @@ const GeneralStatsChart = () => {
   const period = usePeriodStore((state) => state.period);
 
   const { data, error, isLoading } =
-    trpc.codingStats.getWeeklyGeneralStats.useQuery({
+    trpc.codingStats.getPeriodGeneralStats.useQuery({
       start: PERIODS_CONFIG[period].start,
       end: PERIODS_CONFIG[period].end,
     });

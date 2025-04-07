@@ -3,14 +3,14 @@ import languagesAttributes from "@/colors.json";
 import { trpc } from "@/utils/trpc";
 import { usePeriodStore } from "./store/periodStore";
 
-const useQueryWeeklyLangChart = () => {
+const useQueryPeriodLangChart = () => {
   const period = usePeriodStore((state) => state.period);
 
   const {
     data: pieChart,
     error: pieChartError,
     isLoading: isLoadingPie,
-  } = trpc.codingStats.getWeeklyLanguagesTime.useQuery(
+  } = trpc.codingStats.getPeriodLanguagesTime.useQuery(
     {
       start: PERIODS_CONFIG[period].start,
       end: PERIODS_CONFIG[period].end,
@@ -23,7 +23,7 @@ const useQueryWeeklyLangChart = () => {
     data: barChartData,
     error: barChartError,
     isLoading: isLoadingBar,
-  } = trpc.codingStats.getWeeklyLanguagesPerDay.useQuery(
+  } = trpc.codingStats.getPeriodLanguagesPerDay.useQuery(
     {
       start: PERIODS_CONFIG[period].start,
       end: PERIODS_CONFIG[period].end,
@@ -52,4 +52,4 @@ const useQueryWeeklyLangChart = () => {
   };
 };
 
-export default useQueryWeeklyLangChart;
+export default useQueryPeriodLangChart;

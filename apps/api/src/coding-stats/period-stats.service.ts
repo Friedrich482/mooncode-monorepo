@@ -1,20 +1,40 @@
-import { CommonMethodsService } from "./common-methods.service";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
-import { WeeklyStatsDtoType } from "./coding-stats.dto";
+import { PeriodStatsDtoType } from "./coding-stats.dto";
 import { differenceInDays } from "date-fns";
 import formatDuration from "@repo/utils/formatDuration";
 
 @Injectable()
-export class WeeklyStatsService {
+export class PeriodStatsService {
   constructor(
     private readonly dailyDataService: DailyDataService,
     private readonly languagesService: LanguagesService,
-    private readonly commonMethodsService: CommonMethodsService,
   ) {}
 
-  async getDaysOfWeeklyPeriodStats({ userId, start, end }: WeeklyStatsDtoType) {
+  async getTimeSpentOnPeriod({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
+      userId,
+      start,
+      end,
+    );
+
+    const timeSpent = dailyDataForPeriod
+      .map((day) => day.timeSpent)
+      .reduce((acc, curr) => acc + curr, 0);
+
+    return { rawTime: timeSpent, formattedTime: formatDuration(timeSpent) };
+  }
+
+  async getDaysOfPeriodStats({ userId, start, end }: PeriodStatsDtoType) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
       start,
@@ -29,16 +49,16 @@ export class WeeklyStatsService {
       value: formatDuration(timeSpent),
     }));
   }
-  async getWeeklyLanguagesTime({ userId, start, end }: WeeklyStatsDtoType) {
+  async getPeriodLanguagesTime({ userId, start, end }: PeriodStatsDtoType) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
       start,
       end,
     );
 
-    const totalTimeSpentInTheWeek = dailyDataForPeriod
-      .map((day) => day.timeSpent)
-      .reduce((acc, curr) => acc + curr, 0);
+    const totalTimeSpentOnPeriod = (
+      await this.getTimeSpentOnPeriod({ userId, start, end })
+    ).rawTime;
 
     const kVLangTime = (
       await Promise.all(
@@ -59,14 +79,14 @@ export class WeeklyStatsService {
         time: timeSpent,
         value: formatDuration(timeSpent),
         percentage: parseFloat(
-          ((timeSpent * 100) / totalTimeSpentInTheWeek).toFixed(2),
+          ((timeSpent * 100) / totalTimeSpentOnPeriod).toFixed(2),
         ),
       }))
       .sort((a, b) => a.time - b.time);
 
     return finalData;
   }
-  async getWeeklyLanguagesPerDay({ userId, start, end }: WeeklyStatsDtoType) {
+  async getPeriodLanguagesPerDay({ userId, start, end }: PeriodStatsDtoType) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
       start,
@@ -85,12 +105,12 @@ export class WeeklyStatsService {
     );
   }
 
-  async getWeeklyGeneralStats({ userId, start, end }: WeeklyStatsDtoType) {
+  async getPeriodGeneralStats({ userId, start, end }: PeriodStatsDtoType) {
     const numberOfDays = differenceInDays(end, start) + 1;
 
     const avgTimePerDay = formatDuration(
       (
-        await this.commonMethodsService.getTimeSpentOnPeriod({
+        await this.getTimeSpentOnPeriod({
           userId,
           start,
           end,
@@ -114,15 +134,15 @@ export class WeeklyStatsService {
       dailyDataForPeriod.find((day) => day.timeSpent === maxTimeSpentPerDay)
         ?.date || "";
 
-    const weeklyLanguagesTime = await this.getWeeklyLanguagesTime({
+    const periodLanguagesTime = await this.getPeriodLanguagesTime({
       userId,
       start,
       end,
     });
-    const mostUsedLanguageTime = weeklyLanguagesTime
+    const mostUsedLanguageTime = periodLanguagesTime
       .map((language) => language.time)
       .reduce((max, curr) => (curr > max ? curr : max), 0);
-    const mostUsedLanguage = weeklyLanguagesTime.find(
+    const mostUsedLanguage = periodLanguagesTime.find(
       (language) => language.time === mostUsedLanguageTime,
     )?.languageName;
 

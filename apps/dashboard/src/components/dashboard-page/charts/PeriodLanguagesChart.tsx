@@ -21,10 +21,10 @@ import Icon from "@/components/ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { Skeleton } from "@/components/ui/skeleton";
 import languagesAttributes from "@/colors.json";
-import useQueryWeeklyLangChart from "@/hooks/useQueryWeeklyLangChart";
+import useQueryPeriodLangChart from "@/hooks/useQueryPeriodLangChart";
 import { useState } from "react";
 
-const WeeklyPeriodLanguagesChart = () => {
+const PeriodLanguagesChart = () => {
   const [isPieChartVisible, setIsPieChartVisible] = useState(true);
   const handleClick = () => setIsPieChartVisible((prev) => !prev);
 
@@ -35,7 +35,7 @@ const WeeklyPeriodLanguagesChart = () => {
     isLoadingPie,
     pieChartData,
     barChartData,
-  } = useQueryWeeklyLangChart();
+  } = useQueryPeriodLangChart();
 
   if (pieChartError || barChartError) {
     const error = pieChartError || barChartError;
@@ -159,4 +159,4 @@ const WeeklyPeriodLanguagesChart = () => {
   );
 };
 
-export default WeeklyPeriodLanguagesChart;
+export default PeriodLanguagesChart;
