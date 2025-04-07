@@ -60,6 +60,7 @@ export class CodingStatsRouter {
             userId: ctx.user.sub,
             start: input.start,
             end: input.end,
+            groupBy: input.groupBy,
           }),
         ),
 

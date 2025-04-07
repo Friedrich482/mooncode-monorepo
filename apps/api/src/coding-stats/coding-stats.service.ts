@@ -38,11 +38,17 @@ export class CodingStatsService {
     });
   }
 
-  async getDaysOfPeriodStats({ userId, start, end }: PeriodStatsDtoType) {
+  async getDaysOfPeriodStats({
+    userId,
+    start,
+    end,
+    groupBy,
+  }: PeriodStatsDtoType) {
     return this.periodStatsService.getDaysOfPeriodStats({
       userId,
       start,
       end,
+      groupBy,
     });
   }
 

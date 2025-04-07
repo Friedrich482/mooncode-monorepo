@@ -2,7 +2,7 @@ import { LanguagesData } from "./types-schemas";
 
 export const MAX_IDLE_TIME = 600; //seconds
 
-export const forbiddenLanguages = ["scminput"];
+export const forbiddenLanguages = ["scminput", "code-runner-output"];
 export const languageMapping: Record<string, string> = {
   dockercompose: "docker",
   dockerfile: "docker",

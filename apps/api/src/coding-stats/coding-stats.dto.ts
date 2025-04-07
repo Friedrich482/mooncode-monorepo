@@ -20,6 +20,7 @@ export type CodingStatsDefault = {
 export const DatesDto = z.object({
   start: z.string(),
   end: z.string(),
+  groupBy: z.enum(["days", "weeks", "months"]).optional(),
 });
 
 export type PeriodStatsDtoType = z.infer<typeof DatesDto> & { userId: string };
