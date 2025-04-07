@@ -1,19 +1,17 @@
 import {
   CodingStatsDefault,
   CodingStatsDtoType,
-  WeeklyStatsDtoType,
+  PeriodStatsDtoType,
 } from "./coding-stats.dto";
-import { CommonMethodsService } from "./common-methods.service";
 import { DayStatsService } from "./day-stats.service";
 import { Injectable } from "@nestjs/common";
-import { WeeklyStatsService } from "./weekly-stats.service";
+import { PeriodStatsService } from "./period-stats.service";
 
 @Injectable()
 export class CodingStatsService {
   constructor(
     private readonly dayStatsService: DayStatsService,
-    private readonly weeklyStatsService: WeeklyStatsService,
-    private readonly commonMethodsService: CommonMethodsService,
+    private readonly periodStatsService: PeriodStatsService,
   ) {}
   async getDailyStats({ userId, offset = 0 }: CodingStatsDefault) {
     return this.dayStatsService.getDailyStats({ userId, offset });
@@ -32,39 +30,39 @@ export class CodingStatsService {
     return this.dayStatsService.upsert({ id, updateCodingStatsDto });
   }
 
-  async getTimeSpentOnPeriod({ userId, start, end }: WeeklyStatsDtoType) {
-    return this.commonMethodsService.getTimeSpentOnPeriod({
+  async getTimeSpentOnPeriod({ userId, start, end }: PeriodStatsDtoType) {
+    return this.periodStatsService.getTimeSpentOnPeriod({
       userId,
       start,
       end,
     });
   }
 
-  async getDaysOfWeeklyPeriodStats({ userId, start, end }: WeeklyStatsDtoType) {
-    return this.weeklyStatsService.getDaysOfWeeklyPeriodStats({
+  async getDaysOfPeriodStats({ userId, start, end }: PeriodStatsDtoType) {
+    return this.periodStatsService.getDaysOfPeriodStats({
       userId,
       start,
       end,
     });
   }
 
-  async getWeeklyLanguagesTime({ userId, start, end }: WeeklyStatsDtoType) {
-    return this.weeklyStatsService.getWeeklyLanguagesTime({
+  async getPeriodLanguagesTime({ userId, start, end }: PeriodStatsDtoType) {
+    return this.periodStatsService.getPeriodLanguagesTime({
       userId,
       start,
       end,
     });
   }
-  async getWeeklyLanguagesPerDay({ userId, start, end }: WeeklyStatsDtoType) {
-    return this.weeklyStatsService.getWeeklyLanguagesPerDay({
+  async getPeriodLanguagesPerDay({ userId, start, end }: PeriodStatsDtoType) {
+    return this.periodStatsService.getPeriodLanguagesPerDay({
       userId,
       start,
       end,
     });
   }
 
-  async getWeeklyGeneralStats({ userId, start, end }: WeeklyStatsDtoType) {
-    return this.weeklyStatsService.getWeeklyGeneralStats({
+  async getPeriodGeneralStats({ userId, start, end }: PeriodStatsDtoType) {
+    return this.periodStatsService.getPeriodGeneralStats({
       userId,
       start,
       end,

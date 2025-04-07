@@ -77,11 +77,3 @@ export const PERIODS_CONFIG = {
     end: "",
   },
 } as const;
-
-// export const WEEKLY_PERIODS_CONFIG = {
-//   "Last 7 days": PERIODS_CONFIG["Last 7 days"],
-//   "This week": PERIODS_CONFIG["This week"],
-//   "Last week": PERIODS_CONFIG["Last week"],
-//   "Last 14 days": PERIODS_CONFIG["Last 14 days"],
-//   "Last 2 weeks": PERIODS_CONFIG["Last 2 weeks"],
-// };

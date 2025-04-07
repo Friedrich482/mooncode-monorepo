@@ -52,44 +52,44 @@ export class CodingStatsRouter {
           }),
         ),
 
-      getDaysOfWeeklyPeriodStats: this.trpcService
+      getDaysOfPeriodStats: this.trpcService
         .protectedProcedure()
         .input(DatesDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getDaysOfWeeklyPeriodStats({
+          this.codingStatsService.getDaysOfPeriodStats({
             userId: ctx.user.sub,
             start: input.start,
             end: input.end,
           }),
         ),
 
-      getWeeklyLanguagesTime: this.trpcService
+      getPeriodLanguagesTime: this.trpcService
         .protectedProcedure()
         .input(DatesDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getWeeklyLanguagesTime({
+          this.codingStatsService.getPeriodLanguagesTime({
             userId: ctx.user.sub,
             start: input.start,
             end: input.end,
           }),
         ),
 
-      getWeeklyLanguagesPerDay: this.trpcService
+      getPeriodLanguagesPerDay: this.trpcService
         .protectedProcedure()
         .input(DatesDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getWeeklyLanguagesPerDay({
+          this.codingStatsService.getPeriodLanguagesPerDay({
             userId: ctx.user.sub,
             start: input.start,
             end: input.end,
           }),
         ),
 
-      getWeeklyGeneralStats: this.trpcService
+      getPeriodGeneralStats: this.trpcService
         .protectedProcedure()
         .input(DatesDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getWeeklyGeneralStats({
+          this.codingStatsService.getPeriodGeneralStats({
             userId: ctx.user.sub,
             start: input.start,
             end: input.end,

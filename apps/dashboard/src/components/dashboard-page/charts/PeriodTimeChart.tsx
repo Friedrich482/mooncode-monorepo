@@ -11,14 +11,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { trpc } from "@/utils/trpc";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 
-const WeeklyPeriodTimeChart = () => {
+const PeriodTimeChart = () => {
   const period = usePeriodStore((state) => state.period);
 
   const {
     data: chartData,
     error,
     isLoading,
-  } = trpc.codingStats.getDaysOfWeeklyPeriodStats.useQuery(
+  } = trpc.codingStats.getDaysOfPeriodStats.useQuery(
     {
       start: PERIODS_CONFIG[period].start,
       end: PERIODS_CONFIG[period].end,
@@ -84,4 +84,4 @@ const WeeklyPeriodTimeChart = () => {
   );
 };
 
-export default WeeklyPeriodTimeChart;
+export default PeriodTimeChart;
