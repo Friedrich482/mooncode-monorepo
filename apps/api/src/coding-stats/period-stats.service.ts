@@ -4,6 +4,7 @@ import { LanguagesService } from "src/languages/languages.service";
 import { PeriodStatsDtoType } from "./coding-stats.dto";
 import { differenceInDays } from "date-fns";
 import formatDuration from "@repo/utils/formatDuration";
+import getWeeklyDataForPeriod from "src/utils/getWeeklyDataForPeriod";
 
 @Injectable()
 export class PeriodStatsService {
@@ -34,12 +35,32 @@ export class PeriodStatsService {
     return { rawTime: timeSpent, formattedTime: formatDuration(timeSpent) };
   }
 
-  async getDaysOfPeriodStats({ userId, start, end }: PeriodStatsDtoType) {
+  async getDaysOfPeriodStats({
+    userId,
+    start,
+    end,
+    groupBy,
+    periodResolution,
+  }: PeriodStatsDtoType) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
       start,
       end,
     );
+
+    switch (groupBy) {
+      case "days":
+        break;
+
+      case "weeks":
+        return getWeeklyDataForPeriod(dailyDataForPeriod, periodResolution);
+
+      case "months":
+        break;
+
+      default:
+        break;
+    }
 
     return dailyDataForPeriod.map(({ timeSpent, date }) => ({
       timeSpentLine: timeSpent,

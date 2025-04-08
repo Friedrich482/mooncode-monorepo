@@ -17,9 +17,14 @@ export type CodingStatsDefault = {
 };
 
 // TODO make the date validation more robust
+// TODO remove the optionality later
 export const DatesDto = z.object({
   start: z.string(),
   end: z.string(),
+  groupBy: z.enum(["days", "weeks", "months"]).optional(),
+  periodResolution: z.enum(["day", "week", "month"]).optional(),
 });
 
 export type PeriodStatsDtoType = z.infer<typeof DatesDto> & { userId: string };
+export type GroupBy = z.infer<typeof DatesDto>["groupBy"];
+export type PeriodResolution = z.infer<typeof DatesDto>["periodResolution"];
