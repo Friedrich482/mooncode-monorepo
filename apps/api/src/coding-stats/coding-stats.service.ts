@@ -43,12 +43,14 @@ export class CodingStatsService {
     start,
     end,
     groupBy,
+    periodResolution,
   }: PeriodStatsDtoType) {
     return this.periodStatsService.getDaysOfPeriodStats({
       userId,
       start,
       end,
       groupBy,
+      periodResolution,
     });
   }
 

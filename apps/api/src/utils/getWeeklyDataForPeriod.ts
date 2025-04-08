@@ -6,10 +6,12 @@ import {
   startOfWeek,
 } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
+import { PeriodResolution } from "src/coding-stats/coding-stats.dto";
 import formatDuration from "@repo/utils/formatDuration";
 
 const getWeeklyDataForPeriod = (
   data: Awaited<ReturnType<DailyDataService["findRangeDailyData"]>>,
+  periodResolution: PeriodResolution,
 ) => {
   const weeklyMap = new Map<
     string,
@@ -20,22 +22,36 @@ const getWeeklyDataForPeriod = (
       endDate: Date;
     }
   >();
+  const startDate = new Date(data[0].date);
+  const endDate = new Date(data.at(-1)!.date);
 
-  data.forEach((entry) => {
+  data.forEach((entry, index) => {
     const date = new Date(entry.date);
-    const monthStart = startOfMonth(date);
-    const monthEnd = endOfMonth(date);
 
     let weekStart = startOfWeek(date);
     let weekEnd = endOfWeek(date);
 
-    if (weekStart < monthStart) {
-      weekStart = monthStart;
+    if (periodResolution === "month") {
+      const monthStart = startOfMonth(startDate);
+      const monthEnd = endOfMonth(endDate);
+      weekStart = weekStart < monthStart ? monthStart : weekStart;
+      weekEnd =
+        weekEnd > monthEnd
+          ? monthEnd
+          : index >= data.length - 6
+            ? endDate
+            : weekEnd;
     }
 
-    if (weekEnd > monthEnd) {
-      weekEnd = monthEnd;
+    if (periodResolution === "week") {
+      if (index === 0) {
+        weekStart = startDate;
+      }
+      if (index >= data.length - 6) {
+        weekEnd = endDate;
+      }
     }
+
     const weekKey = format(weekStart, "yyyy-MM-dd");
 
     const existing = weeklyMap.get(weekKey) || {

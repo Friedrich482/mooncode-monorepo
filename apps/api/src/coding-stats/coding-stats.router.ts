@@ -61,6 +61,7 @@ export class CodingStatsRouter {
             start: input.start,
             end: input.end,
             groupBy: input.groupBy,
+            periodResolution: input.periodResolution,
           }),
         ),
 

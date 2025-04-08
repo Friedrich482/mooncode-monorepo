@@ -40,6 +40,7 @@ export class PeriodStatsService {
     start,
     end,
     groupBy,
+    periodResolution,
   }: PeriodStatsDtoType) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
@@ -52,7 +53,7 @@ export class PeriodStatsService {
         break;
 
       case "weeks":
-        return getWeeklyDataForPeriod(dailyDataForPeriod);
+        return getWeeklyDataForPeriod(dailyDataForPeriod, periodResolution);
 
       case "months":
         break;
