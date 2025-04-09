@@ -26,13 +26,19 @@ const dateStringDto = z.string().refine(
     const dayNum = parseInt(day, 10);
     const yearNum = parseInt(year, 10);
 
+    // Check if the date is valid using Date object
+    const date = new Date(yearNum, monthNum - 1, dayNum);
+    const isValidDate = date.getFullYear() === yearNum &&
+                        date.getMonth() === monthNum - 1 &&
+                        date.getDate() === dayNum;
+
     return (
       monthNum >= 1 &&
       monthNum <= 12 &&
       dayNum >= 1 &&
-      dayNum <= 31 &&
       yearNum >= 1900 &&
-      yearNum <= 2100
+      yearNum <= 2100 &&
+      isValidDate
     );
   },
   { message: "String must be a valid date in MM/DD/YYYY format" },
