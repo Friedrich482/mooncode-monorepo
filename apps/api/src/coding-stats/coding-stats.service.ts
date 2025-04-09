@@ -61,11 +61,19 @@ export class CodingStatsService {
       end,
     });
   }
-  async getPeriodLanguagesPerDay({ userId, start, end }: PeriodStatsDtoType) {
+  async getPeriodLanguagesPerDay({
+    userId,
+    start,
+    end,
+    groupBy,
+    periodResolution,
+  }: PeriodStatsDtoType) {
     return this.periodStatsService.getPeriodLanguagesPerDay({
       userId,
       start,
       end,
+      groupBy,
+      periodResolution,
     });
   }
 

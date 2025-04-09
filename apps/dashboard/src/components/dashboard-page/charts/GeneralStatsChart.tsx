@@ -8,10 +8,13 @@ const GeneralStatsChart = () => {
   const period = usePeriodStore((state) => state.period);
 
   const { data, error, isLoading } =
-    trpc.codingStats.getPeriodGeneralStats.useQuery({
-      start: PERIODS_CONFIG[period].start,
-      end: PERIODS_CONFIG[period].end,
-    });
+    trpc.codingStats.getPeriodGeneralStats.useQuery(
+      {
+        start: PERIODS_CONFIG[period].start,
+        end: PERIODS_CONFIG[period].end,
+      },
+      { refetchOnWindowFocus: true },
+    );
 
   if (error) {
     return (

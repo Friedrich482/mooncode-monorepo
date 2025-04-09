@@ -5,6 +5,7 @@ import { usePeriodStore } from "./store/periodStore";
 
 const useQueryPeriodLangChart = () => {
   const period = usePeriodStore((state) => state.period);
+  const groupBy = usePeriodStore((state) => state.groupBy);
 
   const {
     data: pieChart,
@@ -27,6 +28,8 @@ const useQueryPeriodLangChart = () => {
     {
       start: PERIODS_CONFIG[period].start,
       end: PERIODS_CONFIG[period].end,
+      groupBy,
+      periodResolution: PERIODS_CONFIG[period].periodResolution,
     },
     { refetchOnWindowFocus: true },
   );

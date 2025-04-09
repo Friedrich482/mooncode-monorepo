@@ -4,7 +4,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { PERIODS_CONFIG, chartConfig } from "@/constants";
+import { PERIODS_CONFIG, WEEK_PERIODS, chartConfig } from "@/constants";
 import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
 import GroupByDropDown from "../GroupByDropDown";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
@@ -43,7 +43,7 @@ const PeriodTimeChart = () => {
 
   return (
     <div className="relative z-0 flex min-h-96 w-[45%] flex-col rounded-md border border-neutral-600/50 max-chart:w-full">
-      <GroupByDropDown />
+      {!WEEK_PERIODS.includes(period) && <GroupByDropDown />}
       <ChartContainer
         config={chartConfig}
         className="h-full flex-1 border-none"

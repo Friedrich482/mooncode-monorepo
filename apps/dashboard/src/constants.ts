@@ -12,7 +12,7 @@ import { ChartConfig } from "@/components/ui/chart";
 import { GroupBy } from "@repo/utils/types";
 import { Theme } from "@/components/themeProvider";
 
-export const themeDropDownItems: {
+export const THEME_DROPDOWN_ITEMS: {
   text: string;
   Icon: React.ForwardRefExoticComponent<
     Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
