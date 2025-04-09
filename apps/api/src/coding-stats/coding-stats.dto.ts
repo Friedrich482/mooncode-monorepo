@@ -1,21 +1,5 @@
 import { z } from "zod";
 
-export const CodingStatsDto = z.object({
-  timeSpentToday: z.number().int(),
-  timeSpentPerLanguage: z.record(z.string(), z.number()),
-});
-
-export const TimeOffsetDto = z.object({
-  offset: z.number().int().max(0, "Value must be at most 0").optional(),
-});
-
-export type CodingStatsDtoType = z.infer<typeof CodingStatsDto>;
-
-export type CodingStatsDefault = {
-  userId: string;
-  offset: number | undefined;
-};
-
 const dateStringDto = z.string().refine(
   (value) => {
     const dateRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
@@ -56,3 +40,17 @@ export const DatesDto = z.object({
 export type PeriodStatsDtoType = z.infer<typeof DatesDto> & { userId: string };
 export type GroupBy = z.infer<typeof DatesDto>["groupBy"];
 export type PeriodResolution = z.infer<typeof DatesDto>["periodResolution"];
+
+export const DayStatsDto = z.object({
+  dateString: dateStringDto,
+});
+
+export type DayStatsDtoType = z.infer<typeof DayStatsDto> & { userId: string };
+
+// TODO INVESTIGATE THIS
+export const CodingStatsDto = z.object({
+  timeSpentToday: z.number().int(),
+  timeSpentPerLanguage: z.record(z.string(), z.number()),
+});
+
+export type CodingStatsDtoType = z.infer<typeof CodingStatsDto>;

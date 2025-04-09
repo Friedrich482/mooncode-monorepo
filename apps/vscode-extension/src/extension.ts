@@ -20,9 +20,12 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   const statusBarItem = addStatusBarItem();
+  const dateString = new Date().toLocaleDateString();
 
   const { timeSpent, dayLanguagesTime: initialLanguagesData } =
-    await trpc.codingStats.getDailyStats.query({ offset: 0 });
+    await trpc.codingStats.getDailyStatsForExtension.query({
+      dateString: dateString,
+    });
 
   setStatusBarItem(timeSpent, statusBarItem);
 

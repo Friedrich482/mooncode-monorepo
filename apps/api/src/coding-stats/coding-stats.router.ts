@@ -1,4 +1,4 @@
-import { CodingStatsDto, DatesDto, TimeOffsetDto } from "./coding-stats.dto";
+import { CodingStatsDto, DatesDto, DayStatsDto } from "./coding-stats.dto";
 import { CodingStatsService } from "./coding-stats.service";
 import { Injectable } from "@nestjs/common";
 import { TrpcService } from "src/trpc/trpc.service";
@@ -21,22 +21,22 @@ export class CodingStatsRouter {
           }),
         ),
 
-      getDailyStats: this.trpcService
+      getDailyStatsForExtension: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DayStatsDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getDailyStats({
-            offset: input.offset,
+          this.codingStatsService.getDailyStatsForExtension({
+            dateString: input.dateString,
             userId: ctx.user.sub,
           }),
         ),
 
       getDailyStatsForChart: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DayStatsDto)
         .query(async ({ ctx, input }) =>
           this.codingStatsService.getDailyStatsForChart({
-            offset: input.offset,
+            dateString: input.dateString,
             userId: ctx.user.sub,
           }),
         ),

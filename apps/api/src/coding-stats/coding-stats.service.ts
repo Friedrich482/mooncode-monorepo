@@ -1,6 +1,6 @@
 import {
-  CodingStatsDefault,
   CodingStatsDtoType,
+  DayStatsDtoType,
   PeriodStatsDtoType,
 } from "./coding-stats.dto";
 import { DayStatsService } from "./day-stats.service";
@@ -13,11 +13,14 @@ export class CodingStatsService {
     private readonly dayStatsService: DayStatsService,
     private readonly periodStatsService: PeriodStatsService,
   ) {}
-  async getDailyStats({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.dayStatsService.getDailyStats({ userId, offset });
+  async getDailyStatsForExtension({ userId, dateString }: DayStatsDtoType) {
+    return this.dayStatsService.getDailyStatsForExtension({
+      userId,
+      dateString,
+    });
   }
-  async getDailyStatsForChart({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.dayStatsService.getDailyStatsForChart({ userId, offset });
+  async getDailyStatsForChart({ userId, dateString }: DayStatsDtoType) {
+    return this.dayStatsService.getDailyStatsForChart({ userId, dateString });
   }
 
   async upsert({
