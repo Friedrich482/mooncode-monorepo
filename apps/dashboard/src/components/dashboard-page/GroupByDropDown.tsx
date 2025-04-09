@@ -20,7 +20,7 @@ const GroupByDropDown = () => {
           className="absolute -top-11 left-0 flex items-center gap-4 bg-neutral-200 dark:bg-accent"
         >
           <Group />
-          <span className="">
+          <span>
             {
               GROUP_BY_DROPDOWN_ITEMS.find((entry) => entry.groupBy === groupBy)
                 ?.text

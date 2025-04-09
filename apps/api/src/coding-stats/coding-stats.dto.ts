@@ -28,9 +28,10 @@ const dateStringDto = z.string().refine(
 
     // Check if the date is valid using Date object
     const date = new Date(yearNum, monthNum - 1, dayNum);
-    const isValidDate = date.getFullYear() === yearNum &&
-                        date.getMonth() === monthNum - 1 &&
-                        date.getDate() === dayNum;
+    const isValidDate =
+      date.getFullYear() === yearNum &&
+      date.getMonth() === monthNum - 1 &&
+      date.getDate() === dayNum;
 
     return (
       monthNum >= 1 &&

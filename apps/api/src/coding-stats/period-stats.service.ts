@@ -50,17 +50,11 @@ export class PeriodStatsService {
     );
 
     switch (groupBy) {
-      case "days":
-        break;
-
       case "weeks":
         return getDaysOfPeriodStatsGroupByWeeks(
           dailyDataForPeriod,
           periodResolution,
         );
-      // TODO add the months implementation here
-      case "months":
-        break;
 
       default:
         break;
@@ -125,9 +119,6 @@ export class PeriodStatsService {
     );
 
     switch (groupBy) {
-      case "days":
-        break;
-
       case "weeks":
         return getPeriodLanguagesPerDayGroupedByWeeks(
           dailyDataForPeriod,

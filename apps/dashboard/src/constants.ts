@@ -1,4 +1,4 @@
-import { CalendarDays, LucideProps, Monitor, Moon, Sun } from "lucide-react";
+import { LucideProps, Monitor, Moon, Sun } from "lucide-react";
 import {
   endOfMonth,
   endOfWeek,
@@ -40,12 +40,9 @@ export const WEEK_PERIODS = ["Last 7 days", "This week", "Last week"];
 export const GROUP_BY_DROPDOWN_ITEMS: {
   groupBy: GroupBy;
   text: string;
-  Icon: React.ForwardRefExoticComponent<
-    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
-  >;
 }[] = [
-  { groupBy: "days", text: "Days", Icon: Sun },
-  { groupBy: "weeks", text: "Weeks", Icon: CalendarDays },
+  { groupBy: "days", text: "Days" },
+  { groupBy: "weeks", text: "Weeks" },
 ];
 
 export const chartConfig = {

@@ -1,15 +1,11 @@
 import { JWTDto } from "@repo/utils/schemas";
+import { JwtPayloadType } from "../../types-schemas";
 import { SafeParseSuccess } from "zod";
 
 const parseJwtPayload = (
   token: string | undefined,
 ):
-  | SafeParseSuccess<{
-      sub: string;
-      username: string;
-      iat: number;
-      exp: number;
-    }>
+  | SafeParseSuccess<JwtPayloadType>
   | {
       success: false;
       error: unknown;
