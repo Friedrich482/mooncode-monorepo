@@ -1,4 +1,4 @@
-import { JWTPayloadSchema } from "../../types-schemas";
+import { JWTDto } from "@repo/utils/schemas";
 import { SafeParseSuccess } from "zod";
 
 const parseJwtPayload = (
@@ -25,7 +25,7 @@ const parseJwtPayload = (
     );
     const jsonPayload = JSON.parse(decodedPayload);
 
-    return JWTPayloadSchema.safeParse(jsonPayload);
+    return JWTDto.safeParse(jsonPayload);
   } catch (error) {
     return { success: false, error };
   }

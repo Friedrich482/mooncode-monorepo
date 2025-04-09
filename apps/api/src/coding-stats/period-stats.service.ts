@@ -1,8 +1,8 @@
+import { differenceInDays, format } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
 import { PeriodStatsDtoType } from "./coding-stats.dto";
-import { differenceInDays } from "date-fns";
 import formatDuration from "@repo/utils/formatDuration";
 import getDaysOfPeriodStatsGroupByWeeks from "src/utils/getDaysOfPeriodStatsGroupByWeeks";
 import getPeriodLanguagesPerDayGroupedByWeeks from "src/utils/getPeriodLanguagesPerDayGroupedByWeeks";
@@ -180,10 +180,9 @@ export class PeriodStatsService {
         ? Math.max(...dailyDataForPeriod.map((day) => day.timeSpent))
         : 0;
 
-    // TODO fix the fallback date
     const mostActiveDate =
       dailyDataForPeriod.find((day) => day.timeSpent === maxTimeSpentPerDay)
-        ?.date || "";
+        ?.date || format(new Date(), "yyyy-MM-dd");
 
     const periodLanguagesTime = await this.getPeriodLanguagesTime({
       userId,

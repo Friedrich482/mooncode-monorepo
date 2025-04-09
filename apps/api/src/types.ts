@@ -1,3 +1,6 @@
+import { JWTDto } from "@repo/utils/schemas";
+import { z } from "zod";
+
 export type ExtendedRequest = Request & {
   user: {
     sub: string;
@@ -5,11 +8,4 @@ export type ExtendedRequest = Request & {
   };
 };
 
-// TODO there is already a JwtPayload type in the extension,
-// TODO try to share both
-export type JwtPayload = {
-  sub: string;
-  username: string;
-  iat: number;
-  exp: number;
-};
+export type JwtPayloadDtoType = z.infer<typeof JWTDto>;

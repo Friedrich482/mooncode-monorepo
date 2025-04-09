@@ -16,11 +16,32 @@ export type CodingStatsDefault = {
   offset: number | undefined;
 };
 
-// TODO make the date validation more robust
-// TODO remove the optionality later
+const dateStringDto = z.string().refine(
+  (value) => {
+    const dateRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+    if (!dateRegex.test(value)) return false;
+
+    const [, month, day, year] = dateRegex.exec(value) || [];
+    const monthNum = parseInt(month, 10);
+    const dayNum = parseInt(day, 10);
+    const yearNum = parseInt(year, 10);
+
+    return (
+      monthNum >= 1 &&
+      monthNum <= 12 &&
+      dayNum >= 1 &&
+      dayNum <= 31 &&
+      yearNum >= 1900 &&
+      yearNum <= 2100
+    );
+  },
+  { message: "String must be a valid date in MM/DD/YYYY format" },
+);
+
 export const DatesDto = z.object({
-  start: z.string(),
-  end: z.string(),
+  start: dateStringDto,
+  end: dateStringDto,
+  // TODO remove the optionality later
   groupBy: z.enum(["days", "weeks", "months"]).optional(),
   periodResolution: z.enum(["day", "week", "month"]).optional(),
 });
