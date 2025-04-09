@@ -129,7 +129,11 @@ const PeriodLanguagesChart = () => {
                   )
                 }
               />
-              {[...new Set(barChartData?.flatMap((day) => Object.keys(day)))]
+              {[
+                ...new Set(
+                  barChartData?.flatMap((entry) => Object.keys(entry)),
+                ),
+              ]
                 .filter(
                   (key) =>
                     key !== "date" &&

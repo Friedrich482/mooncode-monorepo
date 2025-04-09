@@ -4,7 +4,8 @@ import { LanguagesService } from "src/languages/languages.service";
 import { PeriodStatsDtoType } from "./coding-stats.dto";
 import { differenceInDays } from "date-fns";
 import formatDuration from "@repo/utils/formatDuration";
-import getWeeklyDataForPeriod from "src/utils/getWeeklyDataForPeriod";
+import getDaysOfPeriodStatsGroupByWeeks from "src/utils/getDaysOfPeriodStatsGroupByWeeks";
+import getPeriodLanguagesPerDayGroupedByWeeks from "src/utils/getPeriodLanguagesPerDayGroupedByWeeks";
 
 @Injectable()
 export class PeriodStatsService {
@@ -53,8 +54,11 @@ export class PeriodStatsService {
         break;
 
       case "weeks":
-        return getWeeklyDataForPeriod(dailyDataForPeriod, periodResolution);
-
+        return getDaysOfPeriodStatsGroupByWeeks(
+          dailyDataForPeriod,
+          periodResolution,
+        );
+      // TODO add the months implementation here
       case "months":
         break;
 
@@ -107,23 +111,49 @@ export class PeriodStatsService {
 
     return finalData;
   }
-  async getPeriodLanguagesPerDay({ userId, start, end }: PeriodStatsDtoType) {
+  async getPeriodLanguagesPerDay({
+    userId,
+    start,
+    end,
+    groupBy,
+    periodResolution,
+  }: PeriodStatsDtoType) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
       start,
       end,
     );
 
-    return await Promise.all(
-      dailyDataForPeriod.map(async ({ id, date, timeSpent }) => ({
-        originalDate: new Date(date).toDateString(),
+    switch (groupBy) {
+      case "days":
+        break;
 
-        date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
-        timeSpent,
+      case "weeks":
+        return getPeriodLanguagesPerDayGroupedByWeeks(
+          dailyDataForPeriod,
+          periodResolution,
+          this.languagesService,
+        );
 
-        ...(await this.languagesService.findAllLanguages(id)),
-      })),
+      case "months":
+        break;
+
+      default:
+        break;
+    }
+
+    const allLanguages = await Promise.all(
+      dailyDataForPeriod.map(({ id }) =>
+        this.languagesService.findAllLanguages(id),
+      ),
     );
+
+    return dailyDataForPeriod.map(({ date, timeSpent }, index) => ({
+      originalDate: new Date(date).toDateString(),
+      date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
+      timeSpent,
+      ...allLanguages[index],
+    }));
   }
 
   async getPeriodGeneralStats({ userId, start, end }: PeriodStatsDtoType) {

@@ -9,7 +9,7 @@ import { DailyDataService } from "src/daily-data/daily-data.service";
 import { PeriodResolution } from "src/coding-stats/coding-stats.dto";
 import formatDuration from "@repo/utils/formatDuration";
 
-const getWeeklyDataForPeriod = (
+const getDaysOfPeriodStatsGroupByWeeks = (
   data: Awaited<ReturnType<DailyDataService["findRangeDailyData"]>>,
   periodResolution: PeriodResolution,
 ) => {
@@ -76,4 +76,4 @@ const getWeeklyDataForPeriod = (
   }));
 };
 
-export default getWeeklyDataForPeriod;
+export default getDaysOfPeriodStatsGroupByWeeks;
