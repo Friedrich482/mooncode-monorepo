@@ -49,7 +49,10 @@ const getPeriodLanguagesPerDayGroupedByWeeks = async (
       weekEnd = weekEnd > monthEnd ? monthEnd : weekEnd;
     }
 
+    // Set the first entry's week to start from the actual first date in the dataset
     if (index === 0) weekStart = startDate;
+    // For the last week (or partial week), extend to include the actual last date 
+    // We use a threshold of 6 days as a typical week has 7 days
     if (index >= data.length - 6) weekEnd = endDate;
 
     const weekKey = format(weekStart, "yyyy-MM-dd");
