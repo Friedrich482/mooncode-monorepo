@@ -29,13 +29,21 @@ const dateStringDto = z.string().refine(
   { message: "String must be a valid date in MM/DD/YYYY format" },
 );
 
-export const DatesDto = z.object({
-  start: dateStringDto,
-  end: dateStringDto,
-  // TODO remove the optionality later
-  groupBy: z.enum(["days", "weeks", "months"]).optional(),
-  periodResolution: z.enum(["day", "week", "month"]).optional(),
-});
+export const DatesDto = z
+  .object({
+    start: dateStringDto,
+    end: dateStringDto,
+    // TODO remove the optionality later
+    groupBy: z.enum(["days", "weeks", "months"]).optional(),
+    periodResolution: z.enum(["day", "week", "month"]).optional(),
+  })
+  //  this prevent the groupBy attribute to be "weeks" for periods like "Last 7 days", "This week" or "Last week"
+  .transform((input) => {
+    if (input?.periodResolution === "day") {
+      input.groupBy = "days";
+    }
+    return input;
+  });
 
 export type PeriodStatsDtoType = z.infer<typeof DatesDto> & { userId: string };
 export type GroupBy = z.infer<typeof DatesDto>["groupBy"];
