@@ -70,12 +70,27 @@ const ChartTitle = ({
       <Icon
         Icon={ChevronRight}
         onClick={handleChevronRightClick}
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import Icon from "@/components/ui/Icon";
+import { cn } from "@/lib/utils";
+import { useState } from "react";
 import { isSameDay } from 'date-fns';
 
-// ...
+// ...remaining imports
 
-// deactivate the next date button if we are "Today"
-disabled={isSameDay(date, new Date())}
+// Within your component’s render/return:
+      <Icon
+        Icon={ChevronRight}
+        onClick={handleChevronRightClick}
+        // deactivate the next date button if we are "Today"
+        disabled={isSameDay(date, new Date())}
       />
     </h2>
   );
