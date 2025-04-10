@@ -42,7 +42,7 @@ const getGeneralStatsOnPeriodGroupByWeeks = async (
       ? Math.max(...weeklyDataForPeriod.map((week) => week.timeSpent))
       : 0;
   const mostActiveWeek =
-    weeklyDataForPeriod.find((day) => day.timeSpent === maxTimeSpentPerWeek)
+    weeklyDataForPeriod.find((week) => week.timeSpent === maxTimeSpentPerWeek)
       ?.originalDate || format(new Date(), "yyyy-MM-dd");
 
   const mostUsedLanguage = await getMostUsedLanguageOnPeriod(
