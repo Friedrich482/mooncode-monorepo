@@ -70,8 +70,12 @@ const ChartTitle = ({
       <Icon
         Icon={ChevronRight}
         onClick={handleChevronRightClick}
-        // deactivate the next date button if we are "Today"
-        disabled={date.getDate() === new Date().getDate()}
+import { isSameDay } from 'date-fns';
+
+// ...
+
+// deactivate the next date button if we are "Today"
+disabled={isSameDay(date, new Date())}
       />
     </h2>
   );
