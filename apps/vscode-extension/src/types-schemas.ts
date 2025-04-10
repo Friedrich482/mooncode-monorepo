@@ -1,3 +1,4 @@
+import { JWTDto } from "@repo/utils/schemas";
 import z from "zod";
 
 export type LanguageData = {
@@ -17,3 +18,5 @@ export const loginResponseSchema = z.object({
     }),
   }),
 });
+
+export type JwtPayloadType = z.infer<typeof JWTDto>;

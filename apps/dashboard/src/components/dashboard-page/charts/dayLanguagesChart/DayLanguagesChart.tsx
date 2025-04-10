@@ -9,7 +9,6 @@ import { useMemo, useState } from "react";
 import ChartTitle from "./ChartTitle";
 import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
 import { Skeleton } from "@/components/ui/skeleton";
-import getDateOffset from "@/utils/getDateOffset";
 import getNextDayDate from "@/utils/getNextDayDate";
 import getPrevDayDate from "@/utils/getPreviousDayDate";
 import languagesAttributes from "@/colors.json";
@@ -17,7 +16,7 @@ import { trpc } from "@/utils/trpc";
 
 const DayLanguagesChart = () => {
   const [date, setDate] = useState(new Date());
-  const offset = useMemo(() => getDateOffset(date), [date]);
+  const dateString = useMemo(() => date.toLocaleDateString(), [date]);
 
   const handleChevronLeftClick = () => setDate((prev) => getPrevDayDate(prev));
   const handleChevronRightClick = () => setDate((prev) => getNextDayDate(prev));
@@ -25,7 +24,7 @@ const DayLanguagesChart = () => {
   const { data, error, isLoading } =
     trpc.codingStats.getDailyStatsForChart.useQuery(
       {
-        offset,
+        dateString: dateString,
       },
       {
         refetchOnWindowFocus: true,
@@ -41,7 +40,7 @@ const DayLanguagesChart = () => {
     return <Skeleton className="h-[24rem] w-[45%] max-chart:w-full" />;
   }
 
-  const { finalData, formattedTotalTimeSpent, date: displayDate } = data;
+  const { finalData, formattedTotalTimeSpent, dateLabel: displayDate } = data;
 
   const chartData = finalData.map((entry) => ({
     ...entry,
@@ -60,7 +59,6 @@ const DayLanguagesChart = () => {
         formattedTotalTimeSpent={formattedTotalTimeSpent}
         handleChevronLeftClick={handleChevronLeftClick}
         handleChevronRightClick={handleChevronRightClick}
-        offset={offset}
         date={date}
         setDate={setDate}
       />{" "}

@@ -1,9 +1,8 @@
-import { CodingStatsDefault, CodingStatsDtoType } from "./coding-stats.dto";
+import { DayStatsDtoType, UpsertLanguagesDtoType } from "./coding-stats.dto";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
 import formatDuration from "@repo/utils/formatDuration";
-import getDayWithOffset from "src/utils/getDayWithOffset";
 
 @Injectable()
 export class DayStatsService {
@@ -12,12 +11,10 @@ export class DayStatsService {
     private readonly languagesService: LanguagesService,
   ) {}
 
-  async getDailyStats({ userId, offset = 0 }: CodingStatsDefault) {
-    const targetDate = getDayWithOffset(offset);
-
+  async getDailyStatsForExtension({ userId, dateString }: DayStatsDtoType) {
     const dayData = await this.dailyDataService.findOneDailyData(
       userId,
-      targetDate,
+      dateString,
     );
 
     if (!dayData?.id) {
@@ -33,25 +30,30 @@ export class DayStatsService {
     return { timeSpent: dayData.timeSpent, dayLanguagesTime };
   }
 
-  async getDailyStatsForChart({ userId, offset = 0 }: CodingStatsDefault) {
-    const targetDate = getDayWithOffset(offset);
-    const date =
-      offset === 0
+  async getDailyStatsForChart({ userId, dateString }: DayStatsDtoType) {
+    const providedDate = new Date(dateString);
+    const dateLabel =
+      dateString === new Date().toLocaleDateString()
         ? "Today"
-        : offset === -1
+        : dateString ===
+            new Date(
+              new Date().getFullYear(),
+              new Date().getMonth(),
+              new Date().getDate() - 1,
+            ).toLocaleDateString()
           ? "Yesterday"
-          : new Date(targetDate).toDateString();
+          : providedDate.toDateString();
 
     const dayData = await this.dailyDataService.findOneDailyData(
       userId,
-      targetDate,
+      dateString,
     );
 
     if (!dayData?.id) {
       return {
         formattedTotalTimeSpent: formatDuration(0),
         finalData: [],
-        date,
+        dateLabel,
       };
     }
 
@@ -75,17 +77,17 @@ export class DayStatsService {
     return {
       finalData,
       formattedTotalTimeSpent,
-      date,
+      dateLabel,
     };
   }
   async upsert({
     id,
-    updateCodingStatsDto,
+    updateUpsertLanguagesDto,
   }: {
     id: string;
-    updateCodingStatsDto: CodingStatsDtoType;
+    updateUpsertLanguagesDto: UpsertLanguagesDtoType;
   }) {
-    const { timeSpentPerLanguage, timeSpentToday } = updateCodingStatsDto;
+    const { timeSpentPerLanguage, timeSpentToday } = updateUpsertLanguagesDto;
     const todaySDate = new Date().toLocaleString();
 
     const returningDailyData = {

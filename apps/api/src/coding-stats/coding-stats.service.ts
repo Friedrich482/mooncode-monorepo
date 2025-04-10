@@ -1,7 +1,7 @@
 import {
-  CodingStatsDefault,
-  CodingStatsDtoType,
+  DayStatsDtoType,
   PeriodStatsDtoType,
+  UpsertLanguagesDtoType,
 } from "./coding-stats.dto";
 import { DayStatsService } from "./day-stats.service";
 import { Injectable } from "@nestjs/common";
@@ -13,21 +13,24 @@ export class CodingStatsService {
     private readonly dayStatsService: DayStatsService,
     private readonly periodStatsService: PeriodStatsService,
   ) {}
-  async getDailyStats({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.dayStatsService.getDailyStats({ userId, offset });
+  async getDailyStatsForExtension({ userId, dateString }: DayStatsDtoType) {
+    return this.dayStatsService.getDailyStatsForExtension({
+      userId,
+      dateString,
+    });
   }
-  async getDailyStatsForChart({ userId, offset = 0 }: CodingStatsDefault) {
-    return this.dayStatsService.getDailyStatsForChart({ userId, offset });
+  async getDailyStatsForChart({ userId, dateString }: DayStatsDtoType) {
+    return this.dayStatsService.getDailyStatsForChart({ userId, dateString });
   }
 
   async upsert({
     id,
-    updateCodingStatsDto,
+    updateUpsertLanguagesDto,
   }: {
     id: string;
-    updateCodingStatsDto: CodingStatsDtoType;
+    updateUpsertLanguagesDto: UpsertLanguagesDtoType;
   }) {
-    return this.dayStatsService.upsert({ id, updateCodingStatsDto });
+    return this.dayStatsService.upsert({ id, updateUpsertLanguagesDto });
   }
 
   async getTimeSpentOnPeriod({ userId, start, end }: PeriodStatsDtoType) {
@@ -77,11 +80,19 @@ export class CodingStatsService {
     });
   }
 
-  async getPeriodGeneralStats({ userId, start, end }: PeriodStatsDtoType) {
+  async getPeriodGeneralStats({
+    userId,
+    start,
+    end,
+    groupBy,
+    periodResolution,
+  }: PeriodStatsDtoType) {
     return this.periodStatsService.getPeriodGeneralStats({
       userId,
       start,
       end,
+      groupBy,
+      periodResolution,
     });
   }
 }

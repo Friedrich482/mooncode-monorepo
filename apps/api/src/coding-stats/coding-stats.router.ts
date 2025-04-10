@@ -1,4 +1,4 @@
-import { CodingStatsDto, DatesDto, TimeOffsetDto } from "./coding-stats.dto";
+import { DatesDto, DayStatsDto, UpsertLanguagesDto } from "./coding-stats.dto";
 import { CodingStatsService } from "./coding-stats.service";
 import { Injectable } from "@nestjs/common";
 import { TrpcService } from "src/trpc/trpc.service";
@@ -13,30 +13,30 @@ export class CodingStatsRouter {
     codingStats: this.trpcService.trpc.router({
       upsert: this.trpcService
         .protectedProcedure()
-        .input(CodingStatsDto)
+        .input(UpsertLanguagesDto)
         .mutation(async ({ ctx, input }) =>
           this.codingStatsService.upsert({
             id: ctx.user.sub,
-            updateCodingStatsDto: input,
+            updateUpsertLanguagesDto: input,
           }),
         ),
 
-      getDailyStats: this.trpcService
+      getDailyStatsForExtension: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DayStatsDto)
         .query(async ({ ctx, input }) =>
-          this.codingStatsService.getDailyStats({
-            offset: input.offset,
+          this.codingStatsService.getDailyStatsForExtension({
+            dateString: input.dateString,
             userId: ctx.user.sub,
           }),
         ),
 
       getDailyStatsForChart: this.trpcService
         .protectedProcedure()
-        .input(TimeOffsetDto)
+        .input(DayStatsDto)
         .query(async ({ ctx, input }) =>
           this.codingStatsService.getDailyStatsForChart({
-            offset: input.offset,
+            dateString: input.dateString,
             userId: ctx.user.sub,
           }),
         ),
@@ -97,6 +97,8 @@ export class CodingStatsRouter {
             userId: ctx.user.sub,
             start: input.start,
             end: input.end,
+            groupBy: input.groupBy,
+            periodResolution: input.periodResolution,
           }),
         ),
     }),

@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import Icon from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
+import { isSameDay } from "date-fns";
 import { useState } from "react";
 
 const ChartTitle = ({
@@ -15,7 +16,6 @@ const ChartTitle = ({
   formattedTotalTimeSpent,
   handleChevronLeftClick,
   handleChevronRightClick,
-  offset,
   date,
   setDate,
 }: {
@@ -23,12 +23,12 @@ const ChartTitle = ({
   handleChevronRightClick: () => void;
   formattedTotalTimeSpent: string;
   displayDate: string;
-  offset: number;
   date: Date;
   setDate: React.Dispatch<React.SetStateAction<Date>>;
 }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
   const handleClick = () => setIsPopoverOpen((prev) => !prev);
+
   return (
     <h2 className="flex items-center justify-between gap-4 px-3 text-center text-2xl font-bold">
       <Icon Icon={ChevronLeft} onClick={handleChevronLeftClick} />
@@ -71,7 +71,8 @@ const ChartTitle = ({
       <Icon
         Icon={ChevronRight}
         onClick={handleChevronRightClick}
-        disabled={offset === 0}
+        // deactivate the next date button if we are "Today"
+        disabled={isSameDay(date, new Date())}
       />
     </h2>
   );

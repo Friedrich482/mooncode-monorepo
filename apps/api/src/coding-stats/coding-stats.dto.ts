@@ -1,21 +1,5 @@
 import { z } from "zod";
 
-export const CodingStatsDto = z.object({
-  timeSpentToday: z.number().int(),
-  timeSpentPerLanguage: z.record(z.string(), z.number()),
-});
-
-export const TimeOffsetDto = z.object({
-  offset: z.number().int().max(0, "Value must be at most 0").optional(),
-});
-
-export type CodingStatsDtoType = z.infer<typeof CodingStatsDto>;
-
-export type CodingStatsDefault = {
-  userId: string;
-  offset: number | undefined;
-};
-
 const dateStringDto = z.string().refine(
   (value) => {
     const dateRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
@@ -28,9 +12,10 @@ const dateStringDto = z.string().refine(
 
     // Check if the date is valid using Date object
     const date = new Date(yearNum, monthNum - 1, dayNum);
-    const isValidDate = date.getFullYear() === yearNum &&
-                        date.getMonth() === monthNum - 1 &&
-                        date.getDate() === dayNum;
+    const isValidDate =
+      date.getFullYear() === yearNum &&
+      date.getMonth() === monthNum - 1 &&
+      date.getDate() === dayNum;
 
     return (
       monthNum >= 1 &&
@@ -44,14 +29,35 @@ const dateStringDto = z.string().refine(
   { message: "String must be a valid date in MM/DD/YYYY format" },
 );
 
-export const DatesDto = z.object({
-  start: dateStringDto,
-  end: dateStringDto,
-  // TODO remove the optionality later
-  groupBy: z.enum(["days", "weeks", "months"]).optional(),
-  periodResolution: z.enum(["day", "week", "month"]).optional(),
-});
+export const DatesDto = z
+  .object({
+    start: dateStringDto,
+    end: dateStringDto,
+    // TODO remove the optionality later
+    groupBy: z.enum(["days", "weeks", "months"]).optional(),
+    periodResolution: z.enum(["day", "week", "month"]).optional(),
+  })
+  //  this prevent the groupBy attribute to be "weeks" for periods like "Last 7 days", "This week" or "Last week"
+  .transform((input) => {
+    if (input?.periodResolution === "day") {
+      input.groupBy = "days";
+    }
+    return input;
+  });
 
 export type PeriodStatsDtoType = z.infer<typeof DatesDto> & { userId: string };
 export type GroupBy = z.infer<typeof DatesDto>["groupBy"];
 export type PeriodResolution = z.infer<typeof DatesDto>["periodResolution"];
+
+export const DayStatsDto = z.object({
+  dateString: dateStringDto,
+});
+
+export type DayStatsDtoType = z.infer<typeof DayStatsDto> & { userId: string };
+
+export const UpsertLanguagesDto = z.object({
+  timeSpentToday: z.number().int(),
+  timeSpentPerLanguage: z.record(z.string(), z.number()),
+});
+
+export type UpsertLanguagesDtoType = z.infer<typeof UpsertLanguagesDto>;

@@ -37,23 +37,29 @@ const getPeriodLanguagesPerDayGroupedByWeeks = async (
     })),
   );
 
-  for (const [index, entry] of entriesWithLanguages.entries()) {
+  for (const [, entry] of entriesWithLanguages.entries()) {
     const date = new Date(entry.date);
     let weekStart = startOfWeek(date);
     let weekEnd = endOfWeek(date);
 
     if (periodResolution === "month") {
+      // Adjust week boundaries to ensure they don't extend beyond the month start/end
       const monthStart = startOfMonth(startDate);
       const monthEnd = endOfMonth(endDate);
       weekStart = weekStart < monthStart ? monthStart : weekStart;
       weekEnd = weekEnd > monthEnd ? monthEnd : weekEnd;
     }
+    if (periodResolution === "week") {
+      // adjust week boundaries to make sure that the first "week" starts with the first day of the range
+      // and the last "week" ends with the last day of the range
+      if (date <= endOfWeek(startDate)) {
+        weekStart = startDate;
+      }
 
-    // Set the first entry's week to start from the actual first date in the dataset
-    if (index === 0) weekStart = startDate;
-    // For the last week (or partial week), extend to include the actual last date 
-    // We use a threshold of 6 days as a typical week has 7 days
-    if (index >= data.length - 6) weekEnd = endDate;
+      if (date >= startOfWeek(endDate)) {
+        weekEnd = endDate;
+      }
+    }
 
     const weekKey = format(weekStart, "yyyy-MM-dd");
 
@@ -67,7 +73,13 @@ const getPeriodLanguagesPerDayGroupedByWeeks = async (
       });
     }
 
-    const weekEntry = weeklyMap.get(weekKey)!;
+    const weekEntry = weeklyMap.get(weekKey) as {
+      weekRange: string;
+      timeSpent: number;
+      startDate: Date;
+      endDate: Date;
+      languages: Record<string, number>;
+    };
     weekEntry.timeSpent += entry.timeSpent;
 
     for (const [lang, time] of Object.entries(entry.languages)) {

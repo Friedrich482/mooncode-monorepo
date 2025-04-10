@@ -23,7 +23,12 @@ const getDaysOfPeriodStatsGroupByWeeks = (
     }
   >();
   const startDate = new Date(data[0].date);
-  const endDate = new Date(data.at(-1)!.date);
+  const lastEntry = data.at(-1);
+  if (!lastEntry) {
+    // handle empty data scenario, for example:
+    return [];
+  }
+  const endDate = new Date(lastEntry.date);
 
   data.forEach((entry, index) => {
     const date = new Date(entry.date);
@@ -44,10 +49,14 @@ const getDaysOfPeriodStatsGroupByWeeks = (
     }
 
     if (periodResolution === "week") {
-      if (index === 0) {
+      // adjust week boundaries to make sure that the first "week" starts with the first day of the range
+      // and the last "week" ends with the last day of the range
+
+      if (date <= endOfWeek(startDate)) {
         weekStart = startDate;
       }
-      if (index >= data.length - 6) {
+
+      if (date >= startOfWeek(endDate)) {
         weekEnd = endDate;
       }
     }
