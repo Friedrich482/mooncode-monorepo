@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import Icon from "@/components/ui/Icon";
 import { cn } from "@/lib/utils";
+import { isSameDay } from "date-fns";
 import { useState } from "react";
 
 const ChartTitle = ({
@@ -67,25 +68,6 @@ const ChartTitle = ({
           </PopoverContent>
         </Popover>
       </div>
-      <Icon
-        Icon={ChevronRight}
-        onClick={handleChevronRightClick}
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import Icon from "@/components/ui/Icon";
-import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { isSameDay } from 'date-fns';
-
-// ...remaining imports
-
-// Within your component’s render/return:
       <Icon
         Icon={ChevronRight}
         onClick={handleChevronRightClick}
