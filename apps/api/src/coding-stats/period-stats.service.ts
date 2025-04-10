@@ -5,6 +5,8 @@ import { LanguagesService } from "src/languages/languages.service";
 import { PeriodStatsDtoType } from "./coding-stats.dto";
 import formatDuration from "@repo/utils/formatDuration";
 import getDaysOfPeriodStatsGroupByWeeks from "src/utils/getDaysOfPeriodStatsGroupByWeeks";
+import getGeneralStatsOnPeriodGroupByWeeks from "src/utils/getGeneralStatsOnPeriodGroupByWeeks";
+import getMostUsedLanguageOnPeriod from "src/utils/getMostUsedLanguageOnPeriod";
 import getPeriodLanguagesPerDayGroupedByWeeks from "src/utils/getPeriodLanguagesPerDayGroupedByWeeks";
 
 @Injectable()
@@ -126,9 +128,6 @@ export class PeriodStatsService {
           this.languagesService,
         );
 
-      case "months":
-        break;
-
       default:
         break;
     }
@@ -147,10 +146,35 @@ export class PeriodStatsService {
     }));
   }
 
-  async getPeriodGeneralStats({ userId, start, end }: PeriodStatsDtoType) {
-    const numberOfDays = differenceInDays(end, start) + 1;
+  async getPeriodGeneralStats({
+    userId,
+    start,
+    end,
+    groupBy,
+    periodResolution,
+  }: PeriodStatsDtoType) {
+    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
+      userId,
+      start,
+      end,
+    );
 
-    const avgTimePerDay = formatDuration(
+    switch (groupBy) {
+      case "weeks":
+        return getGeneralStatsOnPeriodGroupByWeeks(
+          userId,
+          start,
+          end,
+          this,
+          dailyDataForPeriod,
+          periodResolution,
+        );
+      default:
+        break;
+    }
+
+    const numberOfDays = differenceInDays(end, start) + 1;
+    const avgTime = formatDuration(
       (
         await this.getTimeSpentOnPeriod({
           userId,
@@ -158,12 +182,6 @@ export class PeriodStatsService {
           end,
         })
       ).rawTime / numberOfDays,
-    );
-
-    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
-      userId,
-      start,
-      end,
     );
 
     const maxTimeSpentPerDay =
@@ -174,21 +192,15 @@ export class PeriodStatsService {
     const mostActiveDate =
       dailyDataForPeriod.find((day) => day.timeSpent === maxTimeSpentPerDay)
         ?.date || format(new Date(), "yyyy-MM-dd");
-
-    const periodLanguagesTime = await this.getPeriodLanguagesTime({
+    const mostUsedLanguage = await getMostUsedLanguageOnPeriod(
+      this,
       userId,
       start,
       end,
-    });
-    const mostUsedLanguageTime = periodLanguagesTime
-      .map((language) => language.time)
-      .reduce((max, curr) => (curr > max ? curr : max), 0);
-    const mostUsedLanguage = periodLanguagesTime.find(
-      (language) => language.time === mostUsedLanguageTime,
-    )?.languageName;
+    );
 
     return {
-      avgTimePerDay,
+      avgTime,
       mostActiveDate: new Date(mostActiveDate).toDateString(),
       mostUsedLanguage,
     };

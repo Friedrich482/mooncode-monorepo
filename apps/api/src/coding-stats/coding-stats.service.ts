@@ -80,11 +80,19 @@ export class CodingStatsService {
     });
   }
 
-  async getPeriodGeneralStats({ userId, start, end }: PeriodStatsDtoType) {
+  async getPeriodGeneralStats({
+    userId,
+    start,
+    end,
+    groupBy,
+    periodResolution,
+  }: PeriodStatsDtoType) {
     return this.periodStatsService.getPeriodGeneralStats({
       userId,
       start,
       end,
+      groupBy,
+      periodResolution,
     });
   }
 }
