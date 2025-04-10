@@ -55,10 +55,9 @@ export const DayStatsDto = z.object({
 
 export type DayStatsDtoType = z.infer<typeof DayStatsDto> & { userId: string };
 
-// TODO INVESTIGATE THIS
-export const CodingStatsDto = z.object({
+export const UpsertLanguagesDto = z.object({
   timeSpentToday: z.number().int(),
   timeSpentPerLanguage: z.record(z.string(), z.number()),
 });
 
-export type CodingStatsDtoType = z.infer<typeof CodingStatsDto>;
+export type UpsertLanguagesDtoType = z.infer<typeof UpsertLanguagesDto>;

@@ -1,7 +1,7 @@
 import {
-  CodingStatsDtoType,
   DayStatsDtoType,
   PeriodStatsDtoType,
+  UpsertLanguagesDtoType,
 } from "./coding-stats.dto";
 import { DayStatsService } from "./day-stats.service";
 import { Injectable } from "@nestjs/common";
@@ -25,12 +25,12 @@ export class CodingStatsService {
 
   async upsert({
     id,
-    updateCodingStatsDto,
+    updateUpsertLanguagesDto,
   }: {
     id: string;
-    updateCodingStatsDto: CodingStatsDtoType;
+    updateUpsertLanguagesDto: UpsertLanguagesDtoType;
   }) {
-    return this.dayStatsService.upsert({ id, updateCodingStatsDto });
+    return this.dayStatsService.upsert({ id, updateUpsertLanguagesDto });
   }
 
   async getTimeSpentOnPeriod({ userId, start, end }: PeriodStatsDtoType) {

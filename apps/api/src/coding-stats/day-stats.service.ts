@@ -1,4 +1,4 @@
-import { CodingStatsDtoType, DayStatsDtoType } from "./coding-stats.dto";
+import { DayStatsDtoType, UpsertLanguagesDtoType } from "./coding-stats.dto";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
@@ -82,12 +82,12 @@ export class DayStatsService {
   }
   async upsert({
     id,
-    updateCodingStatsDto,
+    updateUpsertLanguagesDto,
   }: {
     id: string;
-    updateCodingStatsDto: CodingStatsDtoType;
+    updateUpsertLanguagesDto: UpsertLanguagesDtoType;
   }) {
-    const { timeSpentPerLanguage, timeSpentToday } = updateCodingStatsDto;
+    const { timeSpentPerLanguage, timeSpentToday } = updateUpsertLanguagesDto;
     const todaySDate = new Date().toLocaleString();
 
     const returningDailyData = {

@@ -1,4 +1,4 @@
-import { CodingStatsDto, DatesDto, DayStatsDto } from "./coding-stats.dto";
+import { DatesDto, DayStatsDto, UpsertLanguagesDto } from "./coding-stats.dto";
 import { CodingStatsService } from "./coding-stats.service";
 import { Injectable } from "@nestjs/common";
 import { TrpcService } from "src/trpc/trpc.service";
@@ -13,11 +13,11 @@ export class CodingStatsRouter {
     codingStats: this.trpcService.trpc.router({
       upsert: this.trpcService
         .protectedProcedure()
-        .input(CodingStatsDto)
+        .input(UpsertLanguagesDto)
         .mutation(async ({ ctx, input }) =>
           this.codingStatsService.upsert({
             id: ctx.user.sub,
-            updateCodingStatsDto: input,
+            updateUpsertLanguagesDto: input,
           }),
         ),
 
