@@ -55,7 +55,9 @@ const PeriodTimeChart = () => {
             tickMargin={10}
             axisLine={false}
             tickFormatter={(date) =>
-              groupBy !== "days" ? date : date.slice(0, 3)
+              groupBy === "days" || groupBy === "months"
+                ? date.slice(0, 3)
+                : date
             }
           />
           <ChartTooltip

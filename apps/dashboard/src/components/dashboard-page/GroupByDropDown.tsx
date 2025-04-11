@@ -4,14 +4,21 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@radix-ui/react-dropdown-menu";
+import { GROUP_BY_DROPDOWN_ITEMS, PERIODS_CONFIG } from "@/constants";
 import { Button } from "../ui/button";
-import { GROUP_BY_DROPDOWN_ITEMS } from "@/constants";
 import { Group } from "lucide-react";
+import { useMemo } from "react";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 
 const GroupByDropDown = () => {
+  const period = usePeriodStore((state) => state.period);
   const groupBy = usePeriodStore((state) => state.groupBy);
   const setGroupBy = usePeriodStore((state) => state.setGroupBy);
+  const periodResolution = useMemo(
+    () => PERIODS_CONFIG[period].periodResolution,
+    [period],
+  );
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,7 +39,11 @@ const GroupByDropDown = () => {
         className="z-10 w-40 translate-y-1 cursor-pointer rounded-md border-[1px] border-neutral-700 bg-neutral-100 p-2 dark:bg-neutral-950"
         align="start"
       >
-        {GROUP_BY_DROPDOWN_ITEMS.map(({ text, groupBy }) => (
+        {GROUP_BY_DROPDOWN_ITEMS.slice(
+          0,
+          // we show "Months only if the periodResolution is "year" (typically "This year" or "Last year")
+          periodResolution === "year" ? undefined : -1,
+        ).map(({ text, groupBy }) => (
           <DropdownMenuItem
             key={groupBy}
             className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-base outline-0 hover:bg-neutral-200 hover:text-black dark:text-white dark:hover:bg-accent dark:hover:text-white"

@@ -25,7 +25,6 @@ const getDaysOfPeriodStatsGroupByWeeks = (
   const startDate = new Date(data[0].date);
   const lastEntry = data.at(-1);
   if (!lastEntry) {
-    // handle empty data scenario, for example:
     return [];
   }
   const endDate = new Date(lastEntry.date);

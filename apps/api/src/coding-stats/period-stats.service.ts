@@ -5,6 +5,7 @@ import { LanguagesService } from "src/languages/languages.service";
 import { PeriodStatsDtoType } from "./coding-stats.dto";
 import formatDuration from "@repo/utils/formatDuration";
 import getDaysOfPeriodStatsGroupByWeeks from "src/utils/getDaysOfPeriodStatsGroupByWeeks";
+import getDaysOfPeriodStatsGroupedByMonths from "src/utils/getDaysOfPeriodStatsGroupedByMonths";
 import getGeneralStatsOnPeriodGroupByWeeks from "src/utils/getGeneralStatsOnPeriodGroupByWeeks";
 import getMostUsedLanguageOnPeriod from "src/utils/getMostUsedLanguageOnPeriod";
 import getPeriodLanguagesPerDayGroupedByWeeks from "src/utils/getPeriodLanguagesPerDayGroupedByWeeks";
@@ -57,7 +58,8 @@ export class PeriodStatsService {
           dailyDataForPeriod,
           periodResolution,
         );
-
+      case "months":
+        return getDaysOfPeriodStatsGroupedByMonths(dailyDataForPeriod);
       default:
         break;
     }
@@ -70,6 +72,7 @@ export class PeriodStatsService {
       value: formatDuration(timeSpent),
     }));
   }
+
   async getPeriodLanguagesTime({ userId, start, end }: PeriodStatsDtoType) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
@@ -107,6 +110,7 @@ export class PeriodStatsService {
 
     return finalData;
   }
+
   async getPeriodLanguagesPerDay({
     userId,
     start,

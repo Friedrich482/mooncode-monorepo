@@ -2,11 +2,14 @@ import { LucideProps, Monitor, Moon, Sun } from "lucide-react";
 import {
   endOfMonth,
   endOfWeek,
+  endOfYear,
   startOfMonth,
   startOfWeek,
+  startOfYear,
   subDays,
   subMonths,
   subWeeks,
+  subYears,
 } from "date-fns";
 import { ChartConfig } from "@/components/ui/chart";
 import { GroupBy } from "@repo/utils/types";
@@ -32,10 +35,13 @@ export const PERIODS = [
   "Last 2 weeks",
   "This month",
   "Last month",
+  "This year",
+  "Last year",
   "Custom Range",
 ] as const;
 
 export const WEEK_PERIODS = ["Last 7 days", "This week", "Last week"];
+export const YEAR_PERIODS = ["This year", "Last year"];
 
 export const GROUP_BY_DROPDOWN_ITEMS: {
   groupBy: GroupBy;
@@ -43,6 +49,7 @@ export const GROUP_BY_DROPDOWN_ITEMS: {
 }[] = [
   { groupBy: "days", text: "Days" },
   { groupBy: "weeks", text: "Weeks" },
+  { groupBy: "months", text: "Months" },
 ];
 
 export const chartConfig = {
@@ -89,6 +96,16 @@ export const PERIODS_CONFIG = {
     start: startOfMonth(subMonths(new Date(), 1)).toLocaleDateString(),
     end: endOfMonth(subMonths(new Date(), 1)).toLocaleDateString(),
     periodResolution: "month",
+  },
+  "This year": {
+    start: startOfYear(new Date()).toLocaleDateString(),
+    end: new Date().toLocaleDateString(),
+    periodResolution: "year",
+  },
+  "Last year": {
+    start: startOfYear(subYears(new Date(), 1)).toLocaleDateString(),
+    end: endOfYear(subYears(new Date(), 1)).toLocaleDateString(),
+    periodResolution: "year",
   },
   "Custom Range": {
     start: "",
