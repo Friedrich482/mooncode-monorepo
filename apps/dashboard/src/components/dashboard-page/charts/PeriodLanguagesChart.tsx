@@ -15,18 +15,20 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { DEFAULT_COLOR, chartConfig } from "@/constants";
 import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
 import Icon from "@/components/ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { Skeleton } from "@/components/ui/skeleton";
-import languagesAttributes from "@/colors.json";
+import { chartConfig } from "@/constants";
+import getLanguageColor from "@/utils/getLanguageColor";
+import { usePeriodStore } from "@/hooks/store/periodStore";
 import useQueryPeriodLangChart from "@/hooks/useQueryPeriodLangChart";
 import { useState } from "react";
 
 const PeriodLanguagesChart = () => {
   const [isPieChartVisible, setIsPieChartVisible] = useState(true);
   const handleClick = () => setIsPieChartVisible((prev) => !prev);
+  const groupBy = usePeriodStore((state) => state.groupBy);
 
   const {
     pieChartError,
@@ -110,7 +112,9 @@ const PeriodLanguagesChart = () => {
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
-                tickFormatter={(value) => value.slice(0, 3)}
+                tickFormatter={(value) =>
+                  groupBy !== "days" ? value : value.slice(0, 3)
+                }
               />
 
               <ChartTooltip
@@ -122,9 +126,7 @@ const PeriodLanguagesChart = () => {
                 formatter={(value: string, language) =>
                   CustomChartToolTip(
                     parseInt(value),
-                    languagesAttributes[
-                      language as keyof typeof languagesAttributes
-                    ].color || DEFAULT_COLOR,
+                    getLanguageColor(language),
                     language,
                   )
                 }
@@ -146,11 +148,7 @@ const PeriodLanguagesChart = () => {
                       key={language}
                       dataKey={language}
                       stackId="a"
-                      fill={
-                        (languagesAttributes[
-                          language as keyof typeof languagesAttributes
-                        ].color as string) || DEFAULT_COLOR
-                      }
+                      fill={getLanguageColor(language)}
                       className="cursor-pointer"
                     />
                   );

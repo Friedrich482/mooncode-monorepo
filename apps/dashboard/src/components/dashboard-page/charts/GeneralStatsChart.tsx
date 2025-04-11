@@ -1,6 +1,7 @@
-import { DEFAULT_COLOR, PERIODS_CONFIG } from "@/constants";
+import { PERIODS_CONFIG } from "@/constants";
 import { Skeleton } from "@/components/ui/skeleton";
-import languagesAttributes from "@/colors.json";
+import getLanguageColor from "@/utils/getLanguageColor";
+import getLanguageName from "@/utils/getLanguageName";
 import { trpc } from "@/utils/trpc";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 
@@ -29,11 +30,8 @@ const GeneralStatsChart = () => {
   }
 
   const { avgTime, mostActiveDate, mostUsedLanguage } = data;
-  const mostUsedLanguageAttributes =
-    languagesAttributes[mostUsedLanguage as keyof typeof languagesAttributes];
-
-  const { color: mostUsedLanguageColor, name: mostUsedLanguageName } =
-    mostUsedLanguageAttributes;
+  const mostUsedLanguageColor = getLanguageColor(mostUsedLanguage);
+  const mostUsedLanguageName = getLanguageName(mostUsedLanguage);
 
   return (
     <div className="flex min-h-96 w-[45%] flex-col gap-y-3 rounded-md border border-neutral-600/50 p-3 text-2xl max-chart:w-full">
@@ -44,7 +42,7 @@ const GeneralStatsChart = () => {
       </div>
       <div className="flex flex-1 flex-row gap-x-4 max-sm:text-xl">
         <div className="flex w-1/2 flex-col justify-center gap-1 rounded-md border border-neutral-600/50 px-2 text-center">
-          <p>Most active day</p>
+          <p>Most active {groupBy?.slice(0, -1)}</p>
           <p className="font-bold text-moon/85">{mostActiveDate}</p>
         </div>
         <div className="flex w-1/2 flex-col justify-center gap-1 rounded-md border border-neutral-600/50 px-2 text-center">
@@ -53,7 +51,7 @@ const GeneralStatsChart = () => {
             <div
               className="size-5 shrink-0 rounded-sm max-sm:size-3"
               style={{
-                backgroundColor: mostUsedLanguageColor || DEFAULT_COLOR,
+                backgroundColor: mostUsedLanguageColor,
               }}
             />
             <p className="font-bold text-moon/85">{mostUsedLanguageName}</p>
