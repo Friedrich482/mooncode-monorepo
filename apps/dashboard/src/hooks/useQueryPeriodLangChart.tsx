@@ -1,5 +1,5 @@
-import { DEFAULT_COLOR, PERIODS_CONFIG } from "@/constants";
-import languagesAttributes from "@/colors.json";
+import { PERIODS_CONFIG } from "@/constants";
+import getLanguageColor from "@/utils/getLanguageColor";
 import { trpc } from "@/utils/trpc";
 import { usePeriodStore } from "./store/periodStore";
 
@@ -35,13 +35,10 @@ const useQueryPeriodLangChart = () => {
   );
 
   const pieChartData = pieChart?.map((entry) => {
-    const color =
-      languagesAttributes[
-        entry.languageName as keyof typeof languagesAttributes
-      ]?.color;
+    const color = getLanguageColor(entry.languageName);
     return {
       ...entry,
-      color: color || DEFAULT_COLOR,
+      color: color,
     };
   });
 

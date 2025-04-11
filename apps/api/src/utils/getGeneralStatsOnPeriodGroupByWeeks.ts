@@ -1,7 +1,8 @@
-import { differenceInDays, format } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { PeriodResolution } from "src/coding-stats/coding-stats.dto";
 import { PeriodStatsService } from "src/coding-stats/period-stats.service";
+import countStrictWeeks from "./countStrictWeeks";
+import { format } from "date-fns";
 import formatDuration from "@repo/utils/formatDuration";
 import getDaysOfPeriodStatsGroupByWeeks from "./getDaysOfPeriodStatsGroupByWeeks";
 import getMostUsedLanguageOnPeriod from "./getMostUsedLanguageOnPeriod";
@@ -16,9 +17,7 @@ const getGeneralStatsOnPeriodGroupByWeeks = async (
   >,
   periodResolution: PeriodResolution,
 ) => {
-  const numberOfWeeks = parseFloat(
-    ((differenceInDays(end, start) + 1) / 7).toFixed(2),
-  );
+  const numberOfWeeks = countStrictWeeks(new Date(start), new Date(end));
 
   const avgTime = formatDuration(
     (

@@ -4,14 +4,15 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { DEFAULT_COLOR, chartConfig } from "@/constants";
 import { useMemo, useState } from "react";
 import ChartTitle from "./ChartTitle";
 import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
 import { Skeleton } from "@/components/ui/skeleton";
+import { chartConfig } from "@/constants";
+import getLanguageColor from "@/utils/getLanguageColor";
+import getLanguageName from "@/utils/getLanguageName";
 import getNextDayDate from "@/utils/getNextDayDate";
 import getPrevDayDate from "@/utils/getPreviousDayDate";
-import languagesAttributes from "@/colors.json";
 import { trpc } from "@/utils/trpc";
 
 const DayLanguagesChart = () => {
@@ -44,12 +45,8 @@ const DayLanguagesChart = () => {
 
   const chartData = finalData.map((entry) => ({
     ...entry,
-    color:
-      languagesAttributes[entry.languageId as keyof typeof languagesAttributes]
-        .color || DEFAULT_COLOR,
-    languageName:
-      languagesAttributes[entry.languageId as keyof typeof languagesAttributes]
-        .name,
+    color: getLanguageColor(entry.languageId),
+    languageName: getLanguageName(entry.languageId),
   }));
 
   return (

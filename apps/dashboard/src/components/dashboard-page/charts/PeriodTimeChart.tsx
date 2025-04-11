@@ -1,4 +1,4 @@
-import { Bar, CartesianGrid, ComposedChart, Line, XAxis } from "recharts";
+import { Bar, ComposedChart, Line, XAxis } from "recharts";
 import {
   ChartContainer,
   ChartTooltip,
@@ -49,7 +49,6 @@ const PeriodTimeChart = () => {
         className="h-full flex-1 border-none"
       >
         <ComposedChart data={chartData}>
-          <CartesianGrid vertical={false} horizontal={false} />
           <XAxis
             dataKey="date"
             tickLine={false}
