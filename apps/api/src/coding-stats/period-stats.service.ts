@@ -6,8 +6,10 @@ import { PeriodStatsDtoType } from "./coding-stats.dto";
 import formatDuration from "@repo/utils/formatDuration";
 import getDaysOfPeriodStatsGroupByWeeks from "src/utils/getDaysOfPeriodStatsGroupByWeeks";
 import getDaysOfPeriodStatsGroupedByMonths from "src/utils/getDaysOfPeriodStatsGroupedByMonths";
+import getGeneralStatsOnPeriodGroupByMonths from "src/utils/getGeneralStatsOnPeriodGroupByMonths";
 import getGeneralStatsOnPeriodGroupByWeeks from "src/utils/getGeneralStatsOnPeriodGroupByWeeks";
 import getMostUsedLanguageOnPeriod from "src/utils/getMostUsedLanguageOnPeriod";
+import getPeriodLanguagesPerDayGroupedByMonths from "src/utils/getPeriodLanguagesPerDayGroupedByMonths";
 import getPeriodLanguagesPerDayGroupedByWeeks from "src/utils/getPeriodLanguagesPerDayGroupedByWeeks";
 
 @Injectable()
@@ -52,14 +54,20 @@ export class PeriodStatsService {
       end,
     );
 
+    if (dailyDataForPeriod.length === 0) {
+      return [];
+    }
+
     switch (groupBy) {
       case "weeks":
         return getDaysOfPeriodStatsGroupByWeeks(
           dailyDataForPeriod,
           periodResolution,
         );
+
       case "months":
         return getDaysOfPeriodStatsGroupedByMonths(dailyDataForPeriod);
+
       default:
         break;
     }
@@ -79,6 +87,10 @@ export class PeriodStatsService {
       start,
       end,
     );
+
+    if (dailyDataForPeriod.length === 0) {
+      return [];
+    }
 
     const totalTimeSpentOnPeriod = (
       await this.getTimeSpentOnPeriod({ userId, start, end })
@@ -124,11 +136,21 @@ export class PeriodStatsService {
       end,
     );
 
+    if (dailyDataForPeriod.length === 0) {
+      return [];
+    }
+
     switch (groupBy) {
       case "weeks":
         return getPeriodLanguagesPerDayGroupedByWeeks(
           dailyDataForPeriod,
           periodResolution,
+          this.languagesService,
+        );
+
+      case "months":
+        return getPeriodLanguagesPerDayGroupedByMonths(
+          dailyDataForPeriod,
           this.languagesService,
         );
 
@@ -163,6 +185,10 @@ export class PeriodStatsService {
       end,
     );
 
+    if (dailyDataForPeriod.length === 0) {
+      return [];
+    }
+
     switch (groupBy) {
       case "weeks":
         return getGeneralStatsOnPeriodGroupByWeeks(
@@ -173,6 +199,16 @@ export class PeriodStatsService {
           dailyDataForPeriod,
           periodResolution,
         );
+
+      case "months":
+        return getGeneralStatsOnPeriodGroupByMonths(
+          userId,
+          start,
+          end,
+          this,
+          dailyDataForPeriod,
+        );
+
       default:
         break;
     }

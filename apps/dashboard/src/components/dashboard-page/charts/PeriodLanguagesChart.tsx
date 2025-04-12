@@ -113,7 +113,9 @@ const PeriodLanguagesChart = () => {
                 tickMargin={10}
                 axisLine={false}
                 tickFormatter={(value) =>
-                  groupBy !== "days" ? value : value.slice(0, 3)
+                  groupBy === "days" || groupBy === "months"
+                    ? value.slice(0, 3)
+                    : value
                 }
               />
 
