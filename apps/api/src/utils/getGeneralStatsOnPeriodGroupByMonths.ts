@@ -2,7 +2,7 @@ import { differenceInMonths, format } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { PeriodStatsService } from "src/coding-stats/period-stats.service";
 import formatDuration from "@repo/utils/formatDuration";
-import getDaysOfPeriodStatsGroupedByMonths from "./getDaysOfPeriodStatsGroupedByMonths";
+import getDaysOfPeriodStatsGroupByMonths from "./getDaysOfPeriodStatsGroupByMonths";
 import getMostUsedLanguageOnPeriod from "./getMostUsedLanguageOnPeriod";
 
 const getGeneralStatsOnPeriodGroupByMonths = async (
@@ -25,7 +25,7 @@ const getGeneralStatsOnPeriodGroupByMonths = async (
       })
     ).rawTime / numberOfMonths,
   );
-  const monthlyDataForPeriod = getDaysOfPeriodStatsGroupedByMonths(
+  const monthlyDataForPeriod = getDaysOfPeriodStatsGroupByMonths(
     dailyDataForPeriod,
   ).map((entry) => ({
     timeSpent: entry.timeSpentBar,

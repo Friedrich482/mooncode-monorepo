@@ -9,7 +9,7 @@ import { DailyDataService } from "src/daily-data/daily-data.service";
 import { LanguagesService } from "src/languages/languages.service";
 import { PeriodResolution } from "src/coding-stats/coding-stats.dto";
 
-const getPeriodLanguagesPerDayGroupedByWeeks = async (
+const getPeriodLanguagesGroupByWeeks = async (
   data: Awaited<ReturnType<DailyDataService["findRangeDailyData"]>>,
   periodResolution: PeriodResolution,
   languagesService: LanguagesService,
@@ -97,4 +97,4 @@ const getPeriodLanguagesPerDayGroupedByWeeks = async (
   );
 };
 
-export default getPeriodLanguagesPerDayGroupedByWeeks;
+export default getPeriodLanguagesGroupByWeeks;

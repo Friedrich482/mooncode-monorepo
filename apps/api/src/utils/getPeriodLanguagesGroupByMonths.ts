@@ -2,7 +2,7 @@ import { endOfMonth, format, startOfMonth } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { LanguagesService } from "src/languages/languages.service";
 
-const getPeriodLanguagesPerDayGroupedByMonths = async (
+const getPeriodLanguagesGroupByMonths = async (
   data: Awaited<ReturnType<DailyDataService["findRangeDailyData"]>>,
   languagesService: LanguagesService,
 ) => {
@@ -70,4 +70,4 @@ const getPeriodLanguagesPerDayGroupedByMonths = async (
     }),
   );
 };
-export default getPeriodLanguagesPerDayGroupedByMonths;
+export default getPeriodLanguagesGroupByMonths;

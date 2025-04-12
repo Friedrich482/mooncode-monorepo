@@ -42,6 +42,9 @@ export const DatesDto = z
     if (input?.periodResolution === "day") {
       input.groupBy = "days";
     }
+    if (input?.periodResolution === "week" && input.groupBy === "months") {
+      input.groupBy = "weeks";
+    }
     return input;
   });
 

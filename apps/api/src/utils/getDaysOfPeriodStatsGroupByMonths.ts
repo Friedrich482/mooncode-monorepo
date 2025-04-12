@@ -2,7 +2,7 @@ import { endOfMonth, format, startOfMonth } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import formatDuration from "@repo/utils/formatDuration";
 
-const getDaysOfPeriodStatsGroupedByMonths = (
+const getDaysOfPeriodStatsGroupByMonths = (
   data: Awaited<ReturnType<DailyDataService["findRangeDailyData"]>>,
 ) => {
   const monthlyMap = new Map<
@@ -10,9 +10,8 @@ const getDaysOfPeriodStatsGroupedByMonths = (
     { month: string; timeSpent: number; startDate: Date; endDate: Date }
   >();
   const lastEntry = data.at(-1);
-  if (!lastEntry) {
-    return [];
-  }
+  if (!lastEntry) return [];
+
   const endDate = new Date(lastEntry.date);
   data.forEach((entry) => {
     const date = new Date(entry.date);
@@ -43,4 +42,4 @@ const getDaysOfPeriodStatsGroupedByMonths = (
   }));
 };
 
-export default getDaysOfPeriodStatsGroupedByMonths;
+export default getDaysOfPeriodStatsGroupByMonths;
