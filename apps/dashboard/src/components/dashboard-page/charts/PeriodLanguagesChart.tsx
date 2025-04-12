@@ -20,6 +20,7 @@ import Icon from "@/components/ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { Skeleton } from "@/components/ui/skeleton";
 import { chartConfig } from "@/constants";
+import { formatTickForGroupBy } from "@/utils/formatTickForGroupBy";
 import getLanguageColor from "@/utils/getLanguageColor";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 import useQueryPeriodLangChart from "@/hooks/useQueryPeriodLangChart";
@@ -112,9 +113,7 @@ const PeriodLanguagesChart = () => {
                 tickLine={false}
                 tickMargin={10}
                 axisLine={false}
-                tickFormatter={(value) =>
-                  groupBy !== "days" ? value : value.slice(0, 3)
-                }
+                tickFormatter={(value) => formatTickForGroupBy(value, groupBy)}
               />
 
               <ChartTooltip

@@ -35,12 +35,15 @@ export const DatesDto = z
     end: dateStringDto,
     // TODO remove the optionality later
     groupBy: z.enum(["days", "weeks", "months"]).optional(),
-    periodResolution: z.enum(["day", "week", "month"]).optional(),
+    periodResolution: z.enum(["day", "week", "month", "year"]).optional(),
   })
   //  this prevent the groupBy attribute to be "weeks" for periods like "Last 7 days", "This week" or "Last week"
   .transform((input) => {
     if (input?.periodResolution === "day") {
       input.groupBy = "days";
+    }
+    if (input?.periodResolution === "week" && input.groupBy === "months") {
+      input.groupBy = "weeks";
     }
     return input;
   });

@@ -9,6 +9,7 @@ import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
 import GroupByDropDown from "../GroupByDropDown";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatTickForGroupBy } from "@/utils/formatTickForGroupBy";
 import { trpc } from "@/utils/trpc";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 
@@ -54,9 +55,7 @@ const PeriodTimeChart = () => {
             tickLine={false}
             tickMargin={10}
             axisLine={false}
-            tickFormatter={(date) =>
-              groupBy !== "days" ? date : date.slice(0, 3)
-            }
+            tickFormatter={(value) => formatTickForGroupBy(value, groupBy)}
           />
           <ChartTooltip
             content={<ChartTooltipContent labelClassName="font-semibold" />}

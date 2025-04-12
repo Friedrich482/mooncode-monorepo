@@ -4,10 +4,13 @@ import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
 import { PeriodStatsDtoType } from "./coding-stats.dto";
 import formatDuration from "@repo/utils/formatDuration";
+import getDaysOfPeriodStatsGroupByMonths from "src/utils/getDaysOfPeriodStatsGroupByMonths";
 import getDaysOfPeriodStatsGroupByWeeks from "src/utils/getDaysOfPeriodStatsGroupByWeeks";
+import getGeneralStatsOnPeriodGroupByMonths from "src/utils/getGeneralStatsOnPeriodGroupByMonths";
 import getGeneralStatsOnPeriodGroupByWeeks from "src/utils/getGeneralStatsOnPeriodGroupByWeeks";
 import getMostUsedLanguageOnPeriod from "src/utils/getMostUsedLanguageOnPeriod";
-import getPeriodLanguagesPerDayGroupedByWeeks from "src/utils/getPeriodLanguagesPerDayGroupedByWeeks";
+import getPeriodLanguagesGroupByMonths from "src/utils/getPeriodLanguagesGroupByMonths";
+import getPeriodLanguagesGroupByWeeks from "src/utils/getPeriodLanguagesGroupByWeeks";
 
 @Injectable()
 export class PeriodStatsService {
@@ -51,12 +54,17 @@ export class PeriodStatsService {
       end,
     );
 
+    if (dailyDataForPeriod.length === 0) return [];
+
     switch (groupBy) {
       case "weeks":
         return getDaysOfPeriodStatsGroupByWeeks(
           dailyDataForPeriod,
           periodResolution,
         );
+
+      case "months":
+        return getDaysOfPeriodStatsGroupByMonths(dailyDataForPeriod);
 
       default:
         break;
@@ -70,12 +78,15 @@ export class PeriodStatsService {
       value: formatDuration(timeSpent),
     }));
   }
+
   async getPeriodLanguagesTime({ userId, start, end }: PeriodStatsDtoType) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
       start,
       end,
     );
+
+    if (dailyDataForPeriod.length === 0) return [];
 
     const totalTimeSpentOnPeriod = (
       await this.getTimeSpentOnPeriod({ userId, start, end })
@@ -107,6 +118,7 @@ export class PeriodStatsService {
 
     return finalData;
   }
+
   async getPeriodLanguagesPerDay({
     userId,
     start,
@@ -120,11 +132,19 @@ export class PeriodStatsService {
       end,
     );
 
+    if (dailyDataForPeriod.length === 0) return [];
+
     switch (groupBy) {
       case "weeks":
-        return getPeriodLanguagesPerDayGroupedByWeeks(
+        return getPeriodLanguagesGroupByWeeks(
           dailyDataForPeriod,
           periodResolution,
+          this.languagesService,
+        );
+
+      case "months":
+        return getPeriodLanguagesGroupByMonths(
+          dailyDataForPeriod,
           this.languagesService,
         );
 
@@ -159,6 +179,13 @@ export class PeriodStatsService {
       end,
     );
 
+    if (dailyDataForPeriod.length === 0)
+      return {
+        avgTime: formatDuration(0),
+        mostActiveDate: new Date().toLocaleDateString(),
+        mostUsedLanguage: "other",
+      };
+
     switch (groupBy) {
       case "weeks":
         return getGeneralStatsOnPeriodGroupByWeeks(
@@ -169,6 +196,16 @@ export class PeriodStatsService {
           dailyDataForPeriod,
           periodResolution,
         );
+
+      case "months":
+        return getGeneralStatsOnPeriodGroupByMonths(
+          userId,
+          start,
+          end,
+          this,
+          dailyDataForPeriod,
+        );
+
       default:
         break;
     }
