@@ -4,7 +4,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { PERIODS_CONFIG, WEEK_PERIODS, chartConfig } from "@/constants";
+import { PERIODS_CONFIG, chartConfig } from "@/constants";
 import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
 import GroupByDropDown from "../GroupByDropDown";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
@@ -16,18 +16,26 @@ import { usePeriodStore } from "@/hooks/store/periodStore";
 const PeriodTimeChart = () => {
   const period = usePeriodStore((state) => state.period);
   const groupBy = usePeriodStore((state) => state.groupBy);
+  const customRange = usePeriodStore((state) => state.customRange);
 
   const {
     data: chartData,
     error,
     isLoading,
   } = trpc.codingStats.getDaysOfPeriodStats.useQuery(
-    {
-      start: PERIODS_CONFIG[period].start,
-      end: PERIODS_CONFIG[period].end,
-      groupBy,
-      periodResolution: PERIODS_CONFIG[period].periodResolution,
-    },
+    period === "Custom Range"
+      ? {
+          start: customRange.start,
+          end: customRange.end,
+          groupBy: groupBy,
+          periodResolution: customRange.periodResolution,
+        }
+      : {
+          start: PERIODS_CONFIG[period].start,
+          end: PERIODS_CONFIG[period].end,
+          groupBy,
+          periodResolution: PERIODS_CONFIG[period].periodResolution,
+        },
     {
       refetchOnWindowFocus: true,
     },
@@ -44,7 +52,7 @@ const PeriodTimeChart = () => {
 
   return (
     <div className="relative z-0 flex min-h-96 w-[45%] flex-col rounded-md border border-neutral-600/50 max-chart:w-full">
-      {!WEEK_PERIODS.includes(period) && <GroupByDropDown />}
+      <GroupByDropDown />
       <ChartContainer
         config={chartConfig}
         className="h-full flex-1 border-none"

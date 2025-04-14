@@ -6,16 +6,22 @@ import { usePeriodStore } from "./store/periodStore";
 const useQueryPeriodLangChart = () => {
   const period = usePeriodStore((state) => state.period);
   const groupBy = usePeriodStore((state) => state.groupBy);
+  const customRange = usePeriodStore((state) => state.customRange);
 
   const {
     data: pieChart,
     error: pieChartError,
     isLoading: isLoadingPie,
   } = trpc.codingStats.getPeriodLanguagesTime.useQuery(
-    {
-      start: PERIODS_CONFIG[period].start,
-      end: PERIODS_CONFIG[period].end,
-    },
+    period === "Custom Range"
+      ? {
+          start: customRange.start,
+          end: customRange.end,
+        }
+      : {
+          start: PERIODS_CONFIG[period].start,
+          end: PERIODS_CONFIG[period].end,
+        },
     {
       refetchOnWindowFocus: true,
     },
@@ -25,12 +31,19 @@ const useQueryPeriodLangChart = () => {
     error: barChartError,
     isLoading: isLoadingBar,
   } = trpc.codingStats.getPeriodLanguagesPerDay.useQuery(
-    {
-      start: PERIODS_CONFIG[period].start,
-      end: PERIODS_CONFIG[period].end,
-      groupBy,
-      periodResolution: PERIODS_CONFIG[period].periodResolution,
-    },
+    period === "Custom Range"
+      ? {
+          start: customRange.start,
+          end: customRange.end,
+          groupBy: groupBy,
+          periodResolution: customRange.periodResolution,
+        }
+      : {
+          start: PERIODS_CONFIG[period].start,
+          end: PERIODS_CONFIG[period].end,
+          groupBy,
+          periodResolution: PERIODS_CONFIG[period].periodResolution,
+        },
     { refetchOnWindowFocus: true },
   );
 

@@ -8,13 +8,19 @@ import { usePeriodStore } from "@/hooks/store/periodStore";
 const TimeSpentOnPeriod = () => {
   // TODO  this should be an url state
   const period = usePeriodStore((state) => state.period);
+  const customRange = usePeriodStore((state) => state.customRange);
 
   const { isLoading, error, data } =
     trpc.codingStats.getTimeSpentOnPeriod.useQuery(
-      {
-        start: PERIODS_CONFIG[period].start,
-        end: PERIODS_CONFIG[period].end,
-      },
+      period === "Custom Range"
+        ? {
+            start: customRange.start,
+            end: customRange.end,
+          }
+        : {
+            start: PERIODS_CONFIG[period].start,
+            end: PERIODS_CONFIG[period].end,
+          },
       { refetchOnWindowFocus: true },
     );
 

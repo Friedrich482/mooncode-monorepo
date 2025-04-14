@@ -27,6 +27,7 @@ export default tseslint.config(
       "no-throw-literal": "warn",
       "no-unused-vars": "error",
       "sort-imports": "error",
+      "no-console": ["error", { allow: ["warn", "error"] }],
     },
   },
 );

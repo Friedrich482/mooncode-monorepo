@@ -108,8 +108,8 @@ export const PERIODS_CONFIG = {
     periodResolution: "year",
   },
   "Custom Range": {
-    start: "",
-    end: "",
+    start: new Date().toLocaleDateString(),
+    end: new Date().toLocaleDateString(),
     periodResolution: "month",
   },
 } as const;

@@ -8,15 +8,23 @@ import { usePeriodStore } from "@/hooks/store/periodStore";
 const GeneralStatsChart = () => {
   const period = usePeriodStore((state) => state.period);
   const groupBy = usePeriodStore((state) => state.groupBy);
+  const customRange = usePeriodStore((state) => state.customRange);
 
   const { data, error, isLoading } =
     trpc.codingStats.getPeriodGeneralStats.useQuery(
-      {
-        start: PERIODS_CONFIG[period].start,
-        end: PERIODS_CONFIG[period].end,
-        groupBy,
-        periodResolution: PERIODS_CONFIG[period].periodResolution,
-      },
+      period === "Custom Range"
+        ? {
+            start: customRange.start,
+            end: customRange.end,
+            groupBy: groupBy,
+            periodResolution: customRange.periodResolution,
+          }
+        : {
+            start: PERIODS_CONFIG[period].start,
+            end: PERIODS_CONFIG[period].end,
+            groupBy,
+            periodResolution: PERIODS_CONFIG[period].periodResolution,
+          },
       { refetchOnWindowFocus: true },
     );
 
