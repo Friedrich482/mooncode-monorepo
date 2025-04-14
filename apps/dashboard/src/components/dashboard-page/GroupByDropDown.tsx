@@ -3,7 +3,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 import { GROUP_BY_DROPDOWN_ITEMS, PERIODS_CONFIG } from "@/constants";
 import { Button } from "../ui/button";
 import { Group } from "lucide-react";
@@ -35,10 +35,7 @@ const GroupByDropDown = () => {
           </span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="z-10 w-40 translate-y-1 cursor-pointer rounded-md border-[1px] border-neutral-700 bg-neutral-100 p-2 dark:bg-neutral-950"
-        align="start"
-      >
+      <DropdownMenuContent className="w-40 p-2" align="start">
         {GROUP_BY_DROPDOWN_ITEMS.slice(
           0,
           // we show "Months only if the periodResolution is "year" (typically "This year" or "Last year")
@@ -46,7 +43,7 @@ const GroupByDropDown = () => {
         ).map(({ text, groupBy }) => (
           <DropdownMenuItem
             key={groupBy}
-            className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-1 text-base outline-0 hover:bg-neutral-200 hover:text-black dark:text-white dark:hover:bg-accent dark:hover:text-white"
+            className="cursor-pointer rounded-md py-1 text-base"
             onClick={() => setGroupBy(groupBy)}
           >
             {text}
