@@ -38,12 +38,12 @@ const PeriodDropDown = () => {
     }
     setPeriod(item);
     // if the period is a week_period, like "Last 7 days" we force the groupBy to be "days"
-    if (WEEK_PERIODS.includes(period)) {
+    if (WEEK_PERIODS.includes(item)) {
       setGroupBy("days");
       return;
     }
     // if the item is not a year period, it is in the middle (2 weeks, one month)
-    else if (!YEAR_PERIODS.includes(period) && groupBy === "months") {
+    else if (!YEAR_PERIODS.includes(item) && groupBy === "months") {
       setGroupBy("weeks");
       return;
     }
@@ -76,10 +76,10 @@ const PeriodDropDown = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-40 p-2" align="start">
-        {PERIODS.map((item, index) => {
-          const isLastItem = index === PERIODS.length - 1;
+        {PERIODS.map((item) => {
+          const isCustomRange = item === "Custom Range";
 
-          if (!isLastItem) {
+          if (!isCustomRange) {
             return (
               <DropdownMenuItem
                 key={item}
