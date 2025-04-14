@@ -58,7 +58,7 @@ function CalendarPopover<T extends "single" | "range">({
                 if (e.from && e.to) {
                   setTimeout(() => {
                     setIsPopoverOpen(false);
-                  }, 600);
+                  }, 800);
                 }
               }
             }}

@@ -4,24 +4,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  PERIODS,
-  PERIODS_CONFIG,
-  WEEK_PERIODS,
-  YEAR_PERIODS,
-} from "@/constants";
+import { PERIODS, WEEK_PERIODS, YEAR_PERIODS } from "@/constants";
 import { useEffect, useMemo, useState } from "react";
 import { Button } from "../ui/button";
 import CalendarPopover from "../CalendarPopover";
 import { ChevronDown } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { Period } from "@/types-schemas";
+import { differenceInDays } from "date-fns";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 
 const PeriodDropDown = () => {
   const period = usePeriodStore((state) => state.period);
+  const groupBy = usePeriodStore((state) => state.groupBy);
   const setPeriod = usePeriodStore((state) => state.setPeriod);
   const setGroupBy = usePeriodStore((state) => state.setGroupBy);
+  const setCustomRange = usePeriodStore((state) => state.setCustomRange);
 
   const [dateRange, setDateRange] = useState<DateRange>({
     from: new Date(),
@@ -35,30 +33,37 @@ const PeriodDropDown = () => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   const handleClick = (item: Period) => {
-    if (item !== "Custom Range") {
-      setPeriod(item);
-    } else {
+    if (item === "Custom Range") {
       setIsPopoverOpen((prev) => !prev);
-      if (start && end) {
-        PERIODS_CONFIG["Custom Range"].start = start;
-        PERIODS_CONFIG["Custom Range"].end = end;
-        setPeriod("Custom Range");
-        return;
-      }
     }
-    // we force that state to avoid inconsistencies in the data fetching and displaying
+    setPeriod(item);
     // if the period is a week_period, like "Last 7 days" we force the groupBy to be "days"
-    if (WEEK_PERIODS.includes(item)) {
+    if (WEEK_PERIODS.includes(period)) {
       setGroupBy("days");
       return;
     }
     // if the item is not a year period, it is in the middle (2 weeks, one month)
-    else if (!YEAR_PERIODS.includes(item)) {
+    else if (!YEAR_PERIODS.includes(period) && groupBy === "months") {
       setGroupBy("weeks");
       return;
     }
   };
-  useEffect(() => console.log(start, end), [start, end]);
+
+  useEffect(() => {
+    if (period === "Custom Range") {
+      if (start && end) {
+        const numberOfDays = Math.abs(differenceInDays(start, end));
+        const periodResolution =
+          numberOfDays < 7 ? "day" : numberOfDays < 31 ? "week" : "month";
+        setCustomRange({
+          start,
+          end,
+          periodResolution,
+        });
+      }
+    }
+  }, [start, end]);
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

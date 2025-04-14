@@ -1,4 +1,3 @@
-import { GroupBy, PeriodResolution } from "@repo/utils/types";
 import { LucideProps, Monitor, Moon, Sun } from "lucide-react";
 import {
   endOfMonth,
@@ -13,7 +12,7 @@ import {
   subYears,
 } from "date-fns";
 import { ChartConfig } from "@/components/ui/chart";
-import { Period } from "./types-schemas";
+import { GroupBy } from "@repo/utils/types";
 import { Theme } from "@/components/themeProvider";
 
 export const THEME_DROPDOWN_ITEMS: {
@@ -62,15 +61,7 @@ export const chartConfig = {
 
 export const DEFAULT_COLOR = "HSL(334, 90%, 51%)";
 
-export const PERIODS_CONFIG: Record<
-  Period,
-  {
-    // TODO use the dateStringDto to get the correct type for both start and end
-    start: string;
-    end: string;
-    periodResolution: PeriodResolution;
-  }
-> = {
+export const PERIODS_CONFIG = {
   "Last 7 days": {
     start: subDays(new Date(), 6).toLocaleDateString(),
     end: new Date().toLocaleDateString(),
@@ -117,8 +108,8 @@ export const PERIODS_CONFIG: Record<
     periodResolution: "year",
   },
   "Custom Range": {
-    start: "",
-    end: "",
+    start: new Date().toLocaleDateString(),
+    end: new Date().toLocaleDateString(),
     periodResolution: "month",
   },
-};
+} as const;
