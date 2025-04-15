@@ -3,7 +3,15 @@ import { Calendar } from "./ui/calendar";
 import type { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 
-type CalendarPopoverProps<T extends "single" | "range"> = {
+function CalendarPopover<T extends "single" | "range">({
+  mode,
+  isPopoverOpen,
+  setIsPopoverOpen,
+  popoverTriggerContent,
+  date,
+  setDate,
+  className,
+}: {
   mode: T;
   isPopoverOpen: boolean;
   setIsPopoverOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,17 +21,7 @@ type CalendarPopoverProps<T extends "single" | "range"> = {
     React.SetStateAction<T extends "single" ? Date : DateRange>
   >;
   className?: string;
-};
-
-function CalendarPopover<T extends "single" | "range">({
-  mode,
-  isPopoverOpen,
-  setIsPopoverOpen,
-  popoverTriggerContent,
-  date,
-  setDate,
-  className,
-}: CalendarPopoverProps<T>) {
+}) {
   return (
     <Popover open={isPopoverOpen} modal={true} onOpenChange={setIsPopoverOpen}>
       <PopoverTrigger asChild>{popoverTriggerContent}</PopoverTrigger>
