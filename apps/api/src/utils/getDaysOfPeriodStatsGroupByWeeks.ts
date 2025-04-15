@@ -34,6 +34,19 @@ const getDaysOfPeriodStatsGroupByWeeks = (
     let weekStart = startOfWeek(date);
     let weekEnd = endOfWeek(date);
 
+    if (periodResolution === "week") {
+      // adjust week boundaries to make sure that the first "week" starts with the first day of the range
+      // and the last "week" ends with the last day of the range
+
+      if (date <= endOfWeek(startDate)) {
+        weekStart = startDate;
+      }
+
+      if (date >= startOfWeek(endDate)) {
+        weekEnd = endDate;
+      }
+    }
+
     if (periodResolution === "month") {
       const monthStart = startOfMonth(startDate);
       const monthEnd = endOfMonth(endDate);
@@ -46,17 +59,8 @@ const getDaysOfPeriodStatsGroupByWeeks = (
             : weekEnd;
     }
 
-    if (periodResolution === "week") {
-      // adjust week boundaries to make sure that the first "week" starts with the first day of the range
-      // and the last "week" ends with the last day of the range
-
-      if (date <= endOfWeek(startDate)) {
-        weekStart = startDate;
-      }
-
-      if (date >= startOfWeek(endDate)) {
-        weekEnd = endDate;
-      }
+    if (periodResolution === "year") {
+      weekEnd = index >= data.length - 6 ? endDate : weekEnd;
     }
 
     const weekKey = format(weekStart, "yyyy-MM-dd");
