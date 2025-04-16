@@ -16,9 +16,9 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
+import ErrorBoundary from "@/components/suspense/ErrorBoundary";
 import Icon from "@/components/ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
-import { Skeleton } from "@/components/ui/skeleton";
 import { chartConfig } from "@/constants";
 import { formatTickForGroupBy } from "@/utils/formatTickForGroupBy";
 import getLanguageColor from "@/utils/getLanguageColor";
@@ -31,25 +31,11 @@ const PeriodLanguagesChart = () => {
   const handleClick = () => setIsPieChartVisible((prev) => !prev);
   const groupBy = usePeriodStore((state) => state.groupBy);
 
-  const {
-    pieChartError,
-    barChartError,
-    isLoadingBar,
-    isLoadingPie,
-    pieChartData,
-    barChartData,
-  } = useQueryPeriodLangChart();
+  const { pieChartError, barChartError, pieChartData, barChartData } =
+    useQueryPeriodLangChart();
 
-  if (pieChartError || barChartError) {
-    const error = pieChartError || barChartError;
-    return (
-      <span className="text-red-500">An error occurred: {error?.message}</span>
-    );
-  }
-
-  if (isLoadingPie || isLoadingBar) {
-    return <Skeleton className="h-[24rem] w-[45%] max-chart:w-full" />;
-  }
+  if (pieChartError) return <ErrorBoundary error={pieChartError} />;
+  if (barChartError) return <ErrorBoundary error={barChartError} />;
 
   // ! Don't try to refactor the two charts and put them in their own
   // ! component, it is not supported by recharts

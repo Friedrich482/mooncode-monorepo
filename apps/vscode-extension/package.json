@@ -70,10 +70,10 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
-    "@repo/utils": "*",
     "@repo/trpc": "*",
-    "@trpc/client": "^10.45.2",
-    "@trpc/server": "^10.45.2",
+    "@repo/utils": "*",
+    "@trpc/client": "^11.1.0",
+    "@trpc/server": "^11.1.0",
     "zod": "^3.24.2"
   }
 }

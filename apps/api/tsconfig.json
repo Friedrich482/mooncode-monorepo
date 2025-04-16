@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
+    "composite": true,
     "module": "commonjs",
     "declaration": true,
+    "declarationMap": true,
     "removeComments": true,
     "moduleResolution": "node10",
     "emitDecoratorMetadata": true,

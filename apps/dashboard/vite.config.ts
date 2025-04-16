@@ -9,15 +9,11 @@ export default defineConfig({
     port: 4208,
   },
   optimizeDeps: {
-    include: ["react", "react-dom", "@tanstack/react-query"],
+    include: ["react", "react-dom"],
   },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
-      "@tanstack/react-query": path.resolve(
-        __dirname,
-        "./node_modules/@tanstack/react-query",
-      ),
     },
     dedupe: ["react", "react-dom"],
   },

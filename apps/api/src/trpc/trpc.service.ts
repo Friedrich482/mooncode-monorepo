@@ -1,23 +1,26 @@
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { TRPCError, initTRPC } from "@trpc/server";
-import { CreateExpressContextOptions } from "@trpc/server/adapters/express";
 import { EnvService } from "src/env/env.service";
 import { JwtPayloadDtoType } from "src/types";
 import { JwtService } from "@nestjs/jwt";
 import superjson from "superjson";
 
-type TrpcContext = CreateExpressContextOptions & {
+export type TrpcContext = {
+  req: trpcExpress.CreateExpressContextOptions["req"];
+  res: trpcExpress.CreateExpressContextOptions["res"];
   user?: Pick<JwtPayloadDtoType, "sub" | "username">;
 };
+
 export const createContext = async (
   opts: trpcExpress.CreateExpressContextOptions,
-) => {
+): Promise<TrpcContext> => {
   return {
     req: opts.req,
     res: opts.res,
   };
 };
+
 @Injectable()
 export class TrpcService {
   trpc;

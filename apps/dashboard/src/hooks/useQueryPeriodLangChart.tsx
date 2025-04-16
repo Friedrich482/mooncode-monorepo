@@ -1,50 +1,49 @@
 import { PERIODS_CONFIG } from "@/constants";
 import getLanguageColor from "@/utils/getLanguageColor";
-import { trpc } from "@/utils/trpc";
 import { usePeriodStore } from "./store/periodStore";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/utils/trpc";
 
 const useQueryPeriodLangChart = () => {
   const period = usePeriodStore((state) => state.period);
   const groupBy = usePeriodStore((state) => state.groupBy);
   const customRange = usePeriodStore((state) => state.customRange);
 
-  const {
-    data: pieChart,
-    error: pieChartError,
-    isLoading: isLoadingPie,
-  } = trpc.codingStats.getPeriodLanguagesTime.useQuery(
-    period === "Custom Range"
-      ? {
-          start: customRange.start,
-          end: customRange.end,
-        }
-      : {
-          start: PERIODS_CONFIG[period].start,
-          end: PERIODS_CONFIG[period].end,
-        },
-    {
-      refetchOnWindowFocus: true,
-    },
+  const trpc = useTRPC();
+  const { data: pieChart, error: pieChartError } = useSuspenseQuery(
+    trpc.codingStats.getPeriodLanguagesTime.queryOptions(
+      period === "Custom Range"
+        ? {
+            start: customRange.start,
+            end: customRange.end,
+          }
+        : {
+            start: PERIODS_CONFIG[period].start,
+            end: PERIODS_CONFIG[period].end,
+          },
+      {
+        refetchOnWindowFocus: true,
+      },
+    ),
   );
-  const {
-    data: barChartData,
-    error: barChartError,
-    isLoading: isLoadingBar,
-  } = trpc.codingStats.getPeriodLanguagesPerDay.useQuery(
-    period === "Custom Range"
-      ? {
-          start: customRange.start,
-          end: customRange.end,
-          groupBy: groupBy,
-          periodResolution: customRange.periodResolution,
-        }
-      : {
-          start: PERIODS_CONFIG[period].start,
-          end: PERIODS_CONFIG[period].end,
-          groupBy,
-          periodResolution: PERIODS_CONFIG[period].periodResolution,
-        },
-    { refetchOnWindowFocus: true },
+
+  const { data: barChartData, error: barChartError } = useSuspenseQuery(
+    trpc.codingStats.getPeriodLanguagesPerDay.queryOptions(
+      period === "Custom Range"
+        ? {
+            start: customRange.start,
+            end: customRange.end,
+            groupBy: groupBy,
+            periodResolution: customRange.periodResolution,
+          }
+        : {
+            start: PERIODS_CONFIG[period].start,
+            end: PERIODS_CONFIG[period].end,
+            groupBy,
+            periodResolution: PERIODS_CONFIG[period].periodResolution,
+          },
+      { refetchOnWindowFocus: true },
+    ),
   );
 
   const pieChartData = pieChart?.map((entry) => {
@@ -58,10 +57,8 @@ const useQueryPeriodLangChart = () => {
   return {
     pieChartData,
     pieChartError,
-    isLoadingPie,
     barChartData,
     barChartError,
-    isLoadingBar,
   };
 };
 
