@@ -7,7 +7,7 @@ import {
 import { useMemo, useState } from "react";
 import ChartTitle from "./ChartTitle";
 import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
-import { Skeleton } from "@/components/ui/skeleton";
+import ErrorBoundary from "@/components/suspense/ErrorBoundary";
 import { chartConfig } from "@/constants";
 import getLanguageColor from "@/utils/getLanguageColor";
 import getLanguageName from "@/utils/getLanguageName";
@@ -24,7 +24,7 @@ const DayLanguagesChart = () => {
   const handleChevronRightClick = () => setDate((prev) => getNextDayDate(prev));
 
   const trpc = useTRPC();
-  const { data, error, isLoading } = useSuspenseQuery(
+  const { data, error } = useSuspenseQuery(
     trpc.codingStats.getDailyStatsForChart.queryOptions(
       {
         dateString: dateString,
@@ -35,14 +35,7 @@ const DayLanguagesChart = () => {
     ),
   );
 
-  if (error) {
-    return (
-      <span className="text-red-500">An error occurred: {error.message}</span>
-    );
-  }
-  if (isLoading) {
-    return <Skeleton className="h-[24rem] w-[45%] max-chart:w-full" />;
-  }
+  if (error) return <ErrorBoundary error={error} />;
 
   const { finalData, formattedTotalTimeSpent, dateLabel: displayDate } = data;
 

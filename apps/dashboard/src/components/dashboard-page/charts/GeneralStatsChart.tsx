@@ -1,5 +1,5 @@
+import ErrorBoundary from "@/components/suspense/ErrorBoundary";
 import { PERIODS_CONFIG } from "@/constants";
-import { Skeleton } from "@/components/ui/skeleton";
 import getLanguageColor from "@/utils/getLanguageColor";
 import getLanguageName from "@/utils/getLanguageName";
 import { usePeriodStore } from "@/hooks/store/periodStore";
@@ -13,7 +13,7 @@ const GeneralStatsChart = () => {
 
   const trpc = useTRPC();
 
-  const { data, error, isLoading } = useSuspenseQuery(
+  const { data, error } = useSuspenseQuery(
     trpc.codingStats.getPeriodGeneralStats.queryOptions(
       period === "Custom Range"
         ? {
@@ -32,14 +32,7 @@ const GeneralStatsChart = () => {
     ),
   );
 
-  if (error) {
-    return (
-      <span className="text-red-500">An error occurred: {error.message}</span>
-    );
-  }
-  if (isLoading) {
-    return <Skeleton className="h-[24rem] w-[45%] max-chart:w-full" />;
-  }
+  if (error) return <ErrorBoundary error={error} />;
 
   const { avgTime, mostActiveDate, mostUsedLanguage } = data;
   const mostUsedLanguageColor = getLanguageColor(mostUsedLanguage);

@@ -1,7 +1,7 @@
 import { PERIODS_CONFIG } from "@/constants";
 import getLanguageColor from "@/utils/getLanguageColor";
 import { usePeriodStore } from "./store/periodStore";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
 
 const useQueryPeriodLangChart = () => {
@@ -10,11 +10,7 @@ const useQueryPeriodLangChart = () => {
   const customRange = usePeriodStore((state) => state.customRange);
 
   const trpc = useTRPC();
-  const {
-    data: pieChart,
-    error: pieChartError,
-    isLoading: isLoadingPie,
-  } = useQuery(
+  const { data: pieChart, error: pieChartError } = useSuspenseQuery(
     trpc.codingStats.getPeriodLanguagesTime.queryOptions(
       period === "Custom Range"
         ? {
@@ -31,11 +27,7 @@ const useQueryPeriodLangChart = () => {
     ),
   );
 
-  const {
-    data: barChartData,
-    error: barChartError,
-    isLoading: isLoadingBar,
-  } = useQuery(
+  const { data: barChartData, error: barChartError } = useSuspenseQuery(
     trpc.codingStats.getPeriodLanguagesPerDay.queryOptions(
       period === "Custom Range"
         ? {
@@ -65,10 +57,8 @@ const useQueryPeriodLangChart = () => {
   return {
     pieChartData,
     pieChartError,
-    isLoadingPie,
     barChartData,
     barChartError,
-    isLoadingBar,
   };
 };
 
