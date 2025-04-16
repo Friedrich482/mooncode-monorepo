@@ -10,35 +10,40 @@ import GroupByDropDown from "../GroupByDropDown";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatTickForGroupBy } from "@/utils/formatTickForGroupBy";
-import { trpc } from "@/utils/trpc";
 import { usePeriodStore } from "@/hooks/store/periodStore";
+import { useQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/utils/trpc";
 
 const PeriodTimeChart = () => {
   const period = usePeriodStore((state) => state.period);
   const groupBy = usePeriodStore((state) => state.groupBy);
   const customRange = usePeriodStore((state) => state.customRange);
+  const trpc = useTRPC();
 
   const {
     data: chartData,
     error,
     isLoading,
-  } = trpc.codingStats.getDaysOfPeriodStats.useQuery(
-    period === "Custom Range"
-      ? {
-          start: customRange.start,
-          end: customRange.end,
-          groupBy: groupBy,
-          periodResolution: customRange.periodResolution,
-        }
-      : {
-          start: PERIODS_CONFIG[period].start,
-          end: PERIODS_CONFIG[period].end,
-          groupBy,
-          periodResolution: PERIODS_CONFIG[period].periodResolution,
-        },
-    {
-      refetchOnWindowFocus: true,
-    },
+  } = useQuery(
+    trpc.codingStats.getDaysOfPeriodStats.queryOptions(
+      period === "Custom Range"
+        ? {
+            start: customRange.start,
+            end: customRange.end,
+            groupBy: groupBy,
+            periodResolution: customRange.periodResolution,
+          }
+        : {
+            start: PERIODS_CONFIG[period].start,
+            end: PERIODS_CONFIG[period].end,
+            groupBy,
+            periodResolution: PERIODS_CONFIG[period].periodResolution,
+          },
+
+      {
+        refetchOnWindowFocus: true,
+      },
+    ),
   );
 
   if (error) {

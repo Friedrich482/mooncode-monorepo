@@ -2,16 +2,19 @@ import { PERIODS_CONFIG } from "@/constants";
 import { Skeleton } from "@/components/ui/skeleton";
 import getLanguageColor from "@/utils/getLanguageColor";
 import getLanguageName from "@/utils/getLanguageName";
-import { trpc } from "@/utils/trpc";
 import { usePeriodStore } from "@/hooks/store/periodStore";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/utils/trpc";
 
 const GeneralStatsChart = () => {
   const period = usePeriodStore((state) => state.period);
   const groupBy = usePeriodStore((state) => state.groupBy);
   const customRange = usePeriodStore((state) => state.customRange);
 
-  const { data, error, isLoading } =
-    trpc.codingStats.getPeriodGeneralStats.useQuery(
+  const trpc = useTRPC();
+
+  const { data, error, isLoading } = useSuspenseQuery(
+    trpc.codingStats.getPeriodGeneralStats.queryOptions(
       period === "Custom Range"
         ? {
             start: customRange.start,
@@ -26,7 +29,8 @@ const GeneralStatsChart = () => {
             periodResolution: PERIODS_CONFIG[period].periodResolution,
           },
       { refetchOnWindowFocus: true },
-    );
+    ),
+  );
 
   if (error) {
     return (

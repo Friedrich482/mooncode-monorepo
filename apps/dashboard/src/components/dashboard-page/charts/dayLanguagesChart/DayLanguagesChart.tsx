@@ -13,7 +13,8 @@ import getLanguageColor from "@/utils/getLanguageColor";
 import getLanguageName from "@/utils/getLanguageName";
 import getNextDayDate from "@/utils/getNextDayDate";
 import getPrevDayDate from "@/utils/getPreviousDayDate";
-import { trpc } from "@/utils/trpc";
+import { useSuspenseQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/utils/trpc";
 
 const DayLanguagesChart = () => {
   const [date, setDate] = useState(new Date());
@@ -22,15 +23,17 @@ const DayLanguagesChart = () => {
   const handleChevronLeftClick = () => setDate((prev) => getPrevDayDate(prev));
   const handleChevronRightClick = () => setDate((prev) => getNextDayDate(prev));
 
-  const { data, error, isLoading } =
-    trpc.codingStats.getDailyStatsForChart.useQuery(
+  const trpc = useTRPC();
+  const { data, error, isLoading } = useSuspenseQuery(
+    trpc.codingStats.getDailyStatsForChart.queryOptions(
       {
         dateString: dateString,
       },
       {
         refetchOnWindowFocus: true,
       },
-    );
+    ),
+  );
 
   if (error) {
     return (

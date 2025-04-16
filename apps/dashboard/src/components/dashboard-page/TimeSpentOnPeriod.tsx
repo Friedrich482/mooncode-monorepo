@@ -4,9 +4,10 @@ import { PERIODS_CONFIG } from "@/constants";
 import PeriodDropDown from "./PeriodDropDown";
 import { Skeleton } from "../ui/skeleton";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/utils/trpc";
 import { usePeriodStore } from "@/hooks/store/periodStore";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useTRPC } from "@/utils/trpc";
 import useUpdateCustomRangeDates from "@/hooks/useUpdateCustomRangeDates";
 
 const TimeSpentOnPeriod = () => {
@@ -19,8 +20,9 @@ const TimeSpentOnPeriod = () => {
   const [isEndPopoverOpen, setIsEndPopoverOpen] = useState(false);
   const [endDate, setEndDate] = useState(new Date(customRange.end));
 
-  const { isLoading, error, data } =
-    trpc.codingStats.getTimeSpentOnPeriod.useQuery(
+  const trpc = useTRPC();
+  const { isLoading, error, data } = useQuery(
+    trpc.codingStats.getTimeSpentOnPeriod.queryOptions(
       period === "Custom Range"
         ? {
             start: customRange.start,
@@ -30,8 +32,11 @@ const TimeSpentOnPeriod = () => {
             start: PERIODS_CONFIG[period].start,
             end: PERIODS_CONFIG[period].end,
           },
-      { refetchOnWindowFocus: true },
-    );
+      {
+        refetchOnWindowFocus: true,
+      },
+    ),
+  );
 
   useUpdateCustomRangeDates(startDate, endDate);
 
