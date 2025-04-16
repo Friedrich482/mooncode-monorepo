@@ -11,7 +11,7 @@ import GroupByDropDown from "../GroupByDropDown";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { formatTickForGroupBy } from "@/utils/formatTickForGroupBy";
 import { usePeriodStore } from "@/hooks/store/periodStore";
-import { useQuery } from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
 
 const PeriodTimeChart = () => {
@@ -20,7 +20,7 @@ const PeriodTimeChart = () => {
   const customRange = usePeriodStore((state) => state.customRange);
   const trpc = useTRPC();
 
-  const { data: chartData, error } = useQuery(
+  const { data: chartData, error } = useSuspenseQuery(
     trpc.codingStats.getDaysOfPeriodStats.queryOptions(
       period === "Custom Range"
         ? {
