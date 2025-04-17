@@ -1,4 +1,4 @@
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import CalendarPopover from "@/components/ui/CalendarPopover";
 import PeriodDropDown from "./PeriodDropDown";
 import SuspenseBoundary from "../suspense/SuspenseBoundary";

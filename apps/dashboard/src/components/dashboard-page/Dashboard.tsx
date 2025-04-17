@@ -1,4 +1,4 @@
-import DashboardTitle from "./DashBoardTitle";
+import DashboardTitle from "./DashboardTitle";
 import DayLanguagesChart from "./charts/dayLanguagesChart/DayLanguagesChart";
 import GeneralStatsChart from "./charts/GeneralStatsChart";
 import PeriodLanguagesChart from "./charts/PeriodLanguagesChart";

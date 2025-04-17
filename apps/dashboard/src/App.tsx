@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Route, Routes } from "react-router";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "@repo/trpc/router";
-import Dashboard from "./components/dashboard-page/DashBoard";
+import Dashboard from "./components/dashboard-page/Dashboard";
 import Layout from "./components/layout/Layout";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Root from "./components/root-page/Root";
