@@ -1,5 +1,5 @@
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
-import { Calendar } from "./ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Calendar } from "../ui/calendar";
 import type { DateRange } from "react-day-picker";
 import { cn } from "@/lib/utils";
 

@@ -5,9 +5,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Moon, Sun } from "lucide-react";
-import Icon from "../ui/Icon";
+import Icon from "../../ui/Icon";
 import { THEME_DROPDOWN_ITEMS } from "@/constants";
-import { useTheme } from "../themeProvider";
+import { useTheme } from "@/components/themeProvider";
 
 const ToggleThemeDropDown = () => {
   const { setTheme, resolvedTheme } = useTheme();
