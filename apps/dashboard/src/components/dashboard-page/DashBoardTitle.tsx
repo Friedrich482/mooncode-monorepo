@@ -1,5 +1,5 @@
 import { Button } from "../ui/button";
-import CalendarPopover from "../CalendarPopover";
+import CalendarPopover from "@/components/ui/CalendarPopover";
 import PeriodDropDown from "./PeriodDropDown";
 import SuspenseBoundary from "../suspense/SuspenseBoundary";
 import TimeSpentOnPeriod from "./TimeSpentOnPeriod";

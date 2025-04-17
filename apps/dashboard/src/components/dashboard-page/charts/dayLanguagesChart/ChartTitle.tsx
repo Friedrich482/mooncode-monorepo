@@ -1,6 +1,6 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import CalendarPopover from "@/components/CalendarPopover";
+import CalendarPopover from "@/components/ui/CalendarPopover";
 import Icon from "@/components/ui/Icon";
 import { isSameDay } from "date-fns";
 import { useState } from "react";
