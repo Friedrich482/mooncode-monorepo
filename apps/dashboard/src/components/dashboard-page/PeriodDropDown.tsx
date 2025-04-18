@@ -13,6 +13,7 @@ import { DateRange } from "react-day-picker";
 import { Period } from "@/types-schemas";
 import getCustomRangePeriodResolution from "@/utils/getCustomRangePeriodResolution";
 import { usePeriodStore } from "@/hooks/store/periodStore";
+import useSynchronizeURL from "@/hooks/useSynchronizeURL";
 
 const PeriodDropDown = () => {
   const period = usePeriodStore((state) => state.period);
@@ -61,6 +62,8 @@ const PeriodDropDown = () => {
       }
     }
   }, [start, end]);
+
+  useSynchronizeURL();
 
   return (
     <DropdownMenu>

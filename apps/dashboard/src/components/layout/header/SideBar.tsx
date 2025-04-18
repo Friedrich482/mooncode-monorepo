@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import Icon from "@/components/ui/Icon";
+import { Link } from "react-router";
 import Logo from "./Logo";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const VerticalNavbar = ({
+const SideBar = ({
   isOpen,
   handleClick,
 }: {
@@ -36,7 +37,7 @@ const VerticalNavbar = ({
             asChild
             className="self-center bg-transparent text-neutral-700 shadow-none hover:bg-transparent hover:text-black dark:text-neutral-400 dark:hover:text-white"
           >
-            <a href="/dashboard">Dashboard</a>
+            <Link to="/dashboard">Dashboard</Link>
           </Button>
         </li>
       </ul>
@@ -44,4 +45,4 @@ const VerticalNavbar = ({
   );
 };
 
-export default VerticalNavbar;
+export default SideBar;
