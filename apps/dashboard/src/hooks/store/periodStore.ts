@@ -6,9 +6,11 @@ import { getPeriodStoreValuesFromURL } from "@/utils/getPeriodStoreValuesFromURL
 type Store = {
   period: Period;
 
+  // eslint-disable-next-line no-unused-vars
   setPeriod: (state: Period) => void;
   groupBy: GroupBy;
 
+  // eslint-disable-next-line no-unused-vars
   setGroupBy: (state: GroupBy) => void;
 
   customRange: {
@@ -17,6 +19,7 @@ type Store = {
     periodResolution: PeriodResolution;
   };
 
+  // eslint-disable-next-line no-unused-vars
   setCustomRange: (state: {
     start: string;
     end: string;

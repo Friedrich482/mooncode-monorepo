@@ -39,7 +39,7 @@ export const getPeriodStoreValuesFromURL = (): ReturnType => {
       try {
         const groupBySchema = z.enum(["weeks", "months"]);
         groupBy = groupBySchema.parse(groupByParam);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars, no-unused-vars
       } catch (error) {
         console.error(
           `Invalid groupBy parameter: ${groupByParam}. Defaulting to ${defaults.groupBy}`,
