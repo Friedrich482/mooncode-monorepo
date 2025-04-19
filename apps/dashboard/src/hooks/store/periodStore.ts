@@ -24,12 +24,12 @@ type Store = {
   }) => void;
 };
 
-const { period, customRange } = getPeriodStoreValuesFromURL();
+const { period, customRange, groupBy } = getPeriodStoreValuesFromURL();
 
 export const usePeriodStore = create<Store>((set) => ({
   period,
   setPeriod: (newPeriod) => set({ period: newPeriod }),
-  groupBy: "days",
+  groupBy: groupBy,
   setGroupBy: (newGroupBy) => set({ groupBy: newGroupBy }),
   customRange,
   setCustomRange: (newCustomRange) => set({ customRange: newCustomRange }),
