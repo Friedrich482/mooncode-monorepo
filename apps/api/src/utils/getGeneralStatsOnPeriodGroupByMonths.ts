@@ -1,4 +1,4 @@
-import { differenceInMonths, format } from "date-fns";
+import { differenceInMonths, endOfMonth, format, startOfMonth } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { PeriodStatsService } from "src/coding-stats/period-stats.service";
 import formatDuration from "@repo/utils/formatDuration";
@@ -15,22 +15,33 @@ const getGeneralStatsOnPeriodGroupByMonths = async (
   >,
 ) => {
   const numberOfMonths = differenceInMonths(end, start) + 1;
+  const timeSpentOnPeriod = (
+    await periodStatsService.getTimeSpentOnPeriod({
+      userId,
+      start,
+      end,
+    })
+  ).rawTime;
+  const mean = timeSpentOnPeriod / numberOfMonths;
 
-  const avgTime = formatDuration(
-    (
-      await periodStatsService.getTimeSpentOnPeriod({
-        userId,
-        start,
-        end,
-      })
-    ).rawTime / numberOfMonths,
-  );
   const monthlyDataForPeriod = getDaysOfPeriodStatsGroupByMonths(
     dailyDataForPeriod,
   ).map((entry) => ({
     timeSpent: entry.timeSpentBar,
     originalDate: entry.originalDate,
   }));
+
+  const timeSpentOnTodaySMonth = (
+    await periodStatsService.getTimeSpentOnPeriod({
+      userId,
+      start: format(startOfMonth(new Date()), "yyyy-MM-dd"),
+      end: format(endOfMonth(new Date()), "yyyy-MM-dd"),
+    })
+  ).rawTime;
+
+  const percentageToAvg = parseFloat(
+    (((timeSpentOnTodaySMonth - mean) / mean) * 100).toFixed(2),
+  );
 
   const maxTimeSpentPerMonth =
     monthlyDataForPeriod.length > 0
@@ -50,7 +61,8 @@ const getGeneralStatsOnPeriodGroupByMonths = async (
   );
 
   return {
-    avgTime,
+    avgTime: formatDuration(mean),
+    percentageToAvg,
     mostActiveDate: mostActiveMonth,
     mostUsedLanguage,
   };
