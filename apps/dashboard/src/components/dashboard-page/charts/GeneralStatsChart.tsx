@@ -8,7 +8,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
 
 const StatWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex w-1/2 flex-col justify-center gap-1 rounded-md border border-neutral-600/50 px-2 text-center max-[450px]:min-w-full">
+  <div className="max-[28.125rem]:min-w-full flex w-1/2 flex-col justify-center gap-1 rounded-md border border-neutral-600/50 px-2 text-center">
     {children}
   </div>
 );
@@ -21,7 +21,7 @@ const TwoStatsWrapper = ({
 }) => (
   <div
     className={cn(
-      "flex min-h-36 flex-row gap-4 text-xl max-[450px]:flex-col max-[450px]:text-base",
+      "max-[28.125rem]:flex-col max-[28.125rem]:text-base flex min-h-36 flex-row gap-4 text-xl",
       className,
     )}
   >
@@ -61,9 +61,9 @@ const GeneralStatsChart = () => {
   const mostUsedLanguageName = getLanguageName(mostUsedLanguage);
 
   return (
-    <div className="flex min-h-96 w-[45%] flex-col gap-y-3 rounded-md border border-neutral-600/50 p-3 text-2xl max-chart:w-full max-[450px]:justify-between max-[450px]:gap-0">
+    <div className="max-[28.125rem]:justify-between max-[28.125rem]:gap-0 flex min-h-96 w-[45%] flex-col gap-y-3 rounded-md border border-neutral-600/50 p-3 text-2xl max-chart:w-full">
       <h2 className="text-center text-2xl font-bold">General stats</h2>
-      <TwoStatsWrapper className="max-[450px]:pt-4">
+      <TwoStatsWrapper className="max-[28.125rem]:pt-4">
         <StatWrapper>
           <p>Average time per {groupBy?.slice(0, -1)}</p>
           <p className="font-bold text-moon/85">{avgTime}</p>

@@ -312,7 +312,7 @@
   "jolie": { "name": "Jolie", "color": "#843179" },
   "jq": { "name": "jq", "color": "#c7254e" },
   "json": { "name": "JSON", "color": "#292929" },
-  "jsonwithcomments": { "name": "JSON with Comments", "color": "#292929" },
+  "jsonc": { "name": "JSON with Comments", "color": "#292929" },
   "json5": { "name": "JSON5", "color": "#267CB9" },
   "jsoniq": { "name": "JSONiq", "color": "#40d47e" },
   "jsonld": { "name": "JSON-LD", "color": "#0c479c" },
