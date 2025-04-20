@@ -1,6 +1,6 @@
 import Icon from "../../ui/Icon";
 import { Menu } from "lucide-react";
-import VerticalNavbar from "./VerticalNavbar";
+import SideBar from "./SideBar";
 import useOutsideClick from "@/hooks/useOutsideClick";
 import { useState } from "react";
 
@@ -17,7 +17,7 @@ const BurgerMenu = () => {
         onClick={handleClick}
         Icon={Menu}
       />
-      <VerticalNavbar isOpen={isOpen} handleClick={handleClick} />
+      <SideBar isOpen={isOpen} handleClick={handleClick} />
     </>
   );
 };

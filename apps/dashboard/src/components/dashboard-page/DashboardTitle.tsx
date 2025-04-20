@@ -8,7 +8,6 @@ import { useState } from "react";
 import useUpdateCustomRangeDates from "@/hooks/useUpdateCustomRangeDates";
 
 const DashboardTitle = () => {
-  // TODO  this should be an url state
   const period = usePeriodStore((state) => state.period);
   const customRange = usePeriodStore((state) => state.customRange);
 
