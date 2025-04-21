@@ -34,13 +34,11 @@ const useQueryPeriodLangChart = () => {
             start: customRange.start,
             end: customRange.end,
             groupBy: groupBy,
-            periodResolution: customRange.periodResolution,
           }
         : {
             start: PERIODS_CONFIG[period].start,
             end: PERIODS_CONFIG[period].end,
             groupBy,
-            periodResolution: PERIODS_CONFIG[period].periodResolution,
           },
       { refetchOnWindowFocus: true },
     ),

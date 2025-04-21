@@ -79,7 +79,11 @@ export class PeriodStatsService {
     }));
   }
 
-  async getPeriodLanguagesTime({ userId, start, end }: PeriodStatsDtoType) {
+  async getPeriodLanguagesTime({
+    userId,
+    start,
+    end,
+  }: Omit<PeriodStatsDtoType, "periodResolution">) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
       start,
@@ -182,6 +186,7 @@ export class PeriodStatsService {
     if (dailyDataForPeriod.length === 0)
       return {
         avgTime: formatDuration(0),
+        percentageToAvg: 0,
         mostActiveDate: new Date().toLocaleDateString(),
         mostUsedLanguage: "other",
       };
@@ -211,15 +216,28 @@ export class PeriodStatsService {
     }
 
     const numberOfDays = differenceInDays(end, start) + 1;
-    const avgTime = formatDuration(
+    const timeSpentOnPeriod = (
+      await this.getTimeSpentOnPeriod({
+        userId,
+        start,
+        end,
+      })
+    ).rawTime;
+
+    const mean = timeSpentOnPeriod / numberOfDays;
+
+    const timeSpentToday =
       (
-        await this.getTimeSpentOnPeriod({
+        await this.dailyDataService.findOneDailyData(
           userId,
-          start,
-          end,
-        })
-      ).rawTime / numberOfDays,
-    );
+          format(new Date(), "yyyy-MM-dd"),
+        )
+      ).timeSpent || 0;
+
+    const percentageToAvg =
+      mean === 0
+        ? 0
+        : parseFloat((((timeSpentToday - mean) / mean) * 100).toFixed(2));
 
     const maxTimeSpentPerDay =
       dailyDataForPeriod.length > 0
@@ -237,7 +255,8 @@ export class PeriodStatsService {
     );
 
     return {
-      avgTime,
+      avgTime: formatDuration(mean),
+      percentageToAvg,
       mostActiveDate: new Date(mostActiveDate).toDateString(),
       mostUsedLanguage,
     };

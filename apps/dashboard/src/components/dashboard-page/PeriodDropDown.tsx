@@ -11,7 +11,7 @@ import CalendarPopover from "../ui/CalendarPopover";
 import { ChevronDown } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { Period } from "@/types-schemas";
-import getCustomRangePeriodResolution from "@/utils/getCustomRangePeriodResolution";
+import getPeriodResolution from "@repo/utils/getPeriodResolution";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 import useSynchronizeURL from "@/hooks/useSynchronizeURL";
 
@@ -53,7 +53,7 @@ const PeriodDropDown = () => {
   useEffect(() => {
     if (period === "Custom Range") {
       if (start && end) {
-        const periodResolution = getCustomRangePeriodResolution(start, end);
+        const periodResolution = getPeriodResolution(start, end);
         setCustomRange({
           start,
           end,

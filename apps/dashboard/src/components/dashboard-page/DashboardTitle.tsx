@@ -19,13 +19,12 @@ const DashboardTitle = () => {
   useUpdateCustomRangeDates(startDate, endDate);
 
   return (
-    <h1 className="flex flex-row items-start justify-start gap-4 pt-2 text-2xl max-[550px]:flex-col max-[410px]:text-base">
-      <PeriodDropDown />{" "}
-      <div className="flex items-center gap-2 text-center">
+    <h1 className="max-[34.375rem]:flex-col max-[25.625rem]:text-base flex flex-row items-start justify-start gap-4 pt-2 text-2xl">
+      <div className="flex flex-wrap items-center gap-2 text-center">
+        <PeriodDropDown />{" "}
         <SuspenseBoundary fallBackClassName="h-9 w-44">
           <TimeSpentOnPeriod />
         </SuspenseBoundary>
-
         {period === "Custom Range" && (
           <>
             on
@@ -36,7 +35,10 @@ const DashboardTitle = () => {
               date={startDate}
               setDate={setStartDate}
               popoverTriggerContent={
-                <Button variant="link" className="p-0 text-2xl text-moon">
+                <Button
+                  variant="link"
+                  className="max-[25.625rem]:text-base p-0 text-2xl text-moon"
+                >
                   {new Date(customRange.start).toDateString()}
                 </Button>
               }
@@ -49,7 +51,10 @@ const DashboardTitle = () => {
               date={endDate}
               setDate={setEndDate}
               popoverTriggerContent={
-                <Button variant="link" className="p-0 text-2xl text-moon">
+                <Button
+                  variant="link"
+                  className="max-[25.625rem]:text-base p-0 text-2xl text-moon"
+                >
                   {new Date(customRange.end).toDateString()}
                 </Button>
               }

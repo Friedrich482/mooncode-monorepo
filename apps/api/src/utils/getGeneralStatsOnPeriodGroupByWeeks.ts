@@ -1,8 +1,8 @@
+import { endOfWeek, format, startOfWeek } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { PeriodResolution } from "src/coding-stats/coding-stats.dto";
 import { PeriodStatsService } from "src/coding-stats/period-stats.service";
 import countStrictWeeks from "./countStrictWeeks";
-import { format } from "date-fns";
 import formatDuration from "@repo/utils/formatDuration";
 import getDaysOfPeriodStatsGroupByWeeks from "./getDaysOfPeriodStatsGroupByWeeks";
 import getMostUsedLanguageOnPeriod from "./getMostUsedLanguageOnPeriod";
@@ -19,15 +19,16 @@ const getGeneralStatsOnPeriodGroupByWeeks = async (
 ) => {
   const numberOfWeeks = countStrictWeeks(new Date(start), new Date(end));
 
-  const avgTime = formatDuration(
-    (
-      await periodStatsService.getTimeSpentOnPeriod({
-        userId,
-        start,
-        end,
-      })
-    ).rawTime / numberOfWeeks,
-  );
+  const timeSpentOnPeriod = (
+    await periodStatsService.getTimeSpentOnPeriod({
+      userId,
+      start,
+      end,
+    })
+  ).rawTime;
+
+  const mean = timeSpentOnPeriod / numberOfWeeks;
+
   const weeklyDataForPeriod = getDaysOfPeriodStatsGroupByWeeks(
     dailyDataForPeriod,
     periodResolution,
@@ -35,6 +36,19 @@ const getGeneralStatsOnPeriodGroupByWeeks = async (
     timeSpent: entry.timeSpentBar,
     originalDate: entry.originalDate,
   }));
+
+  const timeSpentOnTodaySWeek = (
+    await periodStatsService.getTimeSpentOnPeriod({
+      userId,
+      start: format(startOfWeek(new Date()), "yyyy-MM-dd"),
+      end: format(endOfWeek(new Date()), "yyyy-MM-dd"),
+    })
+  ).rawTime;
+
+  const percentageToAvg =
+    mean === 0
+      ? 0
+      : parseFloat((((timeSpentOnTodaySWeek - mean) / mean) * 100).toFixed(2));
 
   const maxTimeSpentPerWeek =
     weeklyDataForPeriod.length > 0
@@ -52,7 +66,8 @@ const getGeneralStatsOnPeriodGroupByWeeks = async (
   );
 
   return {
-    avgTime,
+    avgTime: formatDuration(mean),
+    percentageToAvg,
     mostActiveDate: mostActiveWeek,
     mostUsedLanguage,
   };
