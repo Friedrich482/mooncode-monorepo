@@ -1,11 +1,11 @@
-import getCustomRangePeriodResolution from "@/utils/getCustomRangePeriodResolution";
+import getPeriodResolution from "@repo/utils/getPeriodResolution";
 import { useEffect } from "react";
 import { usePeriodStore } from "./store/periodStore";
 
 const useUpdateCustomRangeDates = (startDate: Date, endDate: Date) => {
   const customRange = usePeriodStore((state) => state.customRange);
   const setCustomRange = usePeriodStore((state) => state.setCustomRange);
-  const periodResolution = getCustomRangePeriodResolution(startDate, endDate);
+  const periodResolution = getPeriodResolution(startDate, endDate);
 
   useEffect(
     () =>

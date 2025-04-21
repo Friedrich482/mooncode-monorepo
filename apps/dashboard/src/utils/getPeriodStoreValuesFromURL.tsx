@@ -3,7 +3,7 @@ import { IsoDateSchema, Period, PeriodSchema } from "@/types-schemas";
 import { ZodError, z } from "zod";
 import { PERIODS } from "@/constants";
 import { formatZodError } from "@/utils/formatZodIssues";
-import getCustomRangePeriodResolution from "@/utils/getCustomRangePeriodResolution";
+import getPeriodResolution from "@repo/utils/getPeriodResolution";
 
 type ReturnType = {
   period: Period;
@@ -82,7 +82,7 @@ export const getPeriodStoreValuesFromURL = (): ReturnType => {
           customRange: {
             start: validStartFromUrl,
             end: validEndFromUrl,
-            periodResolution: getCustomRangePeriodResolution(
+            periodResolution: getPeriodResolution(
               validStartFromUrl,
               validEndFromUrl,
             ),

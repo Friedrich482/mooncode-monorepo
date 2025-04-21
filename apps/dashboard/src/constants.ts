@@ -65,51 +65,41 @@ export const PERIODS_CONFIG = {
   "Last 7 days": {
     start: subDays(new Date(), 6).toLocaleDateString(),
     end: new Date().toLocaleDateString(),
-    periodResolution: "day",
   },
   "This week": {
     start: startOfWeek(new Date()).toLocaleDateString(),
     end: new Date().toLocaleDateString(),
-    periodResolution: "day",
   },
   "Last week": {
     start: startOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(),
     end: endOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(),
-    periodResolution: "day",
   },
   "Last 14 days": {
     start: subDays(new Date(), 13).toLocaleDateString(),
     end: new Date().toLocaleDateString(),
-    periodResolution: "week",
   },
   "Last 2 weeks": {
     start: startOfWeek(subWeeks(new Date(), 2)).toLocaleDateString(),
     end: endOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(),
-    periodResolution: "week",
   },
   "This month": {
     start: startOfMonth(new Date()).toLocaleDateString(),
     end: new Date().toLocaleDateString(),
-    periodResolution: "month",
   },
   "Last month": {
     start: startOfMonth(subMonths(new Date(), 1)).toLocaleDateString(),
     end: endOfMonth(subMonths(new Date(), 1)).toLocaleDateString(),
-    periodResolution: "month",
   },
   "This year": {
     start: startOfYear(new Date()).toLocaleDateString(),
     end: new Date().toLocaleDateString(),
-    periodResolution: "year",
   },
   "Last year": {
     start: startOfYear(subYears(new Date(), 1)).toLocaleDateString(),
     end: endOfYear(subYears(new Date(), 1)).toLocaleDateString(),
-    periodResolution: "year",
   },
   "Custom Range": {
     start: new Date().toLocaleDateString(),
     end: new Date().toLocaleDateString(),
-    periodResolution: "month",
   },
 } as const;

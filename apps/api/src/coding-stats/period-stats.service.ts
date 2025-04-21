@@ -79,7 +79,11 @@ export class PeriodStatsService {
     }));
   }
 
-  async getPeriodLanguagesTime({ userId, start, end }: PeriodStatsDtoType) {
+  async getPeriodLanguagesTime({
+    userId,
+    start,
+    end,
+  }: Omit<PeriodStatsDtoType, "periodResolution">) {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
       start,

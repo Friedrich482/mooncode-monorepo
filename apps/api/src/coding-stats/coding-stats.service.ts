@@ -33,7 +33,11 @@ export class CodingStatsService {
     return this.dayStatsService.upsert({ id, updateUpsertLanguagesDto });
   }
 
-  async getTimeSpentOnPeriod({ userId, start, end }: PeriodStatsDtoType) {
+  async getTimeSpentOnPeriod({
+    userId,
+    start,
+    end,
+  }: Omit<PeriodStatsDtoType, "periodResolution">) {
     return this.periodStatsService.getTimeSpentOnPeriod({
       userId,
       start,
@@ -57,7 +61,11 @@ export class CodingStatsService {
     });
   }
 
-  async getPeriodLanguagesTime({ userId, start, end }: PeriodStatsDtoType) {
+  async getPeriodLanguagesTime({
+    userId,
+    start,
+    end,
+  }: Omit<PeriodStatsDtoType, "periodResolution">) {
     return this.periodStatsService.getPeriodLanguagesTime({
       userId,
       start,

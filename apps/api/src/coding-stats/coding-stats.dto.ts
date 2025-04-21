@@ -1,3 +1,4 @@
+import getPeriodResolution from "@repo/utils/getPeriodResolution";
 import { z } from "zod";
 
 const dateStringDto = z.string().refine(
@@ -5,7 +6,7 @@ const dateStringDto = z.string().refine(
     const dateRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
     if (!dateRegex.test(value)) return false;
 
-    const [, month, day, year] = dateRegex.exec(value) || [];
+    const [, month = "", day = "", year = ""] = dateRegex.exec(value) || [];
     const monthNum = parseInt(month, 10);
     const dayNum = parseInt(day, 10);
     const yearNum = parseInt(year, 10);
@@ -33,30 +34,28 @@ export const DatesDto = z
   .object({
     start: dateStringDto,
     end: dateStringDto,
-    // TODO remove the optionality later
     groupBy: z.enum(["days", "weeks", "months"]).optional(),
-    periodResolution: z.enum(["day", "week", "month", "year"]).optional(),
   })
   //  this prevent the groupBy attribute to be "weeks" for periods like "Last 7 days", "This week" or "Last week"
   .transform((input) => {
-    if (input?.periodResolution === "day") {
+    const periodResolution = getPeriodResolution(input.start, input.end);
+    if (periodResolution === "day") {
       input.groupBy = "days";
     }
-    if (input?.periodResolution === "week" && input.groupBy === "months") {
+    if (periodResolution === "week" && input.groupBy === "months") {
       input.groupBy = "weeks";
     }
-    return input;
+    return { ...input, periodResolution };
   });
 
 export type PeriodStatsDtoType = z.infer<typeof DatesDto> & { userId: string };
 export type GroupBy = z.infer<typeof DatesDto>["groupBy"];
-export type PeriodResolution = z.infer<typeof DatesDto>["periodResolution"];
+export type PeriodResolution = "day" | "week" | "month" | "year";
+export type DayStatsDtoType = z.infer<typeof DayStatsDto> & { userId: string };
 
 export const DayStatsDto = z.object({
   dateString: dateStringDto,
 });
-
-export type DayStatsDtoType = z.infer<typeof DayStatsDto> & { userId: string };
 
 export const UpsertLanguagesDto = z.object({
   timeSpentToday: z.number().int(),
