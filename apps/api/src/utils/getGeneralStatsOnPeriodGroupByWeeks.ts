@@ -45,9 +45,10 @@ const getGeneralStatsOnPeriodGroupByWeeks = async (
     })
   ).rawTime;
 
-  const percentageToAvg = parseFloat(
-    (((timeSpentOnTodaySWeek - mean) / mean) * 100).toFixed(2),
-  );
+  const percentageToAvg =
+    mean === 0
+      ? 0
+      : parseFloat((((timeSpentOnTodaySWeek - mean) / mean) * 100).toFixed(2));
 
   const maxTimeSpentPerWeek =
     weeklyDataForPeriod.length > 0

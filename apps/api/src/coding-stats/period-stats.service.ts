@@ -234,9 +234,10 @@ export class PeriodStatsService {
         )
       ).timeSpent || 0;
 
-    const percentageToAvg = parseFloat(
-      (((timeSpentToday - mean) / mean) * 100).toFixed(2),
-    );
+    const percentageToAvg =
+      mean === 0
+        ? 0
+        : parseFloat((((timeSpentToday - mean) / mean) * 100).toFixed(2));
 
     const maxTimeSpentPerDay =
       dailyDataForPeriod.length > 0

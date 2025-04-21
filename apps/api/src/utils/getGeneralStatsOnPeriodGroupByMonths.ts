@@ -39,9 +39,10 @@ const getGeneralStatsOnPeriodGroupByMonths = async (
     })
   ).rawTime;
 
-  const percentageToAvg = parseFloat(
-    (((timeSpentOnTodaySMonth - mean) / mean) * 100).toFixed(2),
-  );
+  const percentageToAvg =
+    mean === 0
+      ? 0
+      : parseFloat((((timeSpentOnTodaySMonth - mean) / mean) * 100).toFixed(2));
 
   const maxTimeSpentPerMonth =
     monthlyDataForPeriod.length > 0
