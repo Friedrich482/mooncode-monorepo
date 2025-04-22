@@ -10,7 +10,7 @@ const useQueryPeriodLangChart = () => {
   const customRange = usePeriodStore((state) => state.customRange);
 
   const trpc = useTRPC();
-  const { data: pieChart, error: pieChartError } = useSuspenseQuery(
+  const { data: pieChart } = useSuspenseQuery(
     trpc.codingStats.getPeriodLanguagesTime.queryOptions(
       period === "Custom Range"
         ? {
@@ -21,13 +21,10 @@ const useQueryPeriodLangChart = () => {
             start: PERIODS_CONFIG[period].start,
             end: PERIODS_CONFIG[period].end,
           },
-      {
-        refetchOnWindowFocus: true,
-      },
     ),
   );
 
-  const { data: barChartData, error: barChartError } = useSuspenseQuery(
+  const { data: barChartData } = useSuspenseQuery(
     trpc.codingStats.getPeriodLanguagesPerDay.queryOptions(
       period === "Custom Range"
         ? {
@@ -40,7 +37,6 @@ const useQueryPeriodLangChart = () => {
             end: PERIODS_CONFIG[period].end,
             groupBy,
           },
-      { refetchOnWindowFocus: true },
     ),
   );
 
@@ -54,9 +50,7 @@ const useQueryPeriodLangChart = () => {
 
   return {
     pieChartData,
-    pieChartError,
     barChartData,
-    barChartError,
   };
 };
 

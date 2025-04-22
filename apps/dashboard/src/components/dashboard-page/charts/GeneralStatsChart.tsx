@@ -1,4 +1,3 @@
-import ErrorBoundary from "@/components/suspense/ErrorBoundary";
 import { PERIODS_CONFIG } from "@/constants";
 import { cn } from "@/lib/utils";
 import getLanguageColor from "@/utils/getLanguageColor";
@@ -35,7 +34,7 @@ const GeneralStatsChart = () => {
 
   const trpc = useTRPC();
 
-  const { data, error } = useSuspenseQuery(
+  const { data } = useSuspenseQuery(
     trpc.codingStats.getPeriodGeneralStats.queryOptions(
       period === "Custom Range"
         ? {
@@ -51,8 +50,6 @@ const GeneralStatsChart = () => {
       { refetchOnWindowFocus: true },
     ),
   );
-
-  if (error) return <ErrorBoundary error={error} />;
 
   const { avgTime, percentageToAvg, mostActiveDate, mostUsedLanguage } = data;
   const mostUsedLanguageColor = getLanguageColor(mostUsedLanguage);

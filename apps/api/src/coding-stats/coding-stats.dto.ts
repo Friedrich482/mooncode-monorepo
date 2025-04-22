@@ -1,4 +1,7 @@
+import { GroupByZEnum } from "@repo/utils/types";
+import { INCOHERENT_DATE_RANGE_ERROR_MESSAGE } from "@repo/utils/constants";
 import getPeriodResolution from "@repo/utils/getPeriodResolution";
+import { isAfter } from "date-fns";
 import { z } from "zod";
 
 const dateStringDto = z.string().refine(
@@ -29,12 +32,14 @@ const dateStringDto = z.string().refine(
   },
   { message: "String must be a valid date in MM/DD/YYYY format" },
 );
-
 export const DatesDto = z
   .object({
     start: dateStringDto,
     end: dateStringDto,
-    groupBy: z.enum(["days", "weeks", "months"]).optional(),
+    groupBy: z.enum(GroupByZEnum).optional(),
+  })
+  .refine((input) => !isAfter(input.start, input.end), {
+    message: INCOHERENT_DATE_RANGE_ERROR_MESSAGE,
   })
   //  this prevent the groupBy attribute to be "weeks" for periods like "Last 7 days", "This week" or "Last week"
   .transform((input) => {
@@ -49,8 +54,6 @@ export const DatesDto = z
   });
 
 export type PeriodStatsDtoType = z.infer<typeof DatesDto> & { userId: string };
-export type GroupBy = z.infer<typeof DatesDto>["groupBy"];
-export type PeriodResolution = "day" | "week" | "month" | "year";
 export type DayStatsDtoType = z.infer<typeof DayStatsDto> & { userId: string };
 
 export const DayStatsDto = z.object({

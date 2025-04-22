@@ -1,2 +1,4 @@
-export type { GroupBy } from "../../../apps/api/dist/src/coding-stats/coding-stats.dto";
-export type { PeriodResolution } from "../../../apps/api/src/coding-stats/coding-stats.dto";
+export const GroupByZEnum = ["days", "weeks", "months"] as const;
+export type GroupBy = (typeof GroupByZEnum)[number];
+
+export type PeriodResolution = "day" | "week" | "month" | "year";

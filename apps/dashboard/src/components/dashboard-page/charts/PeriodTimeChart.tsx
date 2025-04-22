@@ -6,7 +6,6 @@ import {
 } from "@/components/ui/chart";
 import { PERIODS_CONFIG, chartConfig } from "@/constants";
 import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
-import ErrorBoundary from "@/components/suspense/ErrorBoundary";
 import GroupByDropDown from "../GroupByDropDown";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { formatTickForGroupBy } from "@/utils/formatTickForGroupBy";
@@ -20,7 +19,7 @@ const PeriodTimeChart = () => {
   const customRange = usePeriodStore((state) => state.customRange);
   const trpc = useTRPC();
 
-  const { data: chartData, error } = useSuspenseQuery(
+  const { data: chartData } = useSuspenseQuery(
     trpc.codingStats.getDaysOfPeriodStats.queryOptions(
       period === "Custom Range"
         ? {
@@ -33,14 +32,8 @@ const PeriodTimeChart = () => {
             end: PERIODS_CONFIG[period].end,
             groupBy,
           },
-
-      {
-        refetchOnWindowFocus: true,
-      },
     ),
   );
-
-  if (error) return <ErrorBoundary error={error} />;
 
   return (
     <div className="relative z-0 flex min-h-96 w-[45%] flex-col rounded-md border border-neutral-600/50 max-chart:w-full">

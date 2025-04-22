@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "@repo/trpc/router";
 import Dashboard from "./components/dashboard-page/Dashboard";
+import { INCOHERENT_DATE_RANGE_ERROR_MESSAGE } from "@repo/utils/constants";
 import Layout from "./components/layout/Layout";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Root from "./components/root-page/Root";
@@ -17,6 +18,24 @@ function makeQueryClient() {
     defaultOptions: {
       queries: {
         staleTime: 60 * 1000,
+        refetchOnWindowFocus: true,
+        retry: (failureCount, error) => {
+          try {
+            const parsedErrors = JSON.parse(error.message);
+            if (Array.isArray(parsedErrors)) {
+              const errorMessage: string = parsedErrors.map(
+                (err) => err.message,
+              )[0];
+              if (errorMessage === INCOHERENT_DATE_RANGE_ERROR_MESSAGE) {
+                return failureCount < 1;
+              }
+            }
+            return failureCount < 0;
+          } catch (error) {
+            console.error(error);
+            return failureCount < 3;
+          }
+        },
       },
     },
   });

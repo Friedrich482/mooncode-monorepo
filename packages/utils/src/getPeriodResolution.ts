@@ -1,4 +1,4 @@
-import type { PeriodResolution } from "../../../apps/api/src/coding-stats/coding-stats.dto";
+import { PeriodResolution } from "./types";
 import { differenceInDays } from "date-fns";
 
 const getPeriodResolution = (
