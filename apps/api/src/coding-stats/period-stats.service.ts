@@ -4,13 +4,13 @@ import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
 import { PeriodStatsDtoType } from "./coding-stats.dto";
 import formatDuration from "@repo/utils/formatDuration";
-import getDaysOfPeriodStatsGroupByMonths from "src/utils/getDaysOfPeriodStatsGroupByMonths";
-import getDaysOfPeriodStatsGroupByWeeks from "src/utils/getDaysOfPeriodStatsGroupByWeeks";
-import getGeneralStatsOnPeriodGroupByMonths from "src/utils/getGeneralStatsOnPeriodGroupByMonths";
-import getGeneralStatsOnPeriodGroupByWeeks from "src/utils/getGeneralStatsOnPeriodGroupByWeeks";
-import getMostUsedLanguageOnPeriod from "src/utils/getMostUsedLanguageOnPeriod";
-import getPeriodLanguagesGroupByMonths from "src/utils/getPeriodLanguagesGroupByMonths";
-import getPeriodLanguagesGroupByWeeks from "src/utils/getPeriodLanguagesGroupByWeeks";
+import getDaysOfPeriodStatsGroupByMonths from "./utils/getDaysOfPeriodStatsGroupByMonths";
+import getDaysOfPeriodStatsGroupByWeeks from "src/coding-stats/utils/getDaysOfPeriodStatsGroupByWeeks";
+import getGeneralStatsOnPeriodGroupByMonths from "./utils/getGeneralStatsOnPeriodGroupByMonths";
+import getGeneralStatsOnPeriodGroupByWeeks from "./utils/getGeneralStatsOnPeriodGroupByWeeks";
+import getMostUsedLanguageOnPeriod from "./utils/getMostUsedLanguageOnPeriod";
+import getPeriodLanguagesGroupByMonths from "./utils/getPeriodLanguagesGroupByMonths";
+import getPeriodLanguagesGroupByWeeks from "src/coding-stats/utils/getPeriodLanguagesGroupByWeeks";
 
 @Injectable()
 export class PeriodStatsService {
