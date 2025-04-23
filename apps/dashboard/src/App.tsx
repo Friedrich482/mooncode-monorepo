@@ -21,7 +21,11 @@ function makeQueryClient() {
         refetchOnWindowFocus: true,
         retry: (failureCount, error) => {
           try {
-            const parsedErrors = JSON.parse(error.message);
+            const parsedErrors =
+              typeof error.message === "string"
+                ? +JSON.parse(error.message)
+                : error.message;
+
             if (Array.isArray(parsedErrors)) {
               const errorMessage: string = parsedErrors.map(
                 (err) => err.message,
