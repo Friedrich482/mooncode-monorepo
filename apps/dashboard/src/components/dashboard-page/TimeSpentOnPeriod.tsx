@@ -1,4 +1,3 @@
-import ErrorBoundary from "../suspense/ErrorBoundary";
 import { PERIODS_CONFIG } from "@/constants";
 import { cn } from "@/lib/utils";
 import { usePeriodStore } from "@/hooks/store/periodStore";
@@ -9,7 +8,7 @@ const TimeSpentOnPeriod = () => {
   const period = usePeriodStore((state) => state.period);
   const customRange = usePeriodStore((state) => state.customRange);
   const trpc = useTRPC();
-  const { error, data } = useSuspenseQuery(
+  const { data } = useSuspenseQuery(
     trpc.codingStats.getTimeSpentOnPeriod.queryOptions(
       period === "Custom Range"
         ? {
@@ -20,14 +19,8 @@ const TimeSpentOnPeriod = () => {
             start: PERIODS_CONFIG[period].start,
             end: PERIODS_CONFIG[period].end,
           },
-      {
-        refetchOnWindowFocus: true,
-      },
     ),
   );
-  if (error) {
-    return <ErrorBoundary error={error} className="text-red-500" />;
-  }
 
   return <span className={cn("text-nowrap")}>{data.formattedTime}</span>;
 };

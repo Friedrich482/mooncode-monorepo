@@ -1,6 +1,6 @@
 import { endOfWeek, format, startOfWeek } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
-import { PeriodResolution } from "src/coding-stats/coding-stats.dto";
+import { PeriodResolution } from "@repo/utils/types";
 import { PeriodStatsService } from "src/coding-stats/period-stats.service";
 import countStrictWeeks from "./countStrictWeeks";
 import formatDuration from "@repo/utils/formatDuration";

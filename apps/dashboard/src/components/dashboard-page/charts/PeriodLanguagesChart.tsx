@@ -16,7 +16,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
-import ErrorBoundary from "@/components/suspense/ErrorBoundary";
 import Icon from "@/components/ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { chartConfig } from "@/constants";
@@ -31,11 +30,7 @@ const PeriodLanguagesChart = () => {
   const handleClick = () => setIsPieChartVisible((prev) => !prev);
   const groupBy = usePeriodStore((state) => state.groupBy);
 
-  const { pieChartError, barChartError, pieChartData, barChartData } =
-    useQueryPeriodLangChart();
-
-  if (pieChartError) return <ErrorBoundary error={pieChartError} />;
-  if (barChartError) return <ErrorBoundary error={barChartError} />;
+  const { pieChartData, barChartData } = useQueryPeriodLangChart();
 
   // ! Don't try to refactor the two charts and put them in their own
   // ! component, it is not supported by recharts
