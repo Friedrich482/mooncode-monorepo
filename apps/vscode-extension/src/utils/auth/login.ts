@@ -45,7 +45,9 @@ const login = async () => {
 
     const {
       result: {
-        data: { access_token },
+        data: {
+          json: { access_token },
+        },
       },
     } = parsedBody;
 

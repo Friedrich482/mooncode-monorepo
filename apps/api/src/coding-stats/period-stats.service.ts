@@ -232,7 +232,7 @@ export class PeriodStatsService {
           userId,
           format(new Date(), "yyyy-MM-dd"),
         )
-      ).timeSpent || 0;
+      )?.timeSpent || 0;
 
     const percentageToAvg =
       mean === 0

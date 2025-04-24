@@ -23,7 +23,7 @@ const getToken = async () => {
 
   if (!token || expireDate * 1000 < Date.now()) {
     const selection = await vscode.window.showInformationMessage(
-      "You are logged out. Do you want to log in?",
+      "You are logged out. Please login",
       "Login",
     );
 

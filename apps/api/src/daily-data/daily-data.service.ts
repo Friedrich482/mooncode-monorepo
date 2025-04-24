@@ -38,6 +38,10 @@ export class DailyDataService {
       .select({ id: dailyData.id, timeSpent: dailyData.timeSpent })
       .from(dailyData)
       .where(and(eq(dailyData.userId, userId), eq(dailyData.date, date)));
+
+    if (!oneDailyData) {
+      return;
+    }
     return oneDailyData;
   }
   async findRangeDailyData(userId: string, start: string, end: string) {

@@ -23,7 +23,7 @@ function makeQueryClient() {
           try {
             const parsedErrors =
               typeof error.message === "string"
-                ? +JSON.parse(error.message)
+                ? JSON.parse(error.message)
                 : error.message;
 
             if (Array.isArray(parsedErrors)) {
