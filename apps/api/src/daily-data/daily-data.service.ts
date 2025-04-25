@@ -40,7 +40,7 @@ export class DailyDataService {
       .where(and(eq(dailyData.userId, userId), eq(dailyData.date, date)));
 
     if (!oneDailyData) {
-      return;
+      return null;
     }
     return oneDailyData;
   }
