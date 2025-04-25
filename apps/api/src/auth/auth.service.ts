@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
-import { SignInUserDtoType } from "./auth.dto";
+import { SignInUserDtoType } from "@repo/utils/schemas";
 import { TRPCError } from "@trpc/server";
 import { UsersService } from "src/users/users.service";
 import { compare } from "bcrypt";

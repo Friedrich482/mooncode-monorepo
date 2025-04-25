@@ -1,4 +1,4 @@
-import { RegisterUserDto } from "src/auth/auth.dto";
+import { RegisterUserDto } from "@repo/utils/schemas";
 import { z } from "zod";
 
 export const UpdateProfileDto = RegisterUserDto.partial();

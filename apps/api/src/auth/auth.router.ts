@@ -1,4 +1,4 @@
-import { RegisterUserDto, SignInUserDto } from "./auth.dto";
+import { RegisterUserDto, SignInUserDto } from "@repo/utils/schemas";
 import { AuthService } from "./auth.service";
 import { Injectable } from "@nestjs/common";
 import { TrpcService } from "src/trpc/trpc.service";
