@@ -1,4 +1,4 @@
-import { LOGIN_URL } from "../../constants";
+import { LOGIN_URL } from "./constants";
 
 const fetchJWTToken = async (username: string, password: string) => {
   const res = await fetch(LOGIN_URL, {

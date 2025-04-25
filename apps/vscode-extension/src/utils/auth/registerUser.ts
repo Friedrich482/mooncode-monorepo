@@ -1,4 +1,4 @@
-import { REGISTER_URL } from "../../constants";
+import { REGISTER_URL } from "@repo/utils/constants";
 
 const registerUser = async ({
   email,
