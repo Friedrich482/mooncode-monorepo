@@ -5,6 +5,7 @@ import type { AppRouter } from "@repo/trpc/router";
 import Dashboard from "./components/dashboard-page/Dashboard";
 import { INCOHERENT_DATE_RANGE_ERROR_MESSAGE } from "@repo/utils/constants";
 import Layout from "./components/layout/Layout";
+import LoginForm from "./components/login-page/LoginForm";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Root from "./components/root-page/Root";
 import { TRPCProvider } from "./utils/trpc";
@@ -23,7 +24,7 @@ function makeQueryClient() {
           try {
             const parsedErrors =
               typeof error.message === "string"
-                ? +JSON.parse(error.message)
+                ? JSON.parse(error.message)
                 : error.message;
 
             if (Array.isArray(parsedErrors)) {
@@ -90,6 +91,7 @@ function App() {
             <Route element={<Layout />}>
               <Route path="/" element={<Root />} />
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="login" element={<LoginForm />} />
             </Route>
           </Routes>
         </TRPCProvider>

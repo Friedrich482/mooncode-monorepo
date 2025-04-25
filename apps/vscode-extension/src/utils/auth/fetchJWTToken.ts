@@ -6,10 +6,11 @@ const fetchJWTToken = async (username: string, password: string) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
+    body: `{"json": ${JSON.stringify({
       username,
       password,
-    }),
+    })}
+    }`,
   });
 
   if (!res.ok) {

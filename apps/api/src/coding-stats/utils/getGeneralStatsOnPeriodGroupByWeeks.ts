@@ -2,7 +2,7 @@ import { endOfWeek, format, startOfWeek } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { PeriodResolution } from "@repo/utils/types";
 import { PeriodStatsService } from "src/coding-stats/period-stats.service";
-import countStrictWeeks from "./countStrictWeeks";
+import countStrictWeeks from "src/utils/countStrictWeeks";
 import formatDuration from "@repo/utils/formatDuration";
 import getDaysOfPeriodStatsGroupByWeeks from "./getDaysOfPeriodStatsGroupByWeeks";
 import getMostUsedLanguageOnPeriod from "./getMostUsedLanguageOnPeriod";

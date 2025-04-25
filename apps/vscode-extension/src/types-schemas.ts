@@ -14,7 +14,9 @@ export type LanguagesData = Record<string, LanguageData>;
 export const loginResponseSchema = z.object({
   result: z.object({
     data: z.object({
-      access_token: z.string().jwt(),
+      json: z.object({
+        access_token: z.string().jwt(),
+      }),
     }),
   }),
 });
