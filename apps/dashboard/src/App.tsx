@@ -62,7 +62,6 @@ function App() {
     createTRPCClient<AppRouter>({
       links: [
         // trpc reads the http only cookie
-        // TODO redirect the user to the login page if the cookie is not found
         httpBatchLink({
           url: import.meta.env.VITE_API_URL,
           fetch(url, options) {

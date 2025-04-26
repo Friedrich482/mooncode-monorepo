@@ -19,6 +19,7 @@ import fetchJWTToken from "@repo/utils/fetchJWTToken";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "react-router";
 
 const LoginForm = () => {
   const form = useForm<SignInUserDtoType>({
@@ -42,11 +43,15 @@ const LoginForm = () => {
     </div>
   );
 
+  const navigate = useNavigate();
+
   const onSubmit = async (values: SignInUserDtoType) => {
     try {
       // send the credentials to the backend and set an http cookie in the browser
       // TODO communicate the jwt returned by this function to the extension
       await fetchJWTToken(values.username, values.password);
+      // TODO add a sonner before redirecting
+      navigate("/dashboard");
     } catch (error) {
       let errorMessage = "An error occurred";
 
