@@ -11,14 +11,13 @@ const fetchJWTToken = async (username: string, password: string) => {
       password,
     })}
     }`,
+    credentials: "include",
   });
 
+  // type this properly
   if (!res.ok) {
     const errorData = await res.json();
-
-    throw new Error(
-      (errorData as { error: { message: string } }).error.message,
-    );
+    throw new Error(errorData.error.json.message);
   }
 
   return res.json();

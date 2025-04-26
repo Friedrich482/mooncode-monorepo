@@ -62,6 +62,7 @@ function App() {
   const [trpcClient] = useState(() =>
     createTRPCClient<AppRouter>({
       links: [
+        // here trpc must read the http only cookie
         httpBatchLink({
           url: import.meta.env.VITE_API_URL,
           headers() {
