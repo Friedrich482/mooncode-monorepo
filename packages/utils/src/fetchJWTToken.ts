@@ -6,11 +6,13 @@ const fetchJWTToken = async (username: string, password: string) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: `{"json": ${JSON.stringify({
-      username,
-      password,
-    })}
-    }`,
+    body: JSON.stringify({
+      // we pass json here because of superjson transformer
+      json: {
+        username,
+        password,
+      },
+    }),
     credentials: "include",
   });
 

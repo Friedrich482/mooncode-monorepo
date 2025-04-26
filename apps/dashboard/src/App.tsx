@@ -10,7 +10,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Root from "./components/root-page/Root";
 import { TRPCProvider } from "./utils/trpc";
 import { ThemeProvider } from "./components/themeProvider";
-import getAuthToken from "./utils/getAuthToken";
 import superjson from "superjson";
 import { useState } from "react";
 
@@ -62,20 +61,15 @@ function App() {
   const [trpcClient] = useState(() =>
     createTRPCClient<AppRouter>({
       links: [
-        // here trpc must read the http only cookie
+        // trpc reads the http only cookie
+        // TODO redirect the user to the login page if the cookie is not found
         httpBatchLink({
           url: import.meta.env.VITE_API_URL,
-          headers() {
-            let authHeaders: { Authorization?: string } = {};
-            // TODO use cookies instead of localStorage
-            const token = getAuthToken() ?? "";
-            if (token) {
-              authHeaders = {
-                Authorization: `Bearer ${token}`,
-              };
-            }
-
-            return authHeaders;
+          fetch(url, options) {
+            return fetch(url, {
+              ...options,
+              credentials: "include",
+            });
           },
           transformer: superjson,
         }),

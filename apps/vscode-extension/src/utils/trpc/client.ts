@@ -1,4 +1,5 @@
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
+import { API_URL } from "@repo/utils/constants";
 import type { AppRouter } from "@repo/trpc/router";
 import getToken from "../auth/getToken";
 import superjson from "superjson";
@@ -6,7 +7,7 @@ import superjson from "superjson";
 const trpc = createTRPCClient<AppRouter>({
   links: [
     httpBatchLink({
-      url: "http://localhost:3000/trpc",
+      url: API_URL,
       async headers() {
         return {
           authorization: `Bearer ${await getToken()}`,
