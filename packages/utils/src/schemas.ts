@@ -21,3 +21,13 @@ export const RegisterUserDto = z.object({
 export type SignInUserDtoType = z.infer<typeof SignInUserDto>;
 
 export type RegisterUserDtoType = z.infer<typeof RegisterUserDto>;
+
+export const loginResponseSchema = z.object({
+  result: z.object({
+    data: z.object({
+      json: z.object({
+        access_token: z.string().jwt(),
+      }),
+    }),
+  }),
+});

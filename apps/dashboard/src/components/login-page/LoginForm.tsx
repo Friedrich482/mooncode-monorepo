@@ -7,10 +7,15 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
+import {
+  INCORRECT_PASSWORD_MESSAGE,
+  USER_NOT_FOUND_MESSAGE,
+} from "@repo/utils/constants";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { SignInUserDto } from "@repo/utils/schemas";
 import { SignInUserDtoType } from "@repo/utils/schemas";
+import fetchJWTToken from "@repo/utils/fetchJWTToken";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,15 +29,9 @@ const LoginForm = () => {
     },
   });
 
-  function onSubmit(values: SignInUserDtoType) {
-    // TODO add fetch call and error handling
-    console.warn(values);
-  }
-
+  // state for the hide/show password option
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
   const handleEyeIconClick = () => setIsPasswordVisible((prev) => !prev);
-
   const EyeIconComponent = () => (
     <div
       className="absolute z-10 pr-2 text-white/60"
@@ -42,6 +41,28 @@ const LoginForm = () => {
       {isPasswordVisible ? <EyeOff /> : <Eye />}
     </div>
   );
+
+  const onSubmit = async (values: SignInUserDtoType) => {
+    try {
+      // send the credentials to the backend and set an http cookie in the browser
+      // TODO communicate the jwt returned by this function to the extension
+      await fetchJWTToken(values.username, values.password);
+    } catch (error) {
+      let errorMessage = "An error occurred";
+
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
+
+      if (errorMessage === INCORRECT_PASSWORD_MESSAGE) {
+        form.setError("password", { message: errorMessage });
+      } else if (errorMessage === USER_NOT_FOUND_MESSAGE) {
+        form.setError("username", { message: errorMessage });
+      } else {
+        form.setError("root", { message: errorMessage });
+      }
+    }
+  };
 
   return (
     <main className="flex flex-col items-center justify-center pb-8 pt-16 text-black dark:text-white">
@@ -77,18 +98,17 @@ const LoginForm = () => {
               <>
                 <FormItem>
                   <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <div className="relative flex items-center justify-end gap-2">
+                  <div className="relative flex items-center justify-end gap-2">
+                    <FormControl>
                       <Input
                         placeholder="**********"
                         {...field}
                         type={isPasswordVisible ? "text" : "password"}
                         className="h-10 flex-nowrap focus-visible:ring-moon/65"
                       />
-
-                      <EyeIconComponent />
-                    </div>
-                  </FormControl>
+                    </FormControl>
+                    <EyeIconComponent />
+                  </div>
                   <FormMessage />
                 </FormItem>
               </>

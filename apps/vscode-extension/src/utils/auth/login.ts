@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import fetchJWTToken from "./fetchJWTToken";
+import fetchJWTToken from "@repo/utils/fetchJWTToken";
 import { getExtensionContext } from "../../extension";
-import { loginResponseSchema } from "../../types-schemas";
+import { loginResponseSchema } from "@repo/utils/schemas";
 import register from "./register";
 import storeToken from "./storeToken";
 

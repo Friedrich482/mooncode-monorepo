@@ -17,7 +17,9 @@ export class AuthRouter {
       signInUser: this.trpcService
         .publicProcedure()
         .input(SignInUserDto)
-        .mutation(async ({ input }) => this.authService.signIn(input)),
+        .mutation(async ({ input, ctx }) =>
+          this.authService.signIn(input, ctx.res),
+        ),
 
       registerUser: this.trpcService
         .publicProcedure()

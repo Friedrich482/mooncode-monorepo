@@ -1,4 +1,4 @@
-import { LOGIN_URL } from "../../constants";
+import { LOGIN_URL } from "./constants";
 
 const fetchJWTToken = async (username: string, password: string) => {
   const res = await fetch(LOGIN_URL, {
@@ -6,19 +6,20 @@ const fetchJWTToken = async (username: string, password: string) => {
     headers: {
       "Content-Type": "application/json",
     },
-    body: `{"json": ${JSON.stringify({
-      username,
-      password,
-    })}
-    }`,
+    body: JSON.stringify({
+      // we pass json here because of superjson transformer
+      json: {
+        username,
+        password,
+      },
+    }),
+    credentials: "include",
   });
 
+  // type this properly
   if (!res.ok) {
     const errorData = await res.json();
-
-    throw new Error(
-      (errorData as { error: { message: string } }).error.message,
-    );
+    throw new Error(errorData.error.json.message);
   }
 
   return res.json();
