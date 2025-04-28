@@ -25,6 +25,10 @@ export class AuthRouter {
         .publicProcedure()
         .input(RegisterUserDto)
         .mutation(async ({ input }) => this.usersService.create(input)),
+
+      checkAuthStatus: this.trpcService
+        .protectedProcedure()
+        .query(async ({ ctx }) => this.authService.checkAuthStatus(ctx)),
     }),
   };
 }

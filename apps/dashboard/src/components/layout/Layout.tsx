@@ -1,12 +1,30 @@
+import { Outlet, useNavigation } from "react-router";
+import { ClipLoader } from "react-spinners";
 import Footer from "./Footer";
 import Header from "./header/Header";
-import { Outlet } from "react-router";
+import { cn } from "@/lib/utils";
+
+const GlobalSpinner = () => (
+  <div className="flex h-dvh items-center justify-center">
+    {/* moon color */}
+    <ClipLoader size={80} color="#FFDC67" />
+  </div>
+);
 
 const Layout = () => {
+  const navigation = useNavigation();
+
+  const isLoading = navigation.state === "loading";
+
   return (
     <>
       <Header />
-      <Outlet />
+      <>
+        <div className={cn(isLoading && "opacity-70")}>
+          {isLoading && <GlobalSpinner />}
+          <Outlet />
+        </div>
+      </>
       <Footer />
     </>
   );

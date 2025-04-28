@@ -1,4 +1,5 @@
-import { Button } from "../../ui/button";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 
 const HorizontalNavbar = () => {
   return (
@@ -10,7 +11,7 @@ const HorizontalNavbar = () => {
             asChild
             className="self-center bg-transparent text-neutral-700 shadow-none hover:bg-transparent hover:text-black dark:text-neutral-400 dark:hover:text-white"
           >
-            <a href="/dashboard">Dashboard</a>
+            <Link to="/dashboard">Dashboard</Link>
           </Button>
         </li>
       </ul>

@@ -17,6 +17,7 @@ import { SignInUserDto } from "@repo/utils/schemas";
 import { SignInUserDtoType } from "@repo/utils/schemas";
 import fetchJWTToken from "@repo/utils/fetchJWTToken";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -42,11 +43,14 @@ const LoginForm = () => {
     </div>
   );
 
+  const navigate = useNavigate();
+
   const onSubmit = async (values: SignInUserDtoType) => {
     try {
       // send the credentials to the backend and set an http cookie in the browser
-      // TODO communicate the jwt returned by this function to the extension
       await fetchJWTToken(values.username, values.password);
+      navigate("/dashboard");
+      // TODO communicate the jwt returned by this function to the extension
     } catch (error) {
       let errorMessage = "An error occurred";
 

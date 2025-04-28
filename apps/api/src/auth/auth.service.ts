@@ -7,6 +7,7 @@ import { JwtService } from "@nestjs/jwt";
 import { Response } from "express";
 import { SignInUserDtoType } from "@repo/utils/schemas";
 import { TRPCError } from "@trpc/server";
+import { TrpcContext } from "src/trpc/trpc.service";
 import { UsersService } from "src/users/users.service";
 import { compare } from "bcrypt";
 
@@ -50,5 +51,10 @@ export class AuthService {
     return {
       access_token: token,
     };
+  }
+
+  async checkAuthStatus(ctx: TrpcContext) {
+    // the protectedProcedure check has been passed so the user is authenticated
+    return { isAuthenticated: true, user: ctx.user };
   }
 }
