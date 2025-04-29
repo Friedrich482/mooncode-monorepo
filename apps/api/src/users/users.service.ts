@@ -23,17 +23,17 @@ export class UsersService {
   async create(createUserDto: CreateUserDtoType) {
     const { email, password, username } = createUserDto;
 
-    // check if a user with the username already exists
+    // check if a user with the email already exists
     const [existingUser] = await this.db
       .select()
       .from(users)
-      .where(eq(users.username, username))
+      .where(eq(users.email, email))
       .limit(1);
 
     if (existingUser) {
       throw new TRPCError({
         code: "CONFLICT",
-        message: "This username is already used",
+        message: "This email is already used",
       });
     }
 
@@ -67,7 +67,8 @@ export class UsersService {
     if (!user) throw new NotFoundException("User not found");
     return user;
   }
-  async findByUsername(username: string) {
+
+  async findByEmail(email: string) {
     const [user] = await this.db
       .select({
         email: users.email,
@@ -77,7 +78,7 @@ export class UsersService {
         password: users.password,
       })
       .from(users)
-      .where(eq(users.username, username))
+      .where(eq(users.email, email))
       .limit(1);
 
     if (!user)

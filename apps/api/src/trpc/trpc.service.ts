@@ -9,7 +9,7 @@ import superjson from "superjson";
 export type TrpcContext = {
   req: trpcExpress.CreateExpressContextOptions["req"];
   res: trpcExpress.CreateExpressContextOptions["res"];
-  user?: Pick<JwtPayloadDtoType, "sub" | "username">;
+  user?: Pick<JwtPayloadDtoType, "sub">;
 };
 
 export const createContext = async (
@@ -51,7 +51,7 @@ export class TrpcService {
       return opts.next({
         ctx: {
           ...opts.ctx,
-          user: { sub: payload.sub, username: payload.username },
+          user: { sub: payload.sub },
         },
       });
     });

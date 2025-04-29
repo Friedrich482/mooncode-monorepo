@@ -11,13 +11,13 @@ import {
   INCORRECT_PASSWORD_MESSAGE,
   USER_NOT_FOUND_MESSAGE,
 } from "@repo/utils/constants";
+import { Link, useNavigate } from "react-router";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { SignInUserDto } from "@repo/utils/schemas";
 import { SignInUserDtoType } from "@repo/utils/schemas";
 import fetchJWTToken from "@repo/utils/fetchJWTToken";
 import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -25,7 +25,7 @@ const LoginForm = () => {
   const form = useForm<SignInUserDtoType>({
     resolver: zodResolver(SignInUserDto),
     defaultValues: {
-      username: "",
+      email: "",
       password: "",
     },
   });
@@ -48,7 +48,7 @@ const LoginForm = () => {
   const onSubmit = async (values: SignInUserDtoType) => {
     try {
       // send the credentials to the backend and set an http cookie in the browser
-      await fetchJWTToken(values.username, values.password);
+      await fetchJWTToken(values.email, values.password);
       navigate("/dashboard");
       // TODO communicate the jwt returned by this function to the extension
     } catch (error) {
@@ -61,7 +61,7 @@ const LoginForm = () => {
       if (errorMessage === INCORRECT_PASSWORD_MESSAGE) {
         form.setError("password", { message: errorMessage });
       } else if (errorMessage === USER_NOT_FOUND_MESSAGE) {
-        form.setError("username", { message: errorMessage });
+        form.setError("email", { message: errorMessage });
       } else {
         form.setError("root", { message: errorMessage });
       }
@@ -80,13 +80,13 @@ const LoginForm = () => {
           </h2>
           <FormField
             control={form.control}
-            name="username"
+            name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
-                    placeholder="Friedrich"
+                    placeholder="example@email.com"
                     {...field}
                     className="h-10 focus-visible:ring-moon/65"
                   />
@@ -118,7 +118,18 @@ const LoginForm = () => {
               </>
             )}
           />
-          <Button type="submit" className="h-10 w-1/2 self-center rounded-lg">
+          <p>
+            Not registered yet ?{" "}
+            <Link to="/register" className="underline">
+              Sign Up
+            </Link>
+          </p>
+          <Button
+            variant="default"
+            type="submit"
+            disabled={form.formState.isSubmitting}
+            className="h-10 w-1/2 self-center rounded-lg"
+          >
             Log in
           </Button>
         </form>

@@ -2,14 +2,13 @@ import z from "zod";
 
 export const JWTDto = z.object({
   sub: z.string().ulid(),
-  username: z.string().min(2),
   iat: z.number().int(),
   exp: z.number().int(),
 });
 
 export const SignInUserDto = z.object({
-  username: z.string().min(3, "Username must be at least 3 characters"),
-  password: z.string(),
+  email: z.string().email(),
+  password: z.string().min(1, "Password is required"),
 });
 
 export const RegisterUserDto = z.object({

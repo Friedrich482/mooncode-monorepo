@@ -1,9 +1,4 @@
-import {
-  FindByIdDto,
-  FindByUsernameDto,
-  UpdateProfileDto,
-  UpdateUserDto,
-} from "./users.dto";
+import { FindByIdDto, UpdateProfileDto, UpdateUserDto } from "./users.dto";
 import { Injectable } from "@nestjs/common";
 import { TrpcService } from "src/trpc/trpc.service";
 import { UsersService } from "./users.service";
@@ -34,13 +29,6 @@ export class UsersRouter {
         .input(FindByIdDto)
         .query(async ({ input }) =>
           this.usersService.findOne({ id: input.id }),
-        ),
-
-      getUserByUsername: this.trpcService
-        .protectedProcedure()
-        .input(FindByUsernameDto)
-        .query(async ({ input }) =>
-          this.usersService.findByUsername(input.username),
         ),
 
       updateUser: this.trpcService

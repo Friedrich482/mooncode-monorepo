@@ -1,6 +1,6 @@
 import { LOGIN_URL } from "./constants";
 
-const fetchJWTToken = async (username: string, password: string) => {
+const fetchJWTToken = async (email: string, password: string) => {
   const res = await fetch(LOGIN_URL, {
     method: "POST",
     headers: {
@@ -9,7 +9,7 @@ const fetchJWTToken = async (username: string, password: string) => {
     body: JSON.stringify({
       // we pass json here because of superjson transformer
       json: {
-        username,
+        email,
         password,
       },
     }),

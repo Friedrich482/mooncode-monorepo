@@ -3,6 +3,7 @@ import {
   USER_NOT_FOUND_MESSAGE,
 } from "@repo/utils/constants";
 import { Injectable } from "@nestjs/common";
+import { JwtPayloadDtoType } from "src/types";
 import { JwtService } from "@nestjs/jwt";
 import { Response } from "express";
 import { SignInUserDtoType } from "@repo/utils/schemas";
@@ -19,8 +20,8 @@ export class AuthService {
   ) {}
 
   async signIn(signInDto: SignInUserDtoType, response: Response) {
-    const { password: pass, username } = signInDto;
-    const user = await this.usersService.findByUsername(username);
+    const { password: pass, email } = signInDto;
+    const user = await this.usersService.findByEmail(email);
 
     if (!user) {
       throw new TRPCError({
@@ -37,7 +38,7 @@ export class AuthService {
       });
     }
 
-    const payload = { sub: user.id, username: user.username };
+    const payload: Pick<JwtPayloadDtoType, "sub"> = { sub: user.id };
     const token = await this.jwtService.signAsync(payload);
 
     // Set the HTTP-only cookie
