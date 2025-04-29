@@ -15,7 +15,7 @@ import { Link, useNavigate } from "react-router";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { SignInUserDto } from "@repo/utils/schemas";
-import { SignInUserDtoType } from "@repo/utils/schemas";
+import { SignInUserDtoType } from "@repo/utils/types";
 import fetchJWTToken from "@repo/utils/fetchJWTToken";
 import { useForm } from "react-hook-form";
 import { useState } from "react";

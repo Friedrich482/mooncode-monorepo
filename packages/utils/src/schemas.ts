@@ -17,10 +17,6 @@ export const RegisterUserDto = z.object({
   username: z.string().min(3, "Username must be at least 3 characters"),
 });
 
-export type SignInUserDtoType = z.infer<typeof SignInUserDto>;
-
-export type RegisterUserDtoType = z.infer<typeof RegisterUserDto>;
-
 export const loginResponseSchema = z.object({
   result: z.object({
     data: z.object({

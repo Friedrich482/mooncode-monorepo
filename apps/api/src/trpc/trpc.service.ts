@@ -2,7 +2,7 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { TRPCError, initTRPC } from "@trpc/server";
 import { EnvService } from "src/env/env.service";
-import { JwtPayloadDtoType } from "src/types";
+import { JwtPayloadDtoType } from "@repo/utils/types";
 import { JwtService } from "@nestjs/jwt";
 import superjson from "superjson";
 

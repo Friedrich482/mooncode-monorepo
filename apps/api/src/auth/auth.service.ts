@@ -2,11 +2,10 @@ import {
   INCORRECT_PASSWORD_MESSAGE,
   USER_NOT_FOUND_MESSAGE,
 } from "@repo/utils/constants";
+import { JwtPayloadDtoType, SignInUserDtoType } from "@repo/utils/types";
 import { Injectable } from "@nestjs/common";
-import { JwtPayloadDtoType } from "src/types";
 import { JwtService } from "@nestjs/jwt";
 import { Response } from "express";
-import { SignInUserDtoType } from "@repo/utils/schemas";
 import { TRPCError } from "@trpc/server";
 import { TrpcContext } from "src/trpc/trpc.service";
 import { UsersService } from "src/users/users.service";
