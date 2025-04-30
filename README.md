@@ -5,7 +5,7 @@ This Turborepo starter is maintained by the Turborepo core team.
 
 Run the following command:
 
-```sh
+```sh  
 npx create-turbo@latest
 ```
 
