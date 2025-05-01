@@ -2,14 +2,14 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { TRPCError, initTRPC } from "@trpc/server";
 import { EnvService } from "src/env/env.service";
-import { JwtPayloadDtoType } from "src/types";
+import { JwtPayloadDtoType } from "@repo/utils/types";
 import { JwtService } from "@nestjs/jwt";
 import superjson from "superjson";
 
 export type TrpcContext = {
   req: trpcExpress.CreateExpressContextOptions["req"];
   res: trpcExpress.CreateExpressContextOptions["res"];
-  user?: Pick<JwtPayloadDtoType, "sub" | "username">;
+  user?: Pick<JwtPayloadDtoType, "sub">;
 };
 
 export const createContext = async (
@@ -51,7 +51,7 @@ export class TrpcService {
       return opts.next({
         ctx: {
           ...opts.ctx,
-          user: { sub: payload.sub, username: payload.username },
+          user: { sub: payload.sub },
         },
       });
     });

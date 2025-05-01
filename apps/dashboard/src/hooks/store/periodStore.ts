@@ -1,7 +1,7 @@
 import type { GroupBy, PeriodResolution } from "@repo/utils/types";
 import { Period } from "@/types-schemas";
 import { create } from "zustand";
-import { getPeriodStoreValuesFromURL } from "@/utils/getPeriodStoreValuesFromURL";
+import getPeriodStoreValuesFromURL from "@/utils/getPeriodStoreValuesFromURL";
 
 type Store = {
   period: Period;

@@ -15,6 +15,7 @@ function makeQueryClient() {
       queries: {
         staleTime: 60 * 1000,
         refetchOnWindowFocus: true,
+        refetchInterval: 60 * 1000,
         retry: (failureCount, error) => {
           try {
             const parsedErrors =

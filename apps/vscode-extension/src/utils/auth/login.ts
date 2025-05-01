@@ -9,9 +9,9 @@ const login = async () => {
   const context = getExtensionContext();
   vscode.window.showInformationMessage("Logging in directly from vscode...");
 
-  const username = await vscode.window.showInputBox({
-    prompt: "Enter your username",
-    title: "Username",
+  const email = await vscode.window.showInputBox({
+    prompt: "Enter your email",
+    title: "Email",
   });
   const password = await vscode.window.showInputBox({
     prompt: "Enter your password",
@@ -19,9 +19,9 @@ const login = async () => {
     title: "Password",
   });
 
-  if (!username || !password) {
+  if (!email || !password) {
     const selection = await vscode.window.showErrorMessage(
-      "Both username and password are required",
+      "Both email and password are required",
       "Try again",
       "Cancel",
     );
@@ -40,7 +40,7 @@ const login = async () => {
     // using it will introduce a circular dependency problem :
     // trpc => token => login => trpc
 
-    const body = await fetchJWTToken(username, password);
+    const body = await fetchJWTToken(email, password);
     const parsedBody = loginResponseSchema.parse(body);
 
     const {

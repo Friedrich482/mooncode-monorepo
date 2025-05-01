@@ -2,10 +2,14 @@ import {
   INCORRECT_PASSWORD_MESSAGE,
   USER_NOT_FOUND_MESSAGE,
 } from "@repo/utils/constants";
+import {
+  JwtPayloadDtoType,
+  RegisterUserDtoType,
+  SignInUserDtoType,
+} from "@repo/utils/types";
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Response } from "express";
-import { SignInUserDtoType } from "@repo/utils/schemas";
 import { TRPCError } from "@trpc/server";
 import { TrpcContext } from "src/trpc/trpc.service";
 import { UsersService } from "src/users/users.service";
@@ -19,8 +23,8 @@ export class AuthService {
   ) {}
 
   async signIn(signInDto: SignInUserDtoType, response: Response) {
-    const { password: pass, username } = signInDto;
-    const user = await this.usersService.findByUsername(username);
+    const { password: pass, email } = signInDto;
+    const user = await this.usersService.findByEmail(email);
 
     if (!user) {
       throw new TRPCError({
@@ -37,7 +41,26 @@ export class AuthService {
       });
     }
 
-    const payload = { sub: user.id, username: user.username };
+    const payload: Pick<JwtPayloadDtoType, "sub"> = { sub: user.id };
+    const token = await this.jwtService.signAsync(payload);
+
+    // Set the HTTP-only cookie
+    response.cookie("auth_token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none", // For cross-origin
+      maxAge: 28 * 24 * 60 * 60 * 1000, // 28 days
+    });
+
+    return {
+      access_token: token,
+    };
+  }
+
+  async register(registerDto: RegisterUserDtoType, response: Response) {
+    const createdUser = await this.usersService.create(registerDto);
+
+    const payload: Pick<JwtPayloadDtoType, "sub"> = { sub: createdUser.id };
     const token = await this.jwtService.signAsync(payload);
 
     // Set the HTTP-only cookie

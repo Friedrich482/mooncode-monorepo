@@ -7,7 +7,7 @@ export const FindByIdDto = z.object({
   id: z.string().ulid(),
 });
 
-export const FindByUsernameDto = z.object({
+export const FindByEmailDto = z.object({
   username: z.string(),
 });
 
