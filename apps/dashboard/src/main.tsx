@@ -1,10 +1,11 @@
 import { RouterProvider, createBrowserRouter } from "react-router";
-import { loginPageRouteLoader, protectedRouteLoader } from "./utils/authLoader";
+import { authRouteLoader, protectedRouteLoader } from "./utils/authLoader";
 import App from "./App.tsx";
 import DashboardPage from "./components/dashboard-page/Dashboard";
 import Layout from "./components/layout/Layout";
-import LoginPage from "./components/login-page/LoginForm";
+import LoginForm from "./components/login-page/LoginForm";
 import React from "react";
+import RegisterForm from "./components/register-page/RegisterForm.tsx";
 import RootPage from "./components/root-page/Root";
 import { createRoot } from "react-dom/client";
 
@@ -21,8 +22,13 @@ const router = createBrowserRouter([
           },
           {
             path: "login",
-            element: <LoginPage />,
-            loader: loginPageRouteLoader,
+            element: <LoginForm />,
+            loader: authRouteLoader,
+          },
+          {
+            path: "register",
+            element: <RegisterForm />,
+            loader: authRouteLoader,
           },
         ],
       },

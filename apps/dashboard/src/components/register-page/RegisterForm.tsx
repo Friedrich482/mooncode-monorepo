@@ -1,4 +1,8 @@
 import {
+  ALREADY_EXISTING_EMAIL_MESSAGE,
+  ALREADY_EXISTING_USERNAME_MESSAGE,
+} from "@repo/utils/constants";
+import {
   Form,
   FormControl,
   FormField,
@@ -6,49 +10,50 @@ import {
   FormLabel,
   FormMessage,
 } from "../ui/form";
-import {
-  INCORRECT_PASSWORD_MESSAGE,
-  USER_NOT_FOUND_MESSAGE,
-} from "@repo/utils/constants";
 import { Link, useNavigate } from "react-router";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 import { Input } from "../ui/input";
-import { SignInUserDto } from "@repo/utils/schemas";
-import { SignInUserDtoType } from "@repo/utils/types";
-import fetchJWTToken from "@repo/utils/fetchJWTToken";
+import { RegisterUserDto } from "@repo/utils/schemas";
+import { RegisterUserDtoType } from "@repo/utils/types";
+import registerUser from "@repo/utils/registerUser";
 import { useForm } from "react-hook-form";
 import useTogglePassword from "@/hooks/useTogglePassword";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-const LoginForm = () => {
-  const form = useForm<SignInUserDtoType>({
-    resolver: zodResolver(SignInUserDto),
+const RegisterForm = () => {
+  const form = useForm<RegisterUserDtoType>({
+    resolver: zodResolver(RegisterUserDto),
     defaultValues: {
       email: "",
       password: "",
+      username: "",
     },
   });
 
   const { isPasswordVisible, EyeIconComponent } = useTogglePassword();
   const navigate = useNavigate();
 
-  const onSubmit = async (values: SignInUserDtoType) => {
+  const onSubmit = async (values: RegisterUserDtoType) => {
     try {
-      // send the credentials to the backend and set an http cookie in the browser
-      await fetchJWTToken(values.email, values.password);
+      await registerUser({
+        email: values.email,
+        username: values.username,
+        password: values.password,
+      });
       navigate("/dashboard");
       // TODO communicate the jwt returned by this function to the extension
     } catch (error) {
       let errorMessage = "An error occurred";
+      console.error(error);
 
       if (error instanceof Error) {
         errorMessage = error.message;
       }
 
-      if (errorMessage === INCORRECT_PASSWORD_MESSAGE) {
-        form.setError("password", { message: errorMessage });
-      } else if (errorMessage === USER_NOT_FOUND_MESSAGE) {
+      if (errorMessage === ALREADY_EXISTING_EMAIL_MESSAGE) {
         form.setError("email", { message: errorMessage });
+      } else if (errorMessage === ALREADY_EXISTING_USERNAME_MESSAGE) {
+        form.setError("username", { message: errorMessage });
       } else {
         form.setError("root", { message: errorMessage });
       }
@@ -63,7 +68,7 @@ const LoginForm = () => {
           className="flex w-[clamp(15rem,60%,25rem)] flex-col gap-8"
         >
           <h2 className="text-center text-3xl text-black dark:text-white max-sm:text-2xl">
-            Login to MoonCode
+            Register
           </h2>
           <FormField
             control={form.control}
@@ -74,6 +79,23 @@ const LoginForm = () => {
                 <FormControl>
                   <Input
                     placeholder="example@email.com"
+                    {...field}
+                    className="h-10 focus-visible:ring-moon/65"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="example"
                     {...field}
                     className="h-10 focus-visible:ring-moon/65"
                   />
@@ -106,9 +128,9 @@ const LoginForm = () => {
             )}
           />
           <p>
-            Not registered yet ?{" "}
-            <Link to="/register" className="underline">
-              Sign Up
+            Already registered ?{" "}
+            <Link to="/login" className="underline">
+              Log in
             </Link>
           </p>
           <Button
@@ -117,7 +139,7 @@ const LoginForm = () => {
             disabled={form.formState.isSubmitting}
             className="h-10 w-1/2 self-center rounded-lg"
           >
-            Log in
+            Register
           </Button>
         </form>
       </Form>
@@ -125,4 +147,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default RegisterForm;

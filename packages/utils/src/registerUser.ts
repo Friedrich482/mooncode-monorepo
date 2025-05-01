@@ -15,18 +15,22 @@ const registerUser = async ({
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      email,
-      username,
-      password,
+      // we pass json here because of superjson
+      json: {
+        email,
+        username,
+        password,
+      },
     }),
+    credentials: "include",
   });
   if (!res.ok) {
     const errorData = await res.json();
 
-    throw new Error(
-      (errorData as { error: { message: string } }).error.message,
-    );
+    throw new Error(errorData.error.json.message);
   }
+
+  return res.json();
 };
 
 export default registerUser;

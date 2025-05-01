@@ -1,9 +1,12 @@
 import * as vscode from "vscode";
-import { TRPCClientError } from "@trpc/client";
-import login from "./login";
-import registerUser from "./registerUser";
+import { getExtensionContext } from "../../extension";
+import { loginResponseSchema } from "@repo/utils/schemas";
+import registerUser from "@repo/utils/registerUser";
+import storeToken from "./storeToken";
 
 const register = async () => {
+  const context = getExtensionContext();
+
   const username = await vscode.window.showInputBox({
     prompt: "Enter your username",
     title: "Username",
@@ -28,22 +31,9 @@ const register = async () => {
     },
   });
 
-  const confirmPassword = await vscode.window.showInputBox({
-    prompt: "Confirm the password",
-    password: true,
-    placeHolder: "********",
-    title: "confirmPassword",
-    validateInput: (input) => {
-      if (input && input !== password) {
-        return "The passwords don't match";
-      }
-      return null;
-    },
-  });
-
-  if (!username || !password || !email || password !== confirmPassword) {
+  if (!username || !password || !email) {
     const selection = await vscode.window.showErrorMessage(
-      "Both email, username and password are required. And both password should match",
+      "Both email, username and password are required",
       "Try again",
       "Cancel",
     );
@@ -57,22 +47,25 @@ const register = async () => {
 
   try {
     // we can't use trpc here for the same reasons as the login function
-    await registerUser({ email, password, username });
+    const body = await registerUser({ email, password, username });
+    const parsedBody = loginResponseSchema.parse(body);
 
-    const selection = await vscode.window.showInformationMessage(
-      "Registered successfully",
-      "Login",
+    const {
+      result: {
+        data: {
+          json: { access_token },
+        },
+      },
+    } = parsedBody;
+
+    await storeToken(context, access_token);
+    vscode.window.showInformationMessage(
+      "Register completed.Logged in successfully",
     );
-
-    if (selection === "Login") {
-      await login();
-    } else {
-      return;
-    }
   } catch (error) {
     let errorMessage = "An error occurred";
 
-    if (error instanceof TRPCClientError) {
+    if (error instanceof Error) {
       errorMessage = error.message;
     }
 

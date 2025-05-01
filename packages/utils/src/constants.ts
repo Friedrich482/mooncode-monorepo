@@ -2,6 +2,8 @@ export const INCOHERENT_DATE_RANGE_ERROR_MESSAGE =
   "Start date must be before end date";
 export const USER_NOT_FOUND_MESSAGE = "User not found";
 export const INCORRECT_PASSWORD_MESSAGE = "Incorrect password";
+export const ALREADY_EXISTING_EMAIL_MESSAGE = "This email is already used";
+export const ALREADY_EXISTING_USERNAME_MESSAGE = "This username already exists";
 
 export const API_URL = "http://localhost:3000/trpc";
 export const LOGIN_URL = "http://localhost:3000/trpc/auth.signInUser";

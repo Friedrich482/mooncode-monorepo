@@ -24,16 +24,29 @@ export class UsersService {
     const { email, password, username } = createUserDto;
 
     // check if a user with the email already exists
-    const [existingUser] = await this.db
+    const [existingUserWithSameEmail] = await this.db
       .select()
       .from(users)
       .where(eq(users.email, email))
       .limit(1);
 
-    if (existingUser) {
+    if (existingUserWithSameEmail) {
       throw new TRPCError({
         code: "CONFLICT",
         message: "This email is already used",
+      });
+    }
+
+    const [existingUserWithSameUsername] = await this.db
+      .select()
+      .from(users)
+      .where(eq(users.username, username))
+      .limit(1);
+
+    if (existingUserWithSameUsername) {
+      throw new TRPCError({
+        code: "CONFLICT",
+        message: "This username already exists",
       });
     }
 
@@ -47,9 +60,9 @@ export class UsersService {
         profilePicture: "picture",
       })
       .returning({
+        id: users.id,
         email: users.email,
         username: users.username,
-        profilePicture: users.profilePicture,
       });
     return userCreated;
   }

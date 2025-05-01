@@ -18,7 +18,7 @@ export const protectedRouteLoader = async () => {
   }
 };
 
-export const loginPageRouteLoader = async () => {
+export const authRouteLoader = async () => {
   try {
     const response = await fetch(`${API_URL}/auth.checkAuthStatus`, {
       credentials: "include",

@@ -11,5 +11,5 @@
     "moduleResolution": "bundler",
     "strict": true
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../../packages/utils/src/registerUser.ts"]
 }
