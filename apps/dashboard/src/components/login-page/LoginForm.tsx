@@ -8,6 +8,7 @@ import {
 } from "../ui/form";
 import {
   INCORRECT_PASSWORD_MESSAGE,
+  LOGIN_URL,
   USER_NOT_FOUND_MESSAGE,
 } from "@repo/utils/constants";
 import { Link, useNavigate } from "react-router";
@@ -35,7 +36,11 @@ const LoginForm = () => {
   const onSubmit = async (values: SignInUserDtoType) => {
     try {
       // send the credentials to the backend and set an http cookie in the browser
-      await fetchJWTToken(values.email, values.password);
+      await fetchJWTToken(LOGIN_URL, {
+        email: values.email,
+        password: values.password,
+      });
+
       navigate("/dashboard");
       // TODO communicate the jwt returned by this function to the extension
     } catch (error) {
