@@ -10,19 +10,17 @@ const Icon = React.forwardRef<
       Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
     >;
   }
->(({ className, Icon, ...props }, ref) => {
-  return (
-    <Button
-      className={cn(
-        "flex size-10 flex-shrink-0 items-center justify-center border-none border-transparent bg-transparent p-0 text-white shadow-none hover:bg-accent hover:text-white [&_svg]:size-auto",
-        className,
-      )}
-      ref={ref}
-      {...props}
-    >
-      <Icon className="text-black dark:text-white" />
-    </Button>
-  );
-});
+>(({ className, Icon, ...props }, ref) => (
+  <Button
+    className={cn(
+      "flex size-10 flex-shrink-0 items-center justify-center border-none border-transparent bg-transparent p-0 text-white shadow-none hover:bg-accent hover:text-white [&_svg]:size-auto",
+      className,
+    )}
+    ref={ref}
+    {...props}
+  >
+    <Icon className="text-black dark:text-white" />
+  </Button>
+));
 
 export default Icon;
