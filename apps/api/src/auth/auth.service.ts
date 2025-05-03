@@ -80,4 +80,17 @@ export class AuthService {
     // the protectedProcedure check has been passed so the user is authenticated
     return { isAuthenticated: true, user: ctx.user };
   }
+
+  async getUser(ctx: TrpcContext) {
+    if (!ctx.user) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User not found",
+      });
+    }
+    const { sub } = ctx.user;
+    const user = await this.usersService.findOne({ id: sub });
+
+    return user;
+  }
 }

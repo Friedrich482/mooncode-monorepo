@@ -1,4 +1,4 @@
-import { LucideProps, Monitor, Moon, Sun } from "lucide-react";
+import { LayoutDashboard, LucideProps, Monitor, Moon, Sun } from "lucide-react";
 import {
   endOfMonth,
   endOfWeek,
@@ -21,12 +21,26 @@ export const THEME_DROPDOWN_ITEMS: {
     Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
   >;
   theme: Theme;
-  fill?: string;
 }[] = [
   { text: "Light", Icon: Sun, theme: "light" },
-  { text: "Dark", Icon: Moon, theme: "dark", fill: "white" },
+  { text: "Dark", Icon: Moon, theme: "dark" },
   { text: "System", Icon: Monitor, theme: "system" },
 ];
+
+export const AUTH_DROPDOWN_ITEMS: {
+  text: string;
+  Icon: React.ForwardRefExoticComponent<
+    Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
+  >;
+  url: string;
+}[] = [
+  {
+    text: "Dashboard",
+    Icon: LayoutDashboard,
+    url: "/dashboard",
+  },
+];
+
 export const PERIODS = [
   "Last 7 days",
   "This week",
