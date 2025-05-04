@@ -1,7 +1,61 @@
-import Icon from "../../ui/Icon";
-import { User } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { LogOut, User } from "lucide-react";
+import { AUTH_DROPDOWN_ITEMS } from "@/constants";
+import { Button } from "@/components/ui/button";
+import GravatarAvatar from "./GravatarAvatar";
+import Icon from "@/components/ui/Icon";
+import { Link } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { useTRPC } from "@/utils/trpc";
 
 const AuthDropDown = () => {
-  return <Icon Icon={User} />;
+  const trpc = useTRPC();
+
+  const { data } = useQuery(trpc.auth.getUser.queryOptions());
+
+  if (!data) {
+    return (
+      <Link to="/login">
+        <Icon Icon={User} />
+      </Link>
+    );
+  }
+
+  const { email, username } = data;
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <GravatarAvatar email={email} />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="flex w-48 -translate-x-2 flex-col gap-1 p-2">
+        <div className="flex flex-col px-2 py-1">
+          <p>{username}</p>
+          <p className="text-sm opacity-50">{email}</p>
+        </div>
+        <DropdownMenuSeparator className="w-full" />
+        {AUTH_DROPDOWN_ITEMS.map(({ Icon, text, url }) => (
+          <DropdownMenuItem
+            className="cursor-pointer rounded-md py-1 text-base"
+            key={text}
+          >
+            <Icon className="size-5" />
+            <Link to={url}>{text}</Link>
+          </DropdownMenuItem>
+        ))}
+        <DropdownMenuSeparator className="w-full" />
+        <Button variant="ghost" className="flex justify-start gap-2">
+          <Icon Icon={LogOut} className="size-4" />
+          Log Out{" "}
+        </Button>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 };
 export default AuthDropDown;

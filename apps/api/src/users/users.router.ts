@@ -11,12 +11,6 @@ export class UsersRouter {
 
   procedures = {
     users: this.trpcService.trpc.router({
-      getProfile: this.trpcService
-        .protectedProcedure()
-        .query(async ({ ctx }) =>
-          this.usersService.findOne({ id: ctx.user.sub }),
-        ),
-
       updateProfile: this.trpcService
         .protectedProcedure()
         .input(UpdateProfileDto)

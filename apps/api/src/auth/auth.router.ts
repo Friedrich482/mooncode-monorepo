@@ -31,6 +31,10 @@ export class AuthRouter {
       checkAuthStatus: this.trpcService
         .protectedProcedure()
         .query(async ({ ctx }) => this.authService.checkAuthStatus(ctx)),
+
+      getUser: this.trpcService
+        .protectedProcedure()
+        .query(async ({ ctx }) => this.authService.getUser(ctx)),
     }),
   };
 }

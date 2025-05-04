@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { LOGIN_URL } from "@repo/utils/constants";
 import fetchJWTToken from "@repo/utils/fetchJWTToken";
 import { getExtensionContext } from "../../extension";
 import { loginResponseSchema } from "@repo/utils/schemas";
@@ -40,7 +41,7 @@ const login = async () => {
     // using it will introduce a circular dependency problem :
     // trpc => token => login => trpc
 
-    const body = await fetchJWTToken(email, password);
+    const body = await fetchJWTToken(LOGIN_URL, { email, password });
     const parsedBody = loginResponseSchema.parse(body);
 
     const {

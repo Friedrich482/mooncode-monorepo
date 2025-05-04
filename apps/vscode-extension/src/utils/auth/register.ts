@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
+import { REGISTER_URL } from "@repo/utils/constants";
+import fetchJWTToken from "@repo/utils/fetchJWTToken";
 import { getExtensionContext } from "../../extension";
 import { loginResponseSchema } from "@repo/utils/schemas";
-import registerUser from "@repo/utils/registerUser";
 import storeToken from "./storeToken";
 
 const register = async () => {
@@ -47,7 +48,11 @@ const register = async () => {
 
   try {
     // we can't use trpc here for the same reasons as the login function
-    const body = await registerUser({ email, password, username });
+    const body = await fetchJWTToken(REGISTER_URL, {
+      email,
+      password,
+      username,
+    });
     const parsedBody = loginResponseSchema.parse(body);
 
     const {

@@ -1,6 +1,7 @@
 import {
   ALREADY_EXISTING_EMAIL_MESSAGE,
   ALREADY_EXISTING_USERNAME_MESSAGE,
+  REGISTER_URL,
 } from "@repo/utils/constants";
 import {
   Form,
@@ -15,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "../ui/input";
 import { RegisterUserDto } from "@repo/utils/schemas";
 import { RegisterUserDtoType } from "@repo/utils/types";
-import registerUser from "@repo/utils/registerUser";
+import fetchJWTToken from "@repo/utils/fetchJWTToken";
 import { useForm } from "react-hook-form";
 import useTogglePassword from "@/hooks/useTogglePassword";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -35,7 +36,7 @@ const RegisterForm = () => {
 
   const onSubmit = async (values: RegisterUserDtoType) => {
     try {
-      await registerUser({
+      await fetchJWTToken(REGISTER_URL, {
         email: values.email,
         username: values.username,
         password: values.password,

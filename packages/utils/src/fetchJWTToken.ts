@@ -1,24 +1,34 @@
-import { LOGIN_URL } from "./constants";
+import { AuthEndPointURL, TrpcAuthError } from "./types";
 
-const fetchJWTToken = async (email: string, password: string) => {
-  const res = await fetch(LOGIN_URL, {
+const fetchJWTToken = async (
+  endpointURL: AuthEndPointURL,
+  body: { email: string; password: string; username?: string },
+) => {
+  const { email, password, username } = body;
+  const res = await fetch(endpointURL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       // we pass json here because of superjson transformer
-      json: {
-        email,
-        password,
-      },
+      json: username
+        ? {
+            email,
+            password,
+            username,
+          }
+        : {
+            email,
+            password,
+          },
     }),
     credentials: "include",
   });
 
   // type this properly
   if (!res.ok) {
-    const errorData = await res.json();
+    const errorData = (await res.json()) as TrpcAuthError;
     throw new Error(errorData.error.json.message);
   }
 
