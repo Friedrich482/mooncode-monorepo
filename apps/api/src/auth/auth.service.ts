@@ -21,6 +21,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
   ) {}
+  private readonly AUTH_COOKIE_NAME = "auth_token";
 
   async signIn(signInDto: SignInUserDtoType, response: Response) {
     const { password: pass, email } = signInDto;
@@ -45,10 +46,10 @@ export class AuthService {
     const token = await this.jwtService.signAsync(payload);
 
     // Set the HTTP-only cookie
-    response.cookie("auth_token", token, {
+    response.cookie(this.AUTH_COOKIE_NAME, token, {
       httpOnly: true,
       secure: true,
-      sameSite: "none", // For cross-origin
+      sameSite: "none",
       maxAge: 28 * 24 * 60 * 60 * 1000, // 28 days
     });
 
@@ -64,11 +65,11 @@ export class AuthService {
     const token = await this.jwtService.signAsync(payload);
 
     // Set the HTTP-only cookie
-    response.cookie("auth_token", token, {
+    response.cookie(this.AUTH_COOKIE_NAME, token, {
       httpOnly: true,
       secure: true,
-      sameSite: "none", // For cross-origin
-      maxAge: 28 * 24 * 60 * 60 * 1000, // 28 days
+      sameSite: "none",
+      maxAge: 28 * 24 * 60 * 60 * 1000,
     });
 
     return {
@@ -92,5 +93,9 @@ export class AuthService {
     const user = await this.usersService.findOne({ id: sub });
 
     return user;
+  }
+
+  async logOut(response: Response) {
+    response.clearCookie(this.AUTH_COOKIE_NAME);
   }
 }

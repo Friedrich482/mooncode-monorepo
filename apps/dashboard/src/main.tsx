@@ -30,16 +30,10 @@ const router = createBrowserRouter([
             element: <RegisterForm />,
             loader: authRouteLoader,
           },
-        ],
-      },
-      {
-        element: <Layout />,
-        loader: protectedRouteLoader,
-
-        children: [
           {
             path: "dashboard",
             element: <DashboardPage />,
+            loader: protectedRouteLoader,
           },
         ],
       },
