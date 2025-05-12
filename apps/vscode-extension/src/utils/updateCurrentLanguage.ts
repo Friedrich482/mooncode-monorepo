@@ -1,8 +1,12 @@
 import getLanguageId from "./getLanguageId";
 import { languagesData } from "../constants";
 
-const updateCurrentLanguage = (currentLanguageId: string) => {
-  currentLanguageId = getLanguageId(currentLanguageId) || "other";
+const updateCurrentLanguage = (currentLanguageId: string | undefined) => {
+  currentLanguageId = getLanguageId(currentLanguageId);
+
+  if (!currentLanguageId) {
+    return;
+  }
 
   if (!languagesData[currentLanguageId]) {
     languagesData[currentLanguageId] = {
