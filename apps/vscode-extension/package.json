@@ -17,8 +17,13 @@
   "contributes": {
     "commands": [
       {
-        "command": "MoonCode.showData",
-        "title": "MoonCode: Show Data",
+        "command": "MoonCode.showCurrentData",
+        "title": "MoonCode: Show Current Data",
+        "icon": "e"
+      },
+      {
+        "command": "MoonCode.showInitialData",
+        "title": "MoonCode: Show Initial Data",
         "icon": "e"
       },
       {

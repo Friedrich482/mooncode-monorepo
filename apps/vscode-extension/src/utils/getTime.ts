@@ -4,20 +4,6 @@ import { type LanguagesData } from "../types-schemas";
 import getLanguageId from "./getLanguageId";
 import updateCurrentLanguage from "./updateCurrentLanguage";
 
-export const updateLanguageData = (language: string) => {
-  if (!languagesData[language]) {
-    languagesData[language] = {
-      elapsedTime: 0,
-      startTime: performance.now(),
-      lastActivityTime: performance.now(),
-      frozenTime: null,
-      freezeStartTime: null,
-      isFrozen: false,
-    };
-  }
-  return languagesData[language];
-};
-
 const getTime = (): (() => LanguagesData) => {
   const disposables: vscode.Disposable[] = [];
 

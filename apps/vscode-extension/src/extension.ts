@@ -29,6 +29,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
   setStatusBarItem(timeSpent, statusBarItem);
 
+  // initialize the time for each language found
+
   Object.keys(initialLanguagesData).forEach((languageName) => {
     const timeSpent = initialLanguagesData[languageName];
     const now = performance.now();
@@ -47,34 +49,47 @@ export async function activate(context: vscode.ExtensionContext) {
   let currentLanguagesData = timeGetter();
   let body: unknown;
 
-  const showDataCommand = vscode.commands.registerCommand(
-    "MoonCode.showData",
+  // debugging commands
+  const showCurrentDataCommand = vscode.commands.registerCommand(
+    "MoonCode.showCurrentData",
     () => {
       currentLanguagesData = timeGetter();
       vscode.window.showInformationMessage(
-        `currentLanguagesData: ${JSON.stringify(Object.entries(currentLanguagesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}
-        initialLanguagesData: ${JSON.stringify(Object.entries(initialLanguagesData).map(([key, elapsedTime]) => `${key}: ${elapsedTime} seconds`))}`,
+        `currentLanguagesData: ${JSON.stringify(Object.entries(currentLanguagesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}`,
       );
     },
   );
+
+  const showInitialDataCommand = vscode.commands.registerCommand(
+    "MoonCode.showInitialData",
+    () => {
+      vscode.window.showInformationMessage(
+        `initialLanguagesData: ${JSON.stringify(Object.entries(initialLanguagesData).map(([key, elapsedTime]) => `${key}: ${elapsedTime} seconds`))}`,
+      );
+    },
+  );
+
   const loginCommand = vscode.commands.registerCommand(
     "MoonCode.login",
     async () => {
       await login();
     },
   );
+
   const registerCommand = vscode.commands.registerCommand(
     "MoonCode.register",
     async () => {
       await register();
     },
   );
+
   const logoutCommand = vscode.commands.registerCommand(
     "MoonCode.logout",
     async () => {
       await logout();
     },
   );
+
   const openDashBoardCommand = vscode.commands.registerCommand(
     "MoonCode.openDashBoard",
     openDashBoard,
@@ -85,7 +100,8 @@ export async function activate(context: vscode.ExtensionContext) {
   }, 60000);
 
   context.subscriptions.push(
-    showDataCommand,
+    showCurrentDataCommand,
+    showInitialDataCommand,
     loginCommand,
     registerCommand,
     logoutCommand,

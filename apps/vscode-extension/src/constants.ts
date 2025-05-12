@@ -8,6 +8,7 @@ export const languageMapping: Record<string, string> = {
   dockerfile: "docker",
   javascriptreact: "javascript",
   typescriptreact: "typescript",
+  jsonc: "json",
 };
 
 export const localUrlPort = 4208;

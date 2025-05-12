@@ -1,10 +1,22 @@
 import getLanguageId from "./getLanguageId";
-import { updateLanguageData } from "./getTime";
+import { languagesData } from "../constants";
 
 const updateCurrentLanguage = (currentLanguageId: string) => {
   currentLanguageId = getLanguageId(currentLanguageId) || "other";
 
-  const currentLanguageData = updateLanguageData(currentLanguageId);
+  if (!languagesData[currentLanguageId]) {
+    languagesData[currentLanguageId] = {
+      elapsedTime: 0,
+      startTime: performance.now(),
+      lastActivityTime: performance.now(),
+      frozenTime: null,
+      freezeStartTime: null,
+      isFrozen: false,
+    };
+  }
+
+  const currentLanguageData = languagesData[currentLanguageId];
+
   currentLanguageData.lastActivityTime = performance.now();
 };
 
