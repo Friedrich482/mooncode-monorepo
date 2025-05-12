@@ -5,17 +5,19 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Link, useNavigate } from "react-router";
 import { LogOut, User } from "lucide-react";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { AUTH_DROPDOWN_ITEMS } from "@/constants";
-import { Button } from "@/components/ui/button";
 import GravatarAvatar from "./GravatarAvatar";
 import Icon from "@/components/ui/Icon";
-import { Link } from "react-router";
-import { useQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
 
 const AuthDropDown = () => {
   const trpc = useTRPC();
+  const navigate = useNavigate();
+
+  const mutation = useMutation(trpc.auth.logOut.mutationOptions());
 
   const { data } = useQuery(trpc.auth.getUser.queryOptions());
 
@@ -50,10 +52,19 @@ const AuthDropDown = () => {
           </DropdownMenuItem>
         ))}
         <DropdownMenuSeparator className="w-full" />
-        <Button variant="ghost" className="flex justify-start gap-2">
-          <Icon Icon={LogOut} className="size-4" />
+        <DropdownMenuItem
+          className="cursor-pointer rounded-md py-1 text-base"
+          onClick={() => {
+            mutation.mutate(undefined, {
+              onSuccess: () => {
+                navigate("/login");
+              },
+            });
+          }}
+        >
+          <LogOut />
           Log Out{" "}
-        </Button>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

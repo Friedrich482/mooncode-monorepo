@@ -1,6 +1,7 @@
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { TRPCError, initTRPC } from "@trpc/server";
+import { COOKIE_NOT_FOUND_MESSAGE } from "@repo/utils/constants";
 import { EnvService } from "src/env/env.service";
 import { JwtPayloadDtoType } from "@repo/utils/types";
 import { JwtService } from "@nestjs/jwt";
@@ -67,7 +68,7 @@ export class TrpcService {
     if (!accessToken) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: "Auth token cookie missing",
+        message: COOKIE_NOT_FOUND_MESSAGE,
       });
     }
 

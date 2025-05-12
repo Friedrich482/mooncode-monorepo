@@ -35,6 +35,10 @@ export class AuthRouter {
       getUser: this.trpcService
         .protectedProcedure()
         .query(async ({ ctx }) => this.authService.getUser(ctx)),
+
+      logOut: this.trpcService
+        .protectedProcedure()
+        .mutation(async ({ ctx }) => this.authService.logOut(ctx.res)),
     }),
   };
 }
