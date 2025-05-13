@@ -15,3 +15,4 @@ export const localUrlPort = 4208;
 export const localUrl = `http://localhost:${localUrlPort}`;
 
 export let languagesData: LanguagesData = {};
+export const SYNC_DATA_KEY = "mooncodeData";
