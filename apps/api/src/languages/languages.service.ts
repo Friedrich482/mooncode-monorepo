@@ -59,6 +59,9 @@ export class LanguagesService {
           eq(languages.languageName, languageName),
         ),
       );
+
+    if (!languageData) return null;
+
     return languageData;
   }
 

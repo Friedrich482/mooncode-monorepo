@@ -10,11 +10,20 @@ export type LanguageData = {
   isFrozen: boolean;
 };
 
-export const globalStateInitialDataSchema = z.object({
-  timeSpentToday: z.number(),
-  timeSpentPerLanguage: z.record(z.string(), z.number()),
-  date: z.date(),
-});
+export const globalStateInitialDataSchema = z.record(
+  z.string(), // the localDateString of the day
+  z.object({
+    timeSpentToday: z.number(),
+    timeSpentPerLanguage: z.record(z.string(), z.number()),
+    updatedAt: z.union([
+      z.date(),
+      z
+        .string()
+        .datetime()
+        .transform((str) => new Date(str)),
+    ]),
+  }),
+);
 
 export type LanguagesData = Record<string, LanguageData>;
 

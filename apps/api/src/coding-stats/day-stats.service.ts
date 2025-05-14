@@ -126,6 +126,7 @@ export class DayStatsService {
         returningDailyData.dailyDataId,
         key,
       );
+
       if (!existingLanguageData?.languageName) {
         // if it doesn't exists, create it, for each language
         const createdLanguageData = await this.languagesService.createLanguage({

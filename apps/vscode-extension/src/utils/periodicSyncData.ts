@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { SYNC_DATA_KEY } from "../constants";
 import { TRPCClientError } from "@trpc/client";
 import getTime from "./getTime";
+import { globalStateInitialDataSchema } from "../types-schemas";
 import setStatusBarItem from "./setStatusBarItem";
 import trpc from "./trpc/client";
 
@@ -41,10 +42,19 @@ const periodicSyncData = async (
   } finally {
     try {
       // save the languages data in the vscode global state
+      const todaysDateString = new Date().toLocaleDateString();
+
+      const globalStateData = globalStateInitialDataSchema.parse(
+        await context.globalState.get(SYNC_DATA_KEY),
+      );
+
       await context.globalState.update(SYNC_DATA_KEY, {
-        timeSpentToday,
-        timeSpentPerLanguage: languagesToSync,
-        date: new Date(),
+        ...globalStateData,
+        [todaysDateString]: {
+          timeSpentToday,
+          timeSpentPerLanguage: languagesToSync,
+          updatedAt: new Date(),
+        },
       });
     } catch (globalStateError) {
       vscode.window.showErrorMessage(
