@@ -8,6 +8,7 @@ const getLanguageName = (languageId: string) => {
       languagesAttributes[languageId as keyof typeof languagesAttributes].name;
   } catch (error) {
     console.error(error);
+    // TODO fix this
     languageName = "Other";
   }
   return languageName;

@@ -10,7 +10,7 @@ const getTime = (): (() => LanguagesData) => {
   const idleCheckInterval = setInterval(() => {
     const now = performance.now();
     const latestLanguage = getLanguageId(
-      vscode.window.activeTextEditor?.document.languageId || "other",
+      vscode.window.activeTextEditor?.document.languageId,
     );
 
     Object.keys(languagesData).forEach((language) => {

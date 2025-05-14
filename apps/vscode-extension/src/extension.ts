@@ -1,14 +1,14 @@
 import * as vscode from "vscode";
+import { SYNC_DATA_KEY, languagesData } from "./constants";
 import addStatusBarItem from "./utils/addStatusBarItem";
+import fetchInitialData from "./utils/fetchInitialData";
 import getTime from "./utils/getTime";
-import { languagesData } from "./constants";
 import login from "./utils/auth/login";
 import logout from "./utils/auth/logout";
 import openDashBoard from "./utils/openDashBoard";
 import periodicSyncData from "./utils/periodicSyncData";
 import register from "./utils/auth/register";
 import setStatusBarItem from "./utils/setStatusBarItem";
-import trpc from "./utils/trpc/client";
 
 let extensionContext: vscode.ExtensionContext;
 
@@ -20,12 +20,8 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   const statusBarItem = addStatusBarItem();
-  const dateString = new Date().toLocaleDateString();
 
-  const { timeSpent, dayLanguagesTime: initialLanguagesData } =
-    await trpc.codingStats.getDailyStatsForExtension.query({
-      dateString: dateString,
-    });
+  const { timeSpent, initialLanguagesData } = await fetchInitialData(context);
 
   setStatusBarItem(timeSpent, statusBarItem);
 
@@ -47,7 +43,6 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const timeGetter = getTime();
   let currentLanguagesData = timeGetter();
-  let body: unknown;
 
   // debugging commands
   const showCurrentDataCommand = vscode.commands.registerCommand(
@@ -63,8 +58,10 @@ export async function activate(context: vscode.ExtensionContext) {
   const showInitialDataCommand = vscode.commands.registerCommand(
     "MoonCode.showInitialData",
     () => {
+      console.log(context.globalState.get(SYNC_DATA_KEY));
       vscode.window.showInformationMessage(
-        `initialLanguagesData: ${JSON.stringify(Object.entries(initialLanguagesData).map(([key, elapsedTime]) => `${key}: ${elapsedTime} seconds`))}`,
+        `initialLanguagesData from server: ${JSON.stringify(Object.entries(initialLanguagesData).map(([key, elapsedTime]) => `${key}: ${elapsedTime} seconds`))}
+        `,
       );
     },
   );
@@ -96,7 +93,7 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   setInterval(async () => {
-    body = await periodicSyncData(context, body, statusBarItem);
+    await periodicSyncData(context, statusBarItem);
   }, 60000);
 
   context.subscriptions.push(
@@ -111,7 +108,7 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 export async function deactivate() {
-  console.log("MoonCode deactivated");
+  vscode.window.showInformationMessage("MoonCode deactivated");
 }
 
 export const getExtensionContext = () => {
