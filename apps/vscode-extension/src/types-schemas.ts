@@ -9,6 +9,13 @@ export type LanguageData = {
   freezeStartTime: number | null;
   isFrozen: boolean;
 };
+
+export const globalStateInitialDataSchema = z.object({
+  timeSpentToday: z.number(),
+  timeSpentPerLanguage: z.record(z.string(), z.number()),
+  date: z.date(),
+});
+
 export type LanguagesData = Record<string, LanguageData>;
 
 export type JwtPayloadType = z.infer<typeof JWTDto>;

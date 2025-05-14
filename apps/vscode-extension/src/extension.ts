@@ -1,6 +1,7 @@
 import * as vscode from "vscode";
 import { SYNC_DATA_KEY, languagesData } from "./constants";
 import addStatusBarItem from "./utils/addStatusBarItem";
+import fetchInitialData from "./utils/fetchInitialData";
 import getTime from "./utils/getTime";
 import login from "./utils/auth/login";
 import logout from "./utils/auth/logout";
@@ -8,7 +9,6 @@ import openDashBoard from "./utils/openDashBoard";
 import periodicSyncData from "./utils/periodicSyncData";
 import register from "./utils/auth/register";
 import setStatusBarItem from "./utils/setStatusBarItem";
-import trpc from "./utils/trpc/client";
 
 let extensionContext: vscode.ExtensionContext;
 
@@ -20,12 +20,8 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   const statusBarItem = addStatusBarItem();
-  const dateString = new Date().toLocaleDateString();
 
-  const { timeSpent, dayLanguagesTime: initialLanguagesData } =
-    await trpc.codingStats.getDailyStatsForExtension.query({
-      dateString: dateString,
-    });
+  const { timeSpent, initialLanguagesData } = await fetchInitialData(context);
 
   setStatusBarItem(timeSpent, statusBarItem);
 
