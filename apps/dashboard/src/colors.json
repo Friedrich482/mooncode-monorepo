@@ -279,7 +279,7 @@
   "icalendar": { "name": "iCalendar", "color": "#ec564c" },
   "idl": { "name": "IDL", "color": "#a3522f" },
   "idris": { "name": "Idris", "color": "#b30000" },
-  "ignorelist": { "name": "Ignore List", "color": "#000000" },
+  "ignore": { "name": "Ignore", "color": "#000000" },
   "igorpro": { "name": "IGOR Pro", "color": "#0000cc" },
   "imagejmacro": { "name": "ImageJ Macro", "color": "#99AAFF" },
   "imba": { "name": "Imba", "color": "#16cec6" },

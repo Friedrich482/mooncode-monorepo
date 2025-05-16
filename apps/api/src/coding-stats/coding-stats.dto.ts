@@ -61,7 +61,8 @@ export const DayStatsDto = z.object({
 });
 
 export const UpsertLanguagesDto = z.object({
-  timeSpentToday: z.number().int(),
+  targetedDate: dateStringDto,
+  timeSpentOnDay: z.number().int(),
   timeSpentPerLanguage: z.record(z.string(), z.number()),
 });
 

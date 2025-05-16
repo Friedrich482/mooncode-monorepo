@@ -3,6 +3,7 @@ import { SYNC_DATA_KEY } from "../constants";
 import { TRPCClientError } from "@trpc/client";
 import getTime from "./getTime";
 import { globalStateInitialDataSchema } from "../types-schemas";
+import { isPast } from "date-fns";
 import setStatusBarItem from "./setStatusBarItem";
 import trpc from "./trpc/client";
 
@@ -10,13 +11,17 @@ const periodicSyncData = async (
   context: vscode.ExtensionContext,
   statusBarItem: vscode.StatusBarItem,
 ) => {
+  const todaysDateString = new Date().toLocaleDateString();
+  let lastServerSync = new Date();
+  let isServerSynced = false;
+
   const timeGetter = getTime();
 
   const timeSpentToday = Object.values(timeGetter()).reduce(
     (acc, value) => acc + value.elapsedTime,
     0,
   );
-  const languagesToSync = Object.fromEntries(
+  const timeSpentPerLanguageToday = Object.fromEntries(
     Object.entries(timeGetter()).map(([key, { elapsedTime }]) => [
       key,
       elapsedTime,
@@ -24,10 +29,45 @@ const periodicSyncData = async (
   );
 
   try {
+    const globalStateData = globalStateInitialDataSchema.parse(
+      await context.globalState.get(SYNC_DATA_KEY),
+    );
+
     // send the languages data to the server
+    for (const [dateString, data] of Object.entries(
+      globalStateData.dailyData,
+    )) {
+      if (isPast(dateString)) {
+        await trpc.codingStats.upsert.mutate({
+          targetedDate: dateString,
+          timeSpentOnDay: data.timeSpentOnDay,
+          timeSpentPerLanguage: data.timeSpentPerLanguage,
+        });
+      }
+    }
+
     await trpc.codingStats.upsert.mutate({
-      timeSpentToday,
-      timeSpentPerLanguage: languagesToSync,
+      targetedDate: todaysDateString,
+      timeSpentOnDay: timeSpentToday,
+      timeSpentPerLanguage: timeSpentPerLanguageToday,
+    });
+
+    isServerSynced = true;
+
+    lastServerSync = new Date();
+
+    // ! Remove all the data (in the global state) for days previous to today if they exist
+    // ! They do exist if the user stays offline and we change day
+
+    await context.globalState.update(SYNC_DATA_KEY, {
+      lastServerSync,
+      dailyData: {
+        [todaysDateString]: {
+          timeSpentOnDay: timeSpentToday,
+          timeSpentPerLanguage: timeSpentPerLanguageToday,
+          updatedAt: new Date(),
+        },
+      },
     });
   } catch (error) {
     if (error instanceof TRPCClientError) {
@@ -42,18 +82,22 @@ const periodicSyncData = async (
   } finally {
     try {
       // save the languages data in the vscode global state
-      const todaysDateString = new Date().toLocaleDateString();
 
       const globalStateData = globalStateInitialDataSchema.parse(
         await context.globalState.get(SYNC_DATA_KEY),
       );
 
       await context.globalState.update(SYNC_DATA_KEY, {
-        ...globalStateData,
-        [todaysDateString]: {
-          timeSpentToday,
-          timeSpentPerLanguage: languagesToSync,
-          updatedAt: new Date(),
+        lastServerSync: isServerSynced
+          ? lastServerSync
+          : globalStateData.lastServerSync,
+        dailyData: {
+          ...globalStateData.dailyData,
+          [todaysDateString]: {
+            timeSpentOnDay: timeSpentToday,
+            timeSpentPerLanguage: timeSpentPerLanguageToday,
+            updatedAt: new Date(),
+          },
         },
       });
     } catch (globalStateError) {
