@@ -11,11 +11,28 @@ export type LanguageData = {
 };
 
 export const globalStateInitialDataSchema = z.object({
-  timeSpentToday: z.number(),
-  timeSpentPerLanguage: z.record(z.string(), z.number()),
-  date: z.date(),
+  lastServerSync: z.union([
+    z.date(),
+    z
+      .string()
+      .datetime()
+      .transform((str) => new Date(str)),
+  ]),
+  dailyData: z.record(
+    z.string(), // the localDateString of the day
+    z.object({
+      timeSpentOnDay: z.number(),
+      timeSpentPerLanguage: z.record(z.string(), z.number()),
+      updatedAt: z.union([
+        z.date(),
+        z
+          .string()
+          .datetime()
+          .transform((str) => new Date(str)),
+      ]),
+    }),
+  ),
 });
-
 export type LanguagesData = Record<string, LanguageData>;
 
 export type JwtPayloadType = z.infer<typeof JWTDto>;

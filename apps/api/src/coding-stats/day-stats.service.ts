@@ -80,52 +80,60 @@ export class DayStatsService {
       dateLabel,
     };
   }
+
   async upsert({
     id,
-    updateUpsertLanguagesDto,
+    upsertLanguagesDto,
   }: {
     id: string;
-    updateUpsertLanguagesDto: UpsertLanguagesDtoType;
+    upsertLanguagesDto: UpsertLanguagesDtoType;
   }) {
-    const { timeSpentPerLanguage, timeSpentToday } = updateUpsertLanguagesDto;
-    const todaySDate = new Date().toLocaleString();
+    const { timeSpentPerLanguage, timeSpentOnDay, targetedDate } =
+      upsertLanguagesDto;
 
     const returningDailyData = {
       dailyDataId: "",
-      timeSpentToday: 0,
-      date: todaySDate,
+      timeSpentOnDay: 0,
+      date: targetedDate,
     };
 
-    const existingTimeSpentToday = await this.dailyDataService.findOneDailyData(
+    const existingTimeSpentOnDay = await this.dailyDataService.findOneDailyData(
       id,
-      todaySDate,
+      targetedDate,
     );
 
-    if (!existingTimeSpentToday?.id) {
-      // create daily time if it doesn't exists
-      const createdTimeSpentToday = await this.dailyDataService.createDailyData(
-        { timeSpent: timeSpentToday, userId: id },
+    if (!existingTimeSpentOnDay?.id) {
+      // create daily data if it doesn't exists
+      const createdTimeSpentOnDay = await this.dailyDataService.createDailyData(
+        { targetedDate, timeSpent: timeSpentOnDay, userId: id },
       );
-      returningDailyData.dailyDataId = createdTimeSpentToday.id;
-      returningDailyData.timeSpentToday = createdTimeSpentToday.timeSpent;
-      returningDailyData.date = createdTimeSpentToday.date;
+
+      returningDailyData.dailyDataId = createdTimeSpentOnDay.id;
+      returningDailyData.timeSpentOnDay = createdTimeSpentOnDay.timeSpent;
+      returningDailyData.date = createdTimeSpentOnDay.date;
     } else {
-      // else update it
-      const updatedTimeSpentToday = await this.dailyDataService.updateDailyData(
-        { timeSpent: timeSpentToday, userId: id, date: todaySDate },
-      );
-      returningDailyData.dailyDataId = updatedTimeSpentToday.id;
-      returningDailyData.timeSpentToday = updatedTimeSpentToday.timeSpent;
-      returningDailyData.date = updatedTimeSpentToday.date;
+      // else update it but only if the new timeSpent is greater than the existing one
+      if (existingTimeSpentOnDay.timeSpent <= timeSpentOnDay) {
+        const updatedTimeSpentOnDay =
+          await this.dailyDataService.updateDailyData({
+            timeSpent: timeSpentOnDay,
+            userId: id,
+            targetedDate,
+          });
+
+        returningDailyData.dailyDataId = updatedTimeSpentOnDay.id;
+        returningDailyData.timeSpentOnDay = updatedTimeSpentOnDay.timeSpent;
+        returningDailyData.date = updatedTimeSpentOnDay.date;
+      }
     }
 
     const languagesData: Record<string, number> = {};
-
     for (const [key, value] of Object.entries(timeSpentPerLanguage)) {
       const existingLanguageData = await this.languagesService.findOneLanguage(
         returningDailyData.dailyDataId,
         key,
       );
+
       if (!existingLanguageData?.languageName) {
         // if it doesn't exists, create it, for each language
         const createdLanguageData = await this.languagesService.createLanguage({
@@ -133,6 +141,7 @@ export class DayStatsService {
           timeSpent: value,
           languageName: key,
         });
+
         languagesData[createdLanguageData.languageName] =
           createdLanguageData.timeSpent;
       } else {
@@ -142,12 +151,14 @@ export class DayStatsService {
           dailyDataId: returningDailyData.dailyDataId,
           languageName: key,
         });
+
         languagesData[updatedLanguageData.languageName] =
           updatedLanguageData.timeSpent;
       }
     }
-    const { timeSpentToday: returningTimeSpentToday, date } =
+    const { timeSpentOnDay: returningTimeSpentOnDay, date } =
       returningDailyData;
-    return { date, timeSpentToday: returningTimeSpentToday, languagesData };
+
+    return { date, timeSpentOnDay: returningTimeSpentOnDay, languagesData };
   }
 }

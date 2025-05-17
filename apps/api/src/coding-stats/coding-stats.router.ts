@@ -17,7 +17,7 @@ export class CodingStatsRouter {
         .mutation(async ({ ctx, input }) =>
           this.codingStatsService.upsert({
             id: ctx.user.sub,
-            updateUpsertLanguagesDto: input,
+            upsertLanguagesDto: input,
           }),
         ),
 

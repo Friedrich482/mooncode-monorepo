@@ -33,6 +33,7 @@ const fetchInitialData = async (context: vscode.ExtensionContext) => {
   }
 
   const globalStateDataRaw = context.globalState.get(SYNC_DATA_KEY);
+
   const parsedGlobalStateInitialData =
     globalStateInitialDataSchema.safeParse(globalStateDataRaw);
 
@@ -40,10 +41,10 @@ const fetchInitialData = async (context: vscode.ExtensionContext) => {
   let initialLanguagesDataFromGlobalState: Record<string, number> = {};
 
   if (parsedGlobalStateInitialData.success) {
-    const { timeSpentToday, timeSpentPerLanguage } =
-      parsedGlobalStateInitialData.data;
+    const { timeSpentOnDay, timeSpentPerLanguage } =
+      parsedGlobalStateInitialData.data.dailyData[dateString];
 
-    timeSpentFromGlobalState = timeSpentToday;
+    timeSpentFromGlobalState = timeSpentOnDay;
     initialLanguagesDataFromGlobalState = timeSpentPerLanguage;
   }
 

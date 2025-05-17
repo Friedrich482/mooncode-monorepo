@@ -25,12 +25,12 @@ export class CodingStatsService {
 
   async upsert({
     id,
-    updateUpsertLanguagesDto,
+    upsertLanguagesDto,
   }: {
     id: string;
-    updateUpsertLanguagesDto: UpsertLanguagesDtoType;
+    upsertLanguagesDto: UpsertLanguagesDtoType;
   }) {
-    return this.dayStatsService.upsert({ id, updateUpsertLanguagesDto });
+    return this.dayStatsService.upsert({ id, upsertLanguagesDto });
   }
 
   async getTimeSpentOnPeriod({
