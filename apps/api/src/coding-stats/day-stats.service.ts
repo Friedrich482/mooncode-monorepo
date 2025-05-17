@@ -80,6 +80,7 @@ export class DayStatsService {
       dateLabel,
     };
   }
+
   async upsert({
     id,
     upsertLanguagesDto,
@@ -102,22 +103,22 @@ export class DayStatsService {
     );
 
     if (!existingTimeSpentOnDay?.id) {
-      // create daily time if it doesn't exists
+      // create daily data if it doesn't exists
       const createdTimeSpentOnDay = await this.dailyDataService.createDailyData(
-        { timeSpent: timeSpentOnDay, userId: id },
+        { targetedDate, timeSpent: timeSpentOnDay, userId: id },
       );
 
       returningDailyData.dailyDataId = createdTimeSpentOnDay.id;
       returningDailyData.timeSpentOnDay = createdTimeSpentOnDay.timeSpent;
       returningDailyData.date = createdTimeSpentOnDay.date;
     } else {
-      // else update it only if the new timeSpent is greater than the existing one
+      // else update it but only if the new timeSpent is greater than the existing one
       if (existingTimeSpentOnDay.timeSpent <= timeSpentOnDay) {
         const updatedTimeSpentOnDay =
           await this.dailyDataService.updateDailyData({
             timeSpent: timeSpentOnDay,
             userId: id,
-            date: targetedDate,
+            targetedDate,
           });
 
         returningDailyData.dailyDataId = updatedTimeSpentOnDay.id;
@@ -127,7 +128,6 @@ export class DayStatsService {
     }
 
     const languagesData: Record<string, number> = {};
-
     for (const [key, value] of Object.entries(timeSpentPerLanguage)) {
       const existingLanguageData = await this.languagesService.findOneLanguage(
         returningDailyData.dailyDataId,

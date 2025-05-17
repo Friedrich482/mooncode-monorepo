@@ -3,7 +3,7 @@ import { SYNC_DATA_KEY } from "../constants";
 import { TRPCClientError } from "@trpc/client";
 import getTime from "./getTime";
 import { globalStateInitialDataSchema } from "../types-schemas";
-import { isPast } from "date-fns";
+import { isEqual } from "date-fns";
 import setStatusBarItem from "./setStatusBarItem";
 import trpc from "./trpc/client";
 
@@ -37,7 +37,8 @@ const periodicSyncData = async (
     for (const [dateString, data] of Object.entries(
       globalStateData.dailyData,
     )) {
-      if (isPast(dateString)) {
+      // we send the data of older dates if found
+      if (!isEqual(new Date(dateString), new Date(todaysDateString))) {
         await trpc.codingStats.upsert.mutate({
           targetedDate: dateString,
           timeSpentOnDay: data.timeSpentOnDay,

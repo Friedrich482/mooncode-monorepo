@@ -16,11 +16,11 @@ export class DailyDataService {
     private readonly db: NodePgDatabase,
   ) {}
   async createDailyData(createDailyDataDto: CreateDailyDataDtoType) {
-    const { timeSpent, userId } = createDailyDataDto;
+    const { timeSpent, userId, targetedDate } = createDailyDataDto;
     const [createdDailyData] = await this.db
       .insert(dailyData)
       .values({
-        date: new Date().toLocaleString(),
+        date: targetedDate,
         timeSpent: timeSpent,
         userId,
       })
@@ -82,14 +82,16 @@ export class DailyDataService {
   }
 
   async updateDailyData(updateDailyDataDto: UpdateDailyDataDtoType) {
-    const { timeSpent, userId, date } = updateDailyDataDto;
+    const { timeSpent, userId, targetedDate } = updateDailyDataDto;
     const [updatedDailyData] = await this.db
       .update(dailyData)
       .set({
-        date: new Date().toLocaleString(),
+        date: targetedDate,
         timeSpent,
       })
-      .where(and(eq(dailyData.userId, userId), eq(dailyData.date, date)))
+      .where(
+        and(eq(dailyData.userId, userId), eq(dailyData.date, targetedDate)),
+      )
       .returning({
         timeSpent: dailyData.timeSpent,
         id: dailyData.id,

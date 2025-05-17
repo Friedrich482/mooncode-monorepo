@@ -1,6 +1,8 @@
+import { dateStringDto } from "@repo/utils/schemas";
 import { z } from "zod";
 
 export const CreateDailyDataDto = z.object({
+  targetedDate: dateStringDto,
   userId: z.string().ulid(),
   timeSpent: z.number().int().positive(),
 });
@@ -12,7 +14,7 @@ export const findOneDailyDataDto = z.object({
 export const UpdateDailyDataDto = z.object({
   userId: z.string().ulid(),
   timeSpent: z.number().int().positive(),
-  date: z.string().date(),
+  targetedDate: dateStringDto,
 });
 
 export type CreateDailyDataDtoType = z.infer<typeof CreateDailyDataDto>;
