@@ -42,7 +42,10 @@ const fetchInitialData = async (context: vscode.ExtensionContext) => {
 
   if (parsedGlobalStateInitialData.success) {
     const { timeSpentOnDay, timeSpentPerLanguage } =
-      parsedGlobalStateInitialData.data.dailyData[dateString];
+      parsedGlobalStateInitialData.data.dailyData[dateString] ?? {
+        timeSpentOnDay: 0,
+        timeSpentPerLanguage: {},
+      };
 
     timeSpentFromGlobalState = timeSpentOnDay;
     initialLanguagesDataFromGlobalState = timeSpentPerLanguage;

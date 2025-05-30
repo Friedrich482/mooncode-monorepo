@@ -17,12 +17,11 @@ export class DayStatsService {
       dateString,
     );
 
-    if (!dayData?.id) {
+    if (!dayData)
       return {
         timeSpent: 0,
         dayLanguagesTime: {},
       };
-    }
 
     const dayLanguagesTime = await this.languagesService.findAllLanguages(
       dayData.id,
@@ -49,13 +48,12 @@ export class DayStatsService {
       dateString,
     );
 
-    if (!dayData?.id) {
+    if (!dayData)
       return {
         formattedTotalTimeSpent: formatDuration(0),
         finalData: [],
         dateLabel,
       };
-    }
 
     const dayLanguagesTime = await this.languagesService.findAllLanguages(
       dayData.id,
@@ -102,7 +100,7 @@ export class DayStatsService {
       targetedDate,
     );
 
-    if (!existingTimeSpentOnDay?.id) {
+    if (!existingTimeSpentOnDay) {
       // create daily data if it doesn't exists
       const createdTimeSpentOnDay = await this.dailyDataService.createDailyData(
         { targetedDate, timeSpent: timeSpentOnDay, userId: id },
@@ -134,8 +132,8 @@ export class DayStatsService {
         key,
       );
 
-      if (!existingLanguageData?.languageName) {
-        // if it doesn't exists, create it, for each language
+      if (!existingLanguageData) {
+        // if it doesn't exists, create it for each language
         const createdLanguageData = await this.languagesService.createLanguage({
           dailyDataId: returningDailyData.dailyDataId,
           timeSpent: value,
@@ -156,9 +154,5 @@ export class DayStatsService {
           updatedLanguageData.timeSpent;
       }
     }
-    const { timeSpentOnDay: returningTimeSpentOnDay, date } =
-      returningDailyData;
-
-    return { date, timeSpentOnDay: returningTimeSpentOnDay, languagesData };
   }
 }

@@ -17,6 +17,7 @@ export class DailyDataService {
   ) {}
   async createDailyData(createDailyDataDto: CreateDailyDataDtoType) {
     const { timeSpent, userId, targetedDate } = createDailyDataDto;
+
     const [createdDailyData] = await this.db
       .insert(dailyData)
       .values({
@@ -42,8 +43,10 @@ export class DailyDataService {
     if (!oneDailyData) {
       return null;
     }
+
     return oneDailyData;
   }
+
   async findRangeDailyData(userId: string, start: string, end: string) {
     const dbData = await this.db
       .select({
@@ -83,6 +86,7 @@ export class DailyDataService {
 
   async updateDailyData(updateDailyDataDto: UpdateDailyDataDtoType) {
     const { timeSpent, userId, targetedDate } = updateDailyDataDto;
+
     const [updatedDailyData] = await this.db
       .update(dailyData)
       .set({

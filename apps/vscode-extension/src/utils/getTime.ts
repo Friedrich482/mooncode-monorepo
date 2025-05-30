@@ -94,7 +94,7 @@ const getTime = (): (() => LanguagesData) => {
 
   // Time getter function
   const timeGetter = () => {
-    // Update all language times
+    // Update all languages times
 
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];

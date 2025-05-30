@@ -44,6 +44,10 @@ export async function activate(context: vscode.ExtensionContext) {
   const timeGetter = getTime();
   let currentLanguagesData = timeGetter();
 
+  setInterval(async () => {
+    await periodicSyncData(context, statusBarItem);
+  }, 60000);
+
   // debugging commands
   const showCurrentDataCommand = vscode.commands.registerCommand(
     "MoonCode.showCurrentData",
@@ -91,10 +95,6 @@ export async function activate(context: vscode.ExtensionContext) {
     "MoonCode.openDashBoard",
     openDashBoard,
   );
-
-  setInterval(async () => {
-    await periodicSyncData(context, statusBarItem);
-  }, 60000);
 
   context.subscriptions.push(
     showCurrentDataCommand,
