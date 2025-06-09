@@ -5,7 +5,7 @@ export type LanguageData = {
   elapsedTime: number;
   startTime: number;
   lastActivityTime: number;
-  frozenTime: number | null;
+  frozenTime: number | null; // this is an accumulator of time to track the elapsedTime when the language is frozen
   freezeStartTime: number | null;
   isFrozen: boolean;
 };

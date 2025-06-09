@@ -25,8 +25,8 @@ const ChartTitle = ({
   return (
     <h2 className="flex items-center justify-between gap-4 px-3 text-center text-2xl font-bold">
       <Icon Icon={ChevronLeft} onClick={handleChevronLeftClick} />
-      <div className="max-[26.25rem]:text-lg max-[24.375rem]:text-sm inline-block">
-        {formattedTotalTimeSpent} -
+      <div className="inline-block max-[26.25rem]:text-lg max-[24.375rem]:text-sm">
+        {formattedTotalTimeSpent} -{" "}
         <CalendarPopover
           mode="single"
           isPopoverOpen={isPopoverOpen}
@@ -36,7 +36,7 @@ const ChartTitle = ({
           popoverTriggerContent={
             <Button
               variant="link"
-              className="max-[26.25rem]:text-lg max-[24.375rem]:text-sm p-0 text-2xl"
+              className="p-0 text-2xl max-[26.25rem]:text-lg max-[24.375rem]:text-sm"
             >
               {displayDate}
             </Button>

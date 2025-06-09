@@ -1,11 +1,13 @@
 import * as vscode from "vscode";
-import { SYNC_DATA_KEY } from "../constants";
 import { TRPCClientError } from "@trpc/client";
-import { globalStateInitialDataSchema } from "../types-schemas";
+import getGlobalStateData from "./getGlobalStateData";
 import trpc from "./trpc/client";
 
-const fetchInitialData = async (context: vscode.ExtensionContext) => {
+const fetchInitialData = async () => {
   const dateString = new Date().toLocaleDateString();
+
+  let timeSpentFromGlobalState = 0;
+  let initialLanguagesDataFromGlobalState: Record<string, number> = {};
 
   let timeSpentFromServer = 0;
   let initialLanguagesDataFromServer: Record<string, number> = {};
@@ -23,33 +25,26 @@ const fetchInitialData = async (context: vscode.ExtensionContext) => {
   } catch (error) {
     if (error instanceof TRPCClientError) {
       vscode.window.showErrorMessage(
-        `tRPC Error: ${error.message}, Cause:, ${error.cause}`,
+        `tRPC Error: ${error.message}, Cause: ${error.cause}`,
       );
     } else {
       vscode.window.showErrorMessage(
-        `Unknown error during server fetch:", ${error}`,
+        `Unknown error during server fetch: ${error}`,
       );
     }
   }
 
-  const globalStateDataRaw = context.globalState.get(SYNC_DATA_KEY);
+  const globalStateData = await getGlobalStateData();
 
-  const parsedGlobalStateInitialData =
-    globalStateInitialDataSchema.safeParse(globalStateDataRaw);
+  const { timeSpentOnDay, timeSpentPerLanguage } = globalStateData.dailyData[
+    dateString
+  ] ?? {
+    timeSpentOnDay: 0,
+    timeSpentPerLanguage: {},
+  };
 
-  let timeSpentFromGlobalState = 0;
-  let initialLanguagesDataFromGlobalState: Record<string, number> = {};
-
-  if (parsedGlobalStateInitialData.success) {
-    const { timeSpentOnDay, timeSpentPerLanguage } =
-      parsedGlobalStateInitialData.data.dailyData[dateString] ?? {
-        timeSpentOnDay: 0,
-        timeSpentPerLanguage: {},
-      };
-
-    timeSpentFromGlobalState = timeSpentOnDay;
-    initialLanguagesDataFromGlobalState = timeSpentPerLanguage;
-  }
+  timeSpentFromGlobalState = timeSpentOnDay;
+  initialLanguagesDataFromGlobalState = timeSpentPerLanguage;
 
   if (serverDataFetchedSuccessfully) {
     if (timeSpentFromServer >= timeSpentFromGlobalState) {
@@ -59,6 +54,7 @@ const fetchInitialData = async (context: vscode.ExtensionContext) => {
         initialLanguagesData: initialLanguagesDataFromServer,
       };
     }
+
     // Global state wins
     return {
       timeSpent: timeSpentFromGlobalState,
@@ -69,6 +65,7 @@ const fetchInitialData = async (context: vscode.ExtensionContext) => {
     vscode.window.showInformationMessage(
       "Server is unavailable, using the global state instead",
     );
+
     return {
       timeSpent: timeSpentFromGlobalState,
       initialLanguagesData: initialLanguagesDataFromGlobalState,

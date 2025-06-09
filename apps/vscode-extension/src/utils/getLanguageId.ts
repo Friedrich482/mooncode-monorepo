@@ -1,11 +1,7 @@
 import { forbiddenLanguages, languageMapping } from "../constants";
 
 const getLanguageId = (languageId: string | undefined) => {
-  if (!languageId) {
-    return;
-  }
-
-  if (forbiddenLanguages.includes(languageId)) {
+  if (!languageId || forbiddenLanguages.includes(languageId)) {
     return;
   }
 

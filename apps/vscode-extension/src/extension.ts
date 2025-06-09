@@ -1,8 +1,9 @@
 import * as vscode from "vscode";
-import { SYNC_DATA_KEY, languagesData } from "./constants";
 import addStatusBarItem from "./utils/addStatusBarItem";
+import calculateTime from "./utils/calculateTime";
 import fetchInitialData from "./utils/fetchInitialData";
-import getTime from "./utils/getTime";
+import getGlobalStateData from "./utils/getGlobalStateData";
+import { languagesData } from "./constants";
 import login from "./utils/auth/login";
 import logout from "./utils/auth/logout";
 import openDashBoard from "./utils/openDashBoard";
@@ -21,7 +22,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const statusBarItem = addStatusBarItem();
 
-  const { timeSpent, initialLanguagesData } = await fetchInitialData(context);
+  const { timeSpent, initialLanguagesData } = await fetchInitialData();
 
   setStatusBarItem(timeSpent, statusBarItem);
 
@@ -41,18 +42,18 @@ export async function activate(context: vscode.ExtensionContext) {
     };
   });
 
-  const timeGetter = getTime();
-  let currentLanguagesData = timeGetter();
+  const getTime = await calculateTime();
+  let currentLanguagesData = getTime();
 
   setInterval(async () => {
-    await periodicSyncData(context, statusBarItem);
+    await periodicSyncData(context, statusBarItem, getTime);
   }, 60000);
 
   // debugging commands
   const showCurrentDataCommand = vscode.commands.registerCommand(
     "MoonCode.showCurrentData",
     () => {
-      currentLanguagesData = timeGetter();
+      currentLanguagesData = getTime();
       vscode.window.showInformationMessage(
         `currentLanguagesData: ${JSON.stringify(Object.entries(currentLanguagesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}`,
       );
@@ -61,11 +62,15 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const showInitialDataCommand = vscode.commands.registerCommand(
     "MoonCode.showInitialData",
-    () => {
-      console.log(context.globalState.get(SYNC_DATA_KEY));
+    async () => {
+      const globalStateData = await getGlobalStateData();
+
       vscode.window.showInformationMessage(
-        `initialLanguagesData from server: ${JSON.stringify(Object.entries(initialLanguagesData).map(([key, elapsedTime]) => `${key}: ${elapsedTime} seconds`))}
-        `,
+        `initialLanguagesData from server: ${JSON.stringify(Object.entries(initialLanguagesData).map(([key, elapsedTime]) => `${key}: ${elapsedTime} seconds`))}`,
+      );
+
+      vscode.window.showInformationMessage(
+        `Global state content: ${JSON.stringify(globalStateData)}`,
       );
     },
   );

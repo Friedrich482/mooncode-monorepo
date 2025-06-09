@@ -26,6 +26,7 @@ export class DayStatsService {
     const dayLanguagesTime = await this.languagesService.findAllLanguages(
       dayData.id,
     );
+
     return { timeSpent: dayData.timeSpent, dayLanguagesTime };
   }
 
