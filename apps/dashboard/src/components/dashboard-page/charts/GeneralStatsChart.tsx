@@ -7,7 +7,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
 
 const StatWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="max-[28.125rem]:min-w-full flex w-1/2 flex-col justify-center gap-1 rounded-md border border-neutral-600/50 px-2 text-center">
+  <div className="flex w-1/2 flex-col justify-center gap-1 rounded-md border border-neutral-600/50 px-2 text-center max-[28.125rem]:min-w-full">
     {children}
   </div>
 );
@@ -20,7 +20,7 @@ const TwoStatsWrapper = ({
 }) => (
   <div
     className={cn(
-      "max-[28.125rem]:flex-col max-[28.125rem]:text-base flex min-h-36 flex-row gap-4 text-xl",
+      "flex min-h-36 flex-row gap-4 text-xl max-[28.125rem]:flex-col max-[28.125rem]:text-base",
       className,
     )}
   >
@@ -56,7 +56,7 @@ const GeneralStatsChart = () => {
   const mostUsedLanguageName = getLanguageName(mostUsedLanguage);
 
   return (
-    <div className="max-[28.125rem]:justify-between max-[28.125rem]:gap-0 flex min-h-96 w-[45%] flex-col gap-y-3 rounded-md border border-neutral-600/50 p-3 text-2xl max-chart:w-full">
+    <div className="flex min-h-96 w-[45%] flex-col gap-y-3 rounded-md border border-neutral-600/50 p-3 text-2xl max-chart:w-full max-[28.125rem]:justify-between max-[28.125rem]:gap-0">
       <h2 className="text-center text-2xl font-bold">General stats</h2>
       <TwoStatsWrapper className="max-[28.125rem]:pt-4">
         <StatWrapper>

@@ -1,27 +1,26 @@
 import * as vscode from "vscode";
 import { MAX_IDLE_TIME, languagesData } from "../constants";
 import { type LanguagesData } from "../types-schemas";
+import getGlobalStateData from "./getGlobalStateData";
 import getLanguageId from "./getLanguageId";
 import updateCurrentLanguage from "./updateCurrentLanguage";
 
-const getTime = (): (() => LanguagesData) => {
+const calculateTime = async (): Promise<() => LanguagesData> => {
   const disposables: vscode.Disposable[] = [];
+  const { dailyData } = await getGlobalStateData();
 
   const idleCheckInterval = setInterval(() => {
     const now = performance.now();
     const latestLanguage = getLanguageId(
-      vscode.window.activeTextEditor?.document.languageId,
+      vscode.window.activeTextEditor?.document,
     );
 
-    Object.keys(languagesData).forEach((language) => {
+    Object.keys(languagesData).map((language) => {
       const languageData = languagesData[language];
-      // reset the timer at 00:00 (local midnight)
-      const date = new Date();
-      if (
-        date.getHours() === 0 &&
-        date.getMinutes() === 0 &&
-        date.getSeconds() === 0
-      ) {
+
+      const todaysDateString = new Date().toLocaleDateString();
+
+      if (!Object.hasOwn(dailyData, todaysDateString)) {
         delete languagesData[language];
         return;
       }
@@ -73,28 +72,24 @@ const getTime = (): (() => LanguagesData) => {
 
   const activityListeners = [
     vscode.workspace.onDidChangeTextDocument((event) => {
-      const currentLanguageId = event.document.languageId || "other";
-      updateCurrentLanguage(currentLanguageId);
+      updateCurrentLanguage(event.document);
     }),
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor) {
-        const currentLanguageId = editor.document.languageId || "other";
-        updateCurrentLanguage(currentLanguageId);
+        updateCurrentLanguage(editor.document);
       }
     }),
     vscode.window.onDidChangeVisibleTextEditors((editors) => {
       if (editors.length > 0) {
-        const currentLanguageId = editors[0].document.languageId || "other";
-        updateCurrentLanguage(currentLanguageId);
+        updateCurrentLanguage(editors[0].document);
       }
     }),
   ];
 
   disposables.push(...activityListeners);
 
-  // Time getter function
-  const timeGetter = () => {
-    // Update all language times
+  const getTime = () => {
+    // Update all languages times
 
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];
@@ -108,11 +103,11 @@ const getTime = (): (() => LanguagesData) => {
     return languagesData;
   };
 
-  (timeGetter as any).dispose = () => {
+  (getTime as any).dispose = () => {
     disposables.forEach((d) => d.dispose());
   };
 
-  return timeGetter;
+  return getTime;
 };
 
-export default getTime;
+export default calculateTime;

@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
+import { LanguagesData } from "../types-schemas";
 import { SYNC_DATA_KEY } from "../constants";
 import { TRPCClientError } from "@trpc/client";
-import getTime from "./getTime";
-import { globalStateInitialDataSchema } from "../types-schemas";
+import getGlobalStateData from "./getGlobalStateData";
 import { isEqual } from "date-fns";
 import setStatusBarItem from "./setStatusBarItem";
 import trpc from "./trpc/client";
@@ -10,28 +10,25 @@ import trpc from "./trpc/client";
 const periodicSyncData = async (
   context: vscode.ExtensionContext,
   statusBarItem: vscode.StatusBarItem,
+  getTime: () => LanguagesData,
 ) => {
   const todaysDateString = new Date().toLocaleDateString();
   let lastServerSync = new Date();
   let isServerSynced = false;
 
-  const timeGetter = getTime();
-
-  const timeSpentToday = Object.values(timeGetter()).reduce(
+  const timeSpentToday = Object.values(getTime()).reduce(
     (acc, value) => acc + value.elapsedTime,
     0,
   );
   const timeSpentPerLanguageToday = Object.fromEntries(
-    Object.entries(timeGetter()).map(([key, { elapsedTime }]) => [
+    Object.entries(getTime()).map(([key, { elapsedTime }]) => [
       key,
       elapsedTime,
     ]),
   );
 
   try {
-    const globalStateData = globalStateInitialDataSchema.parse(
-      await context.globalState.get(SYNC_DATA_KEY),
-    );
+    const globalStateData = await getGlobalStateData();
 
     // send the languages data to the server
     for (const [dateString, data] of Object.entries(
@@ -84,9 +81,7 @@ const periodicSyncData = async (
     try {
       // save the languages data in the vscode global state
 
-      const globalStateData = globalStateInitialDataSchema.parse(
-        await context.globalState.get(SYNC_DATA_KEY),
-      );
+      const globalStateData = await getGlobalStateData();
 
       await context.globalState.update(SYNC_DATA_KEY, {
         lastServerSync: isServerSynced

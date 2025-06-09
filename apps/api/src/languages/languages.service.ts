@@ -24,6 +24,7 @@ export class LanguagesService {
         languageName: languages.languageName,
         timeSpent: languages.timeSpent,
       });
+
     return createdLanguageData;
   }
 
@@ -43,6 +44,7 @@ export class LanguagesService {
         timeSpent,
       ]),
     );
+
     return languagesDataObject;
   }
 
@@ -67,6 +69,7 @@ export class LanguagesService {
 
   async updateLanguage(updateLanguageDto: UpdateLanguageDtoType) {
     const { timeSpent, dailyDataId, languageName } = updateLanguageDto;
+
     const [updatedLanguageData] = await this.db
       .update(languages)
       .set({
@@ -82,6 +85,7 @@ export class LanguagesService {
         languageName: languages.languageName,
         timeSpent: languages.timeSpent,
       });
+
     return updatedLanguageData;
   }
 }
