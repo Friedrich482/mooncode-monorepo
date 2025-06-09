@@ -1,8 +1,9 @@
+import * as vscode from "vscode";
 import getLanguageId from "./getLanguageId";
 import { languagesData } from "../constants";
 
-const updateCurrentLanguage = (currentLanguageId: string | undefined) => {
-  currentLanguageId = getLanguageId(currentLanguageId);
+const updateCurrentLanguage = (document: vscode.TextDocument | undefined) => {
+  const currentLanguageId = getLanguageId(document);
 
   if (!currentLanguageId) {
     return;

@@ -1,8 +1,19 @@
-import { forbiddenLanguages, languageMapping } from "../constants";
+import * as vscode from "vscode";
+import { knownLanguages, languageMapping } from "../constants";
 
-const getLanguageId = (languageId: string | undefined) => {
-  if (!languageId || forbiddenLanguages.includes(languageId)) {
+const getLanguageId = (document: vscode.TextDocument | undefined) => {
+  if (!document || document.uri.scheme !== "file") {
     return;
+  }
+
+  let languageId = document.languageId;
+
+  if (languageId === "plaintext") {
+    const extension = document.uri.fsPath.split(".").pop()?.toLowerCase() ?? "";
+
+    if (Object.hasOwn(knownLanguages, extension)) {
+      return knownLanguages[extension];
+    }
   }
 
   // if the languageId given by vscode is a subset of a language
