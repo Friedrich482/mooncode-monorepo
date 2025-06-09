@@ -98,4 +98,7 @@ export const knownLanguages: Record<string, string> = {
   // Style Languages
   stylus: "stylus",
   styl: "stylus",
+
+  // ignore
+  dockerignore: "dockerignore",
 };

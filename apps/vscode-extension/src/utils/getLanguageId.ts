@@ -8,7 +8,7 @@ const getLanguageId = (document: vscode.TextDocument | undefined) => {
 
   let languageId = document.languageId;
 
-  if (languageId === "plaintext") {
+  if (languageId === "plaintext" || languageId === "ignore") {
     const extension = document.uri.fsPath.split(".").pop()?.toLowerCase() ?? "";
 
     if (Object.hasOwn(knownLanguages, extension)) {
