@@ -4,7 +4,7 @@ import { MAX_IDLE_TIME, filesData, languagesData } from "../constants";
 import getCurrentFileProperties from "./files/getCurrentFileProperties";
 import getGlobalStateData from "./getGlobalStateData";
 import getLanguageId from "./languages/getLanguageId";
-import updateCurrentFileObj from "./files/updateCurrentFIleObj";
+import updateCurrentFileObj from "./files/updateCurrentFileObj";
 import updateCurrentLanguage from "./languages/updateCurrentLanguage";
 
 const calculateTime = async (): Promise<
