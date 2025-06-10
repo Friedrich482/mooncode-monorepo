@@ -1,11 +1,15 @@
 import * as vscode from "vscode";
-import { MAX_IDLE_TIME, languagesData } from "../constants";
-import { type LanguagesData } from "../types-schemas";
+import { FileMap, LanguageMap } from "../types-schemas";
+import { MAX_IDLE_TIME, filesData, languagesData } from "../constants";
+import getCurrentFileProperties from "./files/getCurrentFileProperties";
 import getGlobalStateData from "./getGlobalStateData";
-import getLanguageId from "./getLanguageId";
-import updateCurrentLanguage from "./updateCurrentLanguage";
+import getLanguageId from "./languages/getLanguageId";
+import updateCurrentFileObj from "./files/updateCurrentFileObj";
+import updateCurrentLanguage from "./languages/updateCurrentLanguage";
 
-const calculateTime = async (): Promise<() => LanguagesData> => {
+const calculateTime = async (): Promise<
+  () => { languagesData: LanguageMap; filesData: FileMap }
+> => {
   const disposables: vscode.Disposable[] = [];
   const { dailyData } = await getGlobalStateData();
 
@@ -15,17 +19,27 @@ const calculateTime = async (): Promise<() => LanguagesData> => {
       vscode.window.activeTextEditor?.document,
     );
 
+    const latestFile = getCurrentFileProperties(
+      vscode.window.activeTextEditor?.document,
+    );
+
+    const todaysDateString = new Date().toLocaleDateString();
+
+    if (!Object.hasOwn(dailyData, todaysDateString)) {
+      Object.keys(languagesData).map((language) => {
+        delete languagesData[language];
+      });
+      Object.keys(filesData).map((file) => {
+        delete filesData[file];
+      });
+
+      return;
+    }
+
     Object.keys(languagesData).map((language) => {
       const languageData = languagesData[language];
 
-      const todaysDateString = new Date().toLocaleDateString();
-
-      if (!Object.hasOwn(dailyData, todaysDateString)) {
-        delete languagesData[language];
-        return;
-      }
-
-      if (language !== latestLanguage) {
+      if (!latestLanguage || language !== latestLanguage) {
         // Immediately freeze non-active languages
         if (!languageData.isFrozen) {
           languageData.freezeStartTime = now;
@@ -64,6 +78,47 @@ const calculateTime = async (): Promise<() => LanguagesData> => {
         latestLanguageObj.isFrozen = false;
       }
     });
+
+    Object.keys(filesData).map((file) => {
+      const fileData = filesData[file];
+
+      if (!latestFile || file !== latestFile.relativePath) {
+        // Immediately freeze non-active files
+        if (!fileData.isFrozen) {
+          fileData.freezeStartTime = now;
+          fileData.isFrozen = true;
+          fileData.frozenTime = Math.floor((now - fileData.startTime) / 1000);
+        }
+        return; // Skip the rest of the checks for non-active files
+      }
+
+      // Only check idle time for the active files
+      const latestFileObj = filesData[latestFile.relativePath];
+
+      const idleDuration = Math.floor(
+        (now - latestFileObj.lastActivityTime) / 1000,
+      );
+
+      if (idleDuration >= MAX_IDLE_TIME && !latestFileObj.isFrozen) {
+        latestFileObj.frozenTime = Math.floor(
+          (now - latestFileObj.startTime) / 1000,
+        );
+        latestFileObj.freezeStartTime = now;
+        latestFileObj.isFrozen = true;
+      } else if (
+        idleDuration < MAX_IDLE_TIME &&
+        latestFileObj.isFrozen &&
+        latestFileObj.freezeStartTime
+      ) {
+        const freezeDuration = Math.floor(
+          (now - latestFileObj.freezeStartTime) / 1000,
+        );
+        latestFileObj.startTime += Math.floor(freezeDuration * 1000);
+        latestFileObj.frozenTime = null;
+        latestFileObj.freezeStartTime = null;
+        latestFileObj.isFrozen = false;
+      }
+    });
   }, 1000);
 
   disposables.push({
@@ -73,15 +128,18 @@ const calculateTime = async (): Promise<() => LanguagesData> => {
   const activityListeners = [
     vscode.workspace.onDidChangeTextDocument((event) => {
       updateCurrentLanguage(event.document);
+      updateCurrentFileObj(event.document);
     }),
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor) {
         updateCurrentLanguage(editor.document);
+        updateCurrentFileObj(editor.document);
       }
     }),
     vscode.window.onDidChangeVisibleTextEditors((editors) => {
       if (editors.length > 0) {
         updateCurrentLanguage(editors[0].document);
+        updateCurrentFileObj(editors[0].document);
       }
     }),
   ];
@@ -90,7 +148,6 @@ const calculateTime = async (): Promise<() => LanguagesData> => {
 
   const getTime = () => {
     // Update all languages times
-
     Object.keys(languagesData).forEach((language) => {
       const languageData = languagesData[language];
       const now = performance.now();
@@ -100,7 +157,17 @@ const calculateTime = async (): Promise<() => LanguagesData> => {
           : parseInt(((now - languageData.startTime) / 1000).toFixed(0));
     });
 
-    return languagesData;
+    // Update all files time
+    Object.keys(filesData).forEach((file) => {
+      const fileData = filesData[file];
+      const now = performance.now();
+      fileData.elapsedTime =
+        fileData.isFrozen && fileData.frozenTime
+          ? fileData.frozenTime
+          : parseInt(((now - fileData.startTime) / 1000).toFixed(0));
+    });
+
+    return { languagesData, filesData };
   };
 
   (getTime as any).dispose = () => {

@@ -43,25 +43,24 @@ export async function activate(context: vscode.ExtensionContext) {
   });
 
   const getTime = await calculateTime();
-  let currentLanguagesData = getTime();
 
   setInterval(async () => {
     await periodicSyncData(context, statusBarItem, getTime);
   }, 60000);
 
   // debugging commands
-  const showCurrentDataCommand = vscode.commands.registerCommand(
-    "MoonCode.showCurrentData",
+  const showCurrentLanguagesDataCommand = vscode.commands.registerCommand(
+    "MoonCode.showCurrentLanguagesData",
     () => {
-      currentLanguagesData = getTime();
+      const { languagesData } = getTime();
       vscode.window.showInformationMessage(
-        `currentLanguagesData: ${JSON.stringify(Object.entries(currentLanguagesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}`,
+        `currentLanguagesData: ${JSON.stringify(Object.entries(languagesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}`,
       );
     },
   );
 
-  const showInitialDataCommand = vscode.commands.registerCommand(
-    "MoonCode.showInitialData",
+  const showInitialLanguagesDataCommand = vscode.commands.registerCommand(
+    "MoonCode.showInitialLanguagesData",
     async () => {
       const globalStateData = await getGlobalStateData();
 
@@ -71,6 +70,16 @@ export async function activate(context: vscode.ExtensionContext) {
 
       vscode.window.showInformationMessage(
         `Global state content: ${JSON.stringify(globalStateData)}`,
+      );
+    },
+  );
+
+  const showCurrentFilesDataCommand = vscode.commands.registerCommand(
+    "MoonCode.showCurrentFilesData",
+    () => {
+      const { filesData: currentFilesData } = getTime();
+      vscode.window.showInformationMessage(
+        `currentLanguagesData: ${JSON.stringify(Object.entries(currentFilesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}`,
       );
     },
   );
@@ -102,8 +111,9 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    showCurrentDataCommand,
-    showInitialDataCommand,
+    showCurrentLanguagesDataCommand,
+    showInitialLanguagesDataCommand,
+    showCurrentFilesDataCommand,
     loginCommand,
     registerCommand,
     logoutCommand,
@@ -113,6 +123,16 @@ export async function activate(context: vscode.ExtensionContext) {
 }
 
 export async function deactivate() {
+  const disposables: vscode.Disposable[] = [];
+
+  const getTime = await calculateTime();
+  disposables.push({
+    dispose: () =>
+      ((getTime as any).dispose = () => {
+        disposables.forEach((d) => d.dispose());
+      }),
+  });
+
   vscode.window.showInformationMessage("MoonCode deactivated");
 }
 

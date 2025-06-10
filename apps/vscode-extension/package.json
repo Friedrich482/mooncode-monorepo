@@ -17,13 +17,18 @@
   "contributes": {
     "commands": [
       {
-        "command": "MoonCode.showCurrentData",
-        "title": "MoonCode: Show Current Data",
+        "command": "MoonCode.showCurrentLanguagesData",
+        "title": "MoonCode: Show Current Languages Data",
         "icon": "e"
       },
       {
-        "command": "MoonCode.showInitialData",
-        "title": "MoonCode: Show Initial Data",
+        "command": "MoonCode.showInitialLanguagesData",
+        "title": "MoonCode: Show Initial Languages Data",
+        "icon": "e"
+      },
+      {
+        "command": "MoonCode.showCurrentFilesData",
+        "title": "MoonCode: Show Current Files Data",
         "icon": "e"
       },
       {

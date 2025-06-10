@@ -1,4 +1,4 @@
-import { LanguagesData } from "./types-schemas";
+import { FileMap, LanguageMap } from "./types-schemas";
 
 export const MAX_IDLE_TIME = 600; //seconds
 
@@ -13,7 +13,8 @@ export const languageMapping: Record<string, string> = {
 export const localUrlPort = 4208;
 export const localUrl = `http://localhost:${localUrlPort}`;
 
-export let languagesData: LanguagesData = {};
+export let languagesData: LanguageMap = {};
+export let filesData: FileMap = {};
 export const SYNC_DATA_KEY = "mooncodeData";
 
 export const knownLanguages: Record<string, string> = {
