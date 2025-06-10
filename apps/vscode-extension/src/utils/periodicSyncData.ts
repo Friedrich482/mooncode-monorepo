@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { LanguagesData } from "../types-schemas";
 import { SYNC_DATA_KEY } from "../constants";
 import { TRPCClientError } from "@trpc/client";
+import calculateTime from "./calculateTime";
 import getGlobalStateData from "./getGlobalStateData";
 import { isEqual } from "date-fns";
 import setStatusBarItem from "./setStatusBarItem";
@@ -10,18 +10,18 @@ import trpc from "./trpc/client";
 const periodicSyncData = async (
   context: vscode.ExtensionContext,
   statusBarItem: vscode.StatusBarItem,
-  getTime: () => LanguagesData,
+  getTime: Awaited<ReturnType<typeof calculateTime>>,
 ) => {
   const todaysDateString = new Date().toLocaleDateString();
   let lastServerSync = new Date();
   let isServerSynced = false;
 
-  const timeSpentToday = Object.values(getTime()).reduce(
+  const timeSpentToday = Object.values(getTime().languagesData).reduce(
     (acc, value) => acc + value.elapsedTime,
     0,
   );
   const timeSpentPerLanguageToday = Object.fromEntries(
-    Object.entries(getTime()).map(([key, { elapsedTime }]) => [
+    Object.entries(getTime().languagesData).map(([key, { elapsedTime }]) => [
       key,
       elapsedTime,
     ]),

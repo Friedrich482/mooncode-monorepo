@@ -10,6 +10,17 @@ export type LanguageData = {
   isFrozen: boolean;
 };
 
+export type FileData = {
+  elapsedTime: number;
+  startTime: number;
+  lastActivityTime: number;
+  frozenTime: number | null; // this is an accumulator of time to track the elapsedTime when the language is frozen
+  freezeStartTime: number | null;
+  isFrozen: boolean;
+  projectName: string;
+  language: string | undefined;
+};
+
 export const globalStateInitialDataSchema = z.object({
   lastServerSync: z.union([
     z.date(),
@@ -33,6 +44,7 @@ export const globalStateInitialDataSchema = z.object({
     }),
   ),
 });
-export type LanguagesData = Record<string, LanguageData>;
+export type LanguageMap = Record<string, LanguageData>;
+export type FileMap = Record<string, FileData>;
 
 export type JwtPayloadType = z.infer<typeof JWTDto>;
