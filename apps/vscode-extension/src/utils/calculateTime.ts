@@ -157,7 +157,7 @@ const calculateTime = async (): Promise<
           : parseInt(((now - languageData.startTime) / 1000).toFixed(0));
     });
 
-    // Update all files time
+    // Update all files times
     Object.keys(filesData).forEach((file) => {
       const fileData = filesData[file];
       const now = performance.now();

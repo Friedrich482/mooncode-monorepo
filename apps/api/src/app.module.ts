@@ -14,6 +14,7 @@ import { TrpcModule } from "./trpc/trpc.module";
 import { UsersModule } from "./users/users.module";
 import { envSchema } from "src/env";
 import { ProjectsModule } from './projects/projects.module';
+import { FilesStatsModule } from './files-stats/files-stats.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ProjectsModule } from './projects/projects.module';
     EnvModule,
     FilesModule,
     ProjectsModule,
+    FilesStatsModule,
   ],
   controllers: [AppController],
   providers: [AppService, EnvService],

@@ -27,6 +27,21 @@ const periodicSyncData = async (
     ]),
   );
 
+  // eslint-disable-next-line no-unused-vars
+  const todayFileData = Object.fromEntries(
+    Object.entries(getTime().filesData).map(
+      ([key, { elapsedTime, language, projectName, projectPath }]) => [
+        key,
+        {
+          elapsedTime,
+          language,
+          projectName,
+          projectPath,
+        },
+      ],
+    ),
+  );
+
   try {
     const globalStateData = await getGlobalStateData();
 
