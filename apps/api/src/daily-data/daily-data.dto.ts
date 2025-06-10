@@ -6,7 +6,7 @@ export const CreateDailyDataDto = z.object({
   userId: z.string().ulid(),
   timeSpent: z.number().int().positive(),
 });
-
+// TODO remove or use it it the service
 export const findOneDailyDataDto = z.object({
   date: z.string().date(),
 });

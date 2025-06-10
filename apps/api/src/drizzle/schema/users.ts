@@ -8,6 +8,7 @@ export const users = pgTable("users", {
     .primaryKey()
     .notNull()
     .$defaultFn(() => ulid().toLowerCase()),
+
   username: text("name").notNull().unique(),
   email: text("email").notNull().unique(),
   password: text("password").notNull(),

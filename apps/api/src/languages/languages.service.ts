@@ -16,7 +16,7 @@ export class LanguagesService {
     const [createdLanguageData] = await this.db
       .insert(languages)
       .values({
-        languageName: languageName,
+        languageName,
         timeSpent,
         dailyDataId,
       })

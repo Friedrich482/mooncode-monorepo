@@ -22,7 +22,7 @@ export class DailyDataService {
       .insert(dailyData)
       .values({
         date: targetedDate,
-        timeSpent: timeSpent,
+        timeSpent,
         userId,
       })
       .returning({
@@ -40,9 +40,7 @@ export class DailyDataService {
       .from(dailyData)
       .where(and(eq(dailyData.userId, userId), eq(dailyData.date, date)));
 
-    if (!oneDailyData) {
-      return null;
-    }
+    if (!oneDailyData) return null;
 
     return oneDailyData;
   }
