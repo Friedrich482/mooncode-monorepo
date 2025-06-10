@@ -51,8 +51,8 @@ export class FilesService {
     return fileData;
   }
 
-  async UpdateFile(UpdateFileDto: UpdateFileDtoType) {
-    const { timeSpent, dailyDataId, projectId } = UpdateFileDto;
+  async updateFile(updateFileDto: UpdateFileDtoType) {
+    const { timeSpent, dailyDataId, projectId } = updateFileDto;
 
     const [updatedFileData] = await this.db
       .update(files)
