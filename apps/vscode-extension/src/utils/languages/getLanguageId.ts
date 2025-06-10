@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { knownLanguages, languageMapping } from "../constants";
+import { knownLanguages, languageMapping } from "../../constants";
 
 const getLanguageId = (document: vscode.TextDocument | undefined) => {
   // TODO this function doesn't even need parameters and should be rename getCurrentLanguageId

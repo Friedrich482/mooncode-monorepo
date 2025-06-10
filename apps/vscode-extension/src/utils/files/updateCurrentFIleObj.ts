@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
-import { filesData } from "../constants";
+import { filesData } from "../../constants";
 import getCurrentFileProperties from "./getCurrentFileProperties";
-import getLanguageId from "./getLanguageId";
+import getLanguageId from "../languages/getLanguageId";
 
 const updateCurrentFileObj = (document: vscode.TextDocument | undefined) => {
   const { relativePath, projectName } = getCurrentFileProperties(document);

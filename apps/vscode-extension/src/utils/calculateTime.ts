@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
 import { FileMap, LanguageMap } from "../types-schemas";
 import { MAX_IDLE_TIME, filesData, languagesData } from "../constants";
-import getCurrentFileProperties from "./getCurrentFileProperties";
+import getCurrentFileProperties from "./files/getCurrentFileProperties";
 import getGlobalStateData from "./getGlobalStateData";
-import getLanguageId from "./getLanguageId";
-import updateCurrentFileObj from "./updateCurrentFIleObj";
-import updateCurrentLanguage from "./updateCurrentLanguage";
+import getLanguageId from "./languages/getLanguageId";
+import updateCurrentFileObj from "./files/updateCurrentFIleObj";
+import updateCurrentLanguage from "./languages/updateCurrentLanguage";
 
 const calculateTime = async (): Promise<
   () => { languagesData: LanguageMap; filesData: FileMap }
