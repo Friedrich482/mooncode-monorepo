@@ -127,20 +127,20 @@ const calculateTime = async (): Promise<
   });
 
   const activityListeners = [
-    vscode.workspace.onDidChangeTextDocument((event) => {
-      updateCurrentLanguage(event.document);
-      updateCurrentFileObj(event.document);
-    }),
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor) {
         updateCurrentLanguage(editor.document);
         updateCurrentFileObj(editor.document);
       }
     }),
-    vscode.window.onDidChangeVisibleTextEditors((editors) => {
-      if (editors.length > 0) {
-        updateCurrentLanguage(editors[0].document);
-        updateCurrentFileObj(editors[0].document);
+
+    vscode.workspace.onDidChangeTextDocument((event) => {
+      if (
+        vscode.window.activeTextEditor &&
+        event.document === vscode.window.activeTextEditor.document
+      ) {
+        updateCurrentLanguage(event.document);
+        updateCurrentFileObj(event.document);
       }
     }),
   ];

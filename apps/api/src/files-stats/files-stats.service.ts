@@ -20,10 +20,9 @@ export class FilesStatsService {
     userId,
     dateString,
   }: DayFilesStatsDtoType) {
-    const dayData = await this.dailyDataService.findOneDailyData(
-      userId,
-      dateString,
-    );
+    const dayData = await this.dailyDataService.findOneDailyData(userId, {
+      date: dateString,
+    });
 
     if (!dayData) {
       return {};
@@ -71,7 +70,7 @@ export class FilesStatsService {
       // TODO fix this: not necessarily the date of today
       const dailyDataForDay = await this.dailyDataService.findOneDailyData(
         userId,
-        new Date().toLocaleDateString(),
+        { date: new Date().toLocaleDateString() },
       );
 
       // at this point we know that the dailyData exists because we call the upsert of the coding-stats.service
