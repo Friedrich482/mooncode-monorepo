@@ -18,7 +18,8 @@ export type FileData = {
   freezeStartTime: number | null;
   isFrozen: boolean;
   projectName: string;
-  language: string | undefined;
+  projectPath: string;
+  language: string;
 };
 
 export const globalStateInitialDataSchema = z.object({

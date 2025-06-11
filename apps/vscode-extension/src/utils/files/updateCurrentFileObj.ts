@@ -4,15 +4,16 @@ import getCurrentFileProperties from "./getCurrentFileProperties";
 import getLanguageId from "../languages/getLanguageId";
 
 const updateCurrentFileObj = (document: vscode.TextDocument | undefined) => {
-  const { relativePath, projectName } = getCurrentFileProperties(document);
-
-  if (!relativePath || !projectName) {
-    return;
-  }
+  const { absolutePath, projectName, projectPath } =
+    getCurrentFileProperties(document);
   const currentLanguageId = getLanguageId(document);
 
-  if (!filesData[relativePath]) {
-    filesData[relativePath] = {
+  if (!absolutePath || !projectName || !projectPath || !currentLanguageId) {
+    return;
+  }
+
+  if (!filesData[absolutePath]) {
+    filesData[absolutePath] = {
       elapsedTime: 0,
       startTime: performance.now(),
       lastActivityTime: performance.now(),
@@ -20,13 +21,17 @@ const updateCurrentFileObj = (document: vscode.TextDocument | undefined) => {
       freezeStartTime: null,
       isFrozen: false,
       projectName,
+      projectPath,
       language: currentLanguageId,
     };
   }
 
-  const currentFileData = filesData[relativePath];
+  const currentFileData = filesData[absolutePath];
 
   currentFileData.lastActivityTime = performance.now();
+  currentFileData.language = currentLanguageId;
+  currentFileData.projectName = projectName;
+  currentFileData.projectPath = projectPath;
 };
 
 export default updateCurrentFileObj;

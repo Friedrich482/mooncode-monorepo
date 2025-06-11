@@ -12,10 +12,9 @@ export class DayStatsService {
   ) {}
 
   async getDailyStatsForExtension({ userId, dateString }: DayStatsDtoType) {
-    const dayData = await this.dailyDataService.findOneDailyData(
-      userId,
-      dateString,
-    );
+    const dayData = await this.dailyDataService.findOneDailyData(userId, {
+      date: dateString,
+    });
 
     if (!dayData)
       return {
@@ -44,10 +43,9 @@ export class DayStatsService {
           ? "Yesterday"
           : providedDate.toDateString();
 
-    const dayData = await this.dailyDataService.findOneDailyData(
-      userId,
-      dateString,
-    );
+    const dayData = await this.dailyDataService.findOneDailyData(userId, {
+      date: dateString,
+    });
 
     if (!dayData)
       return {
@@ -98,7 +96,7 @@ export class DayStatsService {
 
     const existingTimeSpentOnDay = await this.dailyDataService.findOneDailyData(
       id,
-      targetedDate,
+      { date: targetedDate },
     );
 
     if (!existingTimeSpentOnDay) {

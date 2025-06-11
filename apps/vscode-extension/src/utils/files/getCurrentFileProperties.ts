@@ -1,27 +1,33 @@
+import * as path from "path";
 import * as vscode from "vscode";
-
 const getCurrentFileProperties = (
   document: vscode.TextDocument | undefined,
 ) => {
   if (!document) {
     return {
       projectName: null,
-      relativePath: null,
+      projectPath: null,
       absolutePath: null,
     };
   }
 
   const fileUri = document.uri;
 
-  const relativePathWithoutFolder = vscode.workspace.asRelativePath(
-    fileUri,
-    false,
-  );
+  const projectName = vscode.workspace.getWorkspaceFolder(fileUri)?.name;
+  const projectPath = vscode.workspace.getWorkspaceFolder(fileUri)?.uri.fsPath;
+
+  if (!projectName || !projectPath) {
+    return {
+      projectName: null,
+      projectPath: null,
+      absolutePath: null,
+    };
+  }
 
   return {
-    projectName: vscode.workspace.getWorkspaceFolder(fileUri)?.name,
-    relativePath: relativePathWithoutFolder,
-    absolutePath: fileUri.fsPath,
+    projectName,
+    projectPath,
+    absolutePath: path.normalize(fileUri.fsPath).toLowerCase(),
   };
 };
 

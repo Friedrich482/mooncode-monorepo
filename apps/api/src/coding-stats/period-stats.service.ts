@@ -228,10 +228,9 @@ export class PeriodStatsService {
 
     const timeSpentToday =
       (
-        await this.dailyDataService.findOneDailyData(
-          userId,
-          format(new Date(), "yyyy-MM-dd"),
-        )
+        await this.dailyDataService.findOneDailyData(userId, {
+          date: format(new Date(), "yyyy-MM-dd"),
+        })
       )?.timeSpent || 0;
 
     const percentageToAvg =

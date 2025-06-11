@@ -12,15 +12,30 @@ const fetchInitialData = async () => {
   let timeSpentFromServer = 0;
   let initialLanguagesDataFromServer: Record<string, number> = {};
   let serverDataFetchedSuccessfully = false;
+  let initialFilesData: Record<
+    string,
+    {
+      timeSpent: number;
+      projectPath: string;
+      language: string;
+      projectName: string;
+    }
+  > = {};
 
   try {
     const { dayLanguagesTime, timeSpent } =
       await trpc.codingStats.getDailyStatsForExtension.query({
-        dateString: dateString,
+        dateString,
+      });
+
+    const dayFilesData =
+      await trpc.filesStats.getDailyFilesStatsForExtension.query({
+        dateString,
       });
 
     timeSpentFromServer = timeSpent;
     initialLanguagesDataFromServer = dayLanguagesTime;
+    initialFilesData = dayFilesData;
     serverDataFetchedSuccessfully = true;
   } catch (error) {
     if (error instanceof TRPCClientError) {
@@ -52,6 +67,7 @@ const fetchInitialData = async () => {
       return {
         timeSpent: timeSpentFromServer,
         initialLanguagesData: initialLanguagesDataFromServer,
+        initialFilesData,
       };
     }
 
@@ -59,6 +75,7 @@ const fetchInitialData = async () => {
     return {
       timeSpent: timeSpentFromGlobalState,
       initialLanguagesData: initialLanguagesDataFromGlobalState,
+      initialFilesData,
     };
   } else {
     // Server data is NOT available, must use global state data
@@ -69,6 +86,7 @@ const fetchInitialData = async () => {
     return {
       timeSpent: timeSpentFromGlobalState,
       initialLanguagesData: initialLanguagesDataFromGlobalState,
+      initialFilesData,
     };
   }
 };

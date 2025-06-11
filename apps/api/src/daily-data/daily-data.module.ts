@@ -8,6 +8,6 @@ import { drizzleProvider } from "src/drizzle/drizzle.provider";
 @Module({
   imports: [ConfigModule, JwtModule],
   providers: [...drizzleProvider, DailyDataService, EnvService],
-  exports: [DailyDataModule],
+  exports: [DailyDataService],
 })
 export class DailyDataModule {}

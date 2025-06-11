@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
+import { filesData, languagesData } from "./constants";
 import addStatusBarItem from "./utils/addStatusBarItem";
 import calculateTime from "./utils/calculateTime";
 import fetchInitialData from "./utils/fetchInitialData";
 import getGlobalStateData from "./utils/getGlobalStateData";
-import { languagesData } from "./constants";
 import login from "./utils/auth/login";
 import logout from "./utils/auth/logout";
 import openDashBoard from "./utils/openDashBoard";
@@ -22,7 +22,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const statusBarItem = addStatusBarItem();
 
-  const { timeSpent, initialLanguagesData } = await fetchInitialData();
+  const { timeSpent, initialLanguagesData, initialFilesData } =
+    await fetchInitialData();
 
   setStatusBarItem(timeSpent, statusBarItem);
 
@@ -39,6 +40,24 @@ export async function activate(context: vscode.ExtensionContext) {
       isFrozen: false,
       lastActivityTime: now,
       startTime: now - timeSpent * 1000,
+    };
+  });
+
+  // initialize the time/other metadata for each file found
+  Object.keys(initialFilesData).forEach((filePath) => {
+    const file = initialFilesData[filePath];
+    const now = performance.now();
+
+    filesData[filePath] = {
+      elapsedTime: file.timeSpent,
+      frozenTime: null,
+      freezeStartTime: null,
+      isFrozen: false,
+      lastActivityTime: now,
+      startTime: now - file.timeSpent * 1000,
+      projectName: file.projectName,
+      projectPath: file.projectPath,
+      language: file.language,
     };
   });
 
@@ -79,7 +98,16 @@ export async function activate(context: vscode.ExtensionContext) {
     () => {
       const { filesData: currentFilesData } = getTime();
       vscode.window.showInformationMessage(
-        `currentLanguagesData: ${JSON.stringify(Object.entries(currentFilesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}`,
+        `currentFilesData: ${JSON.stringify(Object.entries(currentFilesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}`,
+      );
+    },
+  );
+
+  const showInitialFilesDataCommand = vscode.commands.registerCommand(
+    "MoonCode.showInitialFilesData",
+    async () => {
+      vscode.window.showInformationMessage(
+        `initialFilesData from server: ${JSON.stringify(Object.entries(initialFilesData).map(([key, { timeSpent: elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}`,
       );
     },
   );
@@ -111,8 +139,9 @@ export async function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    showCurrentLanguagesDataCommand,
     showInitialLanguagesDataCommand,
+    showCurrentLanguagesDataCommand,
+    showInitialFilesDataCommand,
     showCurrentFilesDataCommand,
     loginCommand,
     registerCommand,

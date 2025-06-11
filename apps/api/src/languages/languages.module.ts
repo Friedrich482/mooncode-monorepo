@@ -7,5 +7,6 @@ import { drizzleProvider } from "src/drizzle/drizzle.provider";
 @Module({
   imports: [ConfigModule],
   providers: [...drizzleProvider, LanguagesService, EnvService],
+  exports: [LanguagesService],
 })
 export class LanguagesModule {}

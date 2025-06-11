@@ -32,6 +32,7 @@ const calculateTime = async (): Promise<
       Object.keys(filesData).map((file) => {
         delete filesData[file];
       });
+      //  TODO set the globalState data with initial data for the new day
 
       return;
     }
@@ -82,7 +83,7 @@ const calculateTime = async (): Promise<
     Object.keys(filesData).map((file) => {
       const fileData = filesData[file];
 
-      if (!latestFile || file !== latestFile.relativePath) {
+      if (!latestFile || file !== latestFile.absolutePath) {
         // Immediately freeze non-active files
         if (!fileData.isFrozen) {
           fileData.freezeStartTime = now;
@@ -93,7 +94,7 @@ const calculateTime = async (): Promise<
       }
 
       // Only check idle time for the active files
-      const latestFileObj = filesData[latestFile.relativePath];
+      const latestFileObj = filesData[latestFile.absolutePath];
 
       const idleDuration = Math.floor(
         (now - latestFileObj.lastActivityTime) / 1000,
@@ -126,20 +127,20 @@ const calculateTime = async (): Promise<
   });
 
   const activityListeners = [
-    vscode.workspace.onDidChangeTextDocument((event) => {
-      updateCurrentLanguage(event.document);
-      updateCurrentFileObj(event.document);
-    }),
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor) {
         updateCurrentLanguage(editor.document);
         updateCurrentFileObj(editor.document);
       }
     }),
-    vscode.window.onDidChangeVisibleTextEditors((editors) => {
-      if (editors.length > 0) {
-        updateCurrentLanguage(editors[0].document);
-        updateCurrentFileObj(editors[0].document);
+
+    vscode.workspace.onDidChangeTextDocument((event) => {
+      if (
+        vscode.window.activeTextEditor &&
+        event.document === vscode.window.activeTextEditor.document
+      ) {
+        updateCurrentLanguage(event.document);
+        updateCurrentFileObj(event.document);
       }
     }),
   ];
@@ -157,7 +158,7 @@ const calculateTime = async (): Promise<
           : parseInt(((now - languageData.startTime) / 1000).toFixed(0));
     });
 
-    // Update all files time
+    // Update all files times
     Object.keys(filesData).forEach((file) => {
       const fileData = filesData[file];
       const now = performance.now();

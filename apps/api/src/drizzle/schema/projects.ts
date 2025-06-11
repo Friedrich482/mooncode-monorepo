@@ -1,10 +1,10 @@
-import { date, integer, pgTable, varchar } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar } from "drizzle-orm/pg-core";
 import { InferSelectModel } from "drizzle-orm";
 import { timestamps } from "../columns.helpers";
 import { ulid } from "ulid";
 import { users } from "./users";
 
-export const dailyData = pgTable("daily_data", {
+export const projects = pgTable("projects", {
   id: varchar("id", { length: 26 })
     .primaryKey()
     .notNull()
@@ -13,9 +13,9 @@ export const dailyData = pgTable("daily_data", {
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
 
-  date: date().notNull(),
-  timeSpent: integer("time_spent").notNull(),
+  projectName: text("project_name").notNull(),
+  path: text("path").notNull(),
   ...timestamps,
 });
 
-export type DailyData = InferSelectModel<typeof dailyData>;
+export type Project = InferSelectModel<typeof projects>;

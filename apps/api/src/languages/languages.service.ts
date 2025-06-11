@@ -16,7 +16,7 @@ export class LanguagesService {
     const [createdLanguageData] = await this.db
       .insert(languages)
       .values({
-        languageName: languageName,
+        languageName,
         timeSpent,
         dailyDataId,
       })
@@ -53,6 +53,7 @@ export class LanguagesService {
       .select({
         timeSpent: languages.timeSpent,
         languageName: languages.languageName,
+        languageId: languages.id,
       })
       .from(languages)
       .where(
