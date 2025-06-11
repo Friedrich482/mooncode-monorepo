@@ -35,6 +35,17 @@ export const globalStateInitialDataSchema = z.object({
     z.object({
       timeSpentOnDay: z.number(),
       timeSpentPerLanguage: z.record(z.string(), z.number()),
+
+      dayFilesData: z.record(
+        z.string(), // the absolute path of the file
+        z.object({
+          timeSpent: z.number(),
+          projectPath: z.string(),
+          language: z.string(),
+          projectName: z.string(),
+        }),
+      ),
+
       updatedAt: z.union([
         z.date(),
         z
@@ -47,5 +58,6 @@ export const globalStateInitialDataSchema = z.object({
 });
 export type LanguageMap = Record<string, LanguageData>;
 export type FileMap = Record<string, FileData>;
-
+export type GlobalStateData = z.infer<typeof globalStateInitialDataSchema>;
+export type FileDataSync = GlobalStateData["dailyData"][string]["dayFilesData"];
 export type JwtPayloadType = z.infer<typeof JWTDto>;
