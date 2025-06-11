@@ -27,11 +27,12 @@ const periodicSyncData = async (
     ]),
   );
 
+  // TODO send this to the server in the next commit
   // eslint-disable-next-line no-unused-vars
-  const todayFileData = Object.fromEntries(
+  const todayFilesData = Object.fromEntries(
     Object.entries(getTime().filesData).map(
-      ([key, { elapsedTime, language, projectName, projectPath }]) => [
-        key,
+      ([filePath, { elapsedTime, language, projectName, projectPath }]) => [
+        filePath,
         {
           elapsedTime,
           language,

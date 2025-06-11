@@ -1,4 +1,8 @@
-import { CreateProjectDtoType, UpdateProjectDtoType } from "./projects.dto";
+import {
+  CreateProjectDtoType,
+  FindProjectDtoType,
+  UpdateProjectDtoType,
+} from "./projects.dto";
 import { Inject, Injectable } from "@nestjs/common";
 import { and, eq } from "drizzle-orm";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
@@ -30,7 +34,9 @@ export class ProjectsService {
     return createdProject;
   }
 
-  async findOneProject(userId: string, projectName: string) {
+  async findOneProject(findProjectDto: FindProjectDtoType) {
+    const { userId, projectName, path } = findProjectDto;
+
     const [project] = await this.db
       .select({
         id: projects.id,
@@ -39,7 +45,11 @@ export class ProjectsService {
       })
       .from(projects)
       .where(
-        and(eq(projects.userId, userId), eq(projects.projectName, projectName)),
+        and(
+          eq(projects.userId, userId),
+          eq(projects.projectName, projectName),
+          eq(projects.path, path),
+        ),
       );
 
     if (!project) return null;

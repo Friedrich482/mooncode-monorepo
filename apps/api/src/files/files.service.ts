@@ -1,4 +1,8 @@
-import { CreateFileDtoType, UpdateFileDtoType } from "./files.dto";
+import {
+  CreateFileDtoType,
+  FindOneFileDtoType,
+  UpdateFileDtoType,
+} from "./files.dto";
 import { Inject, Injectable } from "@nestjs/common";
 import { and, eq } from "drizzle-orm";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
@@ -34,7 +38,9 @@ export class FilesService {
     return createdFileData;
   }
 
-  async findOneFile(dailyDataId: string, projectId: string) {
+  async findOneFile(findOneFileDto: FindOneFileDtoType) {
+    const { dailyDataId, projectId, fileName, path } = findOneFileDto;
+
     const [fileData] = await this.db
       .select({
         fileName: files.fileName,
@@ -43,7 +49,12 @@ export class FilesService {
       })
       .from(files)
       .where(
-        and(eq(files.dailyDataId, dailyDataId), eq(files.projectId, projectId)),
+        and(
+          eq(files.dailyDataId, dailyDataId),
+          eq(files.projectId, projectId),
+          eq(files.fileName, fileName),
+          eq(files.path, path),
+        ),
       );
 
     if (!fileData) return null;
@@ -52,7 +63,8 @@ export class FilesService {
   }
 
   async updateFile(updateFileDto: UpdateFileDtoType) {
-    const { timeSpent, dailyDataId, projectId } = updateFileDto;
+    const { timeSpent, dailyDataId, projectId, languageId, fileName, path } =
+      updateFileDto;
 
     const [updatedFileData] = await this.db
       .update(files)
@@ -60,7 +72,13 @@ export class FilesService {
         timeSpent,
       })
       .where(
-        and(eq(files.dailyDataId, dailyDataId), eq(files.projectId, projectId)),
+        and(
+          eq(files.dailyDataId, dailyDataId),
+          eq(files.projectId, projectId),
+          eq(files.languageId, languageId),
+          eq(files.fileName, fileName),
+          eq(files.path, path),
+        ),
       )
       .returning({
         fileName: files.fileName,

@@ -53,6 +53,7 @@ export class LanguagesService {
       .select({
         timeSpent: languages.timeSpent,
         languageName: languages.languageName,
+        languageId: languages.id,
       })
       .from(languages)
       .where(

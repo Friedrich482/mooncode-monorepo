@@ -32,6 +32,7 @@ const calculateTime = async (): Promise<
       Object.keys(filesData).map((file) => {
         delete filesData[file];
       });
+      //  TODO set the globalState data with initial data for the new day
 
       return;
     }
