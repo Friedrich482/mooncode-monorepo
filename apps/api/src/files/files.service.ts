@@ -4,10 +4,12 @@ import {
   UpdateFileDtoType,
 } from "./files.dto";
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq } from "drizzle-orm";
+import { and, asc, eq } from "drizzle-orm";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { files } from "src/drizzle/schema/files";
+import { languages } from "src/drizzle/schema/languages";
+import { projects } from "src/drizzle/schema/projects";
 
 @Injectable()
 export class FilesService {
@@ -60,6 +62,33 @@ export class FilesService {
     if (!fileData) return null;
 
     return fileData;
+  }
+
+  async findAllFiles(dailyDataId: string) {
+    const filesDataArray = await this.db
+      .select({
+        timeSpent: files.timeSpent,
+        filePath: files.path,
+        projectPath: projects.path,
+        projectName: projects.projectName,
+        language: languages.languageName,
+      })
+      .from(files)
+      .innerJoin(projects, eq(projects.id, files.projectId))
+      .innerJoin(languages, eq(languages.id, files.languageId))
+      .where(eq(files.dailyDataId, dailyDataId))
+      .orderBy(asc(files.timeSpent));
+
+    const filesDataObject = Object.fromEntries(
+      filesDataArray.map(
+        ({ filePath, timeSpent, projectPath, language, projectName }) => [
+          filePath,
+          { timeSpent, projectPath, language, projectName },
+        ],
+      ),
+    );
+
+    return filesDataObject;
   }
 
   async updateFile(updateFileDto: UpdateFileDtoType) {

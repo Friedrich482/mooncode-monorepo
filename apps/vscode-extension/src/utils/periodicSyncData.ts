@@ -27,14 +27,12 @@ const periodicSyncData = async (
     ]),
   );
 
-  // TODO send this to the server in the next commit
-  // eslint-disable-next-line no-unused-vars
   const todayFilesData = Object.fromEntries(
     Object.entries(getTime().filesData).map(
       ([filePath, { elapsedTime, language, projectName, projectPath }]) => [
         filePath,
         {
-          elapsedTime,
+          timeSpent: elapsedTime,
           language,
           projectName,
           projectPath,
@@ -57,6 +55,7 @@ const periodicSyncData = async (
           timeSpentOnDay: data.timeSpentOnDay,
           timeSpentPerLanguage: data.timeSpentPerLanguage,
         });
+        // TODO also send the data of old dates if found
       }
     }
 
@@ -65,6 +64,7 @@ const periodicSyncData = async (
       timeSpentOnDay: timeSpentToday,
       timeSpentPerLanguage: timeSpentPerLanguageToday,
     });
+    await trpc.filesStats.upsert.mutate(todayFilesData);
 
     isServerSynced = true;
 
@@ -83,6 +83,7 @@ const periodicSyncData = async (
         },
       },
     });
+    // also remove files data for old days
   } catch (error) {
     if (error instanceof TRPCClientError) {
       vscode.window.showWarningMessage(

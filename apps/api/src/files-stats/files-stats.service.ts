@@ -1,9 +1,12 @@
+import {
+  DayFilesStatsDtoType,
+  UpsertFilesStatsDtoType,
+} from "./files-stats.dto";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { FilesService } from "src/files/files.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
 import { ProjectsService } from "src/projects/projects.service";
-import { UpsertFilesStatsDtoType } from "./files-stats.dto";
 
 @Injectable()
 export class FilesStatsService {
@@ -13,7 +16,22 @@ export class FilesStatsService {
     private readonly dailyDataService: DailyDataService,
     private readonly languageService: LanguagesService,
   ) {}
-  async getFilesStatsForExtension({}) {}
+  async getDailyFilesStatsForExtension({
+    userId,
+    dateString,
+  }: DayFilesStatsDtoType) {
+    const dayData = await this.dailyDataService.findOneDailyData(
+      userId,
+      dateString,
+    );
+
+    if (!dayData) {
+      return {};
+    }
+
+    const filesData = await this.filesService.findAllFiles(dayData.id);
+    return filesData;
+  }
 
   async upsert({
     userId,
@@ -81,7 +99,7 @@ export class FilesStatsService {
 
       if (!existingFileData) {
         // if the data for this file doesn't exist, create one
-        const createdFileData = await this.filesService.createFile({
+        await this.filesService.createFile({
           projectId: returningProjectData.projectId,
           dailyDataId: dailyDataForDay.id,
           languageId: fileLanguage.languageId,
@@ -91,7 +109,7 @@ export class FilesStatsService {
         });
       } else {
         // else just update the file data
-        const updatedFileData = await this.filesService.updateFile({
+        await this.filesService.updateFile({
           projectId: returningProjectData.projectId,
           dailyDataId: dailyDataForDay.id,
           languageId: fileLanguage.languageId,

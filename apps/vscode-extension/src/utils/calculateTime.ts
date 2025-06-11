@@ -83,7 +83,7 @@ const calculateTime = async (): Promise<
     Object.keys(filesData).map((file) => {
       const fileData = filesData[file];
 
-      if (!latestFile || file !== latestFile.relativePath) {
+      if (!latestFile || file !== latestFile.absolutePath) {
         // Immediately freeze non-active files
         if (!fileData.isFrozen) {
           fileData.freezeStartTime = now;
@@ -94,7 +94,7 @@ const calculateTime = async (): Promise<
       }
 
       // Only check idle time for the active files
-      const latestFileObj = filesData[latestFile.relativePath];
+      const latestFileObj = filesData[latestFile.absolutePath];
 
       const idleDuration = Math.floor(
         (now - latestFileObj.lastActivityTime) / 1000,

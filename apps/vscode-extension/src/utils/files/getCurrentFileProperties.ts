@@ -1,5 +1,5 @@
+import * as path from "path";
 import * as vscode from "vscode";
-
 const getCurrentFileProperties = (
   document: vscode.TextDocument | undefined,
 ) => {
@@ -7,7 +7,6 @@ const getCurrentFileProperties = (
     return {
       projectName: null,
       projectPath: null,
-      relativePath: null,
       absolutePath: null,
     };
   }
@@ -21,21 +20,14 @@ const getCurrentFileProperties = (
     return {
       projectName: null,
       projectPath: null,
-      relativePath: null,
       absolutePath: null,
     };
   }
 
-  const relativePathWithoutFolder = vscode.workspace.asRelativePath(
-    fileUri,
-    false,
-  );
-
   return {
     projectName,
     projectPath,
-    relativePath: relativePathWithoutFolder,
-    absolutePath: fileUri.fsPath,
+    absolutePath: path.normalize(fileUri.fsPath).toLowerCase(),
   };
 };
 
