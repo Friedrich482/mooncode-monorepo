@@ -4,6 +4,7 @@ import { MAX_IDLE_TIME, filesData, languagesData } from "../constants";
 import getCurrentFileProperties from "./files/getCurrentFileProperties";
 import getGlobalStateData from "./getGlobalStateData";
 import getLanguageId from "./languages/getLanguageId";
+import isNewDayHandler from "./IsNewDayHandler";
 import updateCurrentFileObj from "./files/updateCurrentFileObj";
 import updateCurrentLanguage from "./languages/updateCurrentLanguage";
 
@@ -11,9 +12,9 @@ const calculateTime = async (): Promise<
   () => { languagesData: LanguageMap; filesData: FileMap }
 > => {
   const disposables: vscode.Disposable[] = [];
-  const { dailyData } = await getGlobalStateData();
+  let { dailyData, lastServerSync } = await getGlobalStateData();
 
-  const idleCheckInterval = setInterval(() => {
+  const idleCheckInterval = setInterval(async () => {
     const now = performance.now();
     const latestLanguage = getLanguageId(
       vscode.window.activeTextEditor?.document,
@@ -23,18 +24,10 @@ const calculateTime = async (): Promise<
       vscode.window.activeTextEditor?.document,
     );
 
-    const todaysDateString = new Date().toLocaleDateString();
-
-    if (!Object.hasOwn(dailyData, todaysDateString)) {
-      Object.keys(languagesData).map((language) => {
-        delete languagesData[language];
-      });
-      Object.keys(filesData).map((file) => {
-        delete filesData[file];
-      });
-      //  TODO set the globalState data with initial data for the new day
-
-      return;
+    const maybeUpdated = await isNewDayHandler(dailyData, lastServerSync);
+    if (maybeUpdated) {
+      dailyData = maybeUpdated.dailyData;
+      lastServerSync = maybeUpdated.lastServerSync;
     }
 
     Object.keys(languagesData).map((language) => {

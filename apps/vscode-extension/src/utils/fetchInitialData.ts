@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { FileDataSync } from "../types-schemas";
 import { TRPCClientError } from "@trpc/client";
 import getGlobalStateData from "./getGlobalStateData";
 import trpc from "./trpc/client";
@@ -8,19 +9,13 @@ const fetchInitialData = async () => {
 
   let timeSpentFromGlobalState = 0;
   let initialLanguagesDataFromGlobalState: Record<string, number> = {};
+  let initialFilesDataFromGlobalState: FileDataSync = {};
 
   let timeSpentFromServer = 0;
   let initialLanguagesDataFromServer: Record<string, number> = {};
+  let initialFilesDataFromServer: FileDataSync = {};
+
   let serverDataFetchedSuccessfully = false;
-  let initialFilesData: Record<
-    string,
-    {
-      timeSpent: number;
-      projectPath: string;
-      language: string;
-      projectName: string;
-    }
-  > = {};
 
   try {
     const { dayLanguagesTime, timeSpent } =
@@ -35,7 +30,8 @@ const fetchInitialData = async () => {
 
     timeSpentFromServer = timeSpent;
     initialLanguagesDataFromServer = dayLanguagesTime;
-    initialFilesData = dayFilesData;
+    initialFilesDataFromServer = dayFilesData;
+
     serverDataFetchedSuccessfully = true;
   } catch (error) {
     if (error instanceof TRPCClientError) {
@@ -51,15 +47,16 @@ const fetchInitialData = async () => {
 
   const globalStateData = await getGlobalStateData();
 
-  const { timeSpentOnDay, timeSpentPerLanguage } = globalStateData.dailyData[
-    dateString
-  ] ?? {
+  const { timeSpentOnDay, timeSpentPerLanguage, dayFilesData } = globalStateData
+    .dailyData[dateString] ?? {
     timeSpentOnDay: 0,
     timeSpentPerLanguage: {},
+    dayFilesData: {},
   };
 
   timeSpentFromGlobalState = timeSpentOnDay;
   initialLanguagesDataFromGlobalState = timeSpentPerLanguage;
+  initialFilesDataFromGlobalState = dayFilesData;
 
   if (serverDataFetchedSuccessfully) {
     if (timeSpentFromServer >= timeSpentFromGlobalState) {
@@ -67,7 +64,7 @@ const fetchInitialData = async () => {
       return {
         timeSpent: timeSpentFromServer,
         initialLanguagesData: initialLanguagesDataFromServer,
-        initialFilesData,
+        initialFilesData: initialFilesDataFromServer,
       };
     }
 
@@ -75,7 +72,7 @@ const fetchInitialData = async () => {
     return {
       timeSpent: timeSpentFromGlobalState,
       initialLanguagesData: initialLanguagesDataFromGlobalState,
-      initialFilesData,
+      initialFilesData: initialFilesDataFromGlobalState,
     };
   } else {
     // Server data is NOT available, must use global state data
@@ -86,7 +83,7 @@ const fetchInitialData = async () => {
     return {
       timeSpent: timeSpentFromGlobalState,
       initialLanguagesData: initialLanguagesDataFromGlobalState,
-      initialFilesData,
+      initialFilesData: initialFilesDataFromGlobalState,
     };
   }
 };

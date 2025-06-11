@@ -26,7 +26,6 @@ const periodicSyncData = async (
       elapsedTime,
     ]),
   );
-
   const todayFilesData = Object.fromEntries(
     Object.entries(getTime().filesData).map(
       ([filePath, { elapsedTime, language, projectName, projectPath }]) => [
@@ -55,7 +54,10 @@ const periodicSyncData = async (
           timeSpentOnDay: data.timeSpentOnDay,
           timeSpentPerLanguage: data.timeSpentPerLanguage,
         });
-        // TODO also send the data of old dates if found
+        await trpc.filesStats.upsert.mutate({
+          data: data.dayFilesData,
+          targetedDate: dateString,
+        });
       }
     }
 
@@ -64,10 +66,12 @@ const periodicSyncData = async (
       timeSpentOnDay: timeSpentToday,
       timeSpentPerLanguage: timeSpentPerLanguageToday,
     });
-    await trpc.filesStats.upsert.mutate(todayFilesData);
+    await trpc.filesStats.upsert.mutate({
+      data: todayFilesData,
+      targetedDate: todaysDateString,
+    });
 
     isServerSynced = true;
-
     lastServerSync = new Date();
 
     // ! Remove all the data (in the global state) for days previous to today if they exist
@@ -79,11 +83,11 @@ const periodicSyncData = async (
         [todaysDateString]: {
           timeSpentOnDay: timeSpentToday,
           timeSpentPerLanguage: timeSpentPerLanguageToday,
+          dayFilesData: todayFilesData,
           updatedAt: new Date(),
         },
       },
     });
-    // also remove files data for old days
   } catch (error) {
     if (error instanceof TRPCClientError) {
       vscode.window.showWarningMessage(
@@ -109,6 +113,7 @@ const periodicSyncData = async (
           [todaysDateString]: {
             timeSpentOnDay: timeSpentToday,
             timeSpentPerLanguage: timeSpentPerLanguageToday,
+            dayFilesData: todayFilesData,
             updatedAt: new Date(),
           },
         },
@@ -118,6 +123,7 @@ const periodicSyncData = async (
         `CRITICAL ERROR: Failed to save data to globalState : ${globalStateError}. Please open an issue to the Github repo of MoonCode.`,
       );
     }
+
     setStatusBarItem(timeSpentToday, statusBarItem);
   }
 };

@@ -39,7 +39,19 @@ export class FilesStatsService {
     userId: string;
     upsertFilesDto: UpsertFilesStatsDtoType;
   }) {
-    for (const [path, file] of Object.entries(upsertFilesDto)) {
+    const { data, targetedDate } = upsertFilesDto;
+
+    const dailyDataForDay = await this.dailyDataService.findOneDailyData(
+      userId,
+      { date: targetedDate },
+    );
+
+    if (!dailyDataForDay) {
+      // early exit – nothing to upsert
+      return;
+    }
+
+    for (const [path, file] of Object.entries(data)) {
       const fileName = path.split("/").pop()!;
       const returningProjectData = {
         projectId: "",
@@ -67,18 +79,6 @@ export class FilesStatsService {
         returningProjectData.projectName = existingProject.projectName;
       }
 
-      // TODO fix this: not necessarily the date of today
-      const dailyDataForDay = await this.dailyDataService.findOneDailyData(
-        userId,
-        { date: new Date().toLocaleDateString() },
-      );
-
-      // at this point we know that the dailyData exists because we call the upsert of the coding-stats.service
-      // before this one, so the dailyData will have already been created there
-      if (!dailyDataForDay) {
-        continue;
-      }
-
       const existingFileData = await this.filesService.findOneFile({
         dailyDataId: dailyDataForDay.id,
         projectId: returningProjectData.projectId,
@@ -93,7 +93,7 @@ export class FilesStatsService {
 
       // must exist too at this point
       if (!fileLanguage) {
-        return;
+        continue;
       }
 
       if (!existingFileData) {

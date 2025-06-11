@@ -27,7 +27,7 @@ const getCurrentFileProperties = (
   return {
     projectName,
     projectPath,
-    absolutePath: path.normalize(fileUri.fsPath).toLowerCase(),
+    absolutePath: path.normalize(fileUri.fsPath),
   };
 };
 
