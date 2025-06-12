@@ -10,10 +10,9 @@ const formatZodIssue = (issue: ZodIssue): string => {
 export const formatZodError = (error: ZodError) => {
   const { issues } = error;
 
-  if (issues.length) {
-    const currentIssue = issues[0];
-
-    return formatZodIssue(currentIssue);
+  if (issues.length === 0) {
+    return "No validation issues";
   }
-  return "no Error";
+
+  return issues.map(formatZodIssue).join("; ");
 };

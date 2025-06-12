@@ -4,6 +4,8 @@ import {
   globalStateInitialDataSchema,
 } from "../types-schemas";
 import { SYNC_DATA_KEY } from "../constants";
+import { ZodError } from "zod";
+import { formatZodError } from "@repo/utils/formatZodIssues";
 import { getExtensionContext } from "../extension";
 
 const getGlobalStateData: () => Promise<GlobalStateData> = async () => {
@@ -18,7 +20,7 @@ const getGlobalStateData: () => Promise<GlobalStateData> = async () => {
     return globalStateData;
   } catch (error) {
     vscode.window.showErrorMessage(
-      `Invalid data shape: ${error}. Defaulting to default data`,
+      `Invalid data shape: ${error instanceof ZodError ? formatZodError(error) : error}. Defaulting to default data`,
     );
 
     return {
