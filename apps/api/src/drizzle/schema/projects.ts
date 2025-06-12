@@ -1,21 +1,19 @@
-import { pgTable, text, varchar } from "drizzle-orm/pg-core";
-import { InferSelectModel } from "drizzle-orm";
+import { integer, pgTable, text, varchar } from "drizzle-orm/pg-core";
+import { dailyData } from "./dailyData";
 import { timestamps } from "../columns.helpers";
 import { ulid } from "ulid";
-import { users } from "./users";
 
 export const projects = pgTable("projects", {
   id: varchar("id", { length: 26 })
     .primaryKey()
     .notNull()
     .$defaultFn(() => ulid().toLowerCase()),
-  userId: varchar("user_id", { length: 26 })
+  dailyDataId: varchar("daily_data_id", { length: 26 })
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+    .references(() => dailyData.id, { onDelete: "cascade" }),
 
-  projectName: text("project_name").notNull(),
+  name: text("name").notNull(),
   path: text("path").notNull(),
+  timeSpent: integer("time_spent").notNull().default(0),
   ...timestamps,
 });
-
-export type Project = InferSelectModel<typeof projects>;

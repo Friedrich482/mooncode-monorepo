@@ -26,6 +26,24 @@ const periodicSyncData = async (
       elapsedTime,
     ]),
   );
+
+  const timeSpentPerProject = Object.entries(getTime().filesData)
+    .map(([filePath, fileData]) => ({
+      filePath,
+      project: fileData.projectPath,
+      timeSpent: fileData.elapsedTime,
+    }))
+    .reduce(
+      (acc, value) => {
+        if (acc[value.project]) {
+          acc[value.project] += value.timeSpent;
+        } else {
+          acc[value.project] = value.timeSpent;
+        }
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
   const todayFilesData = Object.fromEntries(
     Object.entries(getTime().filesData).map(
       ([filePath, { elapsedTime, language, projectName, projectPath }]) => [
@@ -54,9 +72,18 @@ const periodicSyncData = async (
           timeSpentOnDay: data.timeSpentOnDay,
           timeSpentPerLanguage: data.timeSpentPerLanguage,
         });
+
+        const perProject = Object.values(data.dayFilesData).reduce(
+          (acc, { projectPath, timeSpent }) => {
+            acc[projectPath] = (acc[projectPath] ?? 0) + timeSpent;
+            return acc;
+          },
+          {} as Record<string, number>,
+        );
         await trpc.filesStats.upsert.mutate({
-          data: data.dayFilesData,
+          filesData: data.dayFilesData,
           targetedDate: dateString,
+          timeSpentPerProject: perProject,
         });
       }
     }
@@ -67,8 +94,9 @@ const periodicSyncData = async (
       timeSpentPerLanguage: timeSpentPerLanguageToday,
     });
     await trpc.filesStats.upsert.mutate({
-      data: todayFilesData,
+      filesData: todayFilesData,
       targetedDate: todaysDateString,
+      timeSpentPerProject,
     });
 
     isServerSynced = true;

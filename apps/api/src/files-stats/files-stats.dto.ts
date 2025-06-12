@@ -2,7 +2,8 @@ import { dateStringDto } from "@repo/utils/schemas";
 import { z } from "zod";
 
 export const UpsertFilesDto = z.object({
-  data: z.record(
+  timeSpentPerProject: z.record(z.string(), z.number().int().nonnegative()),
+  filesData: z.record(
     z.string(),
     z.object({
       timeSpent: z.number().int().positive(),
@@ -18,7 +19,11 @@ export const DayFilesStatsDto = z.object({
   dateString: dateStringDto,
 });
 
+export const BaseDto = z.object({
+  start: dateStringDto,
+  end: dateStringDto,
+});
+
 export type UpsertFilesStatsDtoType = z.infer<typeof UpsertFilesDto>;
-export type DayFilesStatsDtoType = z.infer<typeof DayFilesStatsDto> & {
-  userId: string;
-};
+export type DayFilesStatsDtoType = z.infer<typeof DayFilesStatsDto>;
+export type BaseDtoType = z.infer<typeof BaseDto> & { userId: string };

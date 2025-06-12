@@ -17,37 +17,40 @@ export class ProjectsService {
   ) {}
 
   async createProject(createProjectDto: CreateProjectDtoType) {
-    const { userId, projectName, path } = createProjectDto;
+    const { dailyDataId, name, path, timeSpent } = createProjectDto;
 
     const [createdProject] = await this.db
       .insert(projects)
       .values({
-        userId,
-        projectName,
+        dailyDataId,
+        name,
         path,
+        timeSpent,
       })
       .returning({
         id: projects.id,
-        projectName: projects.projectName,
+        name: projects.name,
+        timeSpent: projects.timeSpent,
       });
 
     return createdProject;
   }
 
   async findOneProject(findProjectDto: FindProjectDtoType) {
-    const { userId, projectName, path } = findProjectDto;
+    const { dailyDataId, name, path } = findProjectDto;
 
     const [project] = await this.db
       .select({
         id: projects.id,
-        projectName: projects.projectName,
+        name: projects.name,
         path: projects.path,
+        timeSpent: projects.timeSpent,
       })
       .from(projects)
       .where(
         and(
-          eq(projects.userId, userId),
-          eq(projects.projectName, projectName),
+          eq(projects.dailyDataId, dailyDataId),
+          eq(projects.name, name),
           eq(projects.path, path),
         ),
       );
@@ -57,38 +60,41 @@ export class ProjectsService {
     return project;
   }
 
-  async findAllProjects(userId: string) {
-    const userProjects = await this.db
-      .select({
-        id: projects.id,
-        projectName: projects.projectName,
-        path: projects.path,
-      })
-      .from(projects)
-      .where(eq(projects.userId, userId));
+  // TODO implement this but findAllRangeProjects like dailyData
+  // async findAllProjects(userId: string) {
+  //   const userProjects = await this.db
+  //     .select({
+  //       id: projects.id,
+  //       name: projects.name,
+  //       path: projects.path,
+  //     })
+  //     .from(projects)
+  //     .where(eq(projects.userId, userId));
 
-    const userProjectRecord = Object.fromEntries(
-      userProjects.map(({ path, projectName }) => [projectName, { path }]),
-    );
+  //   const userProjectRecord = Object.fromEntries(
+  //     userProjects.map(({ path, name }) => [name, { path }]),
+  //   );
 
-    return userProjectRecord;
-  }
+  //   return userProjectRecord;
+  // }
 
-  async updateProject(
-    projectId: string,
-    updateProjectDto: UpdateProjectDtoType,
-  ) {
-    const { path, projectName } = updateProjectDto;
+  async updateProject(updateProjectDto: UpdateProjectDtoType) {
+    const { dailyDataId, timeSpent, path, name } = updateProjectDto;
 
     const [updatedProject] = await this.db
       .update(projects)
       .set({
-        projectName,
-        path,
+        timeSpent,
       })
-      .where(eq(projects.id, projectId))
+      .where(
+        and(
+          eq(projects.dailyDataId, dailyDataId),
+          eq(projects.path, path),
+          eq(projects.name, name),
+        ),
+      )
       .returning({
-        projectName: projects.projectName,
+        name: projects.name,
         path: projects.path,
       });
 

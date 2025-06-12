@@ -1,16 +1,22 @@
 import { z } from "zod";
 
 export const CreateProjectDto = z.object({
-  userId: z.string().ulid(),
-  projectName: z.string(),
+  dailyDataId: z.string().ulid(),
+  name: z.string(),
+  path: z.string(),
+  timeSpent: z.number().int().positive(),
+});
+
+export const UpdateProjectDto = z.object({
+  dailyDataId: z.string().ulid(),
+  timeSpent: z.number().int().positive(),
+  name: z.string(),
   path: z.string(),
 });
 
-export const UpdateProjectDto = CreateProjectDto.partial();
-
 export const FindProjectDto = z.object({
-  userId: z.string().ulid(),
-  projectName: z.string(),
+  dailyDataId: z.string().ulid(),
+  name: z.string(),
   path: z.string(),
 });
 

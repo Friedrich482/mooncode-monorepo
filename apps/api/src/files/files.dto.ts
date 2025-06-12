@@ -2,26 +2,24 @@ import { z } from "zod";
 
 export const CreateFileDto = z.object({
   projectId: z.string().ulid(),
-  dailyDataId: z.string().ulid(),
   languageId: z.string().ulid(),
   path: z.string(),
-  fileName: z.string(),
+  name: z.string(),
   timeSpent: z.number().int(),
 });
 
 export const UpdateFileDto = z.object({
   projectId: z.string().ulid(),
-  dailyDataId: z.string().ulid(),
   languageId: z.string().ulid(),
   timeSpent: z.number().int(),
   path: z.string(),
-  fileName: z.string(),
+  name: z.string(),
 });
 
 export const FindOneFileDto = z.object({
-  dailyDataId: z.string().ulid(),
+  languageId: z.string().ulid(),
   projectId: z.string().ulid(),
-  fileName: z.string(),
+  name: z.string(),
   path: z.string(),
 });
 

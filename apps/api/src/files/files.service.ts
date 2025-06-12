@@ -19,42 +19,41 @@ export class FilesService {
   ) {}
 
   async createFile(createFileDto: CreateFileDtoType) {
-    const { languageId, dailyDataId, projectId, fileName, timeSpent, path } =
-      createFileDto;
+    const { languageId, projectId, name, timeSpent, path } = createFileDto;
 
     const [createdFileData] = await this.db
       .insert(files)
       .values({
-        dailyDataId,
         languageId,
         projectId,
-        fileName,
+        name,
         path,
         timeSpent,
       })
       .returning({
-        fileName: files.fileName,
+        name: files.name,
         timeSpent: files.timeSpent,
+        path: files.path,
       });
 
     return createdFileData;
   }
 
   async findOneFile(findOneFileDto: FindOneFileDtoType) {
-    const { dailyDataId, projectId, fileName, path } = findOneFileDto;
+    const { languageId, projectId, name, path } = findOneFileDto;
 
     const [fileData] = await this.db
       .select({
-        fileName: files.fileName,
-        filePath: files.path,
+        name: files.name,
+        path: files.path,
         timeSpent: files.timeSpent,
       })
       .from(files)
       .where(
         and(
-          eq(files.dailyDataId, dailyDataId),
+          eq(files.languageId, languageId),
           eq(files.projectId, projectId),
-          eq(files.fileName, fileName),
+          eq(files.name, name),
           eq(files.path, path),
         ),
       );
@@ -64,26 +63,34 @@ export class FilesService {
     return fileData;
   }
 
-  async findAllFiles(dailyDataId: string) {
+  async findAllFilesOnDay(dailyDataId: string) {
     const filesDataArray = await this.db
       .select({
-        timeSpent: files.timeSpent,
-        filePath: files.path,
-        projectPath: projects.path,
-        projectName: projects.projectName,
         language: languages.languageName,
+        timeSpent: files.timeSpent,
+        fileName: files.name,
+        filePath: files.path,
+        projectName: projects.name,
+        projectPath: projects.path,
       })
       .from(files)
       .innerJoin(projects, eq(projects.id, files.projectId))
       .innerJoin(languages, eq(languages.id, files.languageId))
-      .where(eq(files.dailyDataId, dailyDataId))
+      .where(eq(projects.dailyDataId, dailyDataId))
       .orderBy(asc(files.timeSpent));
 
     const filesDataObject = Object.fromEntries(
       filesDataArray.map(
-        ({ filePath, timeSpent, projectPath, language, projectName }) => [
+        ({
+          language,
+          timeSpent,
+          fileName,
           filePath,
-          { timeSpent, projectPath, language, projectName },
+          projectName,
+          projectPath,
+        }) => [
+          filePath,
+          { language, timeSpent, projectPath, projectName, fileName },
         ],
       ),
     );
@@ -92,8 +99,7 @@ export class FilesService {
   }
 
   async updateFile(updateFileDto: UpdateFileDtoType) {
-    const { timeSpent, dailyDataId, projectId, languageId, fileName, path } =
-      updateFileDto;
+    const { timeSpent, projectId, languageId, name, path } = updateFileDto;
 
     const [updatedFileData] = await this.db
       .update(files)
@@ -102,16 +108,15 @@ export class FilesService {
       })
       .where(
         and(
-          eq(files.dailyDataId, dailyDataId),
           eq(files.projectId, projectId),
           eq(files.languageId, languageId),
-          eq(files.fileName, fileName),
+          eq(files.name, name),
           eq(files.path, path),
         ),
       )
       .returning({
-        fileName: files.fileName,
-        filePath: files.path,
+        name: files.name,
+        path: files.path,
         timeSpent: files.timeSpent,
       });
 

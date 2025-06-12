@@ -1,4 +1,5 @@
 import {
+  BaseDtoType,
   DayFilesStatsDtoType,
   UpsertFilesStatsDtoType,
 } from "./files-stats.dto";
@@ -18,8 +19,13 @@ export class FilesStatsService {
   ) {}
   async getDailyFilesStatsForExtension({
     userId,
-    dateString,
-  }: DayFilesStatsDtoType) {
+    dayFilesStatsDto,
+  }: {
+    userId: string;
+    dayFilesStatsDto: DayFilesStatsDtoType;
+  }) {
+    const { dateString } = dayFilesStatsDto;
+
     const dayData = await this.dailyDataService.findOneDailyData(userId, {
       date: dateString,
     });
@@ -28,7 +34,7 @@ export class FilesStatsService {
       return {};
     }
 
-    const filesData = await this.filesService.findAllFiles(dayData.id);
+    const filesData = await this.filesService.findAllFilesOnDay(dayData.id);
     return filesData;
   }
 
@@ -39,8 +45,7 @@ export class FilesStatsService {
     userId: string;
     upsertFilesDto: UpsertFilesStatsDtoType;
   }) {
-    const { data, targetedDate } = upsertFilesDto;
-
+    const { filesData, timeSpentPerProject, targetedDate } = upsertFilesDto;
     const dailyDataForDay = await this.dailyDataService.findOneDailyData(
       userId,
       { date: targetedDate },
@@ -51,40 +56,46 @@ export class FilesStatsService {
       return;
     }
 
-    for (const [path, file] of Object.entries(data)) {
+    for (const [path, file] of Object.entries(filesData)) {
       const fileName = path.split("/").pop()!;
+
       const returningProjectData = {
         projectId: "",
         projectName: "",
+        timeSpent: 0,
       };
 
       const existingProject = await this.projectService.findOneProject({
-        userId,
-        projectName: file.projectName,
+        dailyDataId: dailyDataForDay.id,
+        name: file.projectName,
         path: file.projectPath,
       });
 
       if (!existingProject) {
-        // if the project for the file doesn't exist, let's create it
+        // if the project doesn't exist, let's create it
         const createdProject = await this.projectService.createProject({
-          projectName: file.projectName,
+          dailyDataId: dailyDataForDay.id,
+          name: file.projectName,
           path: file.projectPath,
-          userId,
+          timeSpent: timeSpentPerProject[file.projectPath],
         });
 
         returningProjectData.projectId = createdProject.id;
-        returningProjectData.projectName = createdProject.projectName;
+        returningProjectData.projectName = createdProject.name;
+        returningProjectData.timeSpent = createdProject.timeSpent;
       } else {
-        returningProjectData.projectId = existingProject.id;
-        returningProjectData.projectName = existingProject.projectName;
-      }
+        // else update it
+        await this.projectService.updateProject({
+          dailyDataId: dailyDataForDay.id,
+          name: file.projectName,
+          path: file.projectPath,
+          timeSpent: timeSpentPerProject[file.projectPath],
+        });
 
-      const existingFileData = await this.filesService.findOneFile({
-        dailyDataId: dailyDataForDay.id,
-        projectId: returningProjectData.projectId,
-        fileName,
-        path,
-      });
+        returningProjectData.projectId = existingProject.id;
+        returningProjectData.projectName = existingProject.name;
+        returningProjectData.timeSpent = existingProject.timeSpent;
+      }
 
       const fileLanguage = await this.languageService.findOneLanguage(
         dailyDataForDay.id,
@@ -96,27 +107,34 @@ export class FilesStatsService {
         continue;
       }
 
+      const existingFileData = await this.filesService.findOneFile({
+        projectId: returningProjectData.projectId,
+        name: fileName,
+        path,
+        languageId: fileLanguage.languageId,
+      });
+
       if (!existingFileData) {
         // if the data for this file doesn't exist, create one
         await this.filesService.createFile({
           projectId: returningProjectData.projectId,
-          dailyDataId: dailyDataForDay.id,
           languageId: fileLanguage.languageId,
-          fileName,
-          path: path,
+          name: fileName,
+          path,
           timeSpent: file.timeSpent,
         });
       } else {
         // else just update the file data
         await this.filesService.updateFile({
           projectId: returningProjectData.projectId,
-          dailyDataId: dailyDataForDay.id,
           languageId: fileLanguage.languageId,
-          path: path,
+          path,
           timeSpent: file.timeSpent,
-          fileName,
+          name: fileName,
         });
       }
     }
   }
+
+  async getPeriodProjects({}: BaseDtoType) {}
 }

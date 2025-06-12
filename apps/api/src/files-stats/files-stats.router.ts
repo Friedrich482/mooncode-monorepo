@@ -28,7 +28,7 @@ export class FilesStatsRouter {
         .query(async ({ ctx, input }) =>
           this.filesStatsService.getDailyFilesStatsForExtension({
             userId: ctx.user.sub,
-            dateString: input.dateString,
+            dayFilesStatsDto: input,
           }),
         ),
     }),
