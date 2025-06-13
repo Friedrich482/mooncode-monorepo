@@ -1,5 +1,6 @@
-import { DatesDto, DayStatsDto, UpsertLanguagesDto } from "./coding-stats.dto";
+import { DayStatsDto, UpsertLanguagesDto } from "./coding-stats.dto";
 import { CodingStatsService } from "./coding-stats.service";
+import { DatesDto } from "src/common/dto";
 import { Injectable } from "@nestjs/common";
 import { TrpcService } from "src/trpc/trpc.service";
 

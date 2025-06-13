@@ -87,7 +87,6 @@ export class DayStatsService {
   }) {
     const { timeSpentPerLanguage, timeSpentOnDay, targetedDate } =
       upsertLanguagesDto;
-
     const returningDailyData = {
       dailyDataId: "",
       timeSpentOnDay: 0,
@@ -121,6 +120,10 @@ export class DayStatsService {
         returningDailyData.dailyDataId = updatedTimeSpentOnDay.id;
         returningDailyData.timeSpentOnDay = updatedTimeSpentOnDay.timeSpent;
         returningDailyData.date = updatedTimeSpentOnDay.date;
+      } else {
+        returningDailyData.dailyDataId = existingTimeSpentOnDay.id;
+        returningDailyData.timeSpentOnDay = existingTimeSpentOnDay.timeSpent;
+        returningDailyData.date = targetedDate;
       }
     }
 

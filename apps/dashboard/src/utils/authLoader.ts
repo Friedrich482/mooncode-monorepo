@@ -1,6 +1,8 @@
 import { redirect } from "react-router";
 
 const API_URL = import.meta.env.VITE_API_URL;
+
+// protects routes
 export const protectedRouteLoader = async () => {
   try {
     const response = await fetch(`${API_URL}/auth.checkAuthStatus`, {
@@ -18,6 +20,7 @@ export const protectedRouteLoader = async () => {
   }
 };
 
+// prevents a logged in user to access an auth route (login & register)
 export const authRouteLoader = async () => {
   try {
     const response = await fetch(`${API_URL}/auth.checkAuthStatus`, {

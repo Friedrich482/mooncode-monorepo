@@ -1,4 +1,5 @@
 import { DayFilesStatsDto, UpsertFilesDto } from "./files-stats.dto";
+import { DatesDto } from "src/common/dto";
 import { FilesStatsService } from "./files-stats.service";
 import { Injectable } from "@nestjs/common";
 import { TrpcService } from "src/trpc/trpc.service";
@@ -28,7 +29,19 @@ export class FilesStatsRouter {
         .query(async ({ ctx, input }) =>
           this.filesStatsService.getDailyFilesStatsForExtension({
             userId: ctx.user.sub,
-            dateString: input.dateString,
+            dayFilesStatsDto: input,
+          }),
+        ),
+
+      getPeriodProjects: this.trpcService
+        .protectedProcedure()
+        .input(DatesDto)
+        .query(async ({ ctx, input }) =>
+          this.filesStatsService.getPeriodProjects({
+            userId: ctx.user.sub,
+            start: input.start,
+            end: input.end,
+            periodResolution: input.periodResolution,
           }),
         ),
     }),

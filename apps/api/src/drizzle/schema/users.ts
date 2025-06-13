@@ -15,5 +15,3 @@ export const users = pgTable("users", {
   profilePicture: text("profile_picture").notNull(),
   ...timestamps,
 });
-
-export type User = InferSelectModel<typeof users>;

@@ -2,7 +2,7 @@ import { GroupBy, PeriodResolution } from "@repo/utils/types";
 import { IsoDateSchema, Period, PeriodSchema } from "@/types-schemas";
 import { ZodError, z } from "zod";
 import { PERIODS } from "@/constants";
-import { formatZodError } from "@/utils/formatZodIssues";
+import { formatZodError } from "@repo/utils/formatZodIssues";
 import getPeriodResolution from "@repo/utils/getPeriodResolution";
 
 type ReturnType = {

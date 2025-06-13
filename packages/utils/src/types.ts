@@ -2,8 +2,8 @@ import { JWTDto, RegisterUserDto, SignInUserDto } from "./schemas";
 import { LOGIN_URL, REGISTER_URL } from "./constants";
 import z from "zod";
 
-export const GroupByZEnum = ["days", "weeks", "months"] as const;
-export type GroupBy = (typeof GroupByZEnum)[number];
+export const GroupByEnum = ["days", "weeks", "months"] as const;
+export type GroupBy = (typeof GroupByEnum)[number];
 
 export type PeriodResolution = "day" | "week" | "month" | "year";
 
