@@ -6,7 +6,7 @@ export const UpsertFilesDto = z.object({
   filesData: z.record(
     z.string(),
     z.object({
-      timeSpent: z.number().int().positive(),
+      timeSpent: z.number().int().nonnegative(),
       language: z.string().min(1),
       projectName: z.string().min(1),
       projectPath: z.string().min(1),
@@ -19,11 +19,5 @@ export const DayFilesStatsDto = z.object({
   dateString: dateStringDto,
 });
 
-export const BaseDto = z.object({
-  start: dateStringDto,
-  end: dateStringDto,
-});
-
 export type UpsertFilesStatsDtoType = z.infer<typeof UpsertFilesDto>;
 export type DayFilesStatsDtoType = z.infer<typeof DayFilesStatsDto>;
-export type BaseDtoType = z.infer<typeof BaseDto> & { userId: string };

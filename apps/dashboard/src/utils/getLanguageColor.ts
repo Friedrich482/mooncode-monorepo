@@ -5,8 +5,7 @@ const getLanguageColor = (languageId: string) => {
   try {
     languageColor =
       languagesAttributes[languageId as keyof typeof languagesAttributes].color;
-  } catch (error) {
-    console.error(error);
+  } catch {
     languageColor = DEFAULT_COLOR;
   }
   return languageColor;

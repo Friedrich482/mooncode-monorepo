@@ -1,9 +1,9 @@
 import {
-  BaseDtoType,
   DayFilesStatsDtoType,
   UpsertFilesStatsDtoType,
 } from "./files-stats.dto";
 import { DailyDataService } from "src/daily-data/daily-data.service";
+import { DatesDtoType } from "src/common/dto";
 import { FilesService } from "src/files/files.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
@@ -136,5 +136,31 @@ export class FilesStatsService {
     }
   }
 
-  async getPeriodProjects({}: BaseDtoType) {}
+  async getPeriodProjects({ userId, start, end }: DatesDtoType) {
+    const projectsOnRange = await this.projectService.findAllRangeProjects({
+      userId,
+      start,
+      end,
+    });
+
+    const timeSpentAcrossAllProjects = projectsOnRange.reduce(
+      (acc, value) => acc + value.totalTimeSpent,
+      0,
+    );
+
+    const finalData = projectsOnRange.map((project) => ({
+      ...project,
+      percentage:
+        timeSpentAcrossAllProjects === 0
+          ? 0
+          : parseFloat(
+              (
+                (project.totalTimeSpent * 100) /
+                timeSpentAcrossAllProjects
+              ).toFixed(2),
+            ),
+    }));
+
+    return finalData;
+  }
 }

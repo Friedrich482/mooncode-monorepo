@@ -4,9 +4,10 @@ import {
   UpdateProjectDtoType,
 } from "./projects.dto";
 import { Inject, Injectable } from "@nestjs/common";
-import { and, eq } from "drizzle-orm";
+import { and, between, eq, sum } from "drizzle-orm";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { dailyData } from "src/drizzle/schema/dailyData";
 import { projects } from "src/drizzle/schema/projects";
 
 @Injectable()
@@ -60,23 +61,31 @@ export class ProjectsService {
     return project;
   }
 
-  // TODO implement this but findAllRangeProjects like dailyData
-  // async findAllProjects(userId: string) {
-  //   const userProjects = await this.db
-  //     .select({
-  //       id: projects.id,
-  //       name: projects.name,
-  //       path: projects.path,
-  //     })
-  //     .from(projects)
-  //     .where(eq(projects.userId, userId));
+  async findAllRangeProjects({
+    userId,
+    start,
+    end,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+  }) {
+    const timeSpentPerProject = await this.db
+      .select({
+        name: projects.name,
+        path: projects.path,
+        totalTimeSpent: sum(projects.timeSpent).mapWith(Number),
+      })
+      .from(projects)
+      .innerJoin(dailyData, eq(projects.dailyDataId, dailyData.id))
+      .where(
+        and(eq(dailyData.userId, userId), between(dailyData.date, start, end)),
+      )
+      .groupBy(projects.path, projects.name)
+      .orderBy(sum(projects.timeSpent));
 
-  //   const userProjectRecord = Object.fromEntries(
-  //     userProjects.map(({ path, name }) => [name, { path }]),
-  //   );
-
-  //   return userProjectRecord;
-  // }
+    return timeSpentPerProject;
+  }
 
   async updateProject(updateProjectDto: UpdateProjectDtoType) {
     const { dailyDataId, timeSpent, path, name } = updateProjectDto;

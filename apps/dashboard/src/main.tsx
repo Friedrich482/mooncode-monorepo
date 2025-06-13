@@ -1,13 +1,14 @@
 import { RouterProvider, createBrowserRouter } from "react-router";
 import { authRouteLoader, protectedRouteLoader } from "./utils/authLoader";
-import App from "./App.tsx";
-import DashboardPage from "./components/dashboard-page/Dashboard";
+import App from "./App";
+import Dashboard from "./components/dashboard-page/Dashboard";
 import Layout from "./components/layout/Layout";
 import LoginForm from "./components/login-page/LoginForm";
-import NotFoundPage from "./components/not-found-page/NotFoundPage.tsx";
+import NotFound from "./components/not-found-page/NotFound";
+import Project from "./components/project-page/Project";
 import React from "react";
-import RegisterForm from "./components/register-page/RegisterForm.tsx";
-import RootPage from "./components/root-page/Root";
+import RegisterForm from "./components/register-page/RegisterForm";
+import Root from "./components/root-page/Root";
 import { createRoot } from "react-dom/client";
 
 const router = createBrowserRouter([
@@ -19,7 +20,7 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <RootPage />,
+            element: <Root />,
           },
           {
             path: "login",
@@ -33,12 +34,17 @@ const router = createBrowserRouter([
           },
           {
             path: "dashboard",
-            element: <DashboardPage />,
+            element: <Dashboard />,
+            loader: protectedRouteLoader,
+          },
+          {
+            path: "dashboard/:projectName",
+            element: <Project />,
             loader: protectedRouteLoader,
           },
           {
             path: "*",
-            element: <NotFoundPage />,
+            element: <NotFound />,
           },
         ],
       },
