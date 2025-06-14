@@ -38,7 +38,14 @@ const Dashboard = () => {
         </ErrorBoundary>
       </div>
       <div className="flex items-center justify-between max-chart:flex-col max-chart:gap-20">
-        <ErrorBoundary FallbackComponent={ErrorFallBack}>
+        <ErrorBoundary
+          FallbackComponent={({ error }) => (
+            <ErrorFallBack
+              error={error}
+              className="relative z-0 flex min-h-96 w-full items-center justify-center rounded-md border border-neutral-600/50 px-1.5 text-2xl text-red-600 max-xl:text-xl max-chart:w-full max-[30rem]:text-lg"
+            />
+          )}
+        >
           <SuspenseBoundary fallBackClassName="h-[24rem] w-full max-chart:w-full">
             <PeriodProjects />
           </SuspenseBoundary>

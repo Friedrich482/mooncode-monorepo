@@ -4,9 +4,10 @@ import {
   UpdateProjectDtoType,
 } from "./projects.dto";
 import { Inject, Injectable } from "@nestjs/common";
-import { and, between, eq, sum } from "drizzle-orm";
+import { and, between, desc, eq, sum } from "drizzle-orm";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import { TRPCError } from "@trpc/server";
 import { dailyData } from "src/drizzle/schema/dailyData";
 import { projects } from "src/drizzle/schema/projects";
 
@@ -82,7 +83,7 @@ export class ProjectsService {
         and(eq(dailyData.userId, userId), between(dailyData.date, start, end)),
       )
       .groupBy(projects.path, projects.name)
-      .orderBy(sum(projects.timeSpent));
+      .orderBy(desc(sum(projects.timeSpent)));
 
     return timeSpentPerProject;
   }
@@ -108,5 +109,53 @@ export class ProjectsService {
       });
 
     return updatedProject;
+  }
+
+  async groupAndAggregateProjectByName({
+    userId,
+    start,
+    end,
+    name,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+    name: string;
+  }) {
+    const [userHasProjectsOfName] = await this.db
+      .select({ name: projects.name, path: projects.path })
+      .from(projects)
+      .innerJoin(dailyData, eq(projects.dailyDataId, dailyData.id))
+      .where(and(eq(projects.name, name), eq(dailyData.userId, userId)))
+      .limit(1);
+
+    if (!userHasProjectsOfName) throw new TRPCError({ code: "NOT_FOUND" });
+
+    const [projectAggregatedOnPeriod] = await this.db
+      .select({
+        name: projects.name,
+        path: projects.path,
+        totalTimeSpent: sum(projects.timeSpent).mapWith(Number),
+      })
+      .from(projects)
+      .innerJoin(dailyData, eq(projects.dailyDataId, dailyData.id))
+      .where(
+        and(
+          eq(dailyData.userId, userId),
+          between(dailyData.date, start, end),
+          eq(projects.name, name),
+        ),
+      )
+      .groupBy(projects.path, projects.name)
+      .orderBy(desc(sum(projects.timeSpent)));
+
+    if (!projectAggregatedOnPeriod)
+      return {
+        name: userHasProjectsOfName.name,
+        path: userHasProjectsOfName.path,
+        totalTimeSpent: 0,
+      };
+
+    return projectAggregatedOnPeriod;
   }
 }

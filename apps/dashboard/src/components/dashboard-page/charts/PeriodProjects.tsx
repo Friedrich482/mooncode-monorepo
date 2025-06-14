@@ -32,7 +32,15 @@ const PeriodProjects = () => {
       <h2 className="text-center text-2xl font-bold">Projects</h2>
       {data.length === 0 ? (
         <p className="text-center text-xl">
-          No projects found on defined period
+          No projects found{" "}
+          {period === "Custom Range" ? (
+            <>
+              between <span className="text-moon/85">{customRange.start}</span>{" "}
+              and <span className="text-moon/85">{customRange.end}</span>
+            </>
+          ) : (
+            `on ${period.toLowerCase()}`
+          )}
         </p>
       ) : (
         <div className="grid grid-cols-[repeat(auto-fit,minmax(12rem,0.5fr))] gap-4 max-[42rem]:grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] max-[42rem]:gap-8">

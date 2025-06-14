@@ -1,5 +1,6 @@
 import {
   DayFilesStatsDtoType,
+  GetProjectOnPeriodDtoType,
   UpsertFilesStatsDtoType,
 } from "./files-stats.dto";
 import { DailyDataService } from "src/daily-data/daily-data.service";
@@ -162,5 +163,21 @@ export class FilesStatsService {
     }));
 
     return finalData;
+  }
+
+  async getProjectOnPeriod({
+    userId,
+    start,
+    end,
+    name,
+  }: GetProjectOnPeriodDtoType) {
+    const project = await this.projectService.groupAndAggregateProjectByName({
+      start,
+      end,
+      userId,
+      name,
+    });
+
+    return project;
   }
 }

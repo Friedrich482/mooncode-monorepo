@@ -7,6 +7,7 @@ import LoginForm from "./components/login-page/LoginForm";
 import NotFound from "./components/not-found-page/NotFound";
 import Project from "./components/project-page/Project";
 import React from "react";
+import RedirectToNotFound from "./components/not-found-page/RedirectToNotFound";
 import RegisterForm from "./components/register-page/RegisterForm";
 import Root from "./components/root-page/Root";
 import { createRoot } from "react-dom/client";
@@ -43,8 +44,12 @@ const router = createBrowserRouter([
             loader: protectedRouteLoader,
           },
           {
-            path: "*",
+            path: "not-found",
             element: <NotFound />,
+          },
+          {
+            path: "*",
+            element: <RedirectToNotFound />,
           },
         ],
       },

@@ -5,15 +5,18 @@ import getPeriodResolution from "@repo/utils/getPeriodResolution";
 import { isAfter } from "date-fns";
 import { z } from "zod";
 
-export const DatesDto = z
-  .object({
-    start: dateStringDto,
-    end: dateStringDto,
-    groupBy: z.enum(GroupByEnum).optional(),
-  })
-  .refine((input) => !isAfter(input.start, input.end), {
+export const BaseSchema = z.object({
+  start: dateStringDto,
+  end: dateStringDto,
+  groupBy: z.enum(GroupByEnum).optional(),
+});
+
+export const DatesDto = BaseSchema.refine(
+  (input) => !isAfter(input.start, input.end),
+  {
     message: INCOHERENT_DATE_RANGE_ERROR_MESSAGE,
-  })
+  },
+)
   //  this prevent the groupBy attribute to be "weeks" for periods like "Last 7 days", "This week" or "Last week"
   .transform((input) => {
     const periodResolution = getPeriodResolution(input.start, input.end);

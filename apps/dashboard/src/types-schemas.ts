@@ -26,3 +26,7 @@ export const IsoDateSchema = z
     { message: "Invalid date" },
   )
   .transform((dateStr) => new Date(dateStr));
+
+export const ProjectParamsSchema = z.object({
+  projectName: z.string().min(1),
+});
