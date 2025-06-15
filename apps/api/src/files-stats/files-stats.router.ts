@@ -1,6 +1,7 @@
 import {
   DayFilesStatsDto,
   GetProjectOnPeriodDto,
+  GetProjectPerDayOfPeriodDto,
   UpsertFilesDto,
 } from "./files-stats.dto";
 import { DatesDto } from "src/common/dto";
@@ -59,6 +60,20 @@ export class FilesStatsRouter {
             name: input.name,
             periodResolution: input.periodResolution,
             userId: ctx.user.sub,
+          }),
+        ),
+
+      getProjectPerDayOfPeriod: this.trpcService
+        .protectedProcedure()
+        .input(GetProjectPerDayOfPeriodDto)
+        .query(async ({ ctx, input }) =>
+          this.filesStatsService.getProjectPerDayOfPeriod({
+            userId: ctx.user.sub,
+            name: input.name,
+            start: input.start,
+            end: input.end,
+            groupBy: input.groupBy,
+            periodResolution: input.periodResolution,
           }),
         ),
     }),

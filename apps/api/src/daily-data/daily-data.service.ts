@@ -67,12 +67,8 @@ export class DailyDataService {
       end: new Date(end),
     });
 
-    const dataByDate = dbData.reduce(
-      (acc, data) => {
-        acc[data.date] = data;
-        return acc;
-      },
-      {} as Record<string, (typeof dbData)[0]>,
+    const dataByDate = Object.fromEntries(
+      dbData.map((item) => [item.date, item]),
     );
 
     return dateRange.map((date) => {

@@ -1,10 +1,12 @@
 import {
   CreateProjectDtoType,
+  FindProjectByNameOnRangeDtoType,
   FindProjectDtoType,
   UpdateProjectDtoType,
 } from "./projects.dto";
 import { Inject, Injectable } from "@nestjs/common";
 import { and, between, desc, eq, sum } from "drizzle-orm";
+import { eachDayOfInterval, format } from "date-fns";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { TRPCError } from "@trpc/server";
@@ -157,5 +159,48 @@ export class ProjectsService {
       };
 
     return projectAggregatedOnPeriod;
+  }
+
+  async findProjectByNameOnRange({
+    userId,
+    start,
+    end,
+    name,
+  }: FindProjectByNameOnRangeDtoType) {
+    const data = await this.db
+      .select({
+        date: dailyData.date,
+        timeSpent: sum(projects.timeSpent).mapWith(Number),
+      })
+      .from(projects)
+      .innerJoin(dailyData, eq(dailyData.id, projects.dailyDataId))
+      .where(
+        and(
+          eq(dailyData.userId, userId),
+          eq(projects.name, name),
+          between(dailyData.date, start, end),
+        ),
+      )
+      .groupBy(dailyData.date);
+
+    const dateRange = eachDayOfInterval({
+      start: new Date(start),
+      end: new Date(end),
+    });
+
+    const dataByDate = Object.fromEntries(
+      data.map((item) => [item.date, item]),
+    );
+
+    return dateRange.map((date) => {
+      const formattedDate = format(date, "yyyy-MM-dd");
+      return (
+        dataByDate[formattedDate] || {
+          name,
+          timeSpent: 0,
+          date: formattedDate,
+        }
+      );
+    });
   }
 }

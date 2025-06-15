@@ -1,7 +1,9 @@
 import CustomRangeDatesSelector from "../CustomRangeDatesSelector";
 import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallBack from "../suspense/ErrorFallback";
 import { Navigate } from "react-router";
 import PeriodDropDown from "../dashboard-page/PeriodDropDown";
+import ProjectTimeOnPeriodChart from "./charts/ProjectTimeOnPeriodChart";
 import ProjectTitle from "./ProjectTitle";
 import SuspenseBoundary from "../suspense/SuspenseBoundary";
 import { TRPCClientError } from "@trpc/client";
@@ -25,21 +27,31 @@ const LocalErrorBoundary = ({ children }: { children: React.ReactNode }) => (
 
 const Project = () => {
   return (
-    <main className="flex flex-col gap-x-10 px-14 pb-4 text-black dark:text-white">
-      <LocalErrorBoundary>
-        <SuspenseBoundary fallBackClassName="h-9 w-52">
-          <ProjectTitle />
-        </SuspenseBoundary>
-      </LocalErrorBoundary>
-
-      <div className="flex flex-wrap items-center gap-2 pt-4 text-center text-2xl max-[25.625rem]:text-base">
-        <PeriodDropDown />
+    <main className="flex flex-col gap-x-10 gap-y-12 px-14 pb-4 text-black dark:text-white">
+      <div className="flex flex-col gap-4">
         <LocalErrorBoundary>
-          <SuspenseBoundary fallBackClassName="h-9 w-44">
-            <TimeSpentOnProject />
+          <SuspenseBoundary fallBackClassName="h-9 w-52">
+            <ProjectTitle />
           </SuspenseBoundary>
         </LocalErrorBoundary>
-        <CustomRangeDatesSelector />
+
+        <div className="flex flex-wrap items-center gap-2 text-center text-2xl max-[25.625rem]:text-base">
+          <PeriodDropDown />
+          <LocalErrorBoundary>
+            <SuspenseBoundary fallBackClassName="h-9 w-44">
+              <TimeSpentOnProject />
+            </SuspenseBoundary>
+          </LocalErrorBoundary>
+          <CustomRangeDatesSelector />
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between max-chart:flex-col max-chart:gap-20">
+        <ErrorBoundary FallbackComponent={ErrorFallBack}>
+          <SuspenseBoundary>
+            <ProjectTimeOnPeriodChart />
+          </SuspenseBoundary>
+        </ErrorBoundary>
       </div>
     </main>
   );
