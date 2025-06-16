@@ -29,8 +29,8 @@ export const GetProjectOnPeriodDto = BaseSchema.extend({
   .refine((input) => !isAfter(input.start, input.end), {
     message: INCOHERENT_DATE_RANGE_ERROR_MESSAGE,
   })
-  //  this prevent the groupBy attribute to be "weeks" for periods like "Last 7 days", "This week" or "Last week"
   .transform((input) => {
+    //  this prevent the groupBy attribute to be "weeks" for periods like "Last 7 days", "This week" or "Last week"
     const periodResolution = getPeriodResolution(input.start, input.end);
     if (periodResolution === "day") {
       input.groupBy = "days";
@@ -41,8 +41,17 @@ export const GetProjectOnPeriodDto = BaseSchema.extend({
     return { ...input, periodResolution };
   });
 
+export const GetProjectPerDayOfPeriodDto = GetProjectOnPeriodDto;
+export const GetProjectLanguagesTimeOnPeriodDto = GetProjectOnPeriodDto;
+
 export type UpsertFilesStatsDtoType = z.infer<typeof UpsertFilesDto>;
 export type DayFilesStatsDtoType = z.infer<typeof DayFilesStatsDto>;
 export type GetProjectOnPeriodDtoType = z.infer<
   typeof GetProjectOnPeriodDto
+> & { userId: string };
+export type GetProjectPerDayOfPeriodDtoType = z.infer<
+  typeof GetProjectPerDayOfPeriodDto
+> & { userId: string };
+export type GetProjectLanguagesTimeOnPeriodType = z.infer<
+  typeof GetProjectLanguagesTimeOnPeriodDto
 > & { userId: string };

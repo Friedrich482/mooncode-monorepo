@@ -1,3 +1,4 @@
+import { dateStringDto } from "@repo/utils/schemas";
 import { z } from "zod";
 
 export const CreateProjectDto = z.object({
@@ -20,6 +21,16 @@ export const FindProjectDto = z.object({
   path: z.string(),
 });
 
+export const FindProjectByNameOnRangeDto = z.object({
+  userId: z.string().ulid(),
+  start: dateStringDto,
+  end: dateStringDto,
+  name: z.string().min(1),
+});
+
 export type CreateProjectDtoType = z.infer<typeof CreateProjectDto>;
 export type UpdateProjectDtoType = z.infer<typeof UpdateProjectDto>;
 export type FindProjectDtoType = z.infer<typeof FindProjectDto>;
+export type FindProjectByNameOnRangeDtoType = z.infer<
+  typeof FindProjectByNameOnRangeDto
+>;

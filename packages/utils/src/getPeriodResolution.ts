@@ -7,7 +7,14 @@ const getPeriodResolution = (
 ): PeriodResolution => {
   const numberOfDays = Math.abs(differenceInDays(start, end));
   const periodResolution =
-    numberOfDays < 7 ? "day" : numberOfDays < 31 ? "week" : "month";
+    numberOfDays < 7
+      ? "day"
+      : numberOfDays < 31
+        ? "week"
+        : numberOfDays < 365
+          ? "month"
+          : "year";
+
   return periodResolution;
 };
 

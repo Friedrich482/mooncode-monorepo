@@ -1,14 +1,18 @@
 import {
   CreateProjectDtoType,
+  FindProjectByNameOnRangeDtoType,
   FindProjectDtoType,
   UpdateProjectDtoType,
 } from "./projects.dto";
 import { Inject, Injectable } from "@nestjs/common";
 import { and, between, desc, eq, sum } from "drizzle-orm";
+import { eachDayOfInterval, format } from "date-fns";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { TRPCError } from "@trpc/server";
 import { dailyData } from "src/drizzle/schema/dailyData";
+import { files } from "src/drizzle/schema/files";
+import { languages } from "src/drizzle/schema/languages";
 import { projects } from "src/drizzle/schema/projects";
 
 @Injectable()
@@ -129,7 +133,8 @@ export class ProjectsService {
       .where(and(eq(projects.name, name), eq(dailyData.userId, userId)))
       .limit(1);
 
-    if (!userHasProjectsOfName) throw new TRPCError({ code: "NOT_FOUND" });
+    if (!userHasProjectsOfName)
+      throw new TRPCError({ code: "NOT_FOUND", message: "Project Not Found" });
 
     const [projectAggregatedOnPeriod] = await this.db
       .select({
@@ -157,5 +162,82 @@ export class ProjectsService {
       };
 
     return projectAggregatedOnPeriod;
+  }
+
+  async findProjectByNameOnRange({
+    userId,
+    start,
+    end,
+    name,
+  }: FindProjectByNameOnRangeDtoType) {
+    const data = await this.db
+      .select({
+        date: dailyData.date,
+        timeSpent: sum(projects.timeSpent).mapWith(Number),
+      })
+      .from(projects)
+      .innerJoin(dailyData, eq(dailyData.id, projects.dailyDataId))
+      .where(
+        and(
+          eq(dailyData.userId, userId),
+          eq(projects.name, name),
+          between(dailyData.date, start, end),
+        ),
+      )
+      .groupBy(dailyData.date);
+
+    const dateRange = eachDayOfInterval({
+      start: new Date(start),
+      end: new Date(end),
+    });
+
+    const dataByDate = Object.fromEntries(
+      data.map((item) => [item.date, item]),
+    );
+
+    return dateRange.map((date) => {
+      const formattedDate = format(date, "yyyy-MM-dd");
+      return (
+        dataByDate[formattedDate] || {
+          name,
+          timeSpent: 0,
+          date: formattedDate,
+        }
+      );
+    });
+  }
+
+  async getLanguagesTimeOnPeriod({
+    userId,
+    start,
+    end,
+    name,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+    name: string;
+  }) {
+    const aggregated = await this.db
+      .select({
+        language: languages.languageName,
+        totalTime: sum(files.timeSpent).mapWith(Number),
+      })
+      .from(files)
+      .innerJoin(projects, eq(projects.id, files.projectId))
+      .innerJoin(dailyData, eq(dailyData.id, projects.dailyDataId))
+      .innerJoin(languages, eq(languages.id, files.languageId))
+      .where(
+        and(
+          eq(dailyData.userId, userId),
+          eq(projects.name, name),
+          between(dailyData.date, start, end),
+        ),
+      )
+      .groupBy(languages.languageName);
+
+    return Object.fromEntries(
+      aggregated.map(({ language, totalTime }) => [language, totalTime]),
+    );
   }
 }
