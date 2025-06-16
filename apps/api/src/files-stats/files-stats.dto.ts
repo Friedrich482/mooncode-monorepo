@@ -42,6 +42,7 @@ export const GetProjectOnPeriodDto = BaseSchema.extend({
   });
 
 export const GetProjectPerDayOfPeriodDto = GetProjectOnPeriodDto;
+export const GetProjectLanguagesTimeOnPeriodDto = GetProjectOnPeriodDto;
 
 export type UpsertFilesStatsDtoType = z.infer<typeof UpsertFilesDto>;
 export type DayFilesStatsDtoType = z.infer<typeof DayFilesStatsDto>;
@@ -50,4 +51,7 @@ export type GetProjectOnPeriodDtoType = z.infer<
 > & { userId: string };
 export type GetProjectPerDayOfPeriodDtoType = z.infer<
   typeof GetProjectPerDayOfPeriodDto
+> & { userId: string };
+export type GetProjectLanguagesTimeOnPeriodType = z.infer<
+  typeof GetProjectLanguagesTimeOnPeriodDto
 > & { userId: string };

@@ -37,6 +37,11 @@
         "icon": "e"
       },
       {
+        "command": "MoonCode.showGlobalStateData",
+        "title": "MoonCode: Show Global State data",
+        "icon": "e"
+      },
+      {
         "command": "MoonCode.login",
         "title": "MoonCode: Login",
         "icon": "lol"

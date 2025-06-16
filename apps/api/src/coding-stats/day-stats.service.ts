@@ -145,15 +145,17 @@ export class DayStatsService {
         languagesData[createdLanguageData.languageName] =
           createdLanguageData.timeSpent;
       } else {
-        // else update it
-        const updatedLanguageData = await this.languagesService.updateLanguage({
-          timeSpent: value,
-          dailyDataId: returningDailyData.dailyDataId,
-          languageName: key,
-        });
-
-        languagesData[updatedLanguageData.languageName] =
-          updatedLanguageData.timeSpent;
+        // else update it but only if the new timeSpent is greater than the existing one
+        if (existingLanguageData.timeSpent <= value) {
+          const updatedLanguageData =
+            await this.languagesService.updateLanguage({
+              timeSpent: value,
+              dailyDataId: returningDailyData.dailyDataId,
+              languageName: key,
+            });
+          languagesData[updatedLanguageData.languageName] =
+            updatedLanguageData.timeSpent;
+        }
       }
     }
   }

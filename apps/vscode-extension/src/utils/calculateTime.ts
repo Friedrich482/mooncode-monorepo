@@ -14,109 +14,117 @@ const calculateTime = async (): Promise<
   const disposables: vscode.Disposable[] = [];
   let { dailyData, lastServerSync } = await getGlobalStateData();
 
-  const idleCheckInterval = setInterval(async () => {
-    const now = performance.now();
-    const latestLanguage = getLanguageId(
-      vscode.window.activeTextEditor?.document,
-    );
+  let timeoutId: NodeJS.Timeout | undefined;
 
-    const latestFile = getCurrentFileProperties(
-      vscode.window.activeTextEditor?.document,
-    );
+  const runPeriodicCheck = async () => {
+    try {
+      const now = performance.now();
+      const latestLanguage = getLanguageId(
+        vscode.window.activeTextEditor?.document,
+      );
+      const latestFile = getCurrentFileProperties(
+        vscode.window.activeTextEditor?.document,
+      );
 
-    const maybeUpdated = await isNewDayHandler(dailyData, lastServerSync);
-    if (maybeUpdated) {
-      dailyData = maybeUpdated.dailyData;
-      lastServerSync = maybeUpdated.lastServerSync;
-    }
+      const maybeUpdated = await isNewDayHandler(dailyData, lastServerSync);
+      if (maybeUpdated) {
+        dailyData = maybeUpdated.dailyData;
+        lastServerSync = maybeUpdated.lastServerSync;
+      }
 
-    Object.keys(languagesData).map((language) => {
-      const languageData = languagesData[language];
+      Object.keys(languagesData).forEach((language) => {
+        const languageData = languagesData[language];
 
-      if (!latestLanguage || language !== latestLanguage) {
-        // Immediately freeze non-active languages
-        if (!languageData.isFrozen) {
-          languageData.freezeStartTime = now;
-          languageData.isFrozen = true;
-          languageData.frozenTime = Math.floor(
-            (now - languageData.startTime) / 1000,
+        if (!latestLanguage || language !== latestLanguage) {
+          if (!languageData.isFrozen) {
+            languageData.freezeStartTime = now;
+            languageData.isFrozen = true;
+            languageData.frozenTime = Math.floor(
+              (now - languageData.startTime) / 1000,
+            );
+          }
+          return;
+        }
+
+        // Only check idle time for the active language
+        const latestLanguageObj = languagesData[latestLanguage];
+        const idleDuration = Math.floor(
+          (now - latestLanguageObj.lastActivityTime) / 1000,
+        );
+
+        if (idleDuration >= MAX_IDLE_TIME && !latestLanguageObj.isFrozen) {
+          latestLanguageObj.frozenTime = Math.floor(
+            (now - latestLanguageObj.startTime) / 1000,
           );
+          latestLanguageObj.freezeStartTime = now;
+          latestLanguageObj.isFrozen = true;
+        } else if (
+          idleDuration < MAX_IDLE_TIME &&
+          latestLanguageObj.isFrozen &&
+          latestLanguageObj.freezeStartTime
+        ) {
+          const freezeDuration = Math.floor(
+            (now - latestLanguageObj.freezeStartTime) / 1000,
+          );
+          latestLanguageObj.startTime += Math.floor(freezeDuration * 1000);
+          latestLanguageObj.frozenTime = null;
+          latestLanguageObj.freezeStartTime = null;
+          latestLanguageObj.isFrozen = false;
         }
-        return; // Skip the rest of the checks for non-active languages
-      }
+      });
 
-      // Only check idle time for the active language
-      const latestLanguageObj = languagesData[latestLanguage];
+      Object.keys(filesData).forEach((file) => {
+        const fileData = filesData[file];
 
-      const idleDuration = Math.floor(
-        (now - latestLanguageObj.lastActivityTime) / 1000,
-      );
-
-      if (idleDuration >= MAX_IDLE_TIME && !latestLanguageObj.isFrozen) {
-        latestLanguageObj.frozenTime = Math.floor(
-          (now - latestLanguageObj.startTime) / 1000,
-        );
-        latestLanguageObj.freezeStartTime = now;
-        latestLanguageObj.isFrozen = true;
-      } else if (
-        idleDuration < MAX_IDLE_TIME &&
-        latestLanguageObj.isFrozen &&
-        latestLanguageObj.freezeStartTime
-      ) {
-        const freezeDuration = Math.floor(
-          (now - latestLanguageObj.freezeStartTime) / 1000,
-        );
-        latestLanguageObj.startTime += Math.floor(freezeDuration * 1000);
-        latestLanguageObj.frozenTime = null;
-        latestLanguageObj.freezeStartTime = null;
-        latestLanguageObj.isFrozen = false;
-      }
-    });
-
-    Object.keys(filesData).map((file) => {
-      const fileData = filesData[file];
-
-      if (!latestFile || file !== latestFile.absolutePath) {
-        // Immediately freeze non-active files
-        if (!fileData.isFrozen) {
-          fileData.freezeStartTime = now;
-          fileData.isFrozen = true;
-          fileData.frozenTime = Math.floor((now - fileData.startTime) / 1000);
+        if (!latestFile || file !== latestFile.absolutePath) {
+          if (!fileData.isFrozen) {
+            fileData.freezeStartTime = now;
+            fileData.isFrozen = true;
+            fileData.frozenTime = Math.floor((now - fileData.startTime) / 1000);
+          }
+          return;
         }
-        return; // Skip the rest of the checks for non-active files
-      }
 
-      // Only check idle time for the active files
-      const latestFileObj = filesData[latestFile.absolutePath];
-
-      const idleDuration = Math.floor(
-        (now - latestFileObj.lastActivityTime) / 1000,
-      );
-
-      if (idleDuration >= MAX_IDLE_TIME && !latestFileObj.isFrozen) {
-        latestFileObj.frozenTime = Math.floor(
-          (now - latestFileObj.startTime) / 1000,
+        const latestFileObj = filesData[latestFile.absolutePath];
+        const idleDuration = Math.floor(
+          (now - latestFileObj.lastActivityTime) / 1000,
         );
-        latestFileObj.freezeStartTime = now;
-        latestFileObj.isFrozen = true;
-      } else if (
-        idleDuration < MAX_IDLE_TIME &&
-        latestFileObj.isFrozen &&
-        latestFileObj.freezeStartTime
-      ) {
-        const freezeDuration = Math.floor(
-          (now - latestFileObj.freezeStartTime) / 1000,
-        );
-        latestFileObj.startTime += Math.floor(freezeDuration * 1000);
-        latestFileObj.frozenTime = null;
-        latestFileObj.freezeStartTime = null;
-        latestFileObj.isFrozen = false;
-      }
-    });
-  }, 1000);
+
+        if (idleDuration >= MAX_IDLE_TIME && !latestFileObj.isFrozen) {
+          latestFileObj.frozenTime = Math.floor(
+            (now - latestFileObj.startTime) / 1000,
+          );
+          latestFileObj.freezeStartTime = now;
+          latestFileObj.isFrozen = true;
+        } else if (
+          idleDuration < MAX_IDLE_TIME &&
+          latestFileObj.isFrozen &&
+          latestFileObj.freezeStartTime
+        ) {
+          const freezeDuration = Math.floor(
+            (now - latestFileObj.freezeStartTime) / 1000,
+          );
+          latestFileObj.startTime += Math.floor(freezeDuration * 1000);
+          latestFileObj.frozenTime = null;
+          latestFileObj.freezeStartTime = null;
+          latestFileObj.isFrozen = false;
+        }
+      });
+    } catch (error) {
+      console.error("Error in periodic check:", error);
+    } finally {
+      timeoutId = setTimeout(runPeriodicCheck, 1000);
+    }
+  };
+
+  timeoutId = setTimeout(runPeriodicCheck, 1000);
 
   disposables.push({
-    dispose: () => clearInterval(idleCheckInterval),
+    dispose: () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    },
   });
 
   const activityListeners = [

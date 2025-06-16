@@ -60,6 +60,17 @@ const initExtensionCommands = (
     },
   );
 
+  const showGlobalStateContentCommand = vscode.commands.registerCommand(
+    "MoonCode.showGlobalStateData",
+    async () => {
+      const data = await getGlobalStateData();
+      console.log(data);
+      vscode.window.showInformationMessage(
+        `Global state data : ${JSON.stringify(data)}`,
+      );
+    },
+  );
+
   const loginCommand = vscode.commands.registerCommand(
     "MoonCode.login",
     async () => {
@@ -91,6 +102,7 @@ const initExtensionCommands = (
     showCurrentLanguagesDataCommand,
     showInitialFilesDataCommand,
     showCurrentFilesDataCommand,
+    showGlobalStateContentCommand,
     loginCommand,
     registerCommand,
     logoutCommand,

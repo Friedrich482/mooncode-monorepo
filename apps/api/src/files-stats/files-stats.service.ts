@@ -1,5 +1,6 @@
 import {
   DayFilesStatsDtoType,
+  GetProjectLanguagesTimeOnPeriodType,
   GetProjectOnPeriodDtoType,
   GetProjectPerDayOfPeriodDtoType,
   UpsertFilesStatsDtoType,
@@ -218,11 +219,62 @@ export class FilesStatsService {
     }
 
     return dailyProjectsForPeriod.map(({ timeSpent, date }) => ({
-      timeSpentLine: timeSpent,
-      timeSpentBar: timeSpent,
+      timeSpent,
       value: formatDuration(timeSpent),
       originalDate: new Date(date).toDateString(),
       date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
     }));
+  }
+
+  async getProjectLanguagesTimeOnPeriod({
+    userId,
+    start,
+    end,
+    name,
+    periodResolution,
+  }: GetProjectLanguagesTimeOnPeriodType) {
+    const dailyProjectsForPeriod =
+      await this.projectService.findProjectByNameOnRange({
+        userId,
+        start,
+        end,
+        name,
+      });
+
+    if (dailyProjectsForPeriod.length === 0) return [];
+
+    const totalTimeSpentOnProjectOnPeriod = (
+      await this.getProjectOnPeriod({
+        userId,
+        start,
+        end,
+        name,
+        periodResolution,
+      })
+    ).totalTimeSpent;
+
+    const aggregatedLanguageTime =
+      await this.projectService.getLanguagesTimeOnPeriod({
+        userId,
+        start,
+        end,
+        name,
+      });
+
+    return Object.entries(aggregatedLanguageTime)
+      .map(([languageName, timeSpent]) => ({
+        languageName,
+        time: timeSpent,
+        value: formatDuration(timeSpent),
+        percentage:
+          totalTimeSpentOnProjectOnPeriod === 0
+            ? 0
+            : parseFloat(
+                ((timeSpent * 100) / totalTimeSpentOnProjectOnPeriod).toFixed(
+                  2,
+                ),
+              ),
+      }))
+      .sort((a, b) => a.time - b.time);
   }
 }

@@ -9,12 +9,12 @@ const isNewDayHandler = async (
   const todaysDateString = new Date().toLocaleDateString();
 
   if (!Object.hasOwn(dailyData, todaysDateString)) {
-    Object.keys(languagesData).map((language) => {
-      delete languagesData[language];
+    Object.keys(languagesData).forEach((key) => {
+      delete languagesData[key];
     });
 
-    Object.keys(filesData).map((file) => {
-      delete filesData[file];
+    Object.keys(filesData).forEach((key) => {
+      delete filesData[key];
     });
 
     const context = getExtensionContext();

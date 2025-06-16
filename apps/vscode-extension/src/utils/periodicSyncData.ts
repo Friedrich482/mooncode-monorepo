@@ -75,7 +75,7 @@ const periodicSyncData = async (
 
         const perProject = Object.values(data.dayFilesData).reduce(
           (acc, { projectPath, timeSpent }) => {
-            acc[projectPath] = (acc[projectPath] ?? 0) + timeSpent;
+            acc[projectPath] = (acc[projectPath] || 0) + timeSpent;
             return acc;
           },
           {} as Record<string, number>,

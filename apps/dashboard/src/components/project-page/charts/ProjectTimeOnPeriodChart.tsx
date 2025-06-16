@@ -1,4 +1,5 @@
-import { Bar, ComposedChart, Line, XAxis } from "recharts";
+import { Area, Bar, ComposedChart, Line, XAxis } from "recharts";
+import { AreaChart, BarChart } from "lucide-react";
 import {
   ChartContainer,
   ChartTooltip,
@@ -7,11 +8,13 @@ import {
 import { PERIODS_CONFIG, chartConfig } from "@/constants";
 import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
 import GroupByDropDown from "@/components/dashboard-page/GroupByDropDown";
+import Icon from "@/components/ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { ProjectParamsSchema } from "@/types-schemas";
 import { formatTickForGroupBy } from "@/utils/formatTickForGroupBy";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 import useSafeParams from "@/hooks/useSafeParams";
+import { useState } from "react";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
 
@@ -21,6 +24,9 @@ const ProjectTimeOnPeriodChart = () => {
   const period = usePeriodStore((state) => state.period);
   const groupBy = usePeriodStore((state) => state.groupBy);
   const customRange = usePeriodStore((state) => state.customRange);
+
+  const [isBarChartVisible, setIsBarChartVisible] = useState(true);
+  const handleClick = () => setIsBarChartVisible((prev) => !prev);
 
   const trpc = useTRPC();
 
@@ -44,6 +50,11 @@ const ProjectTimeOnPeriodChart = () => {
 
   return (
     <div className="relative z-0 flex min-h-96 w-[45%] flex-col rounded-md border border-neutral-600/50 max-chart:w-full">
+      <Icon
+        Icon={isBarChartVisible ? AreaChart : BarChart}
+        className="absolute -top-12 right-0 z-0"
+        onClick={handleClick}
+      />
       <GroupByDropDown />
       <ChartContainer
         config={chartConfig}
@@ -73,22 +84,36 @@ const ProjectTimeOnPeriodChart = () => {
                 : null
             }
           />
-
-          <Bar
-            dataKey="timeSpentBar"
-            fill="var(--color-time)"
-            className="cursor-pointer"
-            name="Time"
-          />
-
-          <Line
-            dataKey="timeSpentLine"
-            stroke="#dc2626"
-            strokeWidth={2}
-            dot={{ r: 4 }}
-            type="monotone"
-            className="cursor-pointer"
-          />
+          {isBarChartVisible ? (
+            <>
+              <Bar
+                dataKey="timeSpent"
+                fill="var(--color-time)"
+                className="cursor-pointer"
+                name="Time"
+              />
+              <Line
+                dataKey="timeSpent"
+                stroke="#dc2626"
+                strokeWidth={2}
+                dot={{ r: 4 }}
+                type="monotone"
+                className="cursor-pointer"
+              />
+            </>
+          ) : (
+            <Area
+              dataKey="timeSpent"
+              fill="var(--color-time)"
+              className="cursor-pointer"
+              name="Time"
+              stroke="#dc2626"
+              strokeWidth={2}
+              type="monotone"
+              fillOpacity={1}
+              dot={{ r: 4 }}
+            />
+          )}
         </ComposedChart>
       </ChartContainer>
     </div>
