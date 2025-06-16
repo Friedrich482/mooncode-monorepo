@@ -3,6 +3,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallBack from "../suspense/ErrorFallback";
 import { Navigate } from "react-router";
 import PeriodDropDown from "../dashboard-page/PeriodDropDown";
+import ProjectLanguagesTimeOnPeriodChart from "./charts/ProjectLanguagesTimeOnPeriodChart";
 import ProjectTimeOnPeriodChart from "./charts/ProjectTimeOnPeriodChart";
 import ProjectTitle from "./ProjectTitle";
 import SuspenseBoundary from "../suspense/SuspenseBoundary";
@@ -50,6 +51,12 @@ const Project = () => {
         <ErrorBoundary FallbackComponent={ErrorFallBack}>
           <SuspenseBoundary>
             <ProjectTimeOnPeriodChart />
+          </SuspenseBoundary>
+        </ErrorBoundary>
+
+        <ErrorBoundary FallbackComponent={ErrorFallBack}>
+          <SuspenseBoundary>
+            <ProjectLanguagesTimeOnPeriodChart />
           </SuspenseBoundary>
         </ErrorBoundary>
       </div>

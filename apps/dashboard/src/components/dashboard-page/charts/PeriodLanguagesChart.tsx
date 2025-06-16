@@ -22,15 +22,15 @@ import { chartConfig } from "@/constants";
 import { formatTickForGroupBy } from "@/utils/formatTickForGroupBy";
 import getLanguageColor from "@/utils/getLanguageColor";
 import { usePeriodStore } from "@/hooks/store/periodStore";
-import useQueryPeriodLangChart from "@/hooks/useQueryPeriodLangChart";
 import { useState } from "react";
+import useSuspenseQueryPeriodLangChart from "@/hooks/useSuspenseQueryPeriodLangChart";
 
 const PeriodLanguagesChart = () => {
   const [isPieChartVisible, setIsPieChartVisible] = useState(true);
   const handleClick = () => setIsPieChartVisible((prev) => !prev);
   const groupBy = usePeriodStore((state) => state.groupBy);
 
-  const { pieChartData, barChartData } = useQueryPeriodLangChart();
+  const { pieChartData, barChartData } = useSuspenseQueryPeriodLangChart();
 
   // ! Don't try to refactor the two charts and put them in their own
   // ! component, it is not supported by recharts

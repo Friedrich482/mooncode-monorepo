@@ -133,7 +133,8 @@ export class ProjectsService {
       .where(and(eq(projects.name, name), eq(dailyData.userId, userId)))
       .limit(1);
 
-    if (!userHasProjectsOfName) throw new TRPCError({ code: "NOT_FOUND" });
+    if (!userHasProjectsOfName)
+      throw new TRPCError({ code: "NOT_FOUND", message: "Project Not Found" });
 
     const [projectAggregatedOnPeriod] = await this.db
       .select({
