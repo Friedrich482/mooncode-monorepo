@@ -1,5 +1,6 @@
 import {
   DayFilesStatsDtoType,
+  GetProjectLanguagesPerDayOfPeriodDtoType,
   GetProjectLanguagesTimeOnPeriodType,
   GetProjectOnPeriodDtoType,
   GetProjectPerDayOfPeriodDtoType,
@@ -12,6 +13,8 @@ import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
 import { ProjectsService } from "src/projects/projects.service";
 import formatDuration from "@repo/utils/formatDuration";
+import getProjectLanguageGroupByMonths from "./utils/getProjectLanguageGroupByMonths";
+import getProjectLanguagesGroupByWeeks from "./utils/getProjectLanguagesGroupByWeeks";
 import getProjectPerDayOfPeriodGroupByMonths from "./utils/getProjectPerDayOfPeriodGroupByMonths";
 import getProjectPerDayOfPeriodGroupByWeeks from "./utils/getProjectPerDayOfPeriodGroupByWeeks";
 
@@ -90,13 +93,17 @@ export class FilesStatsService {
         returningProjectData.projectName = createdProject.name;
         returningProjectData.timeSpent = createdProject.timeSpent;
       } else {
-        // else update it
-        await this.projectService.updateProject({
-          dailyDataId: dailyDataForDay.id,
-          name: file.projectName,
-          path: file.projectPath,
-          timeSpent: timeSpentPerProject[file.projectPath],
-        });
+        // else update it but only if the new time spent is greater than the existing one
+        if (
+          existingProject.timeSpent <= timeSpentPerProject[file.projectPath]
+        ) {
+          await this.projectService.updateProject({
+            dailyDataId: dailyDataForDay.id,
+            name: file.projectName,
+            path: file.projectPath,
+            timeSpent: timeSpentPerProject[file.projectPath],
+          });
+        }
 
         returningProjectData.projectId = existingProject.id;
         returningProjectData.projectName = existingProject.name;
@@ -130,14 +137,16 @@ export class FilesStatsService {
           timeSpent: file.timeSpent,
         });
       } else {
-        // else just update the file data
-        await this.filesService.updateFile({
-          projectId: returningProjectData.projectId,
-          languageId: fileLanguage.languageId,
-          path,
-          timeSpent: file.timeSpent,
-          name: fileName,
-        });
+        // else just update the file data but only if the new timeSpent is greater than the existing one
+        if (existingFileData.timeSpent <= file.timeSpent) {
+          await this.filesService.updateFile({
+            projectId: returningProjectData.projectId,
+            languageId: fileLanguage.languageId,
+            path,
+            timeSpent: file.timeSpent,
+            name: fileName,
+          });
+        }
       }
     }
   }
@@ -276,5 +285,57 @@ export class FilesStatsService {
               ),
       }))
       .sort((a, b) => a.time - b.time);
+  }
+
+  async getProjectLanguagesPerDayOfPeriod({
+    userId,
+    start,
+    end,
+    name,
+    groupBy,
+    periodResolution,
+  }: GetProjectLanguagesPerDayOfPeriodDtoType) {
+    const dailyProjectsForPeriod =
+      await this.projectService.findProjectByNameOnRange({
+        userId,
+        start,
+        end,
+        name,
+      });
+
+    if (dailyProjectsForPeriod.length === 0) return [];
+
+    const languagesTimesPerDayOfPeriod =
+      await this.projectService.getLanguagesTimePerDayOfPeriod({
+        userId,
+        start,
+        end,
+        name,
+      });
+
+    switch (groupBy) {
+      case "weeks":
+        return await getProjectLanguagesGroupByWeeks(
+          dailyProjectsForPeriod,
+          periodResolution,
+          languagesTimesPerDayOfPeriod,
+        );
+
+      case "months":
+        return getProjectLanguageGroupByMonths(
+          dailyProjectsForPeriod,
+          languagesTimesPerDayOfPeriod,
+        );
+
+      default:
+        break;
+    }
+
+    return dailyProjectsForPeriod.map(({ timeSpent, date }) => ({
+      timeSpent,
+      originalDate: new Date(date).toDateString(),
+      date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
+      ...(languagesTimesPerDayOfPeriod[date] ?? {}),
+    }));
   }
 }

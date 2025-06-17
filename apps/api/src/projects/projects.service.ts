@@ -240,4 +240,47 @@ export class ProjectsService {
       aggregated.map(({ language, totalTime }) => [language, totalTime]),
     );
   }
+
+  async getLanguagesTimePerDayOfPeriod({
+    userId,
+    start,
+    end,
+    name,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+    name: string;
+  }) {
+    const languagesPerDayOfPeriod = await this.db
+      .select({
+        language: languages.languageName,
+        timeSpent: files.timeSpent,
+        date: dailyData.date,
+      })
+      .from(files)
+      .innerJoin(projects, eq(projects.id, files.projectId))
+      .innerJoin(dailyData, eq(dailyData.id, projects.dailyDataId))
+      .innerJoin(languages, eq(languages.id, files.languageId))
+      .where(
+        and(
+          eq(dailyData.userId, userId),
+          eq(projects.name, name),
+          between(dailyData.date, start, end),
+        ),
+      );
+
+    const result = languagesPerDayOfPeriod.reduce(
+      (acc, { date, language, timeSpent }) => {
+        if (!acc[date]) {
+          acc[date] = {};
+        }
+        acc[date][language] = (acc[date][language] || 0) + timeSpent;
+        return acc;
+      },
+      {} as Record<string, Record<string, number>>,
+    );
+
+    return result;
+  }
 }

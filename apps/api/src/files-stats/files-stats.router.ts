@@ -1,5 +1,6 @@
 import {
   DayFilesStatsDto,
+  GetProjectLanguagesPerDayOfPeriodDto,
   GetProjectLanguagesTimeOnPeriodDto,
   GetProjectOnPeriodDto,
   GetProjectPerDayOfPeriodDto,
@@ -88,6 +89,20 @@ export class FilesStatsRouter {
             end: input.end,
             name: input.name,
             periodResolution: input.periodResolution,
+          }),
+        ),
+
+      getProjectLanguagesPerDayOfPeriod: this.trpcService
+        .protectedProcedure()
+        .input(GetProjectLanguagesPerDayOfPeriodDto)
+        .query(async ({ ctx, input }) =>
+          this.filesStatsService.getProjectLanguagesPerDayOfPeriod({
+            userId: ctx.user.sub,
+            start: input.start,
+            end: input.end,
+            name: input.name,
+            periodResolution: input.periodResolution,
+            groupBy: input.groupBy,
           }),
         ),
     }),
