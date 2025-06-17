@@ -30,3 +30,24 @@ export const IsoDateSchema = z
 export const ProjectParamsSchema = z.object({
   projectName: z.string().min(1),
 });
+
+export type CircularPackingProps = {
+  width: number;
+  height: number;
+  data: Tree;
+};
+export type TreeNode = {
+  type: "node";
+  value: number;
+  name: string;
+  children: Tree[];
+  key: string;
+};
+export type TreeLeaf = {
+  type: "leaf";
+  name: string;
+  key: string;
+  value: number;
+};
+
+export type Tree = TreeNode | TreeLeaf;
