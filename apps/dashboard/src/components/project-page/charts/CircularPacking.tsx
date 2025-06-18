@@ -1,65 +1,88 @@
-import * as d3 from "d3";
-import { CircularPackingProps, Tree } from "@/types-schemas";
-import { Fragment, useMemo } from "react";
+import { Pause, Play, RotateCcw } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import Icon from "@/components/ui/Icon";
+import { Tree } from "@/types-schemas";
+import { bubblesColors } from "@/constants";
 import formatDuration from "@repo/utils/formatDuration";
-import generateMidToneRandomColor from "@/utils/generateMidToneRandomColor";
+import useAnimateChart from "@/hooks/useAnimateChart";
 
 export const CircularPacking = ({
-  width,
-  height,
   data,
-}: CircularPackingProps) => {
-  const hierarchy = d3
-    .hierarchy(data)
-    .sum((d) => d.value)
-    .sort((a, b) => b.value! - a.value!);
-
-  const packGenerator = d3.pack<Tree>().size([width, height]).padding(0);
-  const root = packGenerator(hierarchy);
-
-  const dataSet = root.descendants().slice(1);
-  const fills = useMemo(
-    () =>
-      dataSet.map((node) =>
-        generateMidToneRandomColor({
-          maxComponentValue: node.x,
-          minComponentValue: node.y,
-        }),
-      ),
-    [],
+  parentDivRef,
+}: {
+  data: Tree;
+  parentDivRef: React.RefObject<HTMLDivElement>;
+}) => {
+  const [width, setWidth] = useState(
+    parentDivRef.current?.clientWidth ?? (window.innerWidth * 5) / 6,
   );
+  const [height, setHeight] = useState((window.innerWidth * 2) / 3);
 
-  const maxValue = Math.max(...dataSet.map((entry) => entry.data.value));
+  const {
+    bubbles,
+    handleBubbleClick,
+    isAnimating,
+    maxValue,
+    handleResetButtonClick,
+    handleToggleAnimationButtonClick,
+  } = useAnimateChart(data, width, height);
+
+  const handleWindowResize = () => {
+    setWidth(parentDivRef.current?.clientWidth ?? (window.innerWidth * 5) / 6);
+    setHeight((window.innerWidth * 2) / 3);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleWindowResize);
+
+    return () => {
+      window.removeEventListener("resize", handleWindowResize);
+    };
+  }, []);
 
   return (
-    <svg width={width} height={height} cx={width / 2}>
-      {dataSet.map((node, index) => (
-        <Fragment key={node.data.key}>
-          <circle
-            cx={node.x}
-            cy={node.y}
-            r={node.r}
-            fill={fills[index]}
-            className="w-full cursor-pointer"
-          />
-          <text
-            x={node.x}
-            y={node.y}
-            fontSize={Math.max((node.data.value / maxValue) * 20, 5)}
-            textAnchor="middle"
-            dominantBaseline="middle"
-            className="cursor-pointer"
+    <>
+      <div className="flex items-center justify-end gap-5">
+        <Icon
+          Icon={isAnimating ? Pause : Play}
+          onClick={handleToggleAnimationButtonClick}
+        />
+        <Icon Icon={RotateCcw} onClick={handleResetButtonClick} />
+      </div>
+
+      <svg width={width} height={height} className="-translate-x-3">
+        {bubbles.map((bubble, index) => (
+          <g
+            key={bubble.data.key}
+            transform={`translate(${bubble.x}, ${bubble.y})`}
           >
-            <tspan x={node.x} className="font-bold">
-              {node.data.name}
-            </tspan>
-            <tspan x={node.x} dy="1.2em">
-              {formatDuration(node.data.value)}
-            </tspan>
-          </text>{" "}
-        </Fragment>
-      ))}
-    </svg>
+            <circle
+              cx={0}
+              cy={0}
+              r={bubble.r}
+              fill={bubblesColors[index]}
+              className="w-full cursor-pointer"
+              onClick={() => handleBubbleClick(index)}
+            />
+            <text
+              x={0}
+              y={0}
+              fontSize={Math.max((bubble.data.value / maxValue) * 20, 10)}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              className="cursor-pointer"
+            >
+              <tspan x={0} className="bg-zinc-600 font-extrabold" fill="white">
+                {bubble.data.name}
+              </tspan>
+              <tspan x={0} dy="1.2em" fill="white" className="font-light">
+                {formatDuration(bubble.data.value)}
+              </tspan>
+            </text>
+          </g>
+        ))}
+      </svg>
+    </>
   );
 };
 

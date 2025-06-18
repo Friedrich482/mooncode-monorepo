@@ -31,11 +31,6 @@ export const ProjectParamsSchema = z.object({
   projectName: z.string().min(1),
 });
 
-export type CircularPackingProps = {
-  width: number;
-  height: number;
-  data: Tree;
-};
 export type TreeNode = {
   type: "node";
   value: number;
@@ -51,3 +46,8 @@ export type TreeLeaf = {
 };
 
 export type Tree = TreeNode | TreeLeaf;
+
+export type Bubble = Omit<d3.HierarchyCircularNode<Tree>, "constructor"> & {
+  vx: number;
+  vy: number;
+};
