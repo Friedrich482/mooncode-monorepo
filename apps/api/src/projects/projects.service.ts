@@ -240,4 +240,97 @@ export class ProjectsService {
       aggregated.map(({ language, totalTime }) => [language, totalTime]),
     );
   }
+
+  async getLanguagesTimePerDayOfPeriod({
+    userId,
+    start,
+    end,
+    name,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+    name: string;
+  }) {
+    const languagesPerDayOfPeriod = await this.db
+      .select({
+        language: languages.languageName,
+        timeSpent: files.timeSpent,
+        date: dailyData.date,
+      })
+      .from(files)
+      .innerJoin(projects, eq(projects.id, files.projectId))
+      .innerJoin(dailyData, eq(dailyData.id, projects.dailyDataId))
+      .innerJoin(languages, eq(languages.id, files.languageId))
+      .where(
+        and(
+          eq(dailyData.userId, userId),
+          eq(projects.name, name),
+          between(dailyData.date, start, end),
+        ),
+      );
+
+    const result = languagesPerDayOfPeriod.reduce(
+      (acc, { date, language, timeSpent }) => {
+        if (!acc[date]) {
+          acc[date] = {};
+        }
+        acc[date][language] = (acc[date][language] || 0) + timeSpent;
+        return acc;
+      },
+      {} as Record<string, Record<string, number>>,
+    );
+
+    return result;
+  }
+  async getAllProjectFilesOnPeriod({
+    userId,
+    start,
+    end,
+    name,
+  }: {
+    userId: string;
+    start: string;
+    end: string;
+    name: string;
+  }) {
+    const aggregatedFilesArray = await this.db
+      .select({
+        totalTimeSpent: sum(files.timeSpent).mapWith(Number),
+        language: languages.languageName,
+        projectName: projects.name,
+        name: files.name,
+        path: files.path,
+      })
+      .from(files)
+      .innerJoin(projects, eq(projects.id, files.projectId))
+      .innerJoin(dailyData, eq(dailyData.id, projects.dailyDataId))
+      .innerJoin(languages, eq(languages.id, files.languageId))
+      .where(
+        and(
+          eq(dailyData.userId, userId),
+          eq(projects.name, name),
+          between(dailyData.date, start, end),
+        ),
+      )
+      .groupBy(files.path, languages.languageName, projects.name, files.name)
+      .orderBy(desc(sum(files.timeSpent).mapWith(Number)));
+
+    const resultObject: {
+      [filePath: string]: {
+        totalTimeSpent: number;
+        language: string;
+        name: string;
+      };
+    } = {};
+    for (const entry of aggregatedFilesArray) {
+      resultObject[entry.path] = {
+        totalTimeSpent: entry.totalTimeSpent,
+        language: entry.language,
+        name: entry.name,
+      };
+    }
+
+    return resultObject;
+  }
 }

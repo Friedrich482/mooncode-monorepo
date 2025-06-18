@@ -44,7 +44,7 @@ const useSuspenseQueryPeriodLangChart = () => {
     const color = getLanguageColor(entry.languageName);
     return {
       ...entry,
-      color: color,
+      color,
     };
   });
 

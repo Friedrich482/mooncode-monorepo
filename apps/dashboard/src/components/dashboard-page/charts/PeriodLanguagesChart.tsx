@@ -15,6 +15,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { useMemo, useState } from "react";
 import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
 import Icon from "@/components/ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
@@ -22,15 +23,24 @@ import { chartConfig } from "@/constants";
 import { formatTickForGroupBy } from "@/utils/formatTickForGroupBy";
 import getLanguageColor from "@/utils/getLanguageColor";
 import { usePeriodStore } from "@/hooks/store/periodStore";
-import { useState } from "react";
 import useSuspenseQueryPeriodLangChart from "@/hooks/useSuspenseQueryPeriodLangChart";
 
 const PeriodLanguagesChart = () => {
+  const { pieChartData, barChartData } = useSuspenseQueryPeriodLangChart();
+
   const [isPieChartVisible, setIsPieChartVisible] = useState(true);
   const handleClick = () => setIsPieChartVisible((prev) => !prev);
-  const groupBy = usePeriodStore((state) => state.groupBy);
 
-  const { pieChartData, barChartData } = useSuspenseQueryPeriodLangChart();
+  const dataSet = useMemo(
+    () =>
+      [...new Set(barChartData?.flatMap((entry) => Object.keys(entry)))].filter(
+        (key) =>
+          key !== "date" && key !== "timeSpent" && key !== "originalDate",
+      ),
+    [barChartData],
+  );
+
+  const groupBy = usePeriodStore((state) => state.groupBy);
 
   // ! Don't try to refactor the two charts and put them in their own
   // ! component, it is not supported by recharts
@@ -111,28 +121,17 @@ const PeriodLanguagesChart = () => {
                   )
                 }
               />
-              {[
-                ...new Set(
-                  barChartData?.flatMap((entry) => Object.keys(entry)),
-                ),
-              ]
-                .filter(
-                  (key) =>
-                    key !== "date" &&
-                    key !== "timeSpent" &&
-                    key !== "originalDate",
-                )
-                .map((language) => {
-                  return (
-                    <Bar
-                      key={language}
-                      dataKey={language}
-                      stackId="a"
-                      fill={getLanguageColor(language)}
-                      className="cursor-pointer"
-                    />
-                  );
-                })}
+              {dataSet.map((language) => {
+                return (
+                  <Bar
+                    key={language}
+                    dataKey={language}
+                    stackId="a"
+                    fill={getLanguageColor(language)}
+                    className="cursor-pointer"
+                  />
+                );
+              })}
             </BarChart>
           )}
         </ChartContainer>

@@ -11,6 +11,7 @@ const useSuspenseQueryProjectsLangChart = () => {
 
   const period = usePeriodStore((state) => state.period);
   const customRange = usePeriodStore((state) => state.customRange);
+  const groupBy = usePeriodStore((state) => state.groupBy);
 
   const trpc = useTRPC();
   const { data: pieChart } = useSuspenseQuery(
@@ -29,15 +30,33 @@ const useSuspenseQueryProjectsLangChart = () => {
     ),
   );
 
+  const { data: barChartData } = useSuspenseQuery(
+    trpc.filesStats.getProjectLanguagesPerDayOfPeriod.queryOptions(
+      period === "Custom Range"
+        ? {
+            start: customRange.start,
+            end: customRange.end,
+            name,
+            groupBy,
+          }
+        : {
+            start: PERIODS_CONFIG[period].start,
+            end: PERIODS_CONFIG[period].end,
+            name,
+            groupBy,
+          },
+    ),
+  );
+
   const pieChartData = pieChart.map((entry) => {
     const color = getLanguageColor(entry.languageName);
     return {
       ...entry,
-      color: color,
+      color,
     };
   });
 
-  return { pieChartData };
+  return { pieChartData, barChartData };
 };
 
 export default useSuspenseQueryProjectsLangChart;
