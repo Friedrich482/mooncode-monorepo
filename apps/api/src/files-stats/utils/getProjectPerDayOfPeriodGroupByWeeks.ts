@@ -79,7 +79,9 @@ const getProjectPerDayOfPeriodGroupByWeeks = (
   });
 
   return Array.from(weeklyMap.values()).map(({ timeSpent, weekRange }) => ({
-    timeSpent,
+    timeSpentLine: timeSpent,
+    timeSpentBar: timeSpent,
+    timeSpentArea: timeSpent,
     originalDate: weekRange,
     date: weekRange,
     value: formatDuration(timeSpent),

@@ -34,7 +34,9 @@ const getProjectPerDayOfPeriodGroupByMonths = (
   });
 
   return Array.from(monthlyMap.values()).map(({ timeSpent, month }) => ({
-    timeSpent,
+    timeSpentLine: timeSpent,
+    timeSpentBar: timeSpent,
+    timeSpentArea: timeSpent,
     originalDate: month,
     date: month,
     value: formatDuration(timeSpent),

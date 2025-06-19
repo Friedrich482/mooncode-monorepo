@@ -229,7 +229,9 @@ export class FilesStatsService {
     }
 
     return dailyProjectsForPeriod.map(({ timeSpent, date }) => ({
-      timeSpent,
+      timeSpentLine: timeSpent,
+      timeSpentBar: timeSpent,
+      timeSpentArea: timeSpent,
       value: formatDuration(timeSpent),
       originalDate: new Date(date).toDateString(),
       date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
@@ -345,12 +347,14 @@ export class FilesStatsService {
     start,
     end,
     name,
+    amount,
   }: GetProjectFilesOnPeriodDtoType) {
     const data = await this.projectsService.getAllProjectFilesOnPeriod({
       userId,
       start,
       end,
       name,
+      amount,
     });
 
     return data;

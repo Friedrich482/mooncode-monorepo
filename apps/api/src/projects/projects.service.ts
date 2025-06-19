@@ -288,13 +288,15 @@ export class ProjectsService {
     start,
     end,
     name,
+    amount,
   }: {
     userId: string;
     start: string;
     end: string;
     name: string;
+    amount?: number;
   }) {
-    const aggregatedFilesArray = await this.db
+    const baseQuery = this.db
       .select({
         totalTimeSpent: sum(files.timeSpent).mapWith(Number),
         language: languages.languageName,
@@ -315,7 +317,8 @@ export class ProjectsService {
       )
       .groupBy(files.path, languages.languageName, projects.name, files.name)
       .orderBy(desc(sum(files.timeSpent).mapWith(Number)));
-
+    const finalQuery = amount ? baseQuery.limit(amount) : baseQuery;
+    const result = await finalQuery.execute();
     const resultObject: {
       [filePath: string]: {
         totalTimeSpent: number;
@@ -323,7 +326,7 @@ export class ProjectsService {
         name: string;
       };
     } = {};
-    for (const entry of aggregatedFilesArray) {
+    for (const entry of result) {
       resultObject[entry.path] = {
         totalTimeSpent: entry.totalTimeSpent,
         language: entry.language,
