@@ -5,7 +5,7 @@ import {
   UpdateProjectDtoType,
 } from "./projects.dto";
 import { Inject, Injectable } from "@nestjs/common";
-import { and, between, desc, eq, sum } from "drizzle-orm";
+import { and, between, desc, eq, inArray, sum } from "drizzle-orm";
 import { eachDayOfInterval, format } from "date-fns";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
@@ -234,7 +234,8 @@ export class ProjectsService {
           between(dailyData.date, start, end),
         ),
       )
-      .groupBy(languages.languageName);
+      .groupBy(languages.languageName)
+      .orderBy(desc(sum(files.timeSpent).mapWith(Number)));
 
     return Object.fromEntries(
       aggregated.map(({ language, totalTime }) => [language, totalTime]),
@@ -289,12 +290,14 @@ export class ProjectsService {
     end,
     name,
     amount,
+    languages: languagesArray,
   }: {
     userId: string;
     start: string;
     end: string;
     name: string;
     amount?: number;
+    languages?: string[];
   }) {
     const baseQuery = this.db
       .select({
@@ -313,12 +316,16 @@ export class ProjectsService {
           eq(dailyData.userId, userId),
           eq(projects.name, name),
           between(dailyData.date, start, end),
+          languagesArray
+            ? inArray(languages.languageName, languagesArray)
+            : undefined,
         ),
       )
       .groupBy(files.path, languages.languageName, projects.name, files.name)
       .orderBy(desc(sum(files.timeSpent).mapWith(Number)));
     const finalQuery = amount ? baseQuery.limit(amount) : baseQuery;
     const result = await finalQuery.execute();
+
     const resultObject: {
       [filePath: string]: {
         totalTimeSpent: number;

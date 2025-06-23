@@ -33,6 +33,7 @@ export const GetProjectFilesOnPeriodDto = refineAndTransformSchema(
   BaseSchema.extend({
     name: z.string().min(1),
     amount: z.number().int().positive().optional(),
+    languages: z.array(z.string().min(1)).optional(),
   }),
 );
 

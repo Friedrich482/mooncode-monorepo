@@ -273,8 +273,8 @@ export class FilesStatsService {
         name,
       });
 
-    return Object.entries(aggregatedLanguageTime)
-      .map(([languageName, timeSpent]) => ({
+    return Object.entries(aggregatedLanguageTime).map(
+      ([languageName, timeSpent]) => ({
         languageName,
         time: timeSpent,
         value: formatDuration(timeSpent),
@@ -286,8 +286,8 @@ export class FilesStatsService {
                   2,
                 ),
               ),
-      }))
-      .sort((a, b) => a.time - b.time);
+      }),
+    );
   }
 
   async getProjectLanguagesPerDayOfPeriod({
@@ -348,6 +348,7 @@ export class FilesStatsService {
     end,
     name,
     amount,
+    languages,
   }: GetProjectFilesOnPeriodDtoType) {
     const data = await this.projectsService.getAllProjectFilesOnPeriod({
       userId,
@@ -355,6 +356,7 @@ export class FilesStatsService {
       end,
       name,
       amount,
+      languages,
     });
 
     return data;

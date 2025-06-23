@@ -118,6 +118,7 @@ export class FilesStatsRouter {
             name: input.name,
             periodResolution: input.periodResolution,
             amount: input.amount,
+            languages: input.languages,
           }),
         ),
     }),
