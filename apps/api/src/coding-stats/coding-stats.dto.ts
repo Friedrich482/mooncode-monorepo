@@ -1,9 +1,6 @@
-import { DatesDto } from "src/common/dto";
+import { DatesDto, UserId } from "src/common/dto";
 import { dateStringDto } from "@repo/utils/schemas";
 import { z } from "zod";
-
-export type PeriodStatsDtoType = z.infer<typeof DatesDto> & { userId: string };
-export type DayStatsDtoType = z.infer<typeof DayStatsDto> & { userId: string };
 
 export const DayStatsDto = z.object({
   dateString: dateStringDto,
@@ -15,4 +12,6 @@ export const UpsertLanguagesDto = z.object({
   timeSpentPerLanguage: z.record(z.string(), z.number()),
 });
 
+export type PeriodStatsDtoType = z.infer<typeof DatesDto> & UserId;
+export type DayStatsDtoType = z.infer<typeof DayStatsDto> & UserId;
 export type UpsertLanguagesDtoType = z.infer<typeof UpsertLanguagesDto>;

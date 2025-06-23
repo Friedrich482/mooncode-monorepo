@@ -229,7 +229,9 @@ export class FilesStatsService {
     }
 
     return dailyProjectsForPeriod.map(({ timeSpent, date }) => ({
-      timeSpent,
+      timeSpentLine: timeSpent,
+      timeSpentBar: timeSpent,
+      timeSpentArea: timeSpent,
       value: formatDuration(timeSpent),
       originalDate: new Date(date).toDateString(),
       date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
@@ -271,8 +273,8 @@ export class FilesStatsService {
         name,
       });
 
-    return Object.entries(aggregatedLanguageTime)
-      .map(([languageName, timeSpent]) => ({
+    return Object.entries(aggregatedLanguageTime).map(
+      ([languageName, timeSpent]) => ({
         languageName,
         time: timeSpent,
         value: formatDuration(timeSpent),
@@ -284,8 +286,8 @@ export class FilesStatsService {
                   2,
                 ),
               ),
-      }))
-      .sort((a, b) => a.time - b.time);
+      }),
+    );
   }
 
   async getProjectLanguagesPerDayOfPeriod({
@@ -345,12 +347,16 @@ export class FilesStatsService {
     start,
     end,
     name,
+    amount,
+    languages,
   }: GetProjectFilesOnPeriodDtoType) {
     const data = await this.projectsService.getAllProjectFilesOnPeriod({
       userId,
       start,
       end,
       name,
+      amount,
+      languages,
     });
 
     return data;

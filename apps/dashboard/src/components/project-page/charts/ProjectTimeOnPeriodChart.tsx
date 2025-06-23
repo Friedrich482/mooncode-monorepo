@@ -87,13 +87,13 @@ const ProjectTimeOnPeriodChart = () => {
           {isBarChartVisible ? (
             <>
               <Bar
-                dataKey="timeSpent"
+                dataKey="timeSpentBar"
                 fill="var(--color-time)"
                 className="cursor-pointer"
                 name="Time"
               />
               <Line
-                dataKey="timeSpent"
+                dataKey="timeSpentLine"
                 stroke="#dc2626"
                 strokeWidth={2}
                 dot={{ r: 4 }}
@@ -103,7 +103,7 @@ const ProjectTimeOnPeriodChart = () => {
             </>
           ) : (
             <Area
-              dataKey="timeSpent"
+              dataKey="timeSpentArea"
               fill="var(--color-time)"
               className="cursor-pointer"
               name="Time"

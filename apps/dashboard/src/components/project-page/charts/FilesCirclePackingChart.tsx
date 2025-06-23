@@ -1,13 +1,11 @@
+import { NUMBER_OF_FILES_TO_SHOW, PERIODS_CONFIG } from "@/constants";
 import { ProjectParamsSchema, Tree } from "@/types-schemas";
 import CircularPacking from "./CircularPacking";
-import { PERIODS_CONFIG } from "@/constants";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 import { useRef } from "react";
 import useSafeParams from "@/hooks/useSafeParams";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
-
-const NUMBER_OF_FILES_TO_SHOW = 30;
 
 const FilesCirclePackingChart = () => {
   const { projectName: name } = useSafeParams(ProjectParamsSchema);
@@ -23,19 +21,18 @@ const FilesCirclePackingChart = () => {
             name,
             start: customRange.start,
             end: customRange.end,
+            amount: NUMBER_OF_FILES_TO_SHOW,
           }
         : {
             name,
             start: PERIODS_CONFIG[period].start,
             end: PERIODS_CONFIG[period].end,
+            amount: NUMBER_OF_FILES_TO_SHOW,
           },
     ),
   );
 
-  const childrenArray = Object.entries(fetched).slice(
-    0,
-    NUMBER_OF_FILES_TO_SHOW,
-  );
+  const childrenArray = Object.entries(fetched);
   const data: Tree = {
     type: "node",
     name: "files",
