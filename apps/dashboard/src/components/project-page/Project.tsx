@@ -2,7 +2,7 @@ import CustomRangeDatesSelector from "../CustomRangeDatesSelector";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallBack from "../suspense/ErrorFallback";
 import FilesCirclePackingChart from "./charts/FilesCirclePackingChart";
-import FilesList from "./FilesList";
+import FilesList from "./files-list/FilesList";
 import { Navigate } from "react-router";
 import PeriodDropDown from "../dashboard-page/PeriodDropDown";
 import ProjectLanguagesTimeOnPeriodChart from "./charts/ProjectLanguagesTimeOnPeriodChart";
@@ -72,11 +72,7 @@ const Project = () => {
       </div>
 
       <div className="flex items-center justify-between max-chart:flex-col max-chart:gap-20">
-        <ErrorBoundary FallbackComponent={ErrorFallBack}>
-          <SuspenseBoundary fallBackClassName="h-[24rem] w-full max-chart:w-full">
-            <FilesList />
-          </SuspenseBoundary>
-        </ErrorBoundary>
+        <FilesList />
       </div>
     </main>
   );
