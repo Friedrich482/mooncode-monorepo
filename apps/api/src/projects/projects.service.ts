@@ -220,7 +220,7 @@ export class ProjectsService {
   }) {
     const aggregated = await this.db
       .select({
-        language: languages.languageName,
+        languageSlug: languages.languageSlug,
         totalTime: sum(files.timeSpent).mapWith(Number),
       })
       .from(files)
@@ -234,11 +234,14 @@ export class ProjectsService {
           between(dailyData.date, start, end),
         ),
       )
-      .groupBy(languages.languageName)
+      .groupBy(languages.languageSlug)
       .orderBy(desc(sum(files.timeSpent).mapWith(Number)));
 
     return Object.fromEntries(
-      aggregated.map(({ language, totalTime }) => [language, totalTime]),
+      aggregated.map(({ languageSlug, totalTime }) => [
+        languageSlug,
+        totalTime,
+      ]),
     );
   }
 
@@ -255,7 +258,7 @@ export class ProjectsService {
   }) {
     const languagesPerDayOfPeriod = await this.db
       .select({
-        language: languages.languageName,
+        languageSlug: languages.languageSlug,
         timeSpent: files.timeSpent,
         date: dailyData.date,
       })
@@ -272,11 +275,11 @@ export class ProjectsService {
       );
 
     const result = languagesPerDayOfPeriod.reduce(
-      (acc, { date, language, timeSpent }) => {
+      (acc, { date, languageSlug, timeSpent }) => {
         if (!acc[date]) {
           acc[date] = {};
         }
-        acc[date][language] = (acc[date][language] || 0) + timeSpent;
+        acc[date][languageSlug] = (acc[date][languageSlug] || 0) + timeSpent;
         return acc;
       },
       {} as Record<string, Record<string, number>>,
@@ -302,7 +305,7 @@ export class ProjectsService {
     const baseQuery = this.db
       .select({
         totalTimeSpent: sum(files.timeSpent).mapWith(Number),
-        language: languages.languageName,
+        languageSlug: languages.languageSlug,
         projectName: projects.name,
         name: files.name,
         path: files.path,
@@ -317,11 +320,11 @@ export class ProjectsService {
           eq(projects.name, name),
           between(dailyData.date, start, end),
           languagesArray
-            ? inArray(languages.languageName, languagesArray)
+            ? inArray(languages.languageSlug, languagesArray)
             : undefined,
         ),
       )
-      .groupBy(files.path, languages.languageName, projects.name, files.name)
+      .groupBy(files.path, languages.languageSlug, projects.name, files.name)
       .orderBy(desc(sum(files.timeSpent).mapWith(Number)));
     const finalQuery = amount ? baseQuery.limit(amount) : baseQuery;
     const result = await finalQuery.execute();
@@ -329,14 +332,14 @@ export class ProjectsService {
     const resultObject: {
       [filePath: string]: {
         totalTimeSpent: number;
-        language: string;
+        languageSlug: string;
         name: string;
       };
     } = {};
     for (const entry of result) {
       resultObject[entry.path] = {
         totalTimeSpent: entry.totalTimeSpent,
-        language: entry.language,
+        languageSlug: entry.languageSlug,
         name: entry.name,
       };
     }

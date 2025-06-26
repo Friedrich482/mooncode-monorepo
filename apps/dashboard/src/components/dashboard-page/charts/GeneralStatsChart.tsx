@@ -27,6 +27,7 @@ const TwoStatsWrapper = ({
     {children}
   </div>
 );
+
 const GeneralStatsChart = () => {
   const period = usePeriodStore((state) => state.period);
   const groupBy = usePeriodStore((state) => state.groupBy);
@@ -47,22 +48,24 @@ const GeneralStatsChart = () => {
             end: PERIODS_CONFIG[period].end,
             groupBy,
           },
-      { refetchOnWindowFocus: true },
     ),
   );
 
-  const { avgTime, percentageToAvg, mostActiveDate, mostUsedLanguage } = data;
-  const mostUsedLanguageColor = getLanguageColor(mostUsedLanguage);
-  const mostUsedLanguageName = getLanguageName(mostUsedLanguage);
+  const { avgTime, percentageToAvg, mostActiveDate, mostUsedLanguageSlug } =
+    data;
+  const mostUsedLanguageColor = getLanguageColor(mostUsedLanguageSlug);
+  const mostUsedLanguageName = getLanguageName(mostUsedLanguageSlug);
 
   return (
     <div className="flex min-h-96 w-[45%] flex-col gap-y-3 rounded-md border border-neutral-600/50 p-3 text-2xl max-chart:w-full max-[28.125rem]:justify-between max-[28.125rem]:gap-0">
       <h2 className="text-center text-2xl font-bold">General stats</h2>
+
       <TwoStatsWrapper>
         <StatWrapper>
           <p>Average time per {groupBy?.slice(0, -1)}</p>
           <p className="font-bold text-moon/85">{avgTime}</p>
         </StatWrapper>
+
         <StatWrapper>
           <p>Percentage to the average</p>
           <p
@@ -76,11 +79,13 @@ const GeneralStatsChart = () => {
           </p>
         </StatWrapper>
       </TwoStatsWrapper>
+
       <TwoStatsWrapper>
         <StatWrapper>
           <p>Most active {groupBy?.slice(0, -1)}</p>
           <p className="font-bold text-moon/85">{mostActiveDate}</p>
         </StatWrapper>
+
         <StatWrapper>
           <p>Most used language</p>
           <div className="flex items-center justify-center gap-2">

@@ -55,10 +55,13 @@ const getGeneralStatsOnPeriodGroupByWeeks = async (
       ? Math.max(...weeklyDataForPeriod.map((week) => week.timeSpent))
       : 0;
   const mostActiveWeek =
-    weeklyDataForPeriod.find((week) => week.timeSpent === maxTimeSpentPerWeek)
-      ?.originalDate || format(new Date(), "yyyy-MM-dd");
+    maxTimeSpentPerWeek === 0
+      ? "N/A"
+      : weeklyDataForPeriod.find(
+          (week) => week.timeSpent === maxTimeSpentPerWeek,
+        )?.originalDate || format(new Date(start), "yyyy-MM-dd");
 
-  const mostUsedLanguage = await getMostUsedLanguageOnPeriod(
+  const mostUsedLanguageSlug = await getMostUsedLanguageOnPeriod(
     periodStatsService,
     userId,
     start,
@@ -69,7 +72,7 @@ const getGeneralStatsOnPeriodGroupByWeeks = async (
     avgTime: formatDuration(mean),
     percentageToAvg,
     mostActiveDate: mostActiveWeek,
-    mostUsedLanguage,
+    mostUsedLanguageSlug,
   };
 };
 export default getGeneralStatsOnPeriodGroupByWeeks;

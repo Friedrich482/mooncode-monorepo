@@ -65,3 +65,9 @@ type GrowToSize<T, A extends Array<T>, N extends number> = {
 }[A["length"] extends N ? 0 : 1];
 
 export type FixedArray<T, N extends number> = GrowToSize<T, [], N>;
+
+export type Entry = {
+  language: string;
+  color: string;
+  languageId: string;
+};

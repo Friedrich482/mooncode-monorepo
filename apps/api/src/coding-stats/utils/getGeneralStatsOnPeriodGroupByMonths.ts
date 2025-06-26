@@ -1,5 +1,6 @@
 import { differenceInMonths, endOfMonth, format, startOfMonth } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
+import { NAString } from "src/common/dto";
 import { PeriodStatsService } from "src/coding-stats/period-stats.service";
 import formatDuration from "@repo/utils/formatDuration";
 import getDaysOfPeriodStatsGroupByMonths from "./getDaysOfPeriodStatsGroupByMonths";
@@ -49,12 +50,14 @@ const getGeneralStatsOnPeriodGroupByMonths = async (
       ? Math.max(...monthlyDataForPeriod.map((month) => month.timeSpent))
       : 0;
 
-  const mostActiveMonth =
-    monthlyDataForPeriod.find(
-      (month) => month.timeSpent === maxTimeSpentPerMonth,
-    )?.originalDate || format(new Date(), "yyyy-MM-dd");
+  const mostActiveMonth: NAString =
+    maxTimeSpentPerMonth === 0
+      ? "N/A"
+      : monthlyDataForPeriod.find(
+          (month) => month.timeSpent === maxTimeSpentPerMonth,
+        )?.originalDate || format(new Date(), "yyyy-MM-dd");
 
-  const mostUsedLanguage = await getMostUsedLanguageOnPeriod(
+  const mostUsedLanguageSlug = await getMostUsedLanguageOnPeriod(
     periodStatsService,
     userId,
     start,
@@ -65,7 +68,7 @@ const getGeneralStatsOnPeriodGroupByMonths = async (
     avgTime: formatDuration(mean),
     percentageToAvg,
     mostActiveDate: mostActiveMonth,
-    mostUsedLanguage,
+    mostUsedLanguageSlug,
   };
 };
 

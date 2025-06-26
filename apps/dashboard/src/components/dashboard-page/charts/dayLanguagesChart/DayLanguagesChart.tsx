@@ -23,9 +23,10 @@ const DayLanguagesChart = () => {
   const handleChevronRightClick = () => setDate((prev) => getNextDayDate(prev));
 
   const trpc = useTRPC();
+
   const { data } = useSuspenseQuery(
     trpc.codingStats.getDailyStatsForChart.queryOptions({
-      dateString: dateString,
+      dateString,
     }),
   );
 
@@ -33,8 +34,8 @@ const DayLanguagesChart = () => {
 
   const chartData = finalData.map((entry) => ({
     ...entry,
-    color: getLanguageColor(entry.languageId),
-    languageName: getLanguageName(entry.languageId),
+    color: getLanguageColor(entry.languageSlug),
+    languageName: getLanguageName(entry.languageSlug),
   }));
 
   return (
@@ -91,7 +92,7 @@ const DayLanguagesChart = () => {
                 <Cell
                   fill={entry.color}
                   min={0}
-                  key={entry.languageId}
+                  key={entry.languageSlug}
                   className="cursor-pointer"
                 />
               ))}

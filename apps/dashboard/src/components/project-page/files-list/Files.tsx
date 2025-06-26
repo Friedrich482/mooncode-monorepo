@@ -1,0 +1,57 @@
+import { cn } from "@/lib/utils";
+import formatDuration from "@repo/utils/formatDuration";
+import getLanguageColor from "@/utils/getLanguageColor";
+import getLanguageName from "@/utils/getLanguageName";
+import useFiles from "@/hooks/useFiles";
+
+const Files = ({
+  languagesToFetch,
+  isGrouped,
+}: {
+  languagesToFetch: string[] | undefined;
+  isGrouped: boolean;
+}) => {
+  const { files, groups } = useFiles(languagesToFetch);
+
+  return (
+    <ul className={cn("flex flex-col", isGrouped && "space-y-16")}>
+      {isGrouped
+        ? groups.map(([language, files]) => (
+            <ul
+              key={language}
+              className="relative rounded-md rounded-l-none border p-4"
+              style={{ borderColor: getLanguageColor(language) }}
+            >
+              <span
+                className="text-normal absolute -left-[1px] -top-11 rounded-tr-md p-2"
+                style={{ backgroundColor: getLanguageColor(language) }}
+              >
+                {getLanguageName(language)}
+              </span>
+              {files.map(({ filePath, name, totalTimeSpent }) => (
+                <li key={filePath} className="flex gap-x-3" title={filePath}>
+                  <span className="whitespace-nowrap font-light">
+                    {formatDuration(totalTimeSpent)}
+                  </span>
+                  <span className="min-h-9 w-full overflow-hidden text-ellipsis whitespace-nowrap font-bold">
+                    {name}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ))
+        : files.map(([filePath, { name, totalTimeSpent }]) => (
+            <li key={filePath} className="flex gap-x-3" title={filePath}>
+              <span className="whitespace-nowrap font-light">
+                {formatDuration(totalTimeSpent)}
+              </span>
+              <span className="min-h-9 w-full overflow-hidden text-ellipsis whitespace-nowrap font-bold">
+                {name}
+              </span>
+            </li>
+          ))}
+    </ul>
+  );
+};
+
+export default Files;
