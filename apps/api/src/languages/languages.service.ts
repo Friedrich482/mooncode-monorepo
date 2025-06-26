@@ -12,16 +12,16 @@ export class LanguagesService {
     private readonly db: NodePgDatabase,
   ) {}
   async createLanguage(createLanguageDto: CreateLanguageDtoType) {
-    const { dailyDataId, languageName, timeSpent } = createLanguageDto;
+    const { dailyDataId, languageSlug, timeSpent } = createLanguageDto;
     const [createdLanguageData] = await this.db
       .insert(languages)
       .values({
-        languageName,
+        languageSlug,
         timeSpent,
         dailyDataId,
       })
       .returning({
-        languageName: languages.languageName,
+        languageSlug: languages.languageSlug,
         timeSpent: languages.timeSpent,
       });
 
@@ -32,15 +32,17 @@ export class LanguagesService {
     const languagesDataArray = await this.db
       .select({
         timeSpent: languages.timeSpent,
-        languageName: languages.languageName,
+        languageSlug: languages.languageSlug,
       })
       .from(languages)
       .where(eq(languages.dailyDataId, dailyDataId))
       .orderBy(asc(languages.timeSpent));
 
-    const languagesDataObject = Object.fromEntries(
-      languagesDataArray.map(({ languageName, timeSpent }) => [
-        languageName,
+    const languagesDataObject: {
+      [languageSlug: string]: number;
+    } = Object.fromEntries(
+      languagesDataArray.map(({ languageSlug, timeSpent }) => [
+        languageSlug,
         timeSpent,
       ]),
     );
@@ -48,18 +50,18 @@ export class LanguagesService {
     return languagesDataObject;
   }
 
-  async findOneLanguage(dailyDataId: string, languageName: string) {
+  async findOneLanguage(dailyDataId: string, languageSlug: string) {
     const [languageData] = await this.db
       .select({
         timeSpent: languages.timeSpent,
-        languageName: languages.languageName,
+        languageSlug: languages.languageSlug,
         languageId: languages.id,
       })
       .from(languages)
       .where(
         and(
           eq(languages.dailyDataId, dailyDataId),
-          eq(languages.languageName, languageName),
+          eq(languages.languageSlug, languageSlug),
         ),
       );
 
@@ -69,7 +71,7 @@ export class LanguagesService {
   }
 
   async updateLanguage(updateLanguageDto: UpdateLanguageDtoType) {
-    const { timeSpent, dailyDataId, languageName } = updateLanguageDto;
+    const { timeSpent, dailyDataId, languageSlug } = updateLanguageDto;
 
     const [updatedLanguageData] = await this.db
       .update(languages)
@@ -79,11 +81,11 @@ export class LanguagesService {
       .where(
         and(
           eq(languages.dailyDataId, dailyDataId),
-          eq(languages.languageName, languageName),
+          eq(languages.languageSlug, languageSlug),
         ),
       )
       .returning({
-        languageName: languages.languageName,
+        languageSlug: languages.languageSlug,
         timeSpent: languages.timeSpent,
       });
 

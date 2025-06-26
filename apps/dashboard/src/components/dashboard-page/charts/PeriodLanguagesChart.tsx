@@ -88,7 +88,7 @@ const PeriodLanguagesChart = () => {
               <Pie
                 data={pieChartData}
                 dataKey="time"
-                nameKey="languageName"
+                nameKey="languageSlug"
                 className="cursor-pointer"
               >
                 {pieChartData?.map((entry, index) => (

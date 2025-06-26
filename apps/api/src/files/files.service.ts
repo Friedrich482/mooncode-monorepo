@@ -66,7 +66,7 @@ export class FilesService {
   async findAllFilesOnDay(dailyDataId: string) {
     const filesDataArray = await this.db
       .select({
-        language: languages.languageName,
+        languageSlug: languages.languageSlug,
         timeSpent: files.timeSpent,
         fileName: files.name,
         filePath: files.path,
@@ -82,7 +82,7 @@ export class FilesService {
     const filesDataObject = Object.fromEntries(
       filesDataArray.map(
         ({
-          language,
+          languageSlug,
           timeSpent,
           fileName,
           filePath,
@@ -90,7 +90,7 @@ export class FilesService {
           projectPath,
         }) => [
           filePath,
-          { language, timeSpent, projectPath, projectName, fileName },
+          { languageSlug, timeSpent, projectPath, projectName, fileName },
         ],
       ),
     );

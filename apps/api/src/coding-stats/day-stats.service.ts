@@ -31,10 +31,12 @@ export class DayStatsService {
 
   async getDailyStatsForChart({ userId, dateString }: DayStatsDtoType) {
     const providedDate = new Date(dateString);
+
     const dateLabel =
       dateString === new Date().toLocaleDateString()
         ? "Today"
-        : dateString ===
+        : // yesterday's date
+          dateString ===
             new Date(
               new Date().getFullYear(),
               new Date().getMonth(),
@@ -61,8 +63,8 @@ export class DayStatsService {
     const totalTimeSpent = dayData.timeSpent;
 
     const finalData = Object.entries(dayLanguagesTime)
-      .map(([languageId, timeSpent]) => ({
-        languageId,
+      .map(([languageSlug, timeSpent]) => ({
+        languageSlug,
         timeSpent,
         formattedValue: formatDuration(timeSpent),
         percentage: parseFloat(((timeSpent * 100) / totalTimeSpent).toFixed(2)),
@@ -139,10 +141,10 @@ export class DayStatsService {
         const createdLanguageData = await this.languagesService.createLanguage({
           dailyDataId: returningDailyData.dailyDataId,
           timeSpent: value,
-          languageName: key,
+          languageSlug: key,
         });
 
-        languagesData[createdLanguageData.languageName] =
+        languagesData[createdLanguageData.languageSlug] =
           createdLanguageData.timeSpent;
       } else {
         // else update it but only if the new timeSpent is greater than the existing one
@@ -151,9 +153,9 @@ export class DayStatsService {
             await this.languagesService.updateLanguage({
               timeSpent: value,
               dailyDataId: returningDailyData.dailyDataId,
-              languageName: key,
+              languageSlug: key,
             });
-          languagesData[updatedLanguageData.languageName] =
+          languagesData[updatedLanguageData.languageSlug] =
             updatedLanguageData.timeSpent;
         }
       }

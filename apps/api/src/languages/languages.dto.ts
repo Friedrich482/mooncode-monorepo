@@ -3,7 +3,7 @@ import { z } from "zod";
 export const CreateLanguageDto = z.object({
   dailyDataId: z.string().ulid(),
   timeSpent: z.number().int(),
-  languageName: z.string(),
+  languageSlug: z.string().min(1),
 });
 
 export const UpdateLanguageDto = CreateLanguageDto;

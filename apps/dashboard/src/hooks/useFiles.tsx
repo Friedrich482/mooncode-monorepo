@@ -41,13 +41,13 @@ const useFiles = (languagesToFetch: string[] | undefined) => {
         },
         [filePath, file],
       ) => {
-        const { language } = file;
+        const { languageSlug } = file;
 
-        if (!acc[language]) {
-          acc[language] = [];
+        if (!acc[languageSlug]) {
+          acc[languageSlug] = [];
         }
 
-        acc[language].push({ ...file, filePath });
+        acc[languageSlug].push({ ...file, filePath });
 
         return acc;
       },

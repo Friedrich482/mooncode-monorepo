@@ -10,6 +10,7 @@ const useSuspenseQueryPeriodLangChart = () => {
   const customRange = usePeriodStore((state) => state.customRange);
 
   const trpc = useTRPC();
+
   const { data: pieChart } = useSuspenseQuery(
     trpc.codingStats.getPeriodLanguagesTime.queryOptions(
       period === "Custom Range"
@@ -41,7 +42,7 @@ const useSuspenseQueryPeriodLangChart = () => {
   );
 
   const pieChartData = pieChart.map((entry) => {
-    const color = getLanguageColor(entry.languageName);
+    const color = getLanguageColor(entry.languageSlug);
     return {
       ...entry,
       color,

@@ -2,6 +2,7 @@ import { differenceInDays, format } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
+import { NAString } from "src/common/dto";
 import { PeriodStatsDtoType } from "./coding-stats.dto";
 import formatDuration from "@repo/utils/formatDuration";
 import getDaysOfPeriodStatsGroupByMonths from "./utils/getDaysOfPeriodStatsGroupByMonths";
@@ -110,8 +111,8 @@ export class PeriodStatsService {
     }, {});
 
     const finalData = Object.entries(kVLangTime)
-      .map(([languageName, timeSpent]) => ({
-        languageName,
+      .map(([languageSlug, timeSpent]) => ({
+        languageSlug,
         time: timeSpent,
         value: formatDuration(timeSpent),
         percentage: parseFloat(
@@ -176,7 +177,12 @@ export class PeriodStatsService {
     end,
     groupBy,
     periodResolution,
-  }: PeriodStatsDtoType) {
+  }: PeriodStatsDtoType): Promise<{
+    avgTime: string;
+    percentageToAvg: number;
+    mostActiveDate: NAString;
+    mostUsedLanguageSlug: NAString;
+  }> {
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
       userId,
       start,
@@ -187,8 +193,8 @@ export class PeriodStatsService {
       return {
         avgTime: formatDuration(0),
         percentageToAvg: 0,
-        mostActiveDate: new Date().toLocaleDateString(),
-        mostUsedLanguage: "other",
+        mostActiveDate: "N/A",
+        mostUsedLanguageSlug: "N/A",
       };
 
     switch (groupBy) {
@@ -243,10 +249,16 @@ export class PeriodStatsService {
         ? Math.max(...dailyDataForPeriod.map((day) => day.timeSpent))
         : 0;
 
-    const mostActiveDate =
-      dailyDataForPeriod.find((day) => day.timeSpent === maxTimeSpentPerDay)
-        ?.date || format(new Date(), "yyyy-MM-dd");
-    const mostUsedLanguage = await getMostUsedLanguageOnPeriod(
+    const mostActiveDate: NAString =
+      maxTimeSpentPerDay === 0
+        ? "N/A"
+        : new Date(
+            dailyDataForPeriod.find(
+              (day) => day.timeSpent === maxTimeSpentPerDay,
+            )?.date || format(new Date(start), "yyyy-MM-dd"),
+          ).toDateString();
+
+    const mostUsedLanguageSlug = await getMostUsedLanguageOnPeriod(
       this,
       userId,
       start,
@@ -256,8 +268,8 @@ export class PeriodStatsService {
     return {
       avgTime: formatDuration(mean),
       percentageToAvg,
-      mostActiveDate: new Date(mostActiveDate).toDateString(),
-      mostUsedLanguage,
+      mostActiveDate,
+      mostUsedLanguageSlug,
     };
   }
 }

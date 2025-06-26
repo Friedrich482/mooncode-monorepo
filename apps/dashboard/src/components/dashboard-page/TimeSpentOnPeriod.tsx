@@ -8,6 +8,7 @@ const TimeSpentOnPeriod = () => {
   const period = usePeriodStore((state) => state.period);
   const customRange = usePeriodStore((state) => state.customRange);
   const trpc = useTRPC();
+
   const { data } = useSuspenseQuery(
     trpc.codingStats.getTimeSpentOnPeriod.queryOptions(
       period === "Custom Range"

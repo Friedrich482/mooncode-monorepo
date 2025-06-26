@@ -34,5 +34,6 @@ export const refineAndTransformSchema = <T extends typeof BaseSchema._input>(
 export const DatesDto = refineAndTransformSchema(BaseSchema);
 
 export type UserId = { userId: string };
+export type NAString = "N/A" | (string & {});
 
 export type DatesDtoType = z.infer<typeof DatesDto> & UserId;
