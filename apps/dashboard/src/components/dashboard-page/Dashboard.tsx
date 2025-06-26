@@ -1,3 +1,4 @@
+import ChartGroupWrapper from "../ChartGroupWrapper";
 import DashboardTitle from "./DashboardTitle";
 import DayLanguagesChart from "./charts/dayLanguagesChart/DayLanguagesChart";
 import { ErrorBoundary } from "react-error-boundary";
@@ -13,31 +14,36 @@ const Dashboard = () => {
   return (
     <main className="flex flex-col gap-x-10 gap-y-12 px-14 pb-4 text-black dark:text-white">
       <DashboardTitle />
-      <div className="flex items-center justify-between max-chart:flex-col max-chart:gap-20">
+
+      <ChartGroupWrapper>
         <ErrorBoundary FallbackComponent={ErrorFallBack}>
           <SuspenseBoundary>
             <PeriodTimeChart />
           </SuspenseBoundary>
         </ErrorBoundary>
+
         <ErrorBoundary FallbackComponent={ErrorFallBack}>
           <SuspenseBoundary>
             <PeriodLanguagesChart />
           </SuspenseBoundary>
         </ErrorBoundary>
-      </div>
-      <div className="flex items-center justify-between max-chart:flex-col max-chart:gap-20">
+      </ChartGroupWrapper>
+
+      <ChartGroupWrapper>
         <ErrorBoundary FallbackComponent={ErrorFallBack}>
           <SuspenseBoundary>
             <DayLanguagesChart />
           </SuspenseBoundary>
         </ErrorBoundary>
+
         <ErrorBoundary FallbackComponent={ErrorFallBack}>
           <SuspenseBoundary>
             <GeneralStatsChart />
           </SuspenseBoundary>
         </ErrorBoundary>
-      </div>
-      <div className="flex items-center justify-between max-chart:flex-col max-chart:gap-20">
+      </ChartGroupWrapper>
+
+      <ChartGroupWrapper>
         <ErrorBoundary
           FallbackComponent={({ error }) => (
             <ErrorFallBack
@@ -50,7 +56,7 @@ const Dashboard = () => {
             <PeriodProjects />
           </SuspenseBoundary>
         </ErrorBoundary>
-      </div>
+      </ChartGroupWrapper>
     </main>
   );
 };
