@@ -113,7 +113,7 @@ export class FilesStatsService {
 
       const fileLanguage = await this.languagesService.findOneLanguage(
         dailyDataForDay.id,
-        file.language,
+        file.languageSlug,
       );
 
       // must exist too at this point

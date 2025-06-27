@@ -22,14 +22,14 @@ const updateCurrentFileObj = (document: vscode.TextDocument | undefined) => {
       isFrozen: false,
       projectName,
       projectPath,
-      language: currentLanguageId,
+      languageSlug: currentLanguageId,
     };
   }
 
   const currentFileData = filesData[absolutePath];
 
   currentFileData.lastActivityTime = performance.now();
-  currentFileData.language = currentLanguageId;
+  currentFileData.languageSlug = currentLanguageId;
   currentFileData.projectName = projectName;
   currentFileData.projectPath = projectPath;
 };

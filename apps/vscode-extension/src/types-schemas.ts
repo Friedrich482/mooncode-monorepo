@@ -19,7 +19,7 @@ export type FileData = {
   isFrozen: boolean;
   projectName: string;
   projectPath: string;
-  language: string;
+  languageSlug: string;
 };
 
 export const globalStateInitialDataSchema = z.object({
@@ -27,22 +27,23 @@ export const globalStateInitialDataSchema = z.object({
     z.date(),
     z
       .string()
+      .min(1)
       .datetime()
       .transform((str) => new Date(str)),
   ]),
   dailyData: z.record(
-    z.string(), // the localDateString of the day
+    z.string().min(1), // the localDateString of the day
     z.object({
       timeSpentOnDay: z.number(),
-      timeSpentPerLanguage: z.record(z.string(), z.number()),
+      timeSpentPerLanguage: z.record(z.string().min(1), z.number()),
 
       dayFilesData: z.record(
-        z.string(), // the absolute path of the file
+        z.string().min(1), // the absolute path of the file
         z.object({
           timeSpent: z.number(),
-          projectPath: z.string(),
-          language: z.string(),
-          projectName: z.string(),
+          projectPath: z.string().min(1),
+          languageSlug: z.string().min(1),
+          projectName: z.string().min(1),
         }),
       ),
 
@@ -50,6 +51,7 @@ export const globalStateInitialDataSchema = z.object({
         z.date(),
         z
           .string()
+          .min(1)
           .datetime()
           .transform((str) => new Date(str)),
       ]),
