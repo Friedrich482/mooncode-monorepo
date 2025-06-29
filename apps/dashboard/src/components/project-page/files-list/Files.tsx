@@ -16,17 +16,17 @@ const Files = ({
   return (
     <ul className={cn("flex flex-col", isGrouped && "space-y-16")}>
       {isGrouped
-        ? groups.map(([language, files]) => (
+        ? groups.map(([languageSlug, files]) => (
             <ul
-              key={language}
+              key={languageSlug}
               className="relative rounded-md rounded-l-none border p-4"
-              style={{ borderColor: getLanguageColor(language) }}
+              style={{ borderColor: getLanguageColor(languageSlug) }}
             >
               <span
                 className="text-normal absolute -left-[1px] -top-11 rounded-tr-md p-2"
-                style={{ backgroundColor: getLanguageColor(language) }}
+                style={{ backgroundColor: getLanguageColor(languageSlug) }}
               >
-                {getLanguageName(language)}
+                {getLanguageName(languageSlug)}
               </span>
               {files.map(({ filePath, name, totalTimeSpent }) => (
                 <li key={filePath} className="flex gap-x-3" title={filePath}>

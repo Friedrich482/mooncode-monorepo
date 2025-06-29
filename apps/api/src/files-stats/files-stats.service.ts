@@ -113,7 +113,7 @@ export class FilesStatsService {
 
       const fileLanguage = await this.languagesService.findOneLanguage(
         dailyDataForDay.id,
-        file.language,
+        file.languageSlug,
       );
 
       // must exist too at this point
@@ -273,9 +273,9 @@ export class FilesStatsService {
         name,
       });
 
-    return Object.entries(aggregatedLanguageTime).map(
-      ([languageName, timeSpent]) => ({
-        languageName,
+    return Object.entries(aggregatedLanguageTime)
+      .map(([languageSlug, timeSpent]) => ({
+        languageSlug,
         time: timeSpent,
         value: formatDuration(timeSpent),
         percentage:
@@ -286,8 +286,8 @@ export class FilesStatsService {
                   2,
                 ),
               ),
-      }),
-    );
+      }))
+      .sort((a, b) => a.time - b.time);
   }
 
   async getProjectLanguagesPerDayOfPeriod({

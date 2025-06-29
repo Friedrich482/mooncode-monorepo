@@ -1,14 +1,14 @@
 import * as vscode from "vscode";
 import { filesData } from "../../constants";
 import getCurrentFileProperties from "./getCurrentFileProperties";
-import getLanguageId from "../languages/getLanguageId";
+import getLanguageSlug from "../languages/getLanguageSlug";
 
 const updateCurrentFileObj = (document: vscode.TextDocument | undefined) => {
   const { absolutePath, projectName, projectPath } =
     getCurrentFileProperties(document);
-  const currentLanguageId = getLanguageId(document);
+  const currentLanguageSlug = getLanguageSlug(document);
 
-  if (!absolutePath || !projectName || !projectPath || !currentLanguageId) {
+  if (!absolutePath || !projectName || !projectPath || !currentLanguageSlug) {
     return;
   }
 
@@ -22,14 +22,14 @@ const updateCurrentFileObj = (document: vscode.TextDocument | undefined) => {
       isFrozen: false,
       projectName,
       projectPath,
-      language: currentLanguageId,
+      languageSlug: currentLanguageSlug,
     };
   }
 
   const currentFileData = filesData[absolutePath];
 
   currentFileData.lastActivityTime = performance.now();
-  currentFileData.language = currentLanguageId;
+  currentFileData.languageSlug = currentLanguageSlug;
   currentFileData.projectName = projectName;
   currentFileData.projectPath = projectPath;
 };

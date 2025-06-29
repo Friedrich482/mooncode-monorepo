@@ -8,7 +8,7 @@ export const UpsertFilesDto = z.object({
     z.string(),
     z.object({
       timeSpent: z.number().int().nonnegative(),
-      language: z.string().min(1),
+      languageSlug: z.string().min(1),
       projectName: z.string().min(1),
       projectPath: z.string().min(1),
     }),

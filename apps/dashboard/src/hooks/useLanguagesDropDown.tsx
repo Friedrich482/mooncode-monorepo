@@ -32,24 +32,24 @@ const useLanguagesDropDown = ({
   );
 
   const languagesToDisplay: Entry[] = fetchedData.map((entry) => ({
-    language: getLanguageName(entry.languageName),
-    color: getLanguageColor(entry.languageName),
-    languageId: entry.languageName,
+    languageName: getLanguageName(entry.languageSlug),
+    color: getLanguageColor(entry.languageSlug),
+    languageSlug: entry.languageSlug,
   }));
 
   const handleCheck = (entry: Entry) =>
     setSelectedEntries((prev) => {
       const isEntryExisting = prev.some(
-        (elt) => elt.languageId === entry.languageId,
+        (elt) => elt.languageSlug === entry.languageSlug,
       );
 
       return isEntryExisting
-        ? prev.filter((elt) => elt.languageId !== entry.languageId)
+        ? prev.filter((elt) => elt.languageSlug !== entry.languageSlug)
         : [...prev, entry];
     });
 
   const isChecked = (entry: Entry) =>
-    selectedEntries.some((elt) => elt.languageId === entry.languageId);
+    selectedEntries.some((elt) => elt.languageSlug === entry.languageSlug);
 
   return { handleCheck, isChecked, languagesToDisplay };
 };

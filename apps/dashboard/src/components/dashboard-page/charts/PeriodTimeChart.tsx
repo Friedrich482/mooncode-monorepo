@@ -55,7 +55,17 @@ const PeriodTimeChart = () => {
             labelFormatter={(
               _date: string,
               payload: Payload<string, string>[],
-            ) => <div>{payload[0].payload.originalDate}</div>}
+            ) => {
+              if (payload.length === 0) return null;
+
+              const {
+                payload: innerPayload,
+              }: { payload?: (typeof chartData)[number] } = payload[0];
+
+              if (!innerPayload) return null;
+
+              return <div>{innerPayload.originalDate}</div>;
+            }}
             formatter={(value: string, name) =>
               name === "Time"
                 ? CustomChartToolTip(parseInt(value), "var(--color-time)")

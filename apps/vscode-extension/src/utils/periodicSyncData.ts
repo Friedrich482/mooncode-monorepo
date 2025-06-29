@@ -46,11 +46,11 @@ const periodicSyncData = async (
     );
   const todayFilesData = Object.fromEntries(
     Object.entries(getTime().filesData).map(
-      ([filePath, { elapsedTime, language, projectName, projectPath }]) => [
+      ([filePath, { elapsedTime, languageSlug, projectName, projectPath }]) => [
         filePath,
         {
           timeSpent: elapsedTime,
-          language,
+          languageSlug,
           projectName,
           projectPath,
         },

@@ -26,7 +26,7 @@ const ProjectLanguagesTimeOnPeriodChart = () => {
 
   const dataSet = useMemo(
     () =>
-      [...new Set(barChartData?.flatMap((entry) => Object.keys(entry)))].filter(
+      [...new Set(barChartData.flatMap((entry) => Object.keys(entry)))].filter(
         (key) =>
           key !== "date" && key !== "timeSpent" && key !== "originalDate",
       ),
@@ -54,14 +54,24 @@ const ProjectLanguagesTimeOnPeriodChart = () => {
               <ChartTooltip
                 labelFormatter={() => <div className="font-semibold">Time</div>}
                 content={<ChartTooltipContent labelClassName="font-semibold" />}
-                formatter={(value: string, language, { payload }) =>
-                  CustomChartToolTip(
+                formatter={(
+                  value: string,
+                  languageSlug,
+                  {
+                    payload,
+                  }: { payload?: { payload: (typeof pieChartData)[number] } },
+                ) => {
+                  if (!payload) return null;
+
+                  const { payload: innerPayload } = payload;
+
+                  return CustomChartToolTip(
                     parseInt(value),
-                    payload.color,
-                    language.toString(),
-                    payload.percentage,
-                  )
-                }
+                    innerPayload.color,
+                    languageSlug.toString(),
+                    innerPayload.percentage,
+                  );
+                }}
               />
               <ChartLegend
                 content={
@@ -79,7 +89,7 @@ const ProjectLanguagesTimeOnPeriodChart = () => {
               <Pie
                 data={pieChartData}
                 dataKey="time"
-                nameKey="languageName"
+                nameKey="languageSlug"
                 className="cursor-pointer"
               >
                 {pieChartData?.map((entry, index) => (
@@ -103,22 +113,32 @@ const ProjectLanguagesTimeOnPeriodChart = () => {
                 labelFormatter={(
                   _date: string,
                   payload: Payload<string, string>[],
-                ) => <div>{payload[0].payload.originalDate}</div>}
-                formatter={(value: string, language) =>
+                ) => {
+                  if (payload.length === 0) return null;
+
+                  const {
+                    payload: innerPayload,
+                  }: { payload?: (typeof barChartData)[number] } = payload[0];
+
+                  if (!innerPayload) return null;
+
+                  return <div>{innerPayload.originalDate}</div>;
+                }}
+                formatter={(value: string, languageSlug) =>
                   CustomChartToolTip(
                     parseInt(value),
-                    getLanguageColor(language),
-                    language,
+                    getLanguageColor(languageSlug),
+                    languageSlug,
                   )
                 }
               />
-              {dataSet.map((language) => {
+              {dataSet.map((languageSlug) => {
                 return (
                   <Bar
-                    key={language}
-                    dataKey={language}
+                    key={languageSlug}
+                    dataKey={languageSlug}
                     stackId="a"
-                    fill={getLanguageColor(language)}
+                    fill={getLanguageColor(languageSlug)}
                     className="cursor-pointer"
                   />
                 );

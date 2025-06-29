@@ -52,7 +52,7 @@ export async function activate(context: vscode.ExtensionContext) {
       startTime: now - file.timeSpent * 1000,
       projectName: file.projectName,
       projectPath: file.projectPath,
-      language: file.language,
+      languageSlug: file.languageSlug,
     };
   });
 

@@ -12,7 +12,7 @@ export const languages = pgTable("languages", {
     .notNull()
     .references(() => dailyData.id, { onDelete: "cascade" }),
 
-  languageSlug: text("languageSlug").notNull(),
+  languageSlug: text("language_slug").notNull(),
   timeSpent: integer("time_spent").notNull().default(0),
   ...timestamps,
 });

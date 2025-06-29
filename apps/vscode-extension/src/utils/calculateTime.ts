@@ -3,7 +3,7 @@ import { FileMap, LanguageMap } from "../types-schemas";
 import { MAX_IDLE_TIME, filesData, languagesData } from "../constants";
 import getCurrentFileProperties from "./files/getCurrentFileProperties";
 import getGlobalStateData from "./getGlobalStateData";
-import getLanguageId from "./languages/getLanguageId";
+import getLanguageSlug from "./languages/getLanguageSlug";
 import isNewDayHandler from "./IsNewDayHandler";
 import updateCurrentFileObj from "./files/updateCurrentFileObj";
 import updateCurrentLanguage from "./languages/updateCurrentLanguage";
@@ -19,7 +19,7 @@ const calculateTime = async (): Promise<
   const runPeriodicCheck = async () => {
     try {
       const now = performance.now();
-      const latestLanguage = getLanguageId(
+      const latestLanguage = getLanguageSlug(
         vscode.window.activeTextEditor?.document,
       );
       const latestFile = getCurrentFileProperties(
