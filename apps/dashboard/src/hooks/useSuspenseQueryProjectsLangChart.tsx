@@ -49,7 +49,7 @@ const useSuspenseQueryProjectsLangChart = () => {
   );
 
   const pieChartData = pieChart.map((entry) => {
-    const color = getLanguageColor(entry.languageName);
+    const color = getLanguageColor(entry.languageSlug);
     return {
       ...entry,
       color,

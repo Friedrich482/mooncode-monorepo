@@ -13,10 +13,9 @@ const FilesList = () => {
   const [selectedEntries, setSelectedEntries] = useState<Entry[]>([]);
   const [isGrouped, setIsGrouped] = useState(false);
   const handleCheckChange = () => setIsGrouped((prev) => !prev);
-
   const languagesToFetch =
     selectedEntries.length !== 0
-      ? selectedEntries.map((entry) => entry.languageId)
+      ? selectedEntries.map((entry) => entry.languageSlug)
       : undefined;
 
   return (

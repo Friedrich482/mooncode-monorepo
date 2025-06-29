@@ -1,16 +1,16 @@
 import * as vscode from "vscode";
-import getLanguageId from "./getLanguageId";
+import getLanguageSlug from "./getLanguageSlug";
 import { languagesData } from "../../constants";
 
 const updateCurrentLanguage = (document: vscode.TextDocument | undefined) => {
-  const currentLanguageId = getLanguageId(document);
+  const currentLanguageSlug = getLanguageSlug(document);
 
-  if (!currentLanguageId) {
+  if (!currentLanguageSlug) {
     return;
   }
 
-  if (!languagesData[currentLanguageId]) {
-    languagesData[currentLanguageId] = {
+  if (!languagesData[currentLanguageSlug]) {
+    languagesData[currentLanguageSlug] = {
       elapsedTime: 0,
       startTime: performance.now(),
       lastActivityTime: performance.now(),
@@ -20,7 +20,7 @@ const updateCurrentLanguage = (document: vscode.TextDocument | undefined) => {
     };
   }
 
-  const currentLanguageData = languagesData[currentLanguageId];
+  const currentLanguageData = languagesData[currentLanguageSlug];
 
   currentLanguageData.lastActivityTime = performance.now();
 };

@@ -5,7 +5,7 @@ import { z } from "zod";
 const CustomChartToolTip = (
   value: number,
   color?: unknown,
-  languageId?: string,
+  languageSlug?: string,
   percentage?: number,
 ) => {
   const safeColor = (() => {
@@ -27,7 +27,7 @@ const CustomChartToolTip = (
           }}
         />
       ) : null}
-      {languageId && <span>{getLanguageName(languageId)}</span>}
+      {languageSlug && <span>{getLanguageName(languageSlug)}</span>}
       <span className="flex-1 text-muted-foreground">
         {!Number.isNaN(value) ? formatDuration(value) : "######"}{" "}
         {percentage && `(${percentage}%)`}

@@ -36,7 +36,7 @@ const LanguagesDropDown = ({
         {languagesToDisplay.map((entry) => (
           <DropdownMenuCheckboxItem
             checked={isChecked(entry)}
-            key={entry.language}
+            key={entry.languageSlug}
             onCheckedChange={() => handleCheck(entry)}
             className="cursor-pointer gap-3 rounded-md py-1 text-base"
           >
@@ -46,7 +46,7 @@ const LanguagesDropDown = ({
                 backgroundColor: entry.color,
               }}
             />
-            <span>{entry.language}</span>
+            <span>{entry.languageName}</span>
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

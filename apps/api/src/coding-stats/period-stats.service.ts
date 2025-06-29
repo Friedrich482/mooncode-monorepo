@@ -104,8 +104,8 @@ export class PeriodStatsService {
         ),
       )
     ).reduce((acc, dayStats) => {
-      Object.keys(dayStats).forEach((language) => {
-        acc[language] = (acc[language] || 0) + dayStats[language];
+      Object.keys(dayStats).forEach((languageSlug) => {
+        acc[languageSlug] = (acc[languageSlug] || 0) + dayStats[languageSlug];
       });
       return acc;
     }, {});

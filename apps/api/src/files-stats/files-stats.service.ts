@@ -274,8 +274,8 @@ export class FilesStatsService {
       });
 
     return Object.entries(aggregatedLanguageTime)
-      .map(([languageName, timeSpent]) => ({
-        languageName,
+      .map(([languageSlug, timeSpent]) => ({
+        languageSlug,
         time: timeSpent,
         value: formatDuration(timeSpent),
         percentage:

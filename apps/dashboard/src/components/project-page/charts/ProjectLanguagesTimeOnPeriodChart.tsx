@@ -89,7 +89,7 @@ const ProjectLanguagesTimeOnPeriodChart = () => {
               <Pie
                 data={pieChartData}
                 dataKey="time"
-                nameKey="languageName"
+                nameKey="languageSlug"
                 className="cursor-pointer"
               >
                 {pieChartData?.map((entry, index) => (
@@ -124,21 +124,21 @@ const ProjectLanguagesTimeOnPeriodChart = () => {
 
                   return <div>{innerPayload.originalDate}</div>;
                 }}
-                formatter={(value: string, language) =>
+                formatter={(value: string, languageSlug) =>
                   CustomChartToolTip(
                     parseInt(value),
-                    getLanguageColor(language),
-                    language,
+                    getLanguageColor(languageSlug),
+                    languageSlug,
                   )
                 }
               />
-              {dataSet.map((language) => {
+              {dataSet.map((languageSlug) => {
                 return (
                   <Bar
-                    key={language}
-                    dataKey={language}
+                    key={languageSlug}
+                    dataKey={languageSlug}
                     stackId="a"
-                    fill={getLanguageColor(language)}
+                    fill={getLanguageColor(languageSlug)}
                     className="cursor-pointer"
                   />
                 );

@@ -35,7 +35,7 @@ const useFiles = (languagesToFetch: string[] | undefined) => {
     files.reduce(
       (
         acc: {
-          [language: string]: ((typeof files)[number][1] & {
+          [languageSlug: string]: ((typeof files)[number][1] & {
             filePath: string;
           })[];
         },

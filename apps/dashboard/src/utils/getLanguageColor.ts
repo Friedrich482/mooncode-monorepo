@@ -1,10 +1,11 @@
 import { DEFAULT_COLOR } from "@/constants";
 import languagesAttributes from "@/colors.json";
-const getLanguageColor = (languageId: string) => {
+const getLanguageColor = (languageSlug: string) => {
   let languageColor: string = "";
   try {
     languageColor =
-      languagesAttributes[languageId as keyof typeof languagesAttributes].color;
+      languagesAttributes[languageSlug as keyof typeof languagesAttributes]
+        .color;
   } catch {
     languageColor = DEFAULT_COLOR;
   }
