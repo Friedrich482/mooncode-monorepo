@@ -90,9 +90,15 @@ export class AuthService {
       });
     }
     const { sub } = ctx.user;
-    const user = await this.usersService.findOne({ id: sub });
+    const { email, id, username } = await this.usersService.findOne({
+      id: sub,
+    });
 
-    return user;
+    return {
+      email,
+      id,
+      username,
+    };
   }
 
   async logOut(response: Response) {

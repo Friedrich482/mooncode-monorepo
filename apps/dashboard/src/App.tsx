@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "@repo/trpc/router";
-import { COOKIE_NOT_FOUND_MESSAGE } from "@repo/utils/constants";
+import { COOKIE_OR_TOKEN_NOT_FOUND_MESSAGE } from "@repo/utils/constants";
 import { INCOHERENT_DATE_RANGE_ERROR_MESSAGE } from "@repo/utils/constants";
 import { Outlet } from "react-router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -20,7 +20,7 @@ function makeQueryClient() {
         retry: (failureCount, error) => {
           try {
             if (
-              error.message === COOKIE_NOT_FOUND_MESSAGE ||
+              error.message === COOKIE_OR_TOKEN_NOT_FOUND_MESSAGE ||
               error.message !== INCOHERENT_DATE_RANGE_ERROR_MESSAGE
             ) {
               return failureCount < 1;

@@ -1,8 +1,8 @@
 import * as trpcExpress from "@trpc/server/adapters/express";
-import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { TRPCError, initTRPC } from "@trpc/server";
-import { COOKIE_NOT_FOUND_MESSAGE } from "@repo/utils/constants";
+import { COOKIE_OR_TOKEN_NOT_FOUND_MESSAGE } from "@repo/utils/constants";
 import { EnvService } from "src/env/env.service";
+import { Injectable } from "@nestjs/common";
 import { JwtPayloadDtoType } from "@repo/utils/types";
 import { JwtService } from "@nestjs/jwt";
 import superjson from "superjson";
@@ -68,7 +68,7 @@ export class TrpcService {
     if (!accessToken) {
       throw new TRPCError({
         code: "UNAUTHORIZED",
-        message: COOKIE_NOT_FOUND_MESSAGE,
+        message: COOKIE_OR_TOKEN_NOT_FOUND_MESSAGE,
       });
     }
 
@@ -82,7 +82,10 @@ export class TrpcService {
       return payload;
     } catch (error) {
       console.error(error);
-      throw new UnauthorizedException(error);
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "An error occurred",
+      });
     }
   }
 }

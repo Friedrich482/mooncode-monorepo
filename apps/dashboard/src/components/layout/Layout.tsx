@@ -19,12 +19,10 @@ const Layout = () => {
   return (
     <>
       <Header />
-      <>
-        <div className={cn(isLoading && "opacity-70")}>
-          {isLoading && <GlobalSpinner />}
-          <Outlet />
-        </div>
-      </>
+      <div className={cn(isLoading && "opacity-70")}>
+        {isLoading && <GlobalSpinner />}
+        <Outlet />
+      </div>
       <Footer />
     </>
   );

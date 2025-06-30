@@ -9,7 +9,7 @@ export const DayStatsDto = z.object({
 export const UpsertLanguagesDto = z.object({
   targetedDate: dateStringDto,
   timeSpentOnDay: z.number().int(),
-  timeSpentPerLanguage: z.record(z.string(), z.number()),
+  timeSpentPerLanguage: z.record(z.string().min(1), z.number().int()),
 });
 
 export type PeriodStatsDtoType = z.infer<typeof DatesDto> & UserId;

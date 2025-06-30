@@ -10,13 +10,18 @@ export const protectedRouteLoader = async () => {
     });
 
     if (!response.ok) {
-      throw redirect("/login");
+      if (response.status >= 500 || response.status === 0) {
+        throw new Error("Service temporarily unavailable");
+      } else if (response.status === 401) {
+        throw redirect("/login");
+      } else {
+        throw new Error("Authentication check failed");
+      }
     }
   } catch (error) {
     if (error instanceof Response && error.headers.get("Location")) {
       throw error;
     }
-    throw redirect("/login");
   }
 };
 

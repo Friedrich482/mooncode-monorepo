@@ -3,9 +3,12 @@ import { dateStringDto } from "@repo/utils/schemas";
 import { z } from "zod";
 
 export const UpsertFilesDto = z.object({
-  timeSpentPerProject: z.record(z.string(), z.number().int().nonnegative()),
+  timeSpentPerProject: z.record(
+    z.string().min(1),
+    z.number().int().nonnegative(),
+  ),
   filesData: z.record(
-    z.string(),
+    z.string().min(1),
     z.object({
       timeSpent: z.number().int().nonnegative(),
       languageSlug: z.string().min(1),
