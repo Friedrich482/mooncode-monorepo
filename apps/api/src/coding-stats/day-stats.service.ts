@@ -49,7 +49,7 @@ export class DayStatsService {
       date: dateString,
     });
 
-    if (!dayData)
+    if (!dayData || dayData.timeSpent === 0)
       return {
         formattedTotalTimeSpent: formatDuration(0),
         finalData: [],

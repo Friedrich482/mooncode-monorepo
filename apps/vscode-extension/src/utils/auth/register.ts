@@ -65,7 +65,7 @@ const register = async () => {
 
     await storeToken(context, access_token);
     vscode.window.showInformationMessage(
-      "Register completed.Logged in successfully",
+      "Register completed. Logged in successfully",
     );
   } catch (error) {
     let errorMessage = "An error occurred";

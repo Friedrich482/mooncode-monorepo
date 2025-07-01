@@ -18,6 +18,8 @@ import { SignInUserDto } from "@repo/utils/schemas";
 import { SignInUserDtoType } from "@repo/utils/types";
 import fetchJWTToken from "@repo/utils/fetchJWTToken";
 import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
+import { useTRPC } from "@/utils/trpc";
 import useTogglePassword from "@/hooks/useTogglePassword";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -31,7 +33,10 @@ const LoginForm = () => {
   });
 
   const { isPasswordVisible, EyeIconComponent } = useTogglePassword();
+
   const navigate = useNavigate();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
 
   const onSubmit = async (values: SignInUserDtoType) => {
     try {
@@ -39,6 +44,11 @@ const LoginForm = () => {
       await fetchJWTToken(LOGIN_URL, {
         email: values.email,
         password: values.password,
+      });
+
+      await queryClient.invalidateQueries({
+        queryKey: trpc.auth.getUser.queryKey(),
+        exact: true,
       });
 
       navigate("/dashboard");

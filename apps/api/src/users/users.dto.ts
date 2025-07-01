@@ -8,7 +8,7 @@ export const FindByIdDto = z.object({
 });
 
 export const FindByEmailDto = z.object({
-  username: z.string(),
+  username: z.string().min(1),
 });
 
 export const UpdateUserDto = z.object({
