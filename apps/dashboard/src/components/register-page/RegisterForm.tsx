@@ -142,6 +142,11 @@ const RegisterForm = () => {
           >
             Register
           </Button>
+          <div className="h-4">
+            {form.formState.errors.root && (
+              <FormMessage>{form.formState.errors.root.message}</FormMessage>
+            )}
+          </div>
         </form>
       </Form>
     </main>
