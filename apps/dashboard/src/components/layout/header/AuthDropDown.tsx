@@ -7,21 +7,27 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Link, useNavigate } from "react-router";
 import { LogOut, User } from "lucide-react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AUTH_DROPDOWN_ITEMS } from "@/constants";
 import GravatarAvatar from "./GravatarAvatar";
 import Icon from "@/components/ui/Icon";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useTRPC } from "@/utils/trpc";
 
 const AuthDropDown = () => {
   const trpc = useTRPC();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const mutation = useMutation(trpc.auth.logOut.mutationOptions());
 
-  const { data } = useQuery(trpc.auth.getUser.queryOptions());
+  const { data, error, isLoading } = useQuery(trpc.auth.getUser.queryOptions());
 
-  if (!data) {
+  if (isLoading) {
+    return <Skeleton className="size-10 self-center rounded-full" />;
+  }
+
+  if (!data || error) {
     return (
       <Link to="/login">
         <Icon Icon={User} />
@@ -56,7 +62,11 @@ const AuthDropDown = () => {
           className="cursor-pointer rounded-md py-1 text-base"
           onClick={() => {
             mutation.mutate(undefined, {
-              onSuccess: () => {
+              onSuccess: async () => {
+                await queryClient.invalidateQueries({
+                  queryKey: trpc.auth.getUser.queryKey(),
+                  exact: true,
+                });
                 navigate("/login");
               },
             });
