@@ -29,11 +29,11 @@ export class PeriodStatsService {
     start: string;
     end: string;
   }) {
-    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
+    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData({
       userId,
       start,
       end,
-    );
+    });
 
     const timeSpent = dailyDataForPeriod
       .map((day) => day.timeSpent)
@@ -49,11 +49,11 @@ export class PeriodStatsService {
     groupBy,
     periodResolution,
   }: PeriodStatsDtoType) {
-    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
+    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData({
       userId,
       start,
       end,
-    );
+    });
 
     if (dailyDataForPeriod.length === 0) return [];
 
@@ -85,11 +85,11 @@ export class PeriodStatsService {
     start,
     end,
   }: Omit<PeriodStatsDtoType, "periodResolution">) {
-    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
+    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData({
       userId,
       start,
       end,
-    );
+    });
 
     if (dailyDataForPeriod.length === 0) return [];
 
@@ -100,7 +100,7 @@ export class PeriodStatsService {
     const kVLangTime = (
       await Promise.all(
         dailyDataForPeriod.map(({ id }) =>
-          this.languagesService.findAllLanguages(id),
+          this.languagesService.findAllLanguages({ dailyDataId: id }),
         ),
       )
     ).reduce((acc, dayStats) => {
@@ -131,11 +131,11 @@ export class PeriodStatsService {
     groupBy,
     periodResolution,
   }: PeriodStatsDtoType) {
-    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
+    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData({
       userId,
       start,
       end,
-    );
+    });
 
     if (dailyDataForPeriod.length === 0) return [];
 
@@ -159,7 +159,7 @@ export class PeriodStatsService {
 
     const allLanguages = await Promise.all(
       dailyDataForPeriod.map(({ id }) =>
-        this.languagesService.findAllLanguages(id),
+        this.languagesService.findAllLanguages({ dailyDataId: id }),
       ),
     );
 
@@ -183,11 +183,11 @@ export class PeriodStatsService {
     mostActiveDate: NAString;
     mostUsedLanguageSlug: NAString;
   }> {
-    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData(
+    const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData({
       userId,
       start,
       end,
-    );
+    });
 
     if (dailyDataForPeriod.length === 0)
       return {
@@ -234,7 +234,8 @@ export class PeriodStatsService {
 
     const timeSpentToday =
       (
-        await this.dailyDataService.findOneDailyData(userId, {
+        await this.dailyDataService.findOneDailyData({
+          userId,
           date: format(new Date(), "yyyy-MM-dd"),
         })
       )?.timeSpent || 0;

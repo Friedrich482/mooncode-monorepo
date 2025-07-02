@@ -23,8 +23,14 @@ export const FindOneFileDto = z.object({
   path: z.string().min(1),
 });
 
+export const FindAllFilesOnDayDto = z.object({
+  dailyDataId: z.string().ulid(),
+});
+
 export type CreateFileDtoType = z.infer<typeof CreateFileDto>;
 
 export type UpdateFileDtoType = z.infer<typeof UpdateFileDto>;
 
 export type FindOneFileDtoType = z.infer<typeof FindOneFileDto>;
+
+export type FindAllFilesOnDayDtoType = z.infer<typeof FindAllFilesOnDayDto>;

@@ -27,7 +27,9 @@ const getPeriodLanguagesGroupByMonths = async (
   const entriesWithLanguages = await Promise.all(
     data.map(async (entry) => ({
       ...entry,
-      languages: await languagesService.findAllLanguages(entry.id),
+      languages: await languagesService.findAllLanguages({
+        dailyDataId: entry.id,
+      }),
     })),
   );
 

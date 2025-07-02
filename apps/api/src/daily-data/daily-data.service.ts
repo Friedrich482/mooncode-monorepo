@@ -1,6 +1,7 @@
 import {
   CreateDailyDataDtoType,
   FindOneDailyDataDtoType,
+  FindRangeDailyDataDtoType,
   UpdateDailyDataDtoType,
 } from "./daily-data.dto";
 import { Inject, Injectable } from "@nestjs/common";
@@ -35,11 +36,9 @@ export class DailyDataService {
     return createdDailyData;
   }
 
-  async findOneDailyData(
-    userId: string,
-    findOneDailyDataDto: FindOneDailyDataDtoType,
-  ) {
-    const { date } = findOneDailyDataDto;
+  async findOneDailyData(findOneDailyDataDto: FindOneDailyDataDtoType) {
+    const { date, userId } = findOneDailyDataDto;
+
     const [oneDailyData] = await this.db
       .select({ id: dailyData.id, timeSpent: dailyData.timeSpent })
       .from(dailyData)
@@ -50,7 +49,9 @@ export class DailyDataService {
     return oneDailyData;
   }
 
-  async findRangeDailyData(userId: string, start: string, end: string) {
+  async findRangeDailyData(findRangeDailyDataDto: FindRangeDailyDataDtoType) {
+    const { userId, start, end } = findRangeDailyDataDto;
+
     const dbData = await this.db
       .select({
         id: dailyData.id,
