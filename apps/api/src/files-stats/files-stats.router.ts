@@ -1,5 +1,6 @@
 import {
-  DayFilesStatsDto,
+  GetDailyFilesStatsForExtensionDto,
+  GetPeriodProjectsDto,
   GetProjectFilesOnPeriodDto,
   GetProjectLanguagesPerDayOfPeriodDto,
   GetProjectLanguagesTimeOnPeriodDto,
@@ -7,7 +8,6 @@ import {
   GetProjectPerDayOfPeriodDto,
   UpsertFilesDto,
 } from "./files-stats.dto";
-import { DatesDto } from "src/common/dto";
 import { FilesStatsService } from "./files-stats.service";
 import { Injectable } from "@nestjs/common";
 import { TrpcService } from "src/trpc/trpc.service";
@@ -21,35 +21,33 @@ export class FilesStatsRouter {
 
   procedures = {
     filesStats: this.trpcService.trpc.router({
+      getDailyFilesStatsForExtension: this.trpcService
+        .protectedProcedure()
+        .input(GetDailyFilesStatsForExtensionDto)
+        .query(async ({ ctx, input }) =>
+          this.filesStatsService.getDailyFilesStatsForExtension({
+            userId: ctx.user.sub,
+            ...input,
+          }),
+        ),
+
       upsert: this.trpcService
         .protectedProcedure()
         .input(UpsertFilesDto)
         .mutation(async ({ ctx, input }) =>
           this.filesStatsService.upsert({
             userId: ctx.user.sub,
-            upsertFilesDto: input,
-          }),
-        ),
-
-      getDailyFilesStatsForExtension: this.trpcService
-        .protectedProcedure()
-        .input(DayFilesStatsDto)
-        .query(async ({ ctx, input }) =>
-          this.filesStatsService.getDailyFilesStatsForExtension({
-            userId: ctx.user.sub,
-            dayFilesStatsDto: input,
+            ...input,
           }),
         ),
 
       getPeriodProjects: this.trpcService
         .protectedProcedure()
-        .input(DatesDto)
+        .input(GetPeriodProjectsDto)
         .query(async ({ ctx, input }) =>
           this.filesStatsService.getPeriodProjects({
             userId: ctx.user.sub,
-            start: input.start,
-            end: input.end,
-            periodResolution: input.periodResolution,
+            ...input,
           }),
         ),
 
@@ -58,11 +56,8 @@ export class FilesStatsRouter {
         .input(GetProjectOnPeriodDto)
         .query(async ({ ctx, input }) =>
           this.filesStatsService.getProjectOnPeriod({
-            start: input.start,
-            end: input.end,
-            name: input.name,
-            periodResolution: input.periodResolution,
             userId: ctx.user.sub,
+            ...input,
           }),
         ),
 
@@ -72,11 +67,7 @@ export class FilesStatsRouter {
         .query(async ({ ctx, input }) =>
           this.filesStatsService.getProjectPerDayOfPeriod({
             userId: ctx.user.sub,
-            name: input.name,
-            start: input.start,
-            end: input.end,
-            groupBy: input.groupBy,
-            periodResolution: input.periodResolution,
+            ...input,
           }),
         ),
 
@@ -86,10 +77,7 @@ export class FilesStatsRouter {
         .query(async ({ ctx, input }) =>
           this.filesStatsService.getProjectLanguagesTimeOnPeriod({
             userId: ctx.user.sub,
-            start: input.start,
-            end: input.end,
-            name: input.name,
-            periodResolution: input.periodResolution,
+            ...input,
           }),
         ),
 
@@ -99,11 +87,7 @@ export class FilesStatsRouter {
         .query(async ({ ctx, input }) =>
           this.filesStatsService.getProjectLanguagesPerDayOfPeriod({
             userId: ctx.user.sub,
-            start: input.start,
-            end: input.end,
-            name: input.name,
-            periodResolution: input.periodResolution,
-            groupBy: input.groupBy,
+            ...input,
           }),
         ),
 
@@ -113,12 +97,7 @@ export class FilesStatsRouter {
         .query(async ({ ctx, input }) =>
           this.filesStatsService.getProjectFilesOnPeriod({
             userId: ctx.user.sub,
-            start: input.start,
-            end: input.end,
-            name: input.name,
-            periodResolution: input.periodResolution,
-            amount: input.amount,
-            languages: input.languages,
+            ...input,
           }),
         ),
     }),
