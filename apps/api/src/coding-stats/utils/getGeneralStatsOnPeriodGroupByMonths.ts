@@ -1,7 +1,7 @@
 import { differenceInMonths, endOfMonth, format, startOfMonth } from "date-fns";
+import { CodingStatsDashboardService } from "../coding-stats-dashboard.service";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { NAString } from "src/common/dto";
-import { PeriodStatsService } from "src/coding-stats/period-stats.service";
 import formatDuration from "@repo/utils/formatDuration";
 import getDaysOfPeriodStatsGroupByMonths from "./getDaysOfPeriodStatsGroupByMonths";
 import getMostUsedLanguageOnPeriod from "./getMostUsedLanguageOnPeriod";
@@ -10,14 +10,14 @@ const getGeneralStatsOnPeriodGroupByMonths = async (
   userId: string,
   start: string,
   end: string,
-  periodStatsService: PeriodStatsService,
+  codingStatsDashboardService: CodingStatsDashboardService,
   dailyDataForPeriod: Awaited<
     ReturnType<DailyDataService["findRangeDailyData"]>
   >,
 ) => {
   const numberOfMonths = differenceInMonths(end, start) + 1;
   const timeSpentOnPeriod = (
-    await periodStatsService.getTimeSpentOnPeriod({
+    await codingStatsDashboardService.getTimeSpentOnPeriod({
       userId,
       start,
       end,
@@ -33,7 +33,7 @@ const getGeneralStatsOnPeriodGroupByMonths = async (
   }));
 
   const timeSpentOnTodaySMonth = (
-    await periodStatsService.getTimeSpentOnPeriod({
+    await codingStatsDashboardService.getTimeSpentOnPeriod({
       userId,
       start: format(startOfMonth(new Date()), "yyyy-MM-dd"),
       end: format(endOfMonth(new Date()), "yyyy-MM-dd"),
@@ -58,7 +58,7 @@ const getGeneralStatsOnPeriodGroupByMonths = async (
         )?.originalDate || format(new Date(), "yyyy-MM-dd");
 
   const mostUsedLanguageSlug = await getMostUsedLanguageOnPeriod(
-    periodStatsService,
+    codingStatsDashboardService,
     userId,
     start,
     end,

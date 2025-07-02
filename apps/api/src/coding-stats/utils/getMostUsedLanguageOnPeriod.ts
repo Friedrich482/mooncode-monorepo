@@ -1,17 +1,18 @@
+import { CodingStatsDashboardService } from "../coding-stats-dashboard.service";
 import { NAString } from "src/common/dto";
-import { PeriodStatsService } from "src/coding-stats/period-stats.service";
 
 const getMostUsedLanguageOnPeriod = async (
-  periodStatsService: PeriodStatsService,
+  codingStatsDashboardService: CodingStatsDashboardService,
   userId: string,
   start: string,
   end: string,
 ) => {
-  const periodLanguagesTime = await periodStatsService.getPeriodLanguagesTime({
-    userId,
-    start,
-    end,
-  });
+  const periodLanguagesTime =
+    await codingStatsDashboardService.getPeriodLanguagesTime({
+      userId,
+      start,
+      end,
+    });
 
   const mostUsedLanguageTime = periodLanguagesTime
     .map((language) => language.time)

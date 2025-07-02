@@ -11,6 +11,11 @@ export const BaseSchema = z.object({
   groupBy: z.enum(GroupByEnum).optional(),
 });
 
+export const DateRangeSchema = z.object({
+  start: dateStringDto,
+  end: dateStringDto,
+});
+
 export const refineAndTransformSchema = <T extends typeof BaseSchema._input>(
   schema: ZodSchema<T>,
 ) => {
@@ -29,6 +34,14 @@ export const refineAndTransformSchema = <T extends typeof BaseSchema._input>(
       }
       return { ...input, periodResolution };
     });
+};
+
+export const refineSchema = <T extends z.infer<typeof DateRangeSchema>>(
+  schema: ZodSchema<T>,
+) => {
+  return schema.refine((input) => !isAfter(input.start, input.end), {
+    message: INCOHERENT_DATE_RANGE_ERROR_MESSAGE,
+  });
 };
 
 export const DatesDto = refineAndTransformSchema(BaseSchema);

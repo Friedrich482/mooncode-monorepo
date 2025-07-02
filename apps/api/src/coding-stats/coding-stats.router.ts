@@ -1,6 +1,14 @@
-import { DayStatsDto, UpsertLanguagesDto } from "./coding-stats.dto";
+import {
+  GetDailyStatsForChartDto,
+  GetDailyStatsForExtensionDto,
+  GetDaysOfPeriodStatsDto,
+  GetPeriodGeneralStatsDto,
+  GetPeriodLanguagesPerDayDto,
+  GetPeriodLanguagesTimeDto,
+  GetTimeSpentOnPeriodDto,
+  UpsertLanguagesDto,
+} from "./coding-stats.dto";
 import { CodingStatsService } from "./coding-stats.service";
-import { DatesDto } from "src/common/dto";
 import { Injectable } from "@nestjs/common";
 import { TrpcService } from "src/trpc/trpc.service";
 
@@ -17,89 +25,78 @@ export class CodingStatsRouter {
         .input(UpsertLanguagesDto)
         .mutation(async ({ ctx, input }) =>
           this.codingStatsService.upsert({
-            id: ctx.user.sub,
-            upsertLanguagesDto: input,
+            userId: ctx.user.sub,
+            ...input,
           }),
         ),
 
       getDailyStatsForExtension: this.trpcService
         .protectedProcedure()
-        .input(DayStatsDto)
+        .input(GetDailyStatsForExtensionDto)
         .query(async ({ ctx, input }) =>
           this.codingStatsService.getDailyStatsForExtension({
-            dateString: input.dateString,
             userId: ctx.user.sub,
-          }),
-        ),
-
-      getDailyStatsForChart: this.trpcService
-        .protectedProcedure()
-        .input(DayStatsDto)
-        .query(async ({ ctx, input }) =>
-          this.codingStatsService.getDailyStatsForChart({
-            dateString: input.dateString,
-            userId: ctx.user.sub,
+            ...input,
           }),
         ),
 
       getTimeSpentOnPeriod: this.trpcService
         .protectedProcedure()
-        .input(DatesDto)
+        .input(GetTimeSpentOnPeriodDto)
         .query(async ({ ctx, input }) =>
           this.codingStatsService.getTimeSpentOnPeriod({
             userId: ctx.user.sub,
-            start: input.start,
-            end: input.end,
+            ...input,
           }),
         ),
 
       getDaysOfPeriodStats: this.trpcService
         .protectedProcedure()
-        .input(DatesDto)
+        .input(GetDaysOfPeriodStatsDto)
         .query(async ({ ctx, input }) =>
           this.codingStatsService.getDaysOfPeriodStats({
             userId: ctx.user.sub,
-            start: input.start,
-            end: input.end,
-            groupBy: input.groupBy,
-            periodResolution: input.periodResolution,
+            ...input,
           }),
         ),
 
       getPeriodLanguagesTime: this.trpcService
         .protectedProcedure()
-        .input(DatesDto)
+        .input(GetPeriodLanguagesTimeDto)
         .query(async ({ ctx, input }) =>
           this.codingStatsService.getPeriodLanguagesTime({
             userId: ctx.user.sub,
-            start: input.start,
-            end: input.end,
+            ...input,
           }),
         ),
 
       getPeriodLanguagesPerDay: this.trpcService
         .protectedProcedure()
-        .input(DatesDto)
+        .input(GetPeriodLanguagesPerDayDto)
         .query(async ({ ctx, input }) =>
           this.codingStatsService.getPeriodLanguagesPerDay({
             userId: ctx.user.sub,
-            start: input.start,
-            end: input.end,
-            groupBy: input.groupBy,
-            periodResolution: input.periodResolution,
+            ...input,
+          }),
+        ),
+
+      getDailyStatsForChart: this.trpcService
+        .protectedProcedure()
+        .input(GetDailyStatsForChartDto)
+        .query(async ({ ctx, input }) =>
+          this.codingStatsService.getDailyStatsForChart({
+            userId: ctx.user.sub,
+            dateString: input.dateString,
           }),
         ),
 
       getPeriodGeneralStats: this.trpcService
         .protectedProcedure()
-        .input(DatesDto)
+        .input(GetPeriodGeneralStatsDto)
         .query(async ({ ctx, input }) =>
           this.codingStatsService.getPeriodGeneralStats({
             userId: ctx.user.sub,
-            start: input.start,
-            end: input.end,
-            groupBy: input.groupBy,
-            periodResolution: input.periodResolution,
+            ...input,
           }),
         ),
     }),

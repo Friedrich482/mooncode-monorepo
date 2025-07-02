@@ -1,11 +1,11 @@
+import { CodingStatsDashboardService } from "./coding-stats-dashboard.service";
+import { CodingStatsExtensionService } from "./coding-stats-extension.service";
 import { CodingStatsRouter } from "./coding-stats.router";
 import { CodingStatsService } from "./coding-stats.service";
 import { DailyDataService } from "src/daily-data/daily-data.service";
-import { DayStatsService } from "./day-stats.service";
 import { EnvService } from "src/env/env.service";
 import { LanguagesService } from "src/languages/languages.service";
 import { Module } from "@nestjs/common";
-import { PeriodStatsService } from "./period-stats.service";
 import { drizzleProvider } from "src/drizzle/drizzle.provider";
 
 @Module({
@@ -16,8 +16,8 @@ import { drizzleProvider } from "src/drizzle/drizzle.provider";
     DailyDataService,
     LanguagesService,
     EnvService,
-    DayStatsService,
-    PeriodStatsService,
+    CodingStatsDashboardService,
+    CodingStatsExtensionService,
   ],
   exports: [CodingStatsService, CodingStatsRouter],
 })

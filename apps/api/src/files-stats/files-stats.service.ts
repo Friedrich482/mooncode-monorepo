@@ -270,7 +270,7 @@ export class FilesStatsService {
     ).totalTimeSpent;
 
     const aggregatedLanguageTime =
-      await this.projectsService.getLanguagesTimeOnPeriod({
+      await this.projectsService.getProjectLanguagesTimeOnPeriod({
         userId,
         start,
         end,
@@ -313,7 +313,7 @@ export class FilesStatsService {
     if (dailyProjectsForPeriod.length === 0) return [];
 
     const languagesTimesPerDayOfPeriod =
-      await this.projectsService.getLanguagesTimePerDayOfPeriod({
+      await this.projectsService.getProjectLanguagesTimePerDayOfPeriod({
         userId,
         start,
         end,

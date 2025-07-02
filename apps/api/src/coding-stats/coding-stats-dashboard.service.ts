@@ -1,9 +1,16 @@
+import {
+  GetDailyStatsForChartDtoType,
+  GetDaysOfPeriodStatsDtoType,
+  GetPeriodGeneralStatsDtoType,
+  GetPeriodLanguagesPerDayDtoType,
+  GetPeriodLanguagesTimeDtoType,
+  GetTimeSpentOnPeriodDtoType,
+} from "./coding-stats.dto";
 import { differenceInDays, format } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
 import { NAString } from "src/common/dto";
-import { PeriodStatsDtoType } from "./coding-stats.dto";
 import formatDuration from "@repo/utils/formatDuration";
 import getDaysOfPeriodStatsGroupByMonths from "./utils/getDaysOfPeriodStatsGroupByMonths";
 import getDaysOfPeriodStatsGroupByWeeks from "src/coding-stats/utils/getDaysOfPeriodStatsGroupByWeeks";
@@ -14,21 +21,17 @@ import getPeriodLanguagesGroupByMonths from "./utils/getPeriodLanguagesGroupByMo
 import getPeriodLanguagesGroupByWeeks from "src/coding-stats/utils/getPeriodLanguagesGroupByWeeks";
 
 @Injectable()
-export class PeriodStatsService {
+export class CodingStatsDashboardService {
   constructor(
     private readonly dailyDataService: DailyDataService,
     private readonly languagesService: LanguagesService,
   ) {}
 
-  async getTimeSpentOnPeriod({
-    userId,
-    start,
-    end,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-  }) {
+  async getTimeSpentOnPeriod(
+    getTimeSpentOnPeriodDto: GetTimeSpentOnPeriodDtoType,
+  ) {
+    const { userId, start, end } = getTimeSpentOnPeriodDto;
+
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData({
       userId,
       start,
@@ -42,13 +45,12 @@ export class PeriodStatsService {
     return { rawTime: timeSpent, formattedTime: formatDuration(timeSpent) };
   }
 
-  async getDaysOfPeriodStats({
-    userId,
-    start,
-    end,
-    groupBy,
-    periodResolution,
-  }: PeriodStatsDtoType) {
+  async getDaysOfPeriodStats(
+    getDaysOfPeriodStatsDto: GetDaysOfPeriodStatsDtoType,
+  ) {
+    const { userId, start, end, groupBy, periodResolution } =
+      getDaysOfPeriodStatsDto;
+
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData({
       userId,
       start,
@@ -80,11 +82,11 @@ export class PeriodStatsService {
     }));
   }
 
-  async getPeriodLanguagesTime({
-    userId,
-    start,
-    end,
-  }: Omit<PeriodStatsDtoType, "periodResolution">) {
+  async getPeriodLanguagesTime(
+    getPeriodLanguagesTimeDto: GetPeriodLanguagesTimeDtoType,
+  ) {
+    const { userId, start, end } = getPeriodLanguagesTimeDto;
+
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData({
       userId,
       start,
@@ -124,13 +126,12 @@ export class PeriodStatsService {
     return finalData;
   }
 
-  async getPeriodLanguagesPerDay({
-    userId,
-    start,
-    end,
-    groupBy,
-    periodResolution,
-  }: PeriodStatsDtoType) {
+  async getPeriodLanguagesPerDay(
+    getPeriodLanguagesPerDayDto: GetPeriodLanguagesPerDayDtoType,
+  ) {
+    const { userId, start, end, groupBy, periodResolution } =
+      getPeriodLanguagesPerDayDto;
+
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData({
       userId,
       start,
@@ -171,18 +172,68 @@ export class PeriodStatsService {
     }));
   }
 
-  async getPeriodGeneralStats({
-    userId,
-    start,
-    end,
-    groupBy,
-    periodResolution,
-  }: PeriodStatsDtoType): Promise<{
-    avgTime: string;
-    percentageToAvg: number;
-    mostActiveDate: NAString;
-    mostUsedLanguageSlug: NAString;
-  }> {
+  async getDailyStatsForChart(
+    getDailyStatsForChartDto: GetDailyStatsForChartDtoType,
+  ) {
+    const { userId, dateString } = getDailyStatsForChartDto;
+
+    const providedDate = new Date(dateString);
+
+    const dateLabel =
+      dateString === new Date().toLocaleDateString()
+        ? "Today"
+        : // yesterday's date
+          dateString ===
+            new Date(
+              new Date().getFullYear(),
+              new Date().getMonth(),
+              new Date().getDate() - 1,
+            ).toLocaleDateString()
+          ? "Yesterday"
+          : providedDate.toDateString();
+
+    const dayData = await this.dailyDataService.findOneDailyData({
+      userId,
+      date: dateString,
+    });
+
+    if (!dayData || dayData.timeSpent === 0)
+      return {
+        formattedTotalTimeSpent: formatDuration(0),
+        finalData: [],
+        dateLabel,
+      };
+
+    const dayLanguagesTime = await this.languagesService.findAllLanguages({
+      dailyDataId: dayData.id,
+    });
+
+    const totalTimeSpent = dayData.timeSpent;
+
+    const finalData = Object.entries(dayLanguagesTime)
+      .map(([languageSlug, timeSpent]) => ({
+        languageSlug,
+        timeSpent,
+        formattedValue: formatDuration(timeSpent),
+        percentage: parseFloat(((timeSpent * 100) / totalTimeSpent).toFixed(2)),
+      }))
+      .sort((a, b) => b.timeSpent - a.timeSpent);
+
+    const formattedTotalTimeSpent = formatDuration(totalTimeSpent);
+
+    return {
+      finalData,
+      formattedTotalTimeSpent,
+      dateLabel,
+    };
+  }
+
+  async getPeriodGeneralStats(
+    getPeriodGeneralStatsDto: GetPeriodGeneralStatsDtoType,
+  ) {
+    const { userId, start, end, groupBy, periodResolution } =
+      getPeriodGeneralStatsDto;
+
     const dailyDataForPeriod = await this.dailyDataService.findRangeDailyData({
       userId,
       start,
