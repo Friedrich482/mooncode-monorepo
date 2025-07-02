@@ -36,7 +36,8 @@ export class FilesStatsService {
   }) {
     const { dateString } = dayFilesStatsDto;
 
-    const dayData = await this.dailyDataService.findOneDailyData(userId, {
+    const dayData = await this.dailyDataService.findOneDailyData({
+      userId,
       date: dateString,
     });
 
@@ -44,7 +45,10 @@ export class FilesStatsService {
       return {};
     }
 
-    const filesData = await this.filesService.findAllFilesOnDay(dayData.id);
+    const filesData = await this.filesService.findAllFilesOnDay({
+      dailyDataId: dayData.id,
+    });
+
     return filesData;
   }
 
@@ -56,10 +60,10 @@ export class FilesStatsService {
     upsertFilesDto: UpsertFilesStatsDtoType;
   }) {
     const { filesData, timeSpentPerProject, targetedDate } = upsertFilesDto;
-    const dailyDataForDay = await this.dailyDataService.findOneDailyData(
+    const dailyDataForDay = await this.dailyDataService.findOneDailyData({
       userId,
-      { date: targetedDate },
-    );
+      date: targetedDate,
+    });
 
     if (!dailyDataForDay) {
       // early exit – nothing to upsert
@@ -111,10 +115,10 @@ export class FilesStatsService {
         returningProjectData.timeSpent = existingProject.timeSpent;
       }
 
-      const fileLanguage = await this.languagesService.findOneLanguage(
-        dailyDataForDay.id,
-        file.languageSlug,
-      );
+      const fileLanguage = await this.languagesService.findOneLanguage({
+        dailyDataId: dailyDataForDay.id,
+        languageSlug: file.languageSlug,
+      });
 
       // must exist too at this point
       if (!fileLanguage) {

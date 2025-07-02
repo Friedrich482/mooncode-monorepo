@@ -1,4 +1,9 @@
-import { CreateLanguageDtoType, UpdateLanguageDtoType } from "./languages.dto";
+import {
+  CreateLanguageDtoType,
+  FindAllLanguagesDtoType,
+  FindOneLanguageDtoType,
+  UpdateLanguageDtoType,
+} from "./languages.dto";
 import { Inject, Injectable } from "@nestjs/common";
 import { and, asc, eq } from "drizzle-orm";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
@@ -13,6 +18,7 @@ export class LanguagesService {
   ) {}
   async createLanguage(createLanguageDto: CreateLanguageDtoType) {
     const { dailyDataId, languageSlug, timeSpent } = createLanguageDto;
+
     const [createdLanguageData] = await this.db
       .insert(languages)
       .values({
@@ -28,7 +34,9 @@ export class LanguagesService {
     return createdLanguageData;
   }
 
-  async findAllLanguages(dailyDataId: string) {
+  async findAllLanguages(findAllLanguagesDto: FindAllLanguagesDtoType) {
+    const { dailyDataId } = findAllLanguagesDto;
+
     const languagesDataArray = await this.db
       .select({
         timeSpent: languages.timeSpent,
@@ -50,7 +58,9 @@ export class LanguagesService {
     return languagesDataObject;
   }
 
-  async findOneLanguage(dailyDataId: string, languageSlug: string) {
+  async findOneLanguage(findOneLanguageDto: FindOneLanguageDtoType) {
+    const { dailyDataId, languageSlug } = findOneLanguageDto;
+
     const [languageData] = await this.db
       .select({
         timeSpent: languages.timeSpent,

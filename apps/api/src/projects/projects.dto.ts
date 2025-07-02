@@ -28,9 +28,51 @@ export const FindProjectByNameOnRangeDto = z.object({
   name: z.string().min(1),
 });
 
+export const FindAllRangeProjectsDto = z.object({
+  userId: z.string().ulid(),
+  start: dateStringDto,
+  end: dateStringDto,
+});
+
+export const GroupAndAggregateProjectByNameDto = FindProjectByNameOnRangeDto;
+
+export const GetLanguagesTimeOnPeriodDto = FindProjectByNameOnRangeDto;
+
+export const GetLanguagesTimePerDayOfPeriodDto = FindProjectByNameOnRangeDto;
+
+export const GetAllProjectFilesOnPeriodDto = FindProjectByNameOnRangeDto.merge(
+  z.object({
+    amount: z.number().optional(),
+    languages: z.array(z.string()).optional(),
+  }),
+);
+
 export type CreateProjectDtoType = z.infer<typeof CreateProjectDto>;
+
 export type UpdateProjectDtoType = z.infer<typeof UpdateProjectDto>;
+
 export type FindProjectDtoType = z.infer<typeof FindProjectDto>;
+
 export type FindProjectByNameOnRangeDtoType = z.infer<
   typeof FindProjectByNameOnRangeDto
+>;
+
+export type FindAllRangeProjectsDtoType = z.infer<
+  typeof FindAllRangeProjectsDto
+>;
+
+export type GroupAndAggregateProjectByNameDtoType = z.infer<
+  typeof GroupAndAggregateProjectByNameDto
+>;
+
+export type GetLanguagesTimeOnPeriodDtoType = z.infer<
+  typeof GetLanguagesTimeOnPeriodDto
+>;
+
+export type GetLanguagesTimePerDayOfPeriodDtoType = z.infer<
+  typeof GetLanguagesTimePerDayOfPeriodDto
+>;
+
+export type GetAllProjectFilesOnPeriodDtoType = z.infer<
+  typeof GetAllProjectFilesOnPeriodDto
 >;

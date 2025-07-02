@@ -101,23 +101,21 @@ const LoginForm = () => {
             control={form.control}
             name="password"
             render={({ field }) => (
-              <>
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <div className="relative flex items-center justify-end gap-2">
-                    <FormControl>
-                      <Input
-                        placeholder="**********"
-                        {...field}
-                        type={isPasswordVisible ? "text" : "password"}
-                        className="h-10 flex-nowrap focus-visible:ring-moon/65"
-                      />
-                    </FormControl>
-                    <EyeIconComponent />
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              </>
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <div className="relative flex items-center justify-end gap-2">
+                  <FormControl>
+                    <Input
+                      placeholder="**********"
+                      {...field}
+                      type={isPasswordVisible ? "text" : "password"}
+                      className="h-10 flex-nowrap focus-visible:ring-moon/65"
+                    />
+                  </FormControl>
+                  <EyeIconComponent />
+                </div>
+                <FormMessage />
+              </FormItem>
             )}
           />
           <p>
@@ -134,6 +132,11 @@ const LoginForm = () => {
           >
             Log in
           </Button>
+          <div className="h-4">
+            {form.formState.errors.root && (
+              <FormMessage>{form.formState.errors.root.message}</FormMessage>
+            )}
+          </div>
         </form>
       </Form>
     </main>

@@ -12,7 +12,8 @@ export class DayStatsService {
   ) {}
 
   async getDailyStatsForExtension({ userId, dateString }: DayStatsDtoType) {
-    const dayData = await this.dailyDataService.findOneDailyData(userId, {
+    const dayData = await this.dailyDataService.findOneDailyData({
+      userId,
       date: dateString,
     });
 
@@ -22,9 +23,9 @@ export class DayStatsService {
         dayLanguagesTime: {},
       };
 
-    const dayLanguagesTime = await this.languagesService.findAllLanguages(
-      dayData.id,
-    );
+    const dayLanguagesTime = await this.languagesService.findAllLanguages({
+      dailyDataId: dayData.id,
+    });
 
     return { timeSpent: dayData.timeSpent, dayLanguagesTime };
   }
@@ -45,7 +46,8 @@ export class DayStatsService {
           ? "Yesterday"
           : providedDate.toDateString();
 
-    const dayData = await this.dailyDataService.findOneDailyData(userId, {
+    const dayData = await this.dailyDataService.findOneDailyData({
+      userId,
       date: dateString,
     });
 
@@ -56,9 +58,9 @@ export class DayStatsService {
         dateLabel,
       };
 
-    const dayLanguagesTime = await this.languagesService.findAllLanguages(
-      dayData.id,
-    );
+    const dayLanguagesTime = await this.languagesService.findAllLanguages({
+      dailyDataId: dayData.id,
+    });
 
     const totalTimeSpent = dayData.timeSpent;
 
@@ -96,8 +98,7 @@ export class DayStatsService {
     };
 
     const existingTimeSpentOnDay = await this.dailyDataService.findOneDailyData(
-      id,
-      { date: targetedDate },
+      { userId: id, date: targetedDate },
     );
 
     if (!existingTimeSpentOnDay) {
@@ -131,10 +132,10 @@ export class DayStatsService {
 
     const languagesData: Record<string, number> = {};
     for (const [key, value] of Object.entries(timeSpentPerLanguage)) {
-      const existingLanguageData = await this.languagesService.findOneLanguage(
-        returningDailyData.dailyDataId,
-        key,
-      );
+      const existingLanguageData = await this.languagesService.findOneLanguage({
+        dailyDataId: returningDailyData.dailyDataId,
+        languageSlug: key,
+      });
 
       if (!existingLanguageData) {
         // if it doesn't exists, create it for each language

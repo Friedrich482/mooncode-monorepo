@@ -1,7 +1,12 @@
 import {
   CreateProjectDtoType,
+  FindAllRangeProjectsDtoType,
   FindProjectByNameOnRangeDtoType,
   FindProjectDtoType,
+  GetAllProjectFilesOnPeriodDtoType,
+  GetLanguagesTimeOnPeriodDtoType,
+  GetLanguagesTimePerDayOfPeriodDtoType,
+  GroupAndAggregateProjectByNameDtoType,
   UpdateProjectDtoType,
 } from "./projects.dto";
 import { Inject, Injectable } from "@nestjs/common";
@@ -66,15 +71,11 @@ export class ProjectsService {
     return project;
   }
 
-  async findAllRangeProjects({
-    userId,
-    start,
-    end,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-  }) {
+  async findAllRangeProjects(
+    findAllRangeProjectsDto: FindAllRangeProjectsDtoType,
+  ) {
+    const { userId, start, end } = findAllRangeProjectsDto;
+
     const timeSpentPerProject = await this.db
       .select({
         name: projects.name,
@@ -115,17 +116,11 @@ export class ProjectsService {
     return updatedProject;
   }
 
-  async groupAndAggregateProjectByName({
-    userId,
-    start,
-    end,
-    name,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-    name: string;
-  }) {
+  async groupAndAggregateProjectByName(
+    groupAndAggregateProjectByNameDto: GroupAndAggregateProjectByNameDtoType,
+  ) {
+    const { userId, name, start, end } = groupAndAggregateProjectByNameDto;
+
     const [userHasProjectsOfName] = await this.db
       .select({ name: projects.name, path: projects.path })
       .from(projects)
@@ -164,12 +159,11 @@ export class ProjectsService {
     return projectAggregatedOnPeriod;
   }
 
-  async findProjectByNameOnRange({
-    userId,
-    start,
-    end,
-    name,
-  }: FindProjectByNameOnRangeDtoType) {
+  async findProjectByNameOnRange(
+    findProjectByNameOnRangeDto: FindProjectByNameOnRangeDtoType,
+  ) {
+    const { userId, name, start, end } = findProjectByNameOnRangeDto;
+
     const data = await this.db
       .select({
         date: dailyData.date,
@@ -207,17 +201,11 @@ export class ProjectsService {
     });
   }
 
-  async getLanguagesTimeOnPeriod({
-    userId,
-    start,
-    end,
-    name,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-    name: string;
-  }) {
+  async getLanguagesTimeOnPeriod(
+    getLanguagesTimeOnPeriodDto: GetLanguagesTimeOnPeriodDtoType,
+  ) {
+    const { userId, name, start, end } = getLanguagesTimeOnPeriodDto;
+
     const aggregated = await this.db
       .select({
         languageSlug: languages.languageSlug,
@@ -245,17 +233,11 @@ export class ProjectsService {
     );
   }
 
-  async getLanguagesTimePerDayOfPeriod({
-    userId,
-    start,
-    end,
-    name,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-    name: string;
-  }) {
+  async getLanguagesTimePerDayOfPeriod(
+    getLanguagesTimePerDayOfPeriodDto: GetLanguagesTimePerDayOfPeriodDtoType,
+  ) {
+    const { userId, name, start, end } = getLanguagesTimePerDayOfPeriodDto;
+
     const languagesPerDayOfPeriod = await this.db
       .select({
         languageSlug: languages.languageSlug,
@@ -287,21 +269,18 @@ export class ProjectsService {
 
     return result;
   }
-  async getAllProjectFilesOnPeriod({
-    userId,
-    start,
-    end,
-    name,
-    amount,
-    languages: languagesArray,
-  }: {
-    userId: string;
-    start: string;
-    end: string;
-    name: string;
-    amount?: number;
-    languages?: string[];
-  }) {
+  async getAllProjectFilesOnPeriod(
+    getAllProjectFilesOnPeriodDto: GetAllProjectFilesOnPeriodDtoType,
+  ) {
+    const {
+      userId,
+      name,
+      start,
+      end,
+      amount,
+      languages: languagesArray,
+    } = getAllProjectFilesOnPeriodDto;
+
     const baseQuery = this.db
       .select({
         totalTimeSpent: sum(files.timeSpent).mapWith(Number),

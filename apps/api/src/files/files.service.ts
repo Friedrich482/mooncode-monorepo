@@ -1,5 +1,6 @@
 import {
   CreateFileDtoType,
+  FindAllFilesOnDayDtoType,
   FindOneFileDtoType,
   UpdateFileDtoType,
 } from "./files.dto";
@@ -63,7 +64,9 @@ export class FilesService {
     return fileData;
   }
 
-  async findAllFilesOnDay(dailyDataId: string) {
+  async findAllFilesOnDay(findAllFilesOnDayDto: FindAllFilesOnDayDtoType) {
+    const { dailyDataId } = findAllFilesOnDayDto;
+
     const filesDataArray = await this.db
       .select({
         languageSlug: languages.languageSlug,
