@@ -8,13 +8,13 @@ import { DrizzleModule } from "./drizzle/drizzle.module";
 import { EnvModule } from "./env/env.module";
 import { EnvService } from "./env/env.service";
 import { FilesModule } from "./files/files.module";
+import { FilesStatsModule } from "./files-stats/files-stats.module";
 import { LanguagesModule } from "./languages/languages.module";
 import { Module } from "@nestjs/common";
+import { ProjectsModule } from "./projects/projects.module";
 import { TrpcModule } from "./trpc/trpc.module";
 import { UsersModule } from "./users/users.module";
 import { envSchema } from "src/env";
-import { ProjectsModule } from './projects/projects.module';
-import { FilesStatsModule } from './files-stats/files-stats.module';
 
 @Module({
   imports: [
