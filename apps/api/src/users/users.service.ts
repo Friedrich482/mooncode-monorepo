@@ -118,7 +118,7 @@ export class UsersService {
       );
     }
 
-    return await this.db
+    return this.db
       .update(users)
       .set(updateData)
       .where(eq(users.id, id))

@@ -7,7 +7,7 @@ const addStatusBarItem = () => {
   statusBarItem.text = "$(watch) MoonCode";
   statusBarItem.tooltip =
     "MoonCode: Time spent coding today. Click to open your dashboard";
-  statusBarItem.command = "MoonCode.openDashBoard";
+  statusBarItem.command = "MoonCode.openDashboard";
   statusBarItem.show();
 
   return statusBarItem;

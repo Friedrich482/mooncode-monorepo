@@ -1,17 +1,23 @@
-import { DayStatsDtoType, UpsertLanguagesDtoType } from "./coding-stats.dto";
+import {
+  GetDailyStatsForExtensionDtoType,
+  UpsertLanguagesDtoType,
+} from "./coding-stats.dto";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
-import formatDuration from "@repo/utils/formatDuration";
 
 @Injectable()
-export class DayStatsService {
+export class CodingStatsExtensionService {
   constructor(
     private readonly dailyDataService: DailyDataService,
     private readonly languagesService: LanguagesService,
   ) {}
 
-  async getDailyStatsForExtension({ userId, dateString }: DayStatsDtoType) {
+  async getDailyStatsForExtension(
+    getDailyStatsForExtensionDto: GetDailyStatsForExtensionDtoType,
+  ) {
+    const { userId, dateString } = getDailyStatsForExtensionDto;
+
     const dayData = await this.dailyDataService.findOneDailyData({
       userId,
       date: dateString,
@@ -30,67 +36,10 @@ export class DayStatsService {
     return { timeSpent: dayData.timeSpent, dayLanguagesTime };
   }
 
-  async getDailyStatsForChart({ userId, dateString }: DayStatsDtoType) {
-    const providedDate = new Date(dateString);
-
-    const dateLabel =
-      dateString === new Date().toLocaleDateString()
-        ? "Today"
-        : // yesterday's date
-          dateString ===
-            new Date(
-              new Date().getFullYear(),
-              new Date().getMonth(),
-              new Date().getDate() - 1,
-            ).toLocaleDateString()
-          ? "Yesterday"
-          : providedDate.toDateString();
-
-    const dayData = await this.dailyDataService.findOneDailyData({
-      userId,
-      date: dateString,
-    });
-
-    if (!dayData || dayData.timeSpent === 0)
-      return {
-        formattedTotalTimeSpent: formatDuration(0),
-        finalData: [],
-        dateLabel,
-      };
-
-    const dayLanguagesTime = await this.languagesService.findAllLanguages({
-      dailyDataId: dayData.id,
-    });
-
-    const totalTimeSpent = dayData.timeSpent;
-
-    const finalData = Object.entries(dayLanguagesTime)
-      .map(([languageSlug, timeSpent]) => ({
-        languageSlug,
-        timeSpent,
-        formattedValue: formatDuration(timeSpent),
-        percentage: parseFloat(((timeSpent * 100) / totalTimeSpent).toFixed(2)),
-      }))
-      .sort((a, b) => b.timeSpent - a.timeSpent);
-
-    const formattedTotalTimeSpent = formatDuration(totalTimeSpent);
-
-    return {
-      finalData,
-      formattedTotalTimeSpent,
-      dateLabel,
-    };
-  }
-
-  async upsert({
-    id,
-    upsertLanguagesDto,
-  }: {
-    id: string;
-    upsertLanguagesDto: UpsertLanguagesDtoType;
-  }) {
-    const { timeSpentPerLanguage, timeSpentOnDay, targetedDate } =
+  async upsert(upsertLanguagesDto: UpsertLanguagesDtoType) {
+    const { timeSpentPerLanguage, timeSpentOnDay, targetedDate, userId } =
       upsertLanguagesDto;
+
     const returningDailyData = {
       dailyDataId: "",
       timeSpentOnDay: 0,
@@ -98,13 +47,13 @@ export class DayStatsService {
     };
 
     const existingTimeSpentOnDay = await this.dailyDataService.findOneDailyData(
-      { userId: id, date: targetedDate },
+      { userId, date: targetedDate },
     );
 
     if (!existingTimeSpentOnDay) {
       // create daily data if it doesn't exists
       const createdTimeSpentOnDay = await this.dailyDataService.createDailyData(
-        { targetedDate, timeSpent: timeSpentOnDay, userId: id },
+        { targetedDate, timeSpent: timeSpentOnDay, userId },
       );
 
       returningDailyData.dailyDataId = createdTimeSpentOnDay.id;
@@ -112,11 +61,11 @@ export class DayStatsService {
       returningDailyData.date = createdTimeSpentOnDay.date;
     } else {
       // else update it but only if the new timeSpent is greater than the existing one
-      if (existingTimeSpentOnDay.timeSpent <= timeSpentOnDay) {
+      if (existingTimeSpentOnDay.timeSpent < timeSpentOnDay) {
         const updatedTimeSpentOnDay =
           await this.dailyDataService.updateDailyData({
             timeSpent: timeSpentOnDay,
-            userId: id,
+            userId,
             targetedDate,
           });
 
@@ -149,7 +98,7 @@ export class DayStatsService {
           createdLanguageData.timeSpent;
       } else {
         // else update it but only if the new timeSpent is greater than the existing one
-        if (existingLanguageData.timeSpent <= value) {
+        if (existingLanguageData.timeSpent < value) {
           const updatedLanguageData =
             await this.languagesService.updateLanguage({
               timeSpent: value,

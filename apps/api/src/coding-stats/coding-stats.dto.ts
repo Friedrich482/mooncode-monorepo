@@ -1,8 +1,14 @@
-import { DatesDto, UserId } from "src/common/dto";
+import {
+  BaseSchema,
+  DateRangeSchema,
+  UserId,
+  refineAndTransformSchema,
+  refineSchema,
+} from "src/common/dto";
 import { dateStringDto } from "@repo/utils/schemas";
 import { z } from "zod";
 
-export const DayStatsDto = z.object({
+export const GetDailyStatsForExtensionDto = z.object({
   dateString: dateStringDto,
 });
 
@@ -12,6 +18,52 @@ export const UpsertLanguagesDto = z.object({
   timeSpentPerLanguage: z.record(z.string().min(1), z.number().int()),
 });
 
-export type PeriodStatsDtoType = z.infer<typeof DatesDto> & UserId;
-export type DayStatsDtoType = z.infer<typeof DayStatsDto> & UserId;
-export type UpsertLanguagesDtoType = z.infer<typeof UpsertLanguagesDto>;
+export const GetTimeSpentOnPeriodDto = refineSchema(DateRangeSchema);
+
+export const GetDaysOfPeriodStatsDto = refineAndTransformSchema(BaseSchema);
+
+export const GetPeriodLanguagesTimeDto = GetTimeSpentOnPeriodDto;
+
+export const GetPeriodLanguagesPerDayDto = GetDaysOfPeriodStatsDto;
+
+export const GetDailyStatsForChartDto = GetDailyStatsForExtensionDto;
+
+export const GetPeriodGeneralStatsDto = GetDaysOfPeriodStatsDto;
+
+export type GetDailyStatsForExtensionDtoType = z.infer<
+  typeof GetDailyStatsForExtensionDto
+> &
+  UserId;
+
+export type UpsertLanguagesDtoType = z.infer<typeof UpsertLanguagesDto> &
+  UserId;
+
+export type GetTimeSpentOnPeriodDtoType = z.infer<
+  typeof GetTimeSpentOnPeriodDto
+> &
+  UserId;
+
+export type GetDaysOfPeriodStatsDtoType = z.infer<
+  typeof GetDaysOfPeriodStatsDto
+> &
+  UserId;
+
+export type GetPeriodLanguagesTimeDtoType = z.infer<
+  typeof GetPeriodLanguagesTimeDto
+> &
+  UserId;
+
+export type GetPeriodLanguagesPerDayDtoType = z.infer<
+  typeof GetPeriodLanguagesPerDayDto
+> &
+  UserId;
+
+export type GetDailyStatsForChartDtoType = z.infer<
+  typeof GetDailyStatsForChartDto
+> &
+  UserId;
+
+export type GetPeriodGeneralStatsDtoType = z.infer<
+  typeof GetPeriodGeneralStatsDto
+> &
+  UserId;

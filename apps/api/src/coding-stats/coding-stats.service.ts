@@ -1,106 +1,79 @@
 import {
-  DayStatsDtoType,
-  PeriodStatsDtoType,
+  GetDailyStatsForChartDtoType,
+  GetDailyStatsForExtensionDtoType,
+  GetDaysOfPeriodStatsDtoType,
+  GetPeriodGeneralStatsDtoType,
+  GetPeriodLanguagesPerDayDtoType,
+  GetPeriodLanguagesTimeDtoType,
+  GetTimeSpentOnPeriodDtoType,
   UpsertLanguagesDtoType,
 } from "./coding-stats.dto";
-import { DayStatsService } from "./day-stats.service";
+import { CodingStatsDashboardService } from "./coding-stats-dashboard.service";
+import { CodingStatsExtensionService } from "./coding-stats-extension.service";
 import { Injectable } from "@nestjs/common";
-import { PeriodStatsService } from "./period-stats.service";
 
 @Injectable()
 export class CodingStatsService {
   constructor(
-    private readonly dayStatsService: DayStatsService,
-    private readonly periodStatsService: PeriodStatsService,
+    private readonly codingStatsExtensionService: CodingStatsExtensionService,
+    private readonly codingStatsDashboardService: CodingStatsDashboardService,
   ) {}
-  async getDailyStatsForExtension({ userId, dateString }: DayStatsDtoType) {
-    return this.dayStatsService.getDailyStatsForExtension({
-      userId,
-      dateString,
-    });
-  }
-  async getDailyStatsForChart({ userId, dateString }: DayStatsDtoType) {
-    return this.dayStatsService.getDailyStatsForChart({ userId, dateString });
+  async getDailyStatsForExtension(
+    getDailyStatsForExtensionDto: GetDailyStatsForExtensionDtoType,
+  ) {
+    return this.codingStatsExtensionService.getDailyStatsForExtension(
+      getDailyStatsForExtensionDto,
+    );
   }
 
-  async upsert({
-    id,
-    upsertLanguagesDto,
-  }: {
-    id: string;
-    upsertLanguagesDto: UpsertLanguagesDtoType;
-  }) {
-    return this.dayStatsService.upsert({ id, upsertLanguagesDto });
+  async upsert(upsertLanguagesDto: UpsertLanguagesDtoType) {
+    return this.codingStatsExtensionService.upsert(upsertLanguagesDto);
   }
 
-  async getTimeSpentOnPeriod({
-    userId,
-    start,
-    end,
-  }: Omit<PeriodStatsDtoType, "periodResolution">) {
-    return this.periodStatsService.getTimeSpentOnPeriod({
-      userId,
-      start,
-      end,
-    });
+  async getTimeSpentOnPeriod(
+    getTimeSpentOnPeriodDto: GetTimeSpentOnPeriodDtoType,
+  ) {
+    return this.codingStatsDashboardService.getTimeSpentOnPeriod(
+      getTimeSpentOnPeriodDto,
+    );
   }
 
-  async getDaysOfPeriodStats({
-    userId,
-    start,
-    end,
-    groupBy,
-    periodResolution,
-  }: PeriodStatsDtoType) {
-    return this.periodStatsService.getDaysOfPeriodStats({
-      userId,
-      start,
-      end,
-      groupBy,
-      periodResolution,
-    });
+  async getDaysOfPeriodStats(
+    getDaysOfPeriodStatsDto: GetDaysOfPeriodStatsDtoType,
+  ) {
+    return this.codingStatsDashboardService.getDaysOfPeriodStats(
+      getDaysOfPeriodStatsDto,
+    );
   }
 
-  async getPeriodLanguagesTime({
-    userId,
-    start,
-    end,
-  }: Omit<PeriodStatsDtoType, "periodResolution">) {
-    return this.periodStatsService.getPeriodLanguagesTime({
-      userId,
-      start,
-      end,
-    });
+  async getPeriodLanguagesTime(
+    getPeriodLanguagesTimeDto: GetPeriodLanguagesTimeDtoType,
+  ) {
+    return this.codingStatsDashboardService.getPeriodLanguagesTime(
+      getPeriodLanguagesTimeDto,
+    );
   }
-  async getPeriodLanguagesPerDay({
-    userId,
-    start,
-    end,
-    groupBy,
-    periodResolution,
-  }: PeriodStatsDtoType) {
-    return this.periodStatsService.getPeriodLanguagesPerDay({
-      userId,
-      start,
-      end,
-      groupBy,
-      periodResolution,
-    });
+  async getPeriodLanguagesPerDay(
+    getPeriodLanguagesPerDayDto: GetPeriodLanguagesPerDayDtoType,
+  ) {
+    return this.codingStatsDashboardService.getPeriodLanguagesPerDay(
+      getPeriodLanguagesPerDayDto,
+    );
   }
 
-  async getPeriodGeneralStats({
-    userId,
-    start,
-    end,
-    groupBy,
-    periodResolution,
-  }: PeriodStatsDtoType) {
-    return this.periodStatsService.getPeriodGeneralStats({
-      userId,
-      start,
-      end,
-      groupBy,
-      periodResolution,
-    });
+  async getDailyStatsForChart(
+    getDailyStatsForChartDto: GetDailyStatsForChartDtoType,
+  ) {
+    return this.codingStatsDashboardService.getDailyStatsForChart(
+      getDailyStatsForChartDto,
+    );
+  }
+
+  async getPeriodGeneralStats(
+    getPeriodGeneralStatsDto: GetPeriodGeneralStatsDtoType,
+  ) {
+    return this.codingStatsDashboardService.getPeriodGeneralStats(
+      getPeriodGeneralStatsDto,
+    );
   }
 }

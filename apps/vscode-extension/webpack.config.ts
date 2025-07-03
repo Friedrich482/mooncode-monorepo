@@ -21,11 +21,17 @@ const extensionConfig = {
   },
   externals: {
     vscode: "commonjs vscode", // the vscode-module is created on-the-fly and must be excluded. Add other modules that cannot be webpack'ed, 📖 -> https://webpack.js.org/configuration/externals/
+    express: "commonjs express",
     // modules added here also need to be added in the .vscodeignore file
   },
   resolve: {
     // support reading TypeScript and JavaScript files, 📖 -> https://github.com/TypeStrong/ts-loader
     extensions: [".ts", ".cjs"],
+    modules: [
+      "node_modules",
+      path.resolve(__dirname, "node_modules"),
+      path.resolve(__dirname, "../../node_modules"),
+    ],
     alias: {
       "@repo/utils": path.resolve(__dirname, "../../packages/utils/src"),
       "@repo/trpc": path.resolve(__dirname, "../../packages/trpc/src"),

@@ -5,7 +5,7 @@ import { getExtensionContext } from "../extension";
 import getGlobalStateData from "./getGlobalStateData";
 import login from "./auth/login";
 import logout from "./auth/logout";
-import openDashBoard from "./openDashBoard";
+import openDashboard from "./openDashboard";
 import register from "./auth/register";
 
 const initExtensionCommands = (
@@ -92,9 +92,9 @@ const initExtensionCommands = (
     },
   );
 
-  const openDashBoardCommand = vscode.commands.registerCommand(
-    "MoonCode.openDashBoard",
-    openDashBoard,
+  const openDashboardCommand = vscode.commands.registerCommand(
+    "MoonCode.openDashboard",
+    openDashboard,
   );
 
   context.subscriptions.push(
@@ -106,7 +106,7 @@ const initExtensionCommands = (
     loginCommand,
     registerCommand,
     logoutCommand,
-    openDashBoardCommand,
+    openDashboardCommand,
     statusBarItem,
   );
 };

@@ -5,6 +5,7 @@ import calculateTime from "./utils/calculateTime";
 import fetchInitialData from "./utils/fetchInitialData";
 import initExtensionCommands from "./utils/initExtensionCommands";
 import periodicSyncData from "./utils/periodicSyncData";
+import serveDashboard from "./utils/serveDashboard";
 import setStatusBarItem from "./utils/setStatusBarItem";
 
 let extensionContext: vscode.ExtensionContext;
@@ -61,6 +62,8 @@ export async function activate(context: vscode.ExtensionContext) {
   setInterval(async () => {
     await periodicSyncData(context, statusBarItem, getTime);
   }, 60000);
+
+  serveDashboard(context);
 
   initExtensionCommands(
     getTime,
