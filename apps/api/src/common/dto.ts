@@ -42,9 +42,5 @@ export const refineAndTransformSchema = <T extends z.infer<typeof BaseSchema>>(
   });
 };
 
-export const DatesDto = refineAndTransformSchema(BaseSchema);
-
 export type UserId = { userId: string };
 export type NAString = "N/A" | (string & {});
-
-export type DatesDtoType = z.infer<typeof DatesDto> & UserId;

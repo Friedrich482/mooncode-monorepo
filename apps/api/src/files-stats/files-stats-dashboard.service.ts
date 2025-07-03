@@ -176,7 +176,7 @@ export class FilesStatsDashboardService {
 
     switch (groupBy) {
       case "weeks":
-        return await getProjectLanguagesGroupByWeeks(
+        return getProjectLanguagesGroupByWeeks(
           dailyProjectsForPeriod,
           periodResolution,
           languagesTimesPerDayOfPeriod,

@@ -10,9 +10,6 @@ export const languageMapping: Record<string, string> = {
   jsonc: "json",
 };
 
-export const localUrlPort = 4208;
-export const localUrl = `http://localhost:${localUrlPort}`;
-
 export let languagesData: LanguageMap = {};
 export let filesData: FileMap = {};
 export const SYNC_DATA_KEY = "mooncodeData";

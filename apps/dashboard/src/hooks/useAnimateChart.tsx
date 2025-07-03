@@ -1,10 +1,14 @@
-import * as d3 from "d3";
+import {
+  HierarchyCircularNode,
+  hierarchy as d3Hierarchy,
+  pack,
+} from "d3-hierarchy";
 import { checkCollision, handleCollision } from "@/utils/chartAnimation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Tree } from "@/types-schemas";
 
 const useAnimateChart = (data: Tree, width: number, height: number) => {
-  const [dataSet, setDataSet] = useState<d3.HierarchyCircularNode<Tree>[]>([]);
+  const [dataSet, setDataSet] = useState<HierarchyCircularNode<Tree>[]>([]);
 
   const maxValue = useMemo(
     () => Math.max(...dataSet.map((entry) => entry.data.value)),
@@ -32,12 +36,11 @@ const useAnimateChart = (data: Tree, width: number, height: number) => {
 
   // instantiate the dataSet
   useEffect(() => {
-    const hierarchy = d3
-      .hierarchy(data)
+    const hierarchy = d3Hierarchy(data)
       .sum((d) => d.value)
       .sort((a, b) => b.value! - a.value!);
 
-    const packGenerator = d3.pack<Tree>().size([width, height]).padding(0);
+    const packGenerator = pack<Tree>().size([width, height]).padding(0);
     const root = packGenerator(hierarchy);
     setDataSet(root.descendants().slice(1));
   }, [width, height, data]);
