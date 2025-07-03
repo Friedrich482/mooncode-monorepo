@@ -11,7 +11,7 @@ const Title = () => {
         to="/dashboard"
       >
         <Logo />
-        <p className="font-bold max-small:hidden">Mooncode</p>
+        <p className="font-bold max-[33rem]:hidden">Mooncode</p>
       </Link>
     </div>
   );
