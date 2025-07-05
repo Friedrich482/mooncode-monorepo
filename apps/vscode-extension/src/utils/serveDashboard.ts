@@ -1,9 +1,10 @@
-import * as express from "express";
 import * as path from "path";
 import * as vscode from "vscode";
 import { DASHBOARD_PORT } from "@repo/utils/constants";
+import express from "express";
+import getPort from "get-port";
 
-const serveDashboard = (context: vscode.ExtensionContext) => {
+const serveDashboard = async (context: vscode.ExtensionContext) => {
   const app = express();
   const pathToFrontendDist = path.join(
     context.extensionPath,
@@ -24,21 +25,31 @@ const serveDashboard = (context: vscode.ExtensionContext) => {
     res.sendFile(path.join(pathToFrontendDist, "index.html"));
   });
 
-  const server = app
-    .listen(DASHBOARD_PORT, () => {
-      console.log(`Dashboard server started on port ${DASHBOARD_PORT}`);
-    })
-    .on("error", (error) => {
-      vscode.window.showErrorMessage(
-        `Failed to start dashboard server: ${error.message}`,
-      );
+  try {
+    const availablePort = await getPort({
+      port: Array.from({ length: 6 }, (_, i) => DASHBOARD_PORT + i),
     });
 
-  context.subscriptions.push({
-    dispose: () => {
-      server.close();
-    },
-  });
+    const server = app
+      .listen(availablePort, () => {
+        console.log(`Dashboard server started on port ${availablePort}`);
+      })
+      .on("error", (error) => {
+        vscode.window.showErrorMessage(
+          `Failed to start dashboard server: ${error.message}`,
+        );
+      });
+
+    context.subscriptions.push({
+      dispose: () => {
+        server.close();
+      },
+    });
+  } catch {
+    vscode.window.showErrorMessage(
+      `Could not find an available port between ${DASHBOARD_PORT} and ${DASHBOARD_PORT + 5}`,
+    );
+  }
 };
 
 export default serveDashboard;

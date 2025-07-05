@@ -1,6 +1,6 @@
 import * as cookieParser from "cookie-parser";
 import { AppModule } from "./app.module";
-import { DASHBOARD_URL } from "@repo/utils/constants";
+import { DASHBOARD_PORT } from "@repo/utils/constants";
 import { NestFactory } from "@nestjs/core";
 import { TrpcExceptionFilter } from "./trpc/trpc.exception-handler";
 import { TrpcRouter } from "./trpc/trpc.router";
@@ -10,7 +10,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    origin: [DASHBOARD_URL],
+    origin: Array.from(
+      { length: 6 },
+      (_, i) => `http://localhost:${DASHBOARD_PORT + i}`,
+    ),
     credentials: true,
   });
 

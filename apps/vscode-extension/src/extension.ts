@@ -1,4 +1,3 @@
-import * as vscode from "vscode";
 import { filesData, languagesData } from "./constants";
 import addStatusBarItem from "./utils/addStatusBarItem";
 import calculateTime from "./utils/calculateTime";
@@ -7,6 +6,7 @@ import initExtensionCommands from "./utils/initExtensionCommands";
 import periodicSyncData from "./utils/periodicSyncData";
 import serveDashboard from "./utils/serveDashboard";
 import setStatusBarItem from "./utils/setStatusBarItem";
+import vscode from "vscode";
 
 let extensionContext: vscode.ExtensionContext;
 

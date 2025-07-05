@@ -1,5 +1,5 @@
-import * as vscode from "vscode";
 import { knownLanguages, languageMapping } from "../../constants";
+import vscode from "vscode";
 
 const getLanguageSlug = (document: vscode.TextDocument | undefined) => {
   if (!document || document.uri.scheme !== "file") {

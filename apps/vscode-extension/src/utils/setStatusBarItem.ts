@@ -1,5 +1,5 @@
-import * as vscode from "vscode";
 import formatDuration from "@repo/utils/formatDuration";
+import vscode from "vscode";
 
 const setStatusBarItem = (
   timeSpentToday: number,
