@@ -1,6 +1,9 @@
 import * as vscode from "vscode";
 import { z } from "zod";
-const storeToken = async (context: vscode.ExtensionContext, token: string) => {
+const storeJWTToken = async (
+  context: vscode.ExtensionContext,
+  token: string,
+) => {
   try {
     const verifiedToken = z.string().min(1).jwt().parse(token);
     await context.secrets.store("authToken", verifiedToken);
@@ -17,4 +20,4 @@ const storeToken = async (context: vscode.ExtensionContext, token: string) => {
   }
 };
 
-export default storeToken;
+export default storeJWTToken;

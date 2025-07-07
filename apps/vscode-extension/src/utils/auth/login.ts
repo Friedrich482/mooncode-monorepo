@@ -7,7 +7,13 @@ const login = async () => {
   const dashboardPort = getDashboardPort();
 
   try {
-    const state = crypto.randomBytes(32).toString("base64url");
+    let state = await context.secrets.get("authState");
+
+    if (!state) {
+      state = crypto.randomBytes(32).toString("base64url");
+      await context.secrets.store("authState", state);
+    }
+
     const publisher = context.extension.id.split(".")[0];
     const extensionId = context.extension.id.split(".")[1];
 
@@ -18,21 +24,19 @@ const login = async () => {
     );
 
     const dashboardLoginUrl = vscode.Uri.parse(
-      `http://localhost:${dashboardPort}/login?callback=${encodeURIComponent(callbackUri.toString())}`,
+      `http://localhost:${dashboardPort}/login?client=vscode&callback=${encodeURIComponent(callbackUri.toString())}`,
     );
-
-    await context.secrets.store("authState", state);
 
     const selection = await vscode.window.showInformationMessage(
       "Open the local dashboard to login",
-      "open dashboard",
+      "Open Dashboard",
     );
 
     if (!selection) {
       return;
     }
 
-    if (selection === "open dashboard") {
+    if (selection === "Open Dashboard") {
       vscode.env.openExternal(dashboardLoginUrl);
     }
   } catch (error) {

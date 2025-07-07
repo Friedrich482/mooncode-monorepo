@@ -1,5 +1,6 @@
 import { getExtensionContext } from "../../extension";
-import storeToken from "./storeToken";
+import setLoginContext from "./setLoginContext";
+import storeJWTToken from "./storeJWTToken";
 import vscode from "vscode";
 
 const registerAuthUriHandler = () => {
@@ -26,14 +27,10 @@ const registerAuthUriHandler = () => {
         }
 
         if (token) {
-          await storeToken(context, token);
+          await storeJWTToken(context, token);
           await context.secrets.delete("authState");
 
-          await vscode.commands.executeCommand(
-            "setContext",
-            "MoonCode.isLoggedIn",
-            true,
-          );
+          await setLoginContext(true);
 
           vscode.window.showInformationMessage("Logged in successfully");
         } else {
