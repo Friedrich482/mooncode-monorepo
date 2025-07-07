@@ -32,7 +32,9 @@ const serveDashboard = async (context: vscode.ExtensionContext) => {
 
     const server = app
       .listen(availablePort, () => {
-        console.log(`Dashboard server started on port ${availablePort}`);
+        vscode.window.showInformationMessage(
+          `Dashboard server started on localhost ${availablePort}`,
+        );
       })
       .on("error", (error) => {
         vscode.window.showErrorMessage(
@@ -45,10 +47,14 @@ const serveDashboard = async (context: vscode.ExtensionContext) => {
         server.close();
       },
     });
+
+    return availablePort;
   } catch {
     vscode.window.showErrorMessage(
       `Could not find an available port between ${DASHBOARD_PORT} and ${DASHBOARD_PORT + 5}`,
     );
+
+    return undefined;
   }
 };
 

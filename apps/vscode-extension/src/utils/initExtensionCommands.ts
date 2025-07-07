@@ -6,7 +6,6 @@ import getGlobalStateData from "./getGlobalStateData";
 import login from "./auth/login";
 import logout from "./auth/logout";
 import openDashboard from "./openDashboard";
-import register from "./auth/register";
 
 const initExtensionCommands = (
   getTime: Awaited<ReturnType<typeof calculateTime>>,
@@ -78,13 +77,6 @@ const initExtensionCommands = (
     },
   );
 
-  const registerCommand = vscode.commands.registerCommand(
-    "MoonCode.register",
-    async () => {
-      await register();
-    },
-  );
-
   const logoutCommand = vscode.commands.registerCommand(
     "MoonCode.logout",
     async () => {
@@ -104,7 +96,6 @@ const initExtensionCommands = (
     showCurrentFilesDataCommand,
     showGlobalStateContentCommand,
     loginCommand,
-    registerCommand,
     logoutCommand,
     openDashboardCommand,
     statusBarItem,

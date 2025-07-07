@@ -1,6 +1,10 @@
 import { RegisterUserDto } from "@repo/utils/schemas";
 import { z } from "zod";
 
+export const createUserDto = RegisterUserDto.omit({
+  callbackUrl: true,
+});
+
 export const UpdateProfileDto = RegisterUserDto.partial();
 
 export const FindByIdDto = z.object({
@@ -8,7 +12,7 @@ export const FindByIdDto = z.object({
 });
 
 export const FindByEmailDto = z.object({
-  username: z.string().min(1),
+  email: z.string().email(),
 });
 
 export const UpdateUserDto = z.object({
@@ -28,6 +32,10 @@ export const DeleteUserDto = z.object({
   id: z.string().ulid(),
 });
 
-export type CreateUserDtoType = z.infer<typeof RegisterUserDto>;
+export type CreateUserDtoType = z.infer<typeof createUserDto>;
 
 export type UpdateUserDtoType = z.infer<typeof UpdateUserDto>;
+
+export type FindByIdDtoType = z.infer<typeof FindByIdDto>;
+
+export type FindByEmailDtoType = z.infer<typeof FindByEmailDto>;

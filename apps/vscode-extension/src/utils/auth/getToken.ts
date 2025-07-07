@@ -11,9 +11,16 @@ const getToken = async () => {
   const parsedPayload = parseJwtPayload(token);
 
   if (!parsedPayload.success) {
+    await vscode.commands.executeCommand(
+      "setContext",
+      "MoonCode.isLoggedIn",
+      false,
+    );
+
     vscode.window.showInformationMessage(
       "You're either logged out or your session has expired",
     );
+
     await login();
     token = await context.secrets.get("authToken");
     return token;
@@ -22,6 +29,12 @@ const getToken = async () => {
   const { exp: expireDate } = parsedPayload.data;
 
   if (!token || expireDate * 1000 < Date.now()) {
+    await vscode.commands.executeCommand(
+      "setContext",
+      "MoonCode.isLoggedIn",
+      false,
+    );
+
     const selection = await vscode.window.showInformationMessage(
       "You are logged out. Please login",
       "Login",
@@ -34,6 +47,12 @@ const getToken = async () => {
     await login();
     token = await context.secrets.get("authToken");
   }
+
+  await vscode.commands.executeCommand(
+    "setContext",
+    "MoonCode.isLoggedIn",
+    true,
+  );
 
   return token;
 };

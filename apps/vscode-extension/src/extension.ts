@@ -4,14 +4,18 @@ import calculateTime from "./utils/calculateTime";
 import fetchInitialData from "./utils/fetchInitialData";
 import initExtensionCommands from "./utils/initExtensionCommands";
 import periodicSyncData from "./utils/periodicSyncData";
+import registerAuthUriHandler from "./utils/auth/registerAuthUriHandler";
 import serveDashboard from "./utils/serveDashboard";
 import setStatusBarItem from "./utils/setStatusBarItem";
 import vscode from "vscode";
 
 let extensionContext: vscode.ExtensionContext;
+let dashboardPort: number | undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
   extensionContext = context;
+  dashboardPort = await serveDashboard(context);
+  registerAuthUriHandler();
 
   vscode.window.showInformationMessage(
     "MoonCode starts now tracking your coding time",
@@ -63,8 +67,6 @@ export async function activate(context: vscode.ExtensionContext) {
     await periodicSyncData(context, statusBarItem, getTime);
   }, 60000);
 
-  serveDashboard(context);
-
   initExtensionCommands(
     getTime,
     initialLanguagesData,
@@ -92,4 +94,13 @@ export const getExtensionContext = () => {
     throw new Error("Extension context has not been initialized.");
   }
   return extensionContext;
+};
+
+export const getDashboardPort = () => {
+  if (!dashboardPort) {
+    throw new Error(
+      "Failed to start the extension. Dashboard could not be served.",
+    );
+  }
+  return dashboardPort;
 };

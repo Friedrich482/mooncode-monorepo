@@ -5,6 +5,13 @@ const logout = async () => {
   const context = getExtensionContext();
 
   await deleteToken(context);
+
+  await vscode.commands.executeCommand(
+    "setContext",
+    "MoonCode.isLoggedIn",
+    false,
+  );
+
   vscode.window.showInformationMessage("Logged out");
 };
 export default logout;

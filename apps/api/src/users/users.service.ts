@@ -5,7 +5,12 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
-import { CreateUserDtoType, UpdateUserDtoType } from "./users.dto";
+import {
+  CreateUserDtoType,
+  FindByEmailDtoType,
+  FindByIdDtoType,
+  UpdateUserDtoType,
+} from "./users.dto";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { TRPCError } from "@trpc/server";
@@ -66,13 +71,14 @@ export class UsersService {
       });
     return userCreated;
   }
-  async findOne({ id }: { id: string }) {
+  async findOne(findByIdDto: FindByIdDtoType) {
+    const { id } = findByIdDto;
+
     const [user] = await this.db
       .select({
         email: users.email,
         username: users.username,
         id: users.id,
-        profilePicture: users.profilePicture,
       })
       .from(users)
       .where(eq(users.id, id))
@@ -81,7 +87,9 @@ export class UsersService {
     return user;
   }
 
-  async findByEmail(email: string) {
+  async findByEmail(findByEmailDto: FindByEmailDtoType) {
+    const { email } = findByEmailDto;
+
     const [user] = await this.db
       .select({
         email: users.email,

@@ -1,6 +1,20 @@
 import * as vscode from "vscode";
+import { z } from "zod";
 const storeToken = async (context: vscode.ExtensionContext, token: string) => {
-  await context.secrets.store("authToken", token);
+  try {
+    const verifiedToken = z.string().min(1).jwt().parse(token);
+    await context.secrets.store("authToken", verifiedToken);
+  } catch (error) {
+    if (error instanceof Error) {
+      vscode.window.showErrorMessage(
+        `Error while storing the authentication token: ${error.message}.`,
+      );
+    } else {
+      vscode.window.showErrorMessage(
+        `Error while storing the authentication token: ${error}.`,
+      );
+    }
+  }
 };
 
 export default storeToken;

@@ -1,10 +1,17 @@
 import { AuthEndPointURL, TrpcAuthError } from "./types";
+import { loginResponseSchema } from "./schemas";
 
 const fetchJWTToken = async (
   endpointURL: AuthEndPointURL,
-  body: { email: string; password: string; username?: string },
+  body: {
+    email: string;
+    password: string;
+    username?: string;
+    callbackUrl: string | null;
+  },
 ) => {
-  const { email, password, username } = body;
+  const { email, password, username, callbackUrl } = body;
+  console.log(callbackUrl);
   const res = await fetch(endpointURL, {
     method: "POST",
     headers: {
@@ -17,10 +24,12 @@ const fetchJWTToken = async (
             email,
             password,
             username,
+            callbackUrl,
           }
         : {
             email,
             password,
+            callbackUrl,
           },
     }),
     credentials: "include",
@@ -31,8 +40,20 @@ const fetchJWTToken = async (
     const errorData = (await res.json()) as TrpcAuthError;
     throw new Error(errorData.error.json.message);
   }
+  const data = await res.json();
 
-  return res.json();
+  if (callbackUrl) {
+    const {
+      result: {
+        data: {
+          json: { access_token },
+        },
+      },
+    } = loginResponseSchema.parse(data);
+
+    return access_token;
+  }
+  return data;
 };
 
 export default fetchJWTToken;
