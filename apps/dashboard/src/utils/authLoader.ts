@@ -1,3 +1,4 @@
+import getCallbackUrl from "./getCallbackUrl";
 import { redirect } from "react-router";
 
 const API_URL = import.meta.env.VITE_API_URL;
@@ -27,6 +28,20 @@ export const protectedRouteLoader = async () => {
 
 // prevents a logged in user to access an auth route (login & register)
 export const authRouteLoader = async () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const clientParam = decodeURIComponent(urlParams.get("client") ?? "");
+  const callbackUrl = getCallbackUrl();
+
+  if (clientParam === "vscode" && callbackUrl) {
+    if (
+      !callbackUrl.startsWith("vscode://") ||
+      !callbackUrl.includes("/auth-callback")
+    ) {
+      return redirect("/dashboard");
+    }
+    return null;
+  }
+
   try {
     const response = await fetch(`${API_URL}/auth.checkAuthStatus`, {
       credentials: "include",

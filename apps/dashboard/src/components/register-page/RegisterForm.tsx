@@ -17,7 +17,10 @@ import { Input } from "../ui/input";
 import { RegisterUserDto } from "@repo/utils/schemas";
 import { RegisterUserDtoType } from "@repo/utils/types";
 import fetchJWTToken from "@repo/utils/fetchJWTToken";
+import getCallbackUrl from "@/utils/getCallbackUrl";
 import { useForm } from "react-hook-form";
+import { useQueryClient } from "@tanstack/react-query";
+import { useTRPC } from "@/utils/trpc";
 import useTogglePassword from "@/hooks/useTogglePassword";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -28,21 +31,37 @@ const RegisterForm = () => {
       email: "",
       password: "",
       username: "",
+      callbackUrl: null,
     },
   });
 
   const { isPasswordVisible, EyeIconComponent } = useTogglePassword();
+
   const navigate = useNavigate();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+
+  const callbackUrl = getCallbackUrl();
 
   const onSubmit = async (values: RegisterUserDtoType) => {
     try {
-      await fetchJWTToken(REGISTER_URL, {
+      const token = await fetchJWTToken(REGISTER_URL, {
         email: values.email,
         username: values.username,
         password: values.password,
+        callbackUrl,
       });
+
+      if (callbackUrl) {
+        window.location.href = callbackUrl + "&token=" + token;
+      }
+
+      await queryClient.invalidateQueries({
+        queryKey: trpc.auth.getUser.queryKey(),
+        exact: true,
+      });
+
       navigate("/dashboard");
-      // TODO communicate the jwt returned by this function to the extension
     } catch (error) {
       let errorMessage = "An error occurred";
       console.error(error);
@@ -130,7 +149,10 @@ const RegisterForm = () => {
           />
           <p>
             Already registered ?{" "}
-            <Link to="/login" className="underline">
+            <Link
+              to={`/login${callbackUrl ? `?callback=${callbackUrl}` : ""}`}
+              className="underline"
+            >
               Log in
             </Link>
           </p>

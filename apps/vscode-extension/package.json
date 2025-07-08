@@ -3,6 +3,7 @@
   "displayName": "MoonCode",
   "description": "",
   "version": "0.0.1",
+  "publisher": "Friedrich482",
   "author": {
     "name": "Friedrich482"
   },
@@ -50,11 +51,6 @@
         "icon": "lol"
       },
       {
-        "command": "MoonCode.register",
-        "title": "MoonCode: Register",
-        "icon": "lol"
-      },
-      {
         "command": "MoonCode.logout",
         "title": "MoonCode: Logout",
         "icon": "lol"
@@ -64,7 +60,19 @@
         "title": "MoonCode: Open Dashboard",
         "icon": "lol"
       }
-    ]
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "MoonCode.login",
+          "when": "!MoonCode.isLoggedIn"
+        },
+        {
+          "command": "MoonCode.logout",
+          "when": "MoonCode.isLoggedIn"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

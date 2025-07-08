@@ -9,12 +9,14 @@ export const JWTDto = z.object({
 export const SignInUserDto = z.object({
   email: z.string().email(),
   password: z.string().min(1, "Password is required"),
+  callbackUrl: z.string().nullable(),
 });
 
 export const RegisterUserDto = z.object({
   email: z.string().email(),
   password: z.string().min(8, "Password must be at least 8 characters"),
   username: z.string().min(3, "Username must be at least 3 characters"),
+  callbackUrl: z.string().nullable(),
 });
 
 export const loginResponseSchema = z.object({

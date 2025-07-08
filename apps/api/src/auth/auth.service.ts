@@ -24,8 +24,9 @@ export class AuthService {
   private readonly AUTH_COOKIE_NAME = "auth_token";
 
   async signIn(signInDto: SignInUserDtoType, response: Response) {
-    const { password: pass, email } = signInDto;
-    const user = await this.usersService.findByEmail(email);
+    const { password: pass, email, callbackUrl } = signInDto;
+
+    const user = await this.usersService.findByEmail({ email });
 
     if (!user) {
       throw new TRPCError({
@@ -53,13 +54,30 @@ export class AuthService {
       maxAge: 28 * 24 * 60 * 60 * 1000, // 28 days
     });
 
-    return {
-      access_token: token,
-    };
+    if (callbackUrl) {
+      //  the request has been sent by the extension
+      if (
+        !callbackUrl.startsWith("vscode://") ||
+        !callbackUrl.includes("/auth-callback")
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid callback url",
+        });
+      }
+      return {
+        access_token: token,
+      };
+    }
   }
 
   async register(registerDto: RegisterUserDtoType, response: Response) {
-    const createdUser = await this.usersService.create(registerDto);
+    const { username, email, password, callbackUrl } = registerDto;
+    const createdUser = await this.usersService.create({
+      username,
+      email,
+      password,
+    });
 
     const payload: Pick<JwtPayloadDtoType, "sub"> = { sub: createdUser.id };
     const token = await this.jwtService.signAsync(payload);
@@ -71,6 +89,22 @@ export class AuthService {
       sameSite: "none",
       maxAge: 28 * 24 * 60 * 60 * 1000,
     });
+
+    if (callbackUrl) {
+      //  the request has been sent by the extension
+      if (
+        !callbackUrl.startsWith("vscode://") ||
+        !callbackUrl.includes("/auth-callback")
+      ) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Invalid callback url",
+        });
+      }
+      return {
+        access_token: token,
+      };
+    }
 
     return {
       access_token: token,

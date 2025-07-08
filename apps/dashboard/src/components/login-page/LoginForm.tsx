@@ -17,6 +17,7 @@ import { Input } from "../ui/input";
 import { SignInUserDto } from "@repo/utils/schemas";
 import { SignInUserDtoType } from "@repo/utils/types";
 import fetchJWTToken from "@repo/utils/fetchJWTToken";
+import getCallbackUrl from "@/utils/getCallbackUrl";
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
@@ -29,6 +30,7 @@ const LoginForm = () => {
     defaultValues: {
       email: "",
       password: "",
+      callbackUrl: null,
     },
   });
 
@@ -38,13 +40,21 @@ const LoginForm = () => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
 
+  const callbackUrl = getCallbackUrl();
+
   const onSubmit = async (values: SignInUserDtoType) => {
     try {
       // send the credentials to the backend and set an http cookie in the browser
-      await fetchJWTToken(LOGIN_URL, {
+
+      const token = await fetchJWTToken(LOGIN_URL, {
         email: values.email,
         password: values.password,
+        callbackUrl,
       });
+
+      if (callbackUrl) {
+        window.location.href = callbackUrl + "&token=" + token;
+      }
 
       await queryClient.invalidateQueries({
         queryKey: trpc.auth.getUser.queryKey(),
@@ -52,7 +62,6 @@ const LoginForm = () => {
       });
 
       navigate("/dashboard");
-      // TODO communicate the jwt returned by this function to the extension
     } catch (error) {
       let errorMessage = "An error occurred";
 
@@ -120,7 +129,10 @@ const LoginForm = () => {
           />
           <p>
             Not registered yet ?{" "}
-            <Link to="/register" className="underline">
+            <Link
+              to={`/register${callbackUrl ? `?callback=${callbackUrl}` : ""}`}
+              className="underline"
+            >
               Sign Up
             </Link>
           </p>
