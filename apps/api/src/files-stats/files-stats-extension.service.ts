@@ -41,6 +41,12 @@ export class FilesStatsExtensionService {
     const { userId, filesData, timeSpentPerProject, targetedDate } =
       upsertFilesDto;
 
+    const returningProjectData = {
+      projectId: "",
+      projectName: "",
+      timeSpent: 0,
+    };
+
     const dailyDataForDay = await this.dailyDataService.findOneDailyData({
       userId,
       date: targetedDate,
@@ -48,17 +54,20 @@ export class FilesStatsExtensionService {
 
     if (!dailyDataForDay) {
       // early exit – nothing to upsert
-      return;
+      return {};
     }
+
+    const returningData = Object.fromEntries(
+      Object.entries(
+        await this.filesService.findAllFilesOnDay({
+          dailyDataId: dailyDataForDay.id,
+        }),
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      ).map(([filePath, { fileName, ...rest }]) => [filePath, rest]),
+    );
 
     for (const [path, file] of Object.entries(filesData)) {
       const fileName = path.split("/").pop()!;
-
-      const returningProjectData = {
-        projectId: "",
-        projectName: "",
-        timeSpent: 0,
-      };
 
       const existingProject = await this.projectsService.findOneProject({
         dailyDataId: dailyDataForDay.id,
@@ -122,6 +131,13 @@ export class FilesStatsExtensionService {
           path,
           timeSpent: file.timeSpent,
         });
+
+        returningData[path] = {
+          languageSlug: file.languageSlug,
+          projectName: file.projectName,
+          projectPath: file.projectPath,
+          timeSpent: file.timeSpent,
+        };
       } else {
         // else just update the file data but only if the new timeSpent is greater than the existing one
         if (existingFileData.timeSpent <= file.timeSpent) {
@@ -132,8 +148,16 @@ export class FilesStatsExtensionService {
             timeSpent: file.timeSpent,
             name: fileName,
           });
+
+          returningData[path] = {
+            languageSlug: file.languageSlug,
+            projectName: file.projectName,
+            projectPath: file.projectPath,
+            timeSpent: file.timeSpent,
+          };
         }
       }
     }
+    return returningData;
   }
 }
