@@ -1,8 +1,9 @@
-import { filesData, languagesData } from "./constants";
 import addStatusBarItem from "./utils/addStatusBarItem";
 import calculateTime from "./utils/calculateTime";
 import fetchInitialData from "./utils/fetchInitialData";
 import initExtensionCommands from "./utils/initExtensionCommands";
+import initializeFiles from "./utils/files/initializeFiles";
+import initializeLanguages from "./utils/languages/initializeLanguages";
 import periodicSyncData from "./utils/periodicSyncData";
 import registerAuthUriHandler from "./utils/auth/registerAuthUriHandler";
 import serveDashboard from "./utils/serveDashboard";
@@ -28,38 +29,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
   setStatusBarItem(timeSpent, statusBarItem);
 
-  // initialize the time for each language found
-  Object.keys(initialLanguagesData).forEach((languageName) => {
-    const timeSpent = initialLanguagesData[languageName];
-    const now = performance.now();
-
-    languagesData[languageName] = {
-      elapsedTime: timeSpent,
-      freezeStartTime: null,
-      frozenTime: null,
-      isFrozen: false,
-      lastActivityTime: now,
-      startTime: now - timeSpent * 1000,
-    };
-  });
-
-  // initialize the time/other metadata for each file found
-  Object.keys(initialFilesData).forEach((filePath) => {
-    const file = initialFilesData[filePath];
-    const now = performance.now();
-
-    filesData[filePath] = {
-      elapsedTime: file.timeSpent,
-      frozenTime: null,
-      freezeStartTime: null,
-      isFrozen: false,
-      lastActivityTime: now,
-      startTime: now - file.timeSpent * 1000,
-      projectName: file.projectName,
-      projectPath: file.projectPath,
-      languageSlug: file.languageSlug,
-    };
-  });
+  initializeLanguages(initialLanguagesData);
+  initializeFiles(initialFilesData);
 
   const getTime = await calculateTime();
 
