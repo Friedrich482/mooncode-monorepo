@@ -5,7 +5,6 @@ import { getExtensionContext } from "../../extension";
 import login from "./login";
 import setLoginContext from "./setLoginContext";
 const logout = async () => {
-  //!! add a warning to prevent the user that all local data will be lost
   const context = getExtensionContext();
 
   await deleteToken(context);

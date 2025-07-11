@@ -40,11 +40,10 @@ export class CodingStatsExtensionService {
     const { timeSpentPerLanguage, timeSpentOnDay, targetedDate, userId } =
       upsertLanguagesDto;
 
-    const returningData = {
+    const returningDailyData = {
       dailyDataId: "",
       timeSpentOnDay: 0,
       date: targetedDate,
-      languages: {} as { [languageSlug: string]: number },
     };
 
     const existingTimeSpentOnDay = await this.dailyDataService.findOneDailyData(
@@ -57,9 +56,9 @@ export class CodingStatsExtensionService {
         { targetedDate, timeSpent: timeSpentOnDay, userId },
       );
 
-      returningData.dailyDataId = createdTimeSpentOnDay.id;
-      returningData.timeSpentOnDay = createdTimeSpentOnDay.timeSpent;
-      returningData.date = createdTimeSpentOnDay.date;
+      returningDailyData.dailyDataId = createdTimeSpentOnDay.id;
+      returningDailyData.timeSpentOnDay = createdTimeSpentOnDay.timeSpent;
+      returningDailyData.date = createdTimeSpentOnDay.date;
     } else {
       // else update it but only if the new timeSpent is greater than the existing one
       if (existingTimeSpentOnDay.timeSpent < timeSpentOnDay) {
@@ -70,31 +69,35 @@ export class CodingStatsExtensionService {
             targetedDate,
           });
 
-        returningData.dailyDataId = updatedTimeSpentOnDay.id;
-        returningData.timeSpentOnDay = updatedTimeSpentOnDay.timeSpent;
-        returningData.date = updatedTimeSpentOnDay.date;
+        returningDailyData.dailyDataId = updatedTimeSpentOnDay.id;
+        returningDailyData.timeSpentOnDay = updatedTimeSpentOnDay.timeSpent;
+        returningDailyData.date = updatedTimeSpentOnDay.date;
       } else {
-        returningData.dailyDataId = existingTimeSpentOnDay.id;
-        returningData.timeSpentOnDay = existingTimeSpentOnDay.timeSpent;
-        returningData.date = targetedDate;
+        returningDailyData.dailyDataId = existingTimeSpentOnDay.id;
+        returningDailyData.timeSpentOnDay = existingTimeSpentOnDay.timeSpent;
+        returningDailyData.date = targetedDate;
       }
     }
 
+    const returningData = await this.languagesService.findAllLanguages({
+      dailyDataId: returningDailyData.dailyDataId,
+    });
+
     for (const [key, value] of Object.entries(timeSpentPerLanguage)) {
       const existingLanguageData = await this.languagesService.findOneLanguage({
-        dailyDataId: returningData.dailyDataId,
+        dailyDataId: returningDailyData.dailyDataId,
         languageSlug: key,
       });
 
       if (!existingLanguageData) {
         // if it doesn't exists, create it for each language
         const createdLanguageData = await this.languagesService.createLanguage({
-          dailyDataId: returningData.dailyDataId,
+          dailyDataId: returningDailyData.dailyDataId,
           timeSpent: value,
           languageSlug: key,
         });
 
-        returningData.languages[createdLanguageData.languageSlug] =
+        returningData[createdLanguageData.languageSlug] =
           createdLanguageData.timeSpent;
       } else {
         // else update it but only if the new timeSpent is greater than the existing one
@@ -102,10 +105,10 @@ export class CodingStatsExtensionService {
           const updatedLanguageData =
             await this.languagesService.updateLanguage({
               timeSpent: value,
-              dailyDataId: returningData.dailyDataId,
+              dailyDataId: returningDailyData.dailyDataId,
               languageSlug: key,
             });
-          returningData.languages[updatedLanguageData.languageSlug] =
+          returningData[updatedLanguageData.languageSlug] =
             updatedLanguageData.timeSpent;
         }
       }

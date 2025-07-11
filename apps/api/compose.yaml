@@ -5,12 +5,11 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ~/apps/mooncode/postgres:/var/lib/postgresql/data
+      - mooncode_postgres:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=mooncode
-
+      - POSTGRES_PASSWORD: postgres
+      - POSTGRES_USER: postgres
+      - POSTGRES_DB: mooncode
 volumes:
   mooncode_postgres:
     name: mooncode_postgres_db

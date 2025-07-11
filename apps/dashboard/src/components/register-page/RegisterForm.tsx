@@ -53,7 +53,7 @@ const RegisterForm = () => {
       });
 
       if (callbackUrl) {
-        window.location.href = callbackUrl + "&token=" + token;
+        window.location.href = `${callbackUrl}&token=${token}&email=${encodeURIComponent(values.email)}`;
       }
 
       await queryClient.invalidateQueries({

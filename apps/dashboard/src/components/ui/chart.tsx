@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ResponsiveContainer, Tooltip, LegendProps, Legend } from "recharts";
+import { Legend, LegendProps, ResponsiveContainer, Tooltip } from "recharts";
 
 import { Payload } from "recharts/types/component/DefaultLegendContent";
 import { cn } from "@/lib/utils";

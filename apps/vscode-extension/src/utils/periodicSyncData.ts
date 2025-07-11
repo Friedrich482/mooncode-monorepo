@@ -3,6 +3,8 @@ import { SYNC_DATA_KEY } from "../constants";
 import { TRPCClientError } from "@trpc/client";
 import calculateTime from "./calculateTime";
 import getGlobalStateData from "./getGlobalStateData";
+import initializeFiles from "./files/initializeFiles";
+import initializeLanguages from "./languages/initializeLanguages";
 import { isEqual } from "date-fns";
 import setStatusBarItem from "./setStatusBarItem";
 import trpc from "./trpc/client";
@@ -88,16 +90,20 @@ const periodicSyncData = async (
       }
     }
 
-    await trpc.codingStats.upsert.mutate({
+    const languages = await trpc.codingStats.upsert.mutate({
       targetedDate: todaysDateString,
       timeSpentOnDay: timeSpentToday,
       timeSpentPerLanguage: timeSpentPerLanguageToday,
     });
-    await trpc.filesStats.upsert.mutate({
+
+    const files = await trpc.filesStats.upsert.mutate({
       filesData: todayFilesData,
       targetedDate: todaysDateString,
       timeSpentPerProject,
     });
+
+    initializeLanguages(languages);
+    initializeFiles(files);
 
     isServerSynced = true;
     lastServerSync = new Date();

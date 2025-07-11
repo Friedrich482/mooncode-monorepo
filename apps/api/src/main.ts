@@ -10,9 +10,8 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe());
   app.enableCors({
-    origin: Array.from(
-      { length: 6 },
-      (_, i) => `http://localhost:${DASHBOARD_PORT + i}`,
+    origin: Array.from({ length: 6 }, (_, i) => DASHBOARD_PORT + i).flatMap(
+      (port) => [`http://localhost:${port}`, `http://127.0.0.1:${port}`],
     ),
     credentials: true,
   });

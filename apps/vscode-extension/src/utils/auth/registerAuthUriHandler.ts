@@ -11,6 +11,7 @@ const registerAuthUriHandler = () => {
         const params = new URLSearchParams(uri.query);
         const token = params.get("token");
         const receivedState = params.get("state");
+        const email = decodeURIComponent(params.get("email") ?? "");
 
         const expectedState = await context.secrets.get("authState");
 
@@ -32,7 +33,9 @@ const registerAuthUriHandler = () => {
 
           await setLoginContext(true);
 
-          vscode.window.showInformationMessage("Logged in successfully");
+          vscode.window.showInformationMessage(
+            `Logged in ${email ? `as ${email}` : "successfully"}`,
+          );
         } else {
           vscode.window.showErrorMessage("Login failed: No token received.");
         }
