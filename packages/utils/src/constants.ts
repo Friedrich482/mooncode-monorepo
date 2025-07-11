@@ -6,6 +6,7 @@ export const ALREADY_EXISTING_EMAIL_MESSAGE = "This email is already used";
 export const ALREADY_EXISTING_USERNAME_MESSAGE = "This username already exists";
 export const COOKIE_OR_TOKEN_NOT_FOUND_MESSAGE = "Auth cookie/token missing";
 
+// TODO store the three first of them in a .env
 export const API_URL = "http://localhost:3000/trpc";
 export const LOGIN_URL = "http://localhost:3000/trpc/auth.signInUser";
 export const REGISTER_URL = "http://localhost:3000/trpc/auth.registerUser";
