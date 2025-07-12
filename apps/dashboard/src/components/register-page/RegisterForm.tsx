@@ -1,7 +1,6 @@
 import {
   ALREADY_EXISTING_EMAIL_MESSAGE,
   ALREADY_EXISTING_USERNAME_MESSAGE,
-  REGISTER_URL,
 } from "@repo/utils/constants";
 import {
   Form,
@@ -45,6 +44,8 @@ const RegisterForm = () => {
 
   const onSubmit = async (values: RegisterUserDtoType) => {
     try {
+      const REGISTER_URL = import.meta.env.VITE_REGISTER_URL;
+
       const token = await fetchJWTToken(REGISTER_URL, {
         email: values.email,
         username: values.username,
