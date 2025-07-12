@@ -8,7 +8,5 @@ export const COOKIE_OR_TOKEN_NOT_FOUND_MESSAGE = "Auth cookie/token missing";
 
 // TODO store the three first of them in a .env
 export const API_URL = "http://localhost:3000/trpc";
-export const LOGIN_URL = "http://localhost:3000/trpc/auth.signInUser";
-export const REGISTER_URL = "http://localhost:3000/trpc/auth.registerUser";
 export const DASHBOARD_PORT = 4208;
 export const DASHBOARD_URL = `http://localhost:${DASHBOARD_PORT}`;

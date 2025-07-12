@@ -8,7 +8,6 @@ import {
 } from "../ui/form";
 import {
   INCORRECT_PASSWORD_MESSAGE,
-  LOGIN_URL,
   USER_NOT_FOUND_MESSAGE,
 } from "@repo/utils/constants";
 import { Link, useNavigate } from "react-router";
@@ -45,6 +44,7 @@ const LoginForm = () => {
   const onSubmit = async (values: SignInUserDtoType) => {
     try {
       // send the credentials to the backend and set an http cookie in the browser
+      const LOGIN_URL = import.meta.env.VITE_LOGIN_URL;
 
       const token = await fetchJWTToken(LOGIN_URL, {
         email: values.email,

@@ -1,5 +1,4 @@
 import { JWTDto, RegisterUserDto, SignInUserDto } from "./schemas";
-import { LOGIN_URL, REGISTER_URL } from "./constants";
 import z from "zod";
 
 export const GroupByEnum = ["days", "weeks", "months"] as const;
@@ -18,6 +17,3 @@ export type TrpcAuthError = {
     };
   };
 };
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const tuple = [REGISTER_URL, LOGIN_URL] as const;
-export type AuthEndPointURL = (typeof tuple)[number];
