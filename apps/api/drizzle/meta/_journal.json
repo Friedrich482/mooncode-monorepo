@@ -8,6 +8,20 @@
       "when": 1752015200209,
       "tag": "0000_whole_glorian",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1752257642486,
+      "tag": "0001_robust_wallflower",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752257675865,
+      "tag": "0002_known_reaper",
+      "breakpoints": true
     }
   ]
 }

@@ -17,5 +17,6 @@
       "cache": false,
       "persistent": true
     }
-  }
+  },
+  "globalEnv": ["API_URL", "LOGIN_URL", "REGISTER_URL"]
 }

@@ -1,5 +1,4 @@
 import { pgTable, text, varchar } from "drizzle-orm/pg-core";
-import { InferSelectModel } from "drizzle-orm";
 import { timestamps } from "../columns.helpers";
 import { ulid } from "ulid";
 
