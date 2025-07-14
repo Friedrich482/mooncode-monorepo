@@ -4,7 +4,6 @@
 
 <h1 align="center">MoonCode VSCode Extension</h1>
 <p align="center">The VSCode Extension for the MoonCode application<br/>
-<a href="https://mooncode-api.fly.dev">[link](link_to_the_extension_in_the_marketplace)</a>
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/version-0.0.1-yellow">  
