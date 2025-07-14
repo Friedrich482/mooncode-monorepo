@@ -1,4 +1,4 @@
-import { RegisterUserDto } from "@repo/utils/schemas";
+import { RegisterUserDto } from "@repo/common/schemas";
 import { z } from "zod";
 
 export const createUserDto = RegisterUserDto.omit({

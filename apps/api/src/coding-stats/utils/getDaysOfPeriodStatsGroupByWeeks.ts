@@ -6,8 +6,8 @@ import {
   startOfWeek,
 } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
-import { PeriodResolution } from "@repo/utils/types";
-import formatDuration from "@repo/utils/formatDuration";
+import { PeriodResolution } from "@repo/common/types";
+import formatDuration from "@repo/common/formatDuration";
 
 const getDaysOfPeriodStatsGroupByWeeks = (
   data: Awaited<ReturnType<DailyDataService["findRangeDailyData"]>>,

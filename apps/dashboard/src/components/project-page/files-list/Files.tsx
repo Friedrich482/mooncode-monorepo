@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import formatDuration from "@repo/utils/formatDuration";
+import formatDuration from "@repo/common/formatDuration";
 import getLanguageColor from "@/utils/getLanguageColor";
 import getLanguageName from "@/utils/getLanguageName";
 import useFiles from "@/hooks/useFiles";

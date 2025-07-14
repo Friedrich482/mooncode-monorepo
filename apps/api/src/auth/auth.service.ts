@@ -1,12 +1,12 @@
 import {
   INCORRECT_PASSWORD_MESSAGE,
   USER_NOT_FOUND_MESSAGE,
-} from "@repo/utils/constants";
+} from "@repo/common/constants";
 import {
   JwtPayloadDtoType,
   RegisterUserDtoType,
   SignInUserDtoType,
-} from "@repo/utils/types";
+} from "@repo/common/types";
 import { Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 import { Response } from "express";

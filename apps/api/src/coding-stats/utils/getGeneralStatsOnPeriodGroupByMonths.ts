@@ -2,7 +2,7 @@ import { differenceInMonths, endOfMonth, format, startOfMonth } from "date-fns";
 import { CodingStatsDashboardService } from "../coding-stats-dashboard.service";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { NAString } from "src/common/dto";
-import formatDuration from "@repo/utils/formatDuration";
+import formatDuration from "@repo/common/formatDuration";
 import getDaysOfPeriodStatsGroupByMonths from "./getDaysOfPeriodStatsGroupByMonths";
 import getMostUsedLanguageOnPeriod from "./getMostUsedLanguageOnPeriod";
 

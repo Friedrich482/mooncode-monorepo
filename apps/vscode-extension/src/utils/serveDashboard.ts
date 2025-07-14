@@ -1,6 +1,6 @@
 import * as path from "path";
 import * as vscode from "vscode";
-import { DASHBOARD_PORT } from "@repo/utils/constants";
+import { DASHBOARD_PORT } from "@repo/common/constants";
 import express from "express";
 import getPort from "get-port";
 

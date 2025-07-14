@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { DASHBOARD_URL } from "@repo/utils/constants";
+import { DASHBOARD_URL } from "@repo/common/constants";
 
 const openDashboard = async () => {
   try {

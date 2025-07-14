@@ -1,4 +1,4 @@
-import { dateStringDto } from "@repo/utils/schemas";
+import { dateStringDto } from "@repo/common/schemas";
 import { z } from "zod";
 
 export const CreateProjectDto = z.object({

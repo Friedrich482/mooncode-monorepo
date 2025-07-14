@@ -34,23 +34,29 @@ const fetchJWTToken = async (
     credentials: "include",
   });
 
-  // type this properly
   if (!res.ok) {
     const errorData = (await res.json()) as TrpcAuthError;
-    throw new Error(errorData.error.json.message);
+    const message = errorData?.error?.json?.message || "Authentication failed";
+    throw new Error(message);
   }
   const data = await res.json();
 
   if (callbackUrl) {
-    const {
-      result: {
-        data: {
-          json: { access_token },
+    try {
+      const {
+        result: {
+          data: {
+            json: { access_token },
+          },
         },
-      },
-    } = loginResponseSchema.parse(data);
+      } = loginResponseSchema.parse(data);
 
-    return access_token;
+      return access_token;
+    } catch (error) {
+      throw new Error(
+        `Failed to parse login response ${error instanceof Error ? error.message : error}`,
+      );
+    }
   }
   return data;
 };

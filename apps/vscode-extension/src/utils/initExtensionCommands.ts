@@ -4,7 +4,6 @@ import calculateTime from "./calculateTime";
 import { getExtensionContext } from "../extension";
 import getGlobalStateData from "./getGlobalStateData";
 import login from "./auth/login";
-import logout from "./auth/logout";
 import openDashboard from "./openDashboard";
 
 const initExtensionCommands = (
@@ -77,13 +76,6 @@ const initExtensionCommands = (
     },
   );
 
-  const logoutCommand = vscode.commands.registerCommand(
-    "MoonCode.logout",
-    async () => {
-      await logout();
-    },
-  );
-
   const openDashboardCommand = vscode.commands.registerCommand(
     "MoonCode.openDashboard",
     openDashboard,
@@ -96,7 +88,6 @@ const initExtensionCommands = (
     showCurrentFilesDataCommand,
     showGlobalStateContentCommand,
     loginCommand,
-    logoutCommand,
     openDashboardCommand,
     statusBarItem,
   );

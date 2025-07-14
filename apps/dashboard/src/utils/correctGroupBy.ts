@@ -1,7 +1,7 @@
-import { GroupBy, PeriodResolution } from "@repo/utils/types";
+import { GroupBy, PeriodResolution } from "@repo/common/types";
 import { PERIODS_CONFIG } from "@/constants";
 import { Period } from "@/types-schemas";
-import getPeriodResolution from "@repo/utils/getPeriodResolution";
+import getPeriodResolution from "@repo/common/getPeriodResolution";
 
 const correctGroupBy = (
   period: Period,

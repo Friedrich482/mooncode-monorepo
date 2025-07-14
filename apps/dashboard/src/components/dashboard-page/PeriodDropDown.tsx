@@ -11,7 +11,7 @@ import CalendarPopover from "../ui/CalendarPopover";
 import { ChevronDown } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { Period } from "@/types-schemas";
-import getPeriodResolution from "@repo/utils/getPeriodResolution";
+import getPeriodResolution from "@repo/common/getPeriodResolution";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 import useSynchronizeURL from "@/hooks/useSynchronizeURL";
 

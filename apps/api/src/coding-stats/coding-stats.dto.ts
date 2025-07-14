@@ -5,7 +5,7 @@ import {
   refineAndTransformSchema,
   refineSchema,
 } from "src/common/dto";
-import { dateStringDto } from "@repo/utils/schemas";
+import { dateStringDto } from "@repo/common/schemas";
 import { z } from "zod";
 
 export const GetDailyStatsForExtensionDto = z.object({

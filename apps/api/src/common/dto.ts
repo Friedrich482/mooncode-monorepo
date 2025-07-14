@@ -1,8 +1,8 @@
 import { ZodSchema, z } from "zod";
-import { GroupByEnum } from "@repo/utils/types";
-import { INCOHERENT_DATE_RANGE_ERROR_MESSAGE } from "@repo/utils/constants";
-import { dateStringDto } from "@repo/utils/schemas";
-import getPeriodResolution from "@repo/utils/getPeriodResolution";
+import { GroupByEnum } from "@repo/common/types";
+import { INCOHERENT_DATE_RANGE_ERROR_MESSAGE } from "@repo/common/constants";
+import { dateStringDto } from "@repo/common/schemas";
+import getPeriodResolution from "@repo/common/getPeriodResolution";
 import { isAfter } from "date-fns";
 
 export const DateRangeSchema = z.object({

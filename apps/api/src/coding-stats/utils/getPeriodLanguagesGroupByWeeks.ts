@@ -7,7 +7,7 @@ import {
 } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { LanguagesService } from "src/languages/languages.service";
-import { PeriodResolution } from "@repo/utils/types";
+import { PeriodResolution } from "@repo/common/types";
 
 const getPeriodLanguagesGroupByWeeks = async (
   data: Awaited<ReturnType<DailyDataService["findRangeDailyData"]>>,

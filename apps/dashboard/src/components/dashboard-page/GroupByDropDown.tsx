@@ -7,7 +7,7 @@ import {
 import { GROUP_BY_DROPDOWN_ITEMS, PERIODS_CONFIG } from "@/constants";
 import { Button } from "../ui/button";
 import { Group } from "lucide-react";
-import getPeriodResolution from "@repo/utils/getPeriodResolution";
+import getPeriodResolution from "@repo/common/getPeriodResolution";
 import { useMemo } from "react";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 

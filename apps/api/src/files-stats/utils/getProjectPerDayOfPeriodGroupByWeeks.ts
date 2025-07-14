@@ -5,9 +5,9 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
-import { PeriodResolution } from "@repo/utils/types";
+import { PeriodResolution } from "@repo/common/types";
 import { ProjectsService } from "src/projects/projects.service";
-import formatDuration from "@repo/utils/formatDuration";
+import formatDuration from "@repo/common/formatDuration";
 
 const getProjectPerDayOfPeriodGroupByWeeks = (
   data: Awaited<ReturnType<ProjectsService["findProjectByNameOnRange"]>>,

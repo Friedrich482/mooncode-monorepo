@@ -58,7 +58,7 @@ const aliasPlugin = {
   name: "alias",
   setup(build) {
     build.onResolve({ filter: /^@repo\/utils$/ }, () => ({
-      path: path.resolve(__dirname, "../../packages/utils/src/index.ts"),
+      path: path.resolve(__dirname, "../../packages/common/src/index.ts"),
     }));
     build.onResolve({ filter: /^@repo\/trpc$/ }, () => ({
       path: path.resolve(__dirname, "../../packages/trpc/src/index.ts"),

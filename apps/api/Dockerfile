@@ -6,7 +6,7 @@ COPY package*.json ./
 COPY turbo.json ./
 
 COPY apps/api/package*.json ./apps/api/
-COPY packages/utils/package*.json ./packages/utils/
+COPY packages/common/package*.json ./packages/common/
 COPY packages/trpc/package*.json ./packages/trpc/
 
 RUN npm install
@@ -23,7 +23,7 @@ COPY package*.json ./
 COPY turbo.json ./
 
 COPY apps/api/package*.json ./apps/api/
-COPY packages/utils/package*.json ./packages/utils/
+COPY packages/common/package*.json ./packages/common/
 COPY packages/trpc/package*.json ./packages/trpc/
 
 RUN npm ci --only=production

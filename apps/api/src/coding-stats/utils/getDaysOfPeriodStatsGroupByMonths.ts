@@ -1,6 +1,6 @@
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
-import formatDuration from "@repo/utils/formatDuration";
+import formatDuration from "@repo/common/formatDuration";
 
 const getDaysOfPeriodStatsGroupByMonths = (
   data: Awaited<ReturnType<DailyDataService["findRangeDailyData"]>>,

@@ -11,7 +11,7 @@ import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
 import { NAString } from "src/common/dto";
-import formatDuration from "@repo/utils/formatDuration";
+import formatDuration from "@repo/common/formatDuration";
 import getDaysOfPeriodStatsGroupByMonths from "./utils/getDaysOfPeriodStatsGroupByMonths";
 import getDaysOfPeriodStatsGroupByWeeks from "src/coding-stats/utils/getDaysOfPeriodStatsGroupByWeeks";
 import getGeneralStatsOnPeriodGroupByMonths from "./utils/getGeneralStatsOnPeriodGroupByMonths";
