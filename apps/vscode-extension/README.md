@@ -1,4 +1,4 @@
-<p align="center">
+[Screencast from 2025-07-14 15-11-24.webm](https://github.com/user-attachments/assets/0981f4c5-a53c-41c8-900f-1c4170eb8b20)<p align="center">
   <img width="200" height="200" alt="Moon" src="https://github.com/user-attachments/assets/e38843c0-22dd-4dbc-985e-eab77277acc4" />
 </p>
 
@@ -22,6 +22,10 @@ MoonCode is an application that tracks your coding time (like Wakatime) and give
 - Breakdown of coding activity per project
 - Local dashboard to visualize your data, with extensive filters for a more detailled summary
 - All parts (vscode-extension, api, dashboard) of the project are self-hostable
+
+## Demo 🖥️
+[Screencast from 2025-07-14 15-11-24.webm](https://github.com/user-attachments/assets/a0f58fcb-2983-4760-8bb5-e4b186e97fd8)
+
 
 ## Installation
 
