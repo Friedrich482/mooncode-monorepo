@@ -1,8 +1,9 @@
 {
   "name": "mooncode",
   "displayName": "MoonCode",
-  "description": "",
+  "description": "MoonCode is an application that tracks your coding time (like Wakatime) and gives you a detailled summary about all your coding statistics. With MoonCode, developers get the full history of their coding activity.",
   "version": "0.0.1",
+  "icon": "./public/moon.png",
   "publisher": "Friedrich482",
   "author": {
     "name": "Friedrich482"
@@ -11,7 +12,9 @@
     "vscode": "^1.95.0"
   },
   "categories": [
-    "Other"
+    "Programming Languages",
+    "Language Packs",
+    "Visualization"
   ],
   "activationEvents": [
     "onStartupFinished",
@@ -22,38 +25,31 @@
     "commands": [
       {
         "command": "MoonCode.showInitialLanguagesData",
-        "title": "MoonCode: Show Initial Languages Data",
-        "icon": "e"
+        "title": "MoonCode: Show Initial Languages Data"
       },
       {
         "command": "MoonCode.showCurrentLanguagesData",
-        "title": "MoonCode: Show Current Languages Data",
-        "icon": "e"
+        "title": "MoonCode: Show Current Languages Data"
       },
       {
         "command": "MoonCode.showInitialFilesData",
-        "title": "MoonCode: Show Initial Files Data",
-        "icon": "e"
+        "title": "MoonCode: Show Initial Files Data"
       },
       {
         "command": "MoonCode.showCurrentFilesData",
-        "title": "MoonCode: Show Current Files Data",
-        "icon": "e"
+        "title": "MoonCode: Show Current Files Data"
       },
       {
         "command": "MoonCode.showGlobalStateData",
-        "title": "MoonCode: Show Global State data",
-        "icon": "e"
+        "title": "MoonCode: Show Global State data"
       },
       {
         "command": "MoonCode.login",
-        "title": "MoonCode: Login",
-        "icon": "lol"
+        "title": "MoonCode: Login"
       },
       {
         "command": "MoonCode.openDashboard",
-        "title": "MoonCode: Open Dashboard",
-        "icon": "lol"
+        "title": "MoonCode: Open Dashboard"
       }
     ],
     "menus": {
