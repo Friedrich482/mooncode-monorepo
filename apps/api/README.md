@@ -75,10 +75,10 @@ To dockerize the application, you need to place yourself at the root of the mono
 ```bash
 docker build -f apps/api/Dockerfile -t mooncode-api --progress=plain .
 ```
-And to run a container called `mooncode-api-container`: 
+And to run a container called `mooncode-api-container`(from `apps/api`) : 
 
 ```bash
-docker run -p 3000:3000 --name mooncode-api-container mooncode-api
+docker run -p 3000:3000 --name mooncode-api-container --env-file .env mooncode-api
 ```
 
 ## License
