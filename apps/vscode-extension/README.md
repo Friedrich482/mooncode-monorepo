@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="200" height="200" alt="mooncode-github" src="https://github.com/user-attachments/assets/dda8cb57-96ba-4271-b2c1-33ce69f23fc2" />
+![MoonCode Logo](https://raw.githubusercontent.com/Friedrich482/mooncode-monorepo/main/.github/images/moon.png)
 </p>
 
 <h1 align="center">MoonCode VSCode Extension</h1>
