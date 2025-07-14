@@ -5,7 +5,7 @@ import {
   startOfMonth,
   startOfWeek,
 } from "date-fns";
-import { PeriodResolution } from "@repo/utils/types";
+import { PeriodResolution } from "@repo/common/types";
 import { ProjectsService } from "src/projects/projects.service";
 
 const getProjectLanguagesGroupByWeeks = async (

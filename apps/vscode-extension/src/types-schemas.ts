@@ -1,4 +1,4 @@
-import { JWTDto } from "@repo/utils/schemas";
+import { JWTDto } from "@repo/common/schemas";
 import z from "zod";
 
 export type LanguageData = {

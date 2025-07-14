@@ -1,4 +1,4 @@
-import { GroupBy } from "@repo/utils/types";
+import { GroupBy } from "@repo/common/types";
 
 export const formatTickForGroupBy = (
   value: string,

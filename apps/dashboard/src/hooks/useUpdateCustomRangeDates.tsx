@@ -1,4 +1,4 @@
-import getPeriodResolution from "@repo/utils/getPeriodResolution";
+import getPeriodResolution from "@repo/common/getPeriodResolution";
 import { useEffect } from "react";
 import { usePeriodStore } from "./store/periodStore";
 

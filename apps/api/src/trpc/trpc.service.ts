@@ -1,9 +1,9 @@
 import * as trpcExpress from "@trpc/server/adapters/express";
 import { TRPCError, initTRPC } from "@trpc/server";
-import { COOKIE_OR_TOKEN_NOT_FOUND_MESSAGE } from "@repo/utils/constants";
+import { COOKIE_OR_TOKEN_NOT_FOUND_MESSAGE } from "@repo/common/constants";
 import { EnvService } from "src/env/env.service";
 import { Injectable } from "@nestjs/common";
-import { JwtPayloadDtoType } from "@repo/utils/types";
+import { JwtPayloadDtoType } from "@repo/common/types";
 import { JwtService } from "@nestjs/jwt";
 import superjson from "superjson";
 

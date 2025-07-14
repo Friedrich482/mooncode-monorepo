@@ -2,7 +2,7 @@ import { Folder, FolderOpen } from "lucide-react";
 import Icon from "@/components/ui/Icon";
 import { Link } from "react-router";
 import { PERIODS_CONFIG } from "@/constants";
-import formatDuration from "@repo/utils/formatDuration";
+import formatDuration from "@repo/common/formatDuration";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";

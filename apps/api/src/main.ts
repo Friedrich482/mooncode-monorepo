@@ -1,6 +1,6 @@
 import * as cookieParser from "cookie-parser";
 import { AppModule } from "./app.module";
-import { DASHBOARD_PORT } from "@repo/utils/constants";
+import { DASHBOARD_PORT } from "@repo/common/constants";
 import { NestFactory } from "@nestjs/core";
 import { TrpcExceptionFilter } from "./trpc/trpc.exception-handler";
 import { TrpcRouter } from "./trpc/trpc.router";

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Icon from "@/components/ui/Icon";
 import { Tree } from "@/types-schemas";
 import { bubblesColors } from "@/constants";
-import formatDuration from "@repo/utils/formatDuration";
+import formatDuration from "@repo/common/formatDuration";
 import useAnimateChart from "@/hooks/useAnimateChart";
 
 export const CircularPacking = ({

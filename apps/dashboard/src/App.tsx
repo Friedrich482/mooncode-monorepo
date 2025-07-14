@@ -1,8 +1,8 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "@repo/trpc/router";
-import { COOKIE_OR_TOKEN_NOT_FOUND_MESSAGE } from "@repo/utils/constants";
-import { INCOHERENT_DATE_RANGE_ERROR_MESSAGE } from "@repo/utils/constants";
+import { COOKIE_OR_TOKEN_NOT_FOUND_MESSAGE } from "@repo/common/constants";
+import { INCOHERENT_DATE_RANGE_ERROR_MESSAGE } from "@repo/common/constants";
 import { Outlet } from "react-router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TRPCProvider } from "./utils/trpc";

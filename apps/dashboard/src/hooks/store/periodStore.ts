@@ -1,4 +1,4 @@
-import type { GroupBy, PeriodResolution } from "@repo/utils/types";
+import type { GroupBy, PeriodResolution } from "@repo/common/types";
 import { Period } from "@/types-schemas";
 import correctGroupBy from "@/utils/correctGroupBy";
 import { create } from "zustand";

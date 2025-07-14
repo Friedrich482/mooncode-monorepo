@@ -1,6 +1,6 @@
 import { endOfMonth, format, startOfMonth } from "date-fns";
 import { ProjectsService } from "src/projects/projects.service";
-import formatDuration from "@repo/utils/formatDuration";
+import formatDuration from "@repo/common/formatDuration";
 
 const getProjectPerDayOfPeriodGroupByMonths = (
   data: Awaited<ReturnType<ProjectsService["findProjectByNameOnRange"]>>,

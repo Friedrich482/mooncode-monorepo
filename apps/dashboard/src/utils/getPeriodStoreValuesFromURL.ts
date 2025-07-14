@@ -1,9 +1,9 @@
-import { GroupBy, PeriodResolution } from "@repo/utils/types";
+import { GroupBy, PeriodResolution } from "@repo/common/types";
 import { IsoDateSchema, Period, PeriodSchema } from "@/types-schemas";
 import { ZodError, z } from "zod";
 import { PERIODS } from "@/constants";
-import { formatZodError } from "@repo/utils/formatZodIssues";
-import getPeriodResolution from "@repo/utils/getPeriodResolution";
+import { formatZodError } from "@repo/common/formatZodIssues";
+import getPeriodResolution from "@repo/common/getPeriodResolution";
 
 type ReturnType = {
   period: Period;

@@ -1,7 +1,7 @@
 import {
   ALREADY_EXISTING_EMAIL_MESSAGE,
   ALREADY_EXISTING_USERNAME_MESSAGE,
-} from "@repo/utils/constants";
+} from "@repo/common/constants";
 import {
   Form,
   FormControl,
@@ -13,9 +13,9 @@ import {
 import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { Input } from "../ui/input";
-import { RegisterUserDto } from "@repo/utils/schemas";
-import { RegisterUserDtoType } from "@repo/utils/types";
-import fetchJWTToken from "@repo/utils/fetchJWTToken";
+import { RegisterUserDto } from "@repo/common/schemas";
+import { RegisterUserDtoType } from "@repo/common/types";
+import fetchJWTToken from "@repo/common/fetchJWTToken";
 import getCallbackUrl from "@/utils/getCallbackUrl";
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";

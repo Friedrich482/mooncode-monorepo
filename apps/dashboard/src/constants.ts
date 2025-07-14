@@ -13,7 +13,7 @@ import {
 } from "date-fns";
 import { ChartConfig } from "@/components/ui/chart";
 import { FixedArray } from "./types-schemas";
-import { GroupBy } from "@repo/utils/types";
+import { GroupBy } from "@repo/common/types";
 import { Theme } from "@/components/themeProvider";
 
 export const THEME_DROPDOWN_ITEMS: {

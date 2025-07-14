@@ -1,4 +1,4 @@
-import { DASHBOARD_PORT } from "@repo/utils/constants";
+import { DASHBOARD_PORT } from "@repo/common/constants";
 import commonjs from "vite-plugin-commonjs";
 import { defineConfig } from "vite";
 import path from "path";

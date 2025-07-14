@@ -51,11 +51,6 @@
         "icon": "lol"
       },
       {
-        "command": "MoonCode.logout",
-        "title": "MoonCode: Logout",
-        "icon": "lol"
-      },
-      {
         "command": "MoonCode.openDashboard",
         "title": "MoonCode: Open Dashboard",
         "icon": "lol"
@@ -66,10 +61,6 @@
         {
           "command": "MoonCode.login",
           "when": "!MoonCode.isLoggedIn"
-        },
-        {
-          "command": "MoonCode.logout",
-          "when": "MoonCode.isLoggedIn"
         }
       ]
     }
@@ -100,7 +91,7 @@
   },
   "dependencies": {
     "@repo/trpc": "*",
-    "@repo/utils": "*",
+    "@repo/common": "*",
     "@trpc/client": "^11.1.0",
     "@trpc/server": "^11.1.0",
     "express": "^4.21.2",

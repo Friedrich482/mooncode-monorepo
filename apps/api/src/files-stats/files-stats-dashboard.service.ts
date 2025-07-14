@@ -8,7 +8,7 @@ import {
 } from "./files-stats.dto";
 import { Injectable } from "@nestjs/common";
 import { ProjectsService } from "src/projects/projects.service";
-import formatDuration from "@repo/utils/formatDuration";
+import formatDuration from "@repo/common/formatDuration";
 import getProjectLanguageGroupByMonths from "./utils/getProjectLanguageGroupByMonths";
 import getProjectLanguagesGroupByWeeks from "./utils/getProjectLanguagesGroupByWeeks";
 import getProjectPerDayOfPeriodGroupByMonths from "./utils/getProjectPerDayOfPeriodGroupByMonths";
