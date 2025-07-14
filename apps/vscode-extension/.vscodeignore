@@ -1,14 +1,48 @@
-.vscode/**
-.vscode-test/**
-out/**
-node_modules/**
-src/**
+# Source files
+src/
+tsconfig*.json
+build.js
+.turbo/
+
+# Monorepo files - CRITICAL
+../
+../../
+
+# Node modules and dependencies
+node_modules/
+.npm/
+.yarn/
+
+# Build artifacts
+*.tsbuildinfo
+.nyc_output/
+coverage/
+
+# Development files
+.vscode/
+.git/
 .gitignore
-.yarnrc
-webpack.config.js
-vsc-extension-quickstart.md
-**/tsconfig.json
-**/eslint.config.mjs
-**/*.map
-**/*.ts
-**/.vscode-test.*
+*.log
+*.map
+
+# Documentation (optional, keep readme.md)
+docs/
+*.md
+!readme.md
+!changelog.md
+
+# Test files
+test/
+tests/
+**/*.test.js
+**/*.test.ts
+**/*.spec.js
+**/*.spec.ts
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Unnecessary config files
+.eslintrc*
+.prettierrc*

@@ -1,4 +1,5 @@
 {
+  "extends": "@repo/typescript-config/base.json",
   "references": [{ "path": "../../packages/trpc/tsconfig.json" }],
   "compilerOptions": {
     "module": "ES2022",
@@ -6,10 +7,13 @@
     "lib": ["ES2022"],
     "sourceMap": true,
     "paths": {
-      "@/*": ["./src/"]
+      "@/*": ["./src/"],
+      "@repo/trpc": ["../../packages/trpc/src"],
+      "@repo/common": ["../../packages/common/src"]
     },
     "moduleResolution": "bundler",
-    "strict": true
+    "strict": true,
+    "noEmit": true
   },
   "include": ["src/**/*"]
 }
