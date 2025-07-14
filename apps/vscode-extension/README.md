@@ -1,18 +1,15 @@
 <p align="center">
 <img width="128" height="128" alt="moon" src="https://github.com/user-attachments/assets/12d40455-d3f5-4356-842c-6139ee56f456" />
+
+<h1 align="center">MoonCode</h1>
 </p>
 
-<h1 align="center">MoonCode VSCode Extension</h1>
-<p align="center">The VSCode Extension for the MoonCode application<br/>
-</p>
+MoonCode is an extension that tracks your coding time (like Wakatime) and gives you a detailled summary about all your coding statistics. With MoonCode, developers get the full history of their coding activity.
+
 <p align="center">
   <img src="https://img.shields.io/badge/version-0.0.1-yellow">  
   <img src="https://img.shields.io/badge/LICENSE-MIT-blue">
 </p>
-
-## Description
-
-MoonCode is an application that tracks your coding time (like Wakatime) and gives you a detailled summary about all your coding statistics. With MoonCode, developers get the full history of their coding activity.
 
 ## Features 🚀
 
