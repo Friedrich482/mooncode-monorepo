@@ -13,8 +13,8 @@
 </p>
 
 ## Description
-This project is the API used to power the other main packages in the monorepo: `dashboard` and `vscode-extension`.
-It is built on top of [Nestjs](https://nestjs.com/) and powered [trpc](https://trpc.io/).
+This project is the API used to power the other main packages in the monorepo: [dashboard](../dashboard) and [vscode-extension](../vscode-extension).
+It is built on top of [Nestjs](https://nestjs.com/) and powered by [trpc](https://trpc.io/).
 
 ## Project setup
 
