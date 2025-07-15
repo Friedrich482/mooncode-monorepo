@@ -53,3 +53,4 @@
 ### Chores
 
 - improved `README.md` and `CHANGELOG.md`
+- Reduced the `MAX_IDLE_TIME` constant

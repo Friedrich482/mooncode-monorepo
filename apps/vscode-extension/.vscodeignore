@@ -46,5 +46,6 @@ Thumbs.db
 # Unnecessary config files
 .eslintrc*
 .prettierrc*
+eslint.config*
 
 !LICENSE.md 

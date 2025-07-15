@@ -9,7 +9,7 @@ MoonCode is an extension that tracks your coding time (like Wakatime) and gives 
 </p>
 <p align="center">
   <img src="https://img.shields.io/badge/version-0.0.3-yellow">  
-  <img src="https://img.shields.io/badge/LICENSE-MIT-blue">
+  <img src="https://img.shields.io/badge/LICENSE-MIT-yellow">
 </p>
 
 ## Features 🚀
@@ -61,7 +61,10 @@ Fix: Copy dashboard build in extension files
 
 ### 0.0.5
 
-Chore: `README.md` and `CHANGELOG.md` improved
+Chore:
+
+- `README.md` and `CHANGELOG.md` improved
+- Reduced the `MAX_IDLE_TIME` constant
 
 ## License
 
