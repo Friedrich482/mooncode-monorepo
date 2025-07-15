@@ -34,7 +34,7 @@
 
 ### Fixes
 
-- removed useless `onCommand:Mooncode.activate` from the `activationEvents` in `package.json`
+- removed useless `onCommand:MoonCode.activate` from the `activationEvents` in `package.json`
 
 ## [0.0.3] - 2025-07-14
 
