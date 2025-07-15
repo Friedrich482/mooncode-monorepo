@@ -19,6 +19,7 @@ MoonCode is an extension that tracks your coding time (like Wakatime) and gives 
 - Breakdown of coding activity per project
 - Local dashboard to visualize your data, with extensive filters for a more detailled summary
 - All parts (vscode-extension, api, dashboard) of the project are self-hostable
+- Works offline 🔌
 
 ## Demo 🖥️
 
