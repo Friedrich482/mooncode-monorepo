@@ -3,9 +3,10 @@
 
 <h1 align="center">MoonCode</h1>
 </p>
-
+<p align="center">
 MoonCode is an extension that tracks your coding time (like Wakatime) and gives you a detailled summary about all your coding statistics. With MoonCode, developers get the full history of their coding activity.
-
+<a href="https://marketplace.visualstudio.com/items?itemName=Friedrich482.mooncode">https://marketplace.visualstudio.com/items?itemName=Friedrich482.mooncode</a>  
+</p>
 <p align="center">
   <img src="https://img.shields.io/badge/version-0.0.3-yellow">  
   <img src="https://img.shields.io/badge/LICENSE-MIT-blue">
