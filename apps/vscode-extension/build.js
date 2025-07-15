@@ -3,9 +3,63 @@
 
 const esbuild = require("esbuild");
 const path = require("path");
+const fs = require("fs");
 
 const production = process.argv.includes("--production");
 const watch = process.argv.includes("--watch");
+
+/**
+ * Copy dashboard files from monorepo to extension directory
+ */
+async function copyDashboard() {
+  const sourcePath = path.resolve(__dirname, "../dashboard/dist");
+  const destPath = path.resolve(__dirname, "dashboard");
+
+  console.log("[dashboard] Copying dashboard files...");
+
+  if (!fs.existsSync(sourcePath)) {
+    console.error(`✘ [ERROR] Dashboard dist not found at: ${sourcePath}`);
+    console.error("Make sure to build the dashboard first!");
+    console.error("Run: cd ../../dashboard && npm run build");
+    process.exit(1);
+  }
+
+  try {
+    // Remove existing dashboard folder
+    if (fs.existsSync(destPath)) {
+      fs.rmSync(destPath, { recursive: true, force: true });
+    }
+
+    // Copy dashboard files
+    fs.cpSync(sourcePath, destPath, { recursive: true });
+
+    // Get folder size for logging
+    const getDirSize = (dir) => {
+      let size = 0;
+      const files = fs.readdirSync(dir);
+      for (const file of files) {
+        const filePath = path.join(dir, file);
+        const stats = fs.statSync(filePath);
+        if (stats.isDirectory()) {
+          size += getDirSize(filePath);
+        } else {
+          size += stats.size;
+        }
+      }
+      return size;
+    };
+
+    const dashboardSize = getDirSize(destPath);
+    const dashboardSizeKB = (dashboardSize / 1024).toFixed(1);
+
+    console.log(
+      `[dashboard] Dashboard files copied successfully ✓ (${dashboardSizeKB} KB)`,
+    );
+  } catch (error) {
+    console.error(`✘ [ERROR] Failed to copy dashboard files:`, error.message);
+    process.exit(1);
+  }
+}
 
 /**
  * @type {import('esbuild').Plugin}
@@ -67,6 +121,9 @@ const aliasPlugin = {
 };
 
 async function main() {
+  // Always copy dashboard files, even in watch mode
+  await copyDashboard();
+
   const ctx = await esbuild.context({
     entryPoints: ["src/extension.ts"],
 
@@ -82,7 +139,7 @@ async function main() {
     sourcemap: production ? false : true,
     sourcesContent: false,
 
-    external: ["vscode", "express"],
+    external: ["vscode"],
 
     resolveExtensions: [".ts", ".js", ".cjs"],
 

@@ -2,7 +2,7 @@
   "name": "mooncode",
   "displayName": "MoonCode",
   "description": "MoonCode is an extension that tracks your coding time (like Wakatime) and gives you a detailled summary about all your coding statistics. With MoonCode, developers get the full history of their coding activity.",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "icon": "./public/moon.png",
   "publisher": "Friedrich482",
   "author": {
@@ -13,10 +13,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Friedrich482/mooncode.git"
+    "url": "https://github.com/Friedrich482/mooncode-monorepo.git"
   },
   "license": "MIT",
-  "homepage": "https://github.com/Friedrich482/mooncode",
+  "keywords": [
+    "coding",
+    "time tracking",
+    "productivity",
+    "statistics"
+  ],
+  "homepage": "https://marketplace.visualstudio.com/manage/publishers/friedrich482/extensions/mooncode/hub?_a=acquisition",
   "categories": [
     "Programming Languages",
     "Language Packs",
@@ -24,8 +30,7 @@
     "Other"
   ],
   "activationEvents": [
-    "onStartupFinished",
-    "onCommand:Mooncode.activate"
+    "onStartupFinished"
   ],
   "main": "./dist/extension.js",
   "contributes": {

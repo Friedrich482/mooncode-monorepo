@@ -7,7 +7,7 @@
 MoonCode is an extension that tracks your coding time (like Wakatime) and gives you a detailled summary about all your coding statistics. With MoonCode, developers get the full history of their coding activity.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.0.1-yellow">  
+  <img src="https://img.shields.io/badge/version-0.0.3-yellow">  
   <img src="https://img.shields.io/badge/LICENSE-MIT-blue">
 </p>
 
@@ -44,6 +44,22 @@ Look for the extension `MoonCode` on the VSCode marketplace then install it. You
 ### 0.0.1
 
 Initial release of MoonCode
+
+### 0.0.2
+
+Fix: activation command
+
+### 0.0.3
+
+Fix: Missing `express` dependency
+
+### 0.0.4
+
+Fix: Copy dashboard build in extension files
+
+### 0.0.5
+
+Chore: `README.md` and `CHANGELOG.md` improved
 
 ## License
 
