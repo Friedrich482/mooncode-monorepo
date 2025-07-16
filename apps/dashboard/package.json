@@ -19,6 +19,7 @@
     "@radix-ui/react-slot": "^1.2.0",
     "@repo/trpc": "*",
     "@repo/common": "*",
+    "@repo/ui": "*",
     "@tanstack/react-query": "^5.74.3",
     "@tanstack/react-query-devtools": "^5.74.3",
     "@trpc/client": "^11.1.0",

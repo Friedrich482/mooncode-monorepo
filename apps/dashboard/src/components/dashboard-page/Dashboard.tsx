@@ -1,3 +1,4 @@
+import { Button } from "@repo/ui/components/ui/button";
 import ChartGroupWrapper from "../ChartGroupWrapper";
 import DashboardTitle from "./DashboardTitle";
 import DayLanguagesChart from "./charts/dayLanguagesChart/DayLanguagesChart";
