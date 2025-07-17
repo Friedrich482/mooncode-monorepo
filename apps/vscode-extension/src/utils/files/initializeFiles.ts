@@ -17,6 +17,7 @@ const initializeFiles = (data: FileDataSync) => {
       projectName: file.projectName,
       projectPath: file.projectPath,
       languageSlug: file.languageSlug,
+      fileName: file.fileName,
     };
   });
 };

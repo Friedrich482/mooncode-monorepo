@@ -4,6 +4,7 @@ import calculateTime from "./calculateTime";
 import { getExtensionContext } from "../extension";
 import getGlobalStateData from "./getGlobalStateData";
 import login from "./auth/login";
+import logout from "./auth/logout";
 import openDashboard from "./openDashboard";
 
 const initExtensionCommands = (
@@ -18,24 +19,21 @@ const initExtensionCommands = (
     "MoonCode.showCurrentLanguagesData",
     () => {
       const { languagesData } = getTime();
-      vscode.window.showInformationMessage(
-        `currentLanguagesData: ${JSON.stringify(Object.entries(languagesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}`,
-      );
+
+      const formattedData = Object.entries(languagesData)
+        .map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`)
+        .join("\n");
+      console.log(`Current Languages Data:\n${formattedData}`);
     },
   );
 
   const showInitialLanguagesDataCommand = vscode.commands.registerCommand(
     "MoonCode.showInitialLanguagesData",
-    async () => {
-      const globalStateData = await getGlobalStateData();
-
-      vscode.window.showInformationMessage(
-        `initialLanguagesData from server: ${JSON.stringify(Object.entries(initialLanguagesData).map(([key, elapsedTime]) => `${key}: ${elapsedTime} seconds`))}`,
-      );
-
-      vscode.window.showInformationMessage(
-        `Global state content: ${JSON.stringify(globalStateData)}`,
-      );
+    () => {
+      const formattedData = Object.entries(initialLanguagesData)
+        .map(([key, elapsedTime]) => `${key}: ${elapsedTime} seconds`)
+        .join("\n");
+      console.log(`Initial Languages Data:\n${formattedData}`);
     },
   );
 
@@ -43,18 +41,23 @@ const initExtensionCommands = (
     "MoonCode.showCurrentFilesData",
     () => {
       const { filesData: currentFilesData } = getTime();
-      vscode.window.showInformationMessage(
-        `currentFilesData: ${JSON.stringify(Object.entries(currentFilesData).map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}`,
-      );
+      const formattedData = Object.entries(currentFilesData)
+        .map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`)
+        .join("\n");
+      console.log(`Current files data:\n${formattedData}`);
     },
   );
 
   const showInitialFilesDataCommand = vscode.commands.registerCommand(
     "MoonCode.showInitialFilesData",
-    async () => {
-      vscode.window.showInformationMessage(
-        `initialFilesData from server: ${JSON.stringify(Object.entries(initialFilesData).map(([key, { timeSpent: elapsedTime }]) => `${key}: ${elapsedTime} seconds`))}`,
-      );
+    () => {
+      const formattedData = Object.entries(initialFilesData)
+        .map(
+          ([key, { timeSpent: elapsedTime }]) =>
+            `${key}: ${elapsedTime} seconds`,
+        )
+        .join("\n");
+      console.log(`InitialFilesData from server:\n${formattedData}`);
     },
   );
 
@@ -62,10 +65,7 @@ const initExtensionCommands = (
     "MoonCode.showGlobalStateData",
     async () => {
       const data = await getGlobalStateData();
-      console.log(data);
-      vscode.window.showInformationMessage(
-        `Global state data : ${JSON.stringify(data)}`,
-      );
+      console.dir(data, { depth: Infinity });
     },
   );
 
@@ -73,6 +73,13 @@ const initExtensionCommands = (
     "MoonCode.login",
     async () => {
       await login();
+    },
+  );
+
+  const logoutCommand = vscode.commands.registerCommand(
+    "MoonCode.logout",
+    async () => {
+      await logout();
     },
   );
 
@@ -88,6 +95,7 @@ const initExtensionCommands = (
     showCurrentFilesDataCommand,
     showGlobalStateContentCommand,
     loginCommand,
+    logoutCommand,
     openDashboardCommand,
     statusBarItem,
   );

@@ -41,6 +41,9 @@ export class FilesStatsExtensionService {
     const { userId, filesData, timeSpentPerProject, targetedDate } =
       upsertFilesDto;
 
+    // This returningProjectData object is reused for each file's project,
+    // which means its values will be overwritten in each iteration.
+    // It primarily serves to pass the projectId to the file creation/update.
     const returningProjectData = {
       projectId: "",
       projectName: "",
@@ -62,13 +65,10 @@ export class FilesStatsExtensionService {
         await this.filesService.findAllFilesOnDay({
           dailyDataId: dailyDataForDay.id,
         }),
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ).map(([filePath, { fileName, ...rest }]) => [filePath, rest]),
+      ),
     );
 
     for (const [path, file] of Object.entries(filesData)) {
-      const fileName = path.split("/").pop()!;
-
       const existingProject = await this.projectsService.findOneProject({
         dailyDataId: dailyDataForDay.id,
         name: file.projectName,
@@ -98,11 +98,14 @@ export class FilesStatsExtensionService {
             path: file.projectPath,
             timeSpent: timeSpentPerProject[file.projectPath],
           });
+          returningProjectData.timeSpent =
+            timeSpentPerProject[file.projectPath];
+        } else {
+          returningProjectData.timeSpent = existingProject.timeSpent;
         }
 
         returningProjectData.projectId = existingProject.id;
         returningProjectData.projectName = existingProject.name;
-        returningProjectData.timeSpent = existingProject.timeSpent;
       }
 
       const fileLanguage = await this.languagesService.findOneLanguage({
@@ -117,7 +120,7 @@ export class FilesStatsExtensionService {
 
       const existingFileData = await this.filesService.findOneFile({
         projectId: returningProjectData.projectId,
-        name: fileName,
+        name: file.fileName,
         path,
         languageId: fileLanguage.languageId,
       });
@@ -127,7 +130,7 @@ export class FilesStatsExtensionService {
         await this.filesService.createFile({
           projectId: returningProjectData.projectId,
           languageId: fileLanguage.languageId,
-          name: fileName,
+          name: file.fileName,
           path,
           timeSpent: file.timeSpent,
         });
@@ -137,6 +140,7 @@ export class FilesStatsExtensionService {
           projectName: file.projectName,
           projectPath: file.projectPath,
           timeSpent: file.timeSpent,
+          fileName: file.fileName,
         };
       } else {
         // else just update the file data but only if the new timeSpent is greater than the existing one
@@ -146,7 +150,7 @@ export class FilesStatsExtensionService {
             languageId: fileLanguage.languageId,
             path,
             timeSpent: file.timeSpent,
-            name: fileName,
+            name: file.fileName,
           });
 
           returningData[path] = {
@@ -154,6 +158,15 @@ export class FilesStatsExtensionService {
             projectName: file.projectName,
             projectPath: file.projectPath,
             timeSpent: file.timeSpent,
+            fileName: file.fileName,
+          };
+        } else {
+          returningData[path] = {
+            languageSlug: file.languageSlug,
+            projectName: file.projectName,
+            projectPath: file.projectPath,
+            fileName: file.fileName,
+            timeSpent: existingFileData.timeSpent,
           };
         }
       }
