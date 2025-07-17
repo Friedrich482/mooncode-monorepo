@@ -9,10 +9,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
+} from "@repo/ui/components/ui/form";
 import { Link, useNavigate } from "react-router";
-import { Button } from "@/components/ui/button";
-import { Input } from "../ui/input";
+import { Button } from "@repo/ui/components/ui/button";
+import { Input } from "@repo/ui/components/ui/input";
 import { RegisterUserDto } from "@repo/common/schemas";
 import { RegisterUserDtoType } from "@repo/common/types";
 import fetchJWTToken from "@repo/common/fetchJWTToken";
@@ -20,7 +20,7 @@ import getCallbackUrl from "@/utils/getCallbackUrl";
 import { useForm } from "react-hook-form";
 import { useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
-import useTogglePassword from "@/hooks/useTogglePassword";
+import useTogglePassword from "@/hooks/auth/useTogglePassword";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 const RegisterForm = () => {

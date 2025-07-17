@@ -1,48 +1,41 @@
 import { PERIODS_CONFIG } from "@/constants";
-import { ProjectParamsSchema } from "@/types-schemas";
-import getLanguageColor from "@/utils/getLanguageColor";
-import { usePeriodStore } from "./store/periodStore";
-import useSafeParams from "./useSafeParams";
+import getLanguageColor from "@repo/common/getLanguageColor";
+import { usePeriodStore } from "@/hooks/store/periodStore";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
 
-const useSuspenseQueryProjectsLangChart = () => {
-  const { projectName: name } = useSafeParams(ProjectParamsSchema);
-
+const useSuspenseQueryPeriodLangChart = () => {
   const period = usePeriodStore((state) => state.period);
-  const customRange = usePeriodStore((state) => state.customRange);
   const groupBy = usePeriodStore((state) => state.groupBy);
+  const customRange = usePeriodStore((state) => state.customRange);
 
   const trpc = useTRPC();
+
   const { data: pieChart } = useSuspenseQuery(
-    trpc.filesStats.getProjectLanguagesTimeOnPeriod.queryOptions(
+    trpc.codingStats.getPeriodLanguagesTime.queryOptions(
       period === "Custom Range"
         ? {
             start: customRange.start,
             end: customRange.end,
-            name,
           }
         : {
             start: PERIODS_CONFIG[period].start,
             end: PERIODS_CONFIG[period].end,
-            name,
           },
     ),
   );
 
   const { data: barChartData } = useSuspenseQuery(
-    trpc.filesStats.getProjectLanguagesPerDayOfPeriod.queryOptions(
+    trpc.codingStats.getPeriodLanguagesPerDay.queryOptions(
       period === "Custom Range"
         ? {
             start: customRange.start,
             end: customRange.end,
-            name,
-            groupBy,
+            groupBy: groupBy,
           }
         : {
             start: PERIODS_CONFIG[period].start,
             end: PERIODS_CONFIG[period].end,
-            name,
             groupBy,
           },
     ),
@@ -56,7 +49,10 @@ const useSuspenseQueryProjectsLangChart = () => {
     };
   });
 
-  return { pieChartData, barChartData };
+  return {
+    pieChartData,
+    barChartData,
+  };
 };
 
-export default useSuspenseQueryProjectsLangChart;
+export default useSuspenseQueryPeriodLangChart;

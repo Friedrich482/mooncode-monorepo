@@ -3,13 +3,13 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@repo/ui/components/ui/dropdown-menu";
 import { PERIODS, WEEK_PERIODS, YEAR_PERIODS } from "@/constants";
 import { useEffect, useMemo, useState } from "react";
-import { Button } from "@/components/ui/button";
-import CalendarPopover from "../ui/CalendarPopover";
+import { Button } from "@repo/ui/components/ui/button";
+import CalendarPopover from "@repo/ui/components/ui/CalendarPopover";
 import { ChevronDown } from "lucide-react";
-import { DateRange } from "react-day-picker";
+import { DateRange } from "@repo/ui/index";
 import { Period } from "@/types-schemas";
 import getPeriodResolution from "@repo/common/getPeriodResolution";
 import { usePeriodStore } from "@/hooks/store/periodStore";

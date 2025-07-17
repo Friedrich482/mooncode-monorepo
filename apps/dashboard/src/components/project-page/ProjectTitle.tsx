@@ -1,4 +1,4 @@
-import useGetTimeSpentOnProject from "@/hooks/useGetTimeSpentOnProject";
+import useGetTimeSpentOnProject from "@/hooks/projects/useGetTimeSpentOnProject";
 
 const ProjectTitle = () => {
   const data = useGetTimeSpentOnProject();

@@ -1,7 +1,7 @@
 import { PERIODS_CONFIG } from "@/constants";
-import { cn } from "@/lib/utils";
-import getLanguageColor from "@/utils/getLanguageColor";
-import getLanguageName from "@/utils/getLanguageName";
+import { cn } from "@repo/ui/lib/utils";
+import getLanguageColor from "@repo/common/getLanguageColor";
+import getLanguageName from "@repo/common/getLanguageName";
 import { usePeriodStore } from "@/hooks/store/periodStore";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";

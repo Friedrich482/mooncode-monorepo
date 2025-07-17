@@ -1,7 +1,7 @@
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import type { DateRange } from "react-day-picker";
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils";
 
 function CalendarPopover<T extends "single" | "range">({
   mode,

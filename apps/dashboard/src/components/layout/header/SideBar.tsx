@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
-import Icon from "@/components/ui/Icon";
+import { Button } from "@repo/ui/components/ui/button";
+import Icon from "@repo/ui/components/ui/Icon";
 import { Link } from "react-router";
 import Logo from "./Logo";
 import { X } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 
 const SideBar = ({
   isOpen,

@@ -2,14 +2,13 @@ import * as React from "react";
 import { Legend, LegendProps, ResponsiveContainer, Tooltip } from "recharts";
 
 import { Payload } from "recharts/types/component/DefaultLegendContent";
-import { cn } from "@/lib/utils";
-import getLanguageName from "@/utils/getLanguageName";
+import { cn } from "../../lib/utils";
+import getLanguageName from "@repo/common/getLanguageName";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
 
 export type ChartConfig = {
-  // eslint-disable-next-line no-unused-vars
   [k in string]: {
     label?: React.ReactNode;
     icon?: React.ComponentType;

@@ -14,16 +14,16 @@ import {
   ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
+} from "@repo/ui/components/ui/chart";
 import { useMemo, useState } from "react";
-import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
-import Icon from "@/components/ui/Icon";
+import CustomChartToolTip from "@/components/CustomChartToolTip";
+import Icon from "@repo/ui/components/ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { chartConfig } from "@/constants";
 import { formatTickForGroupBy } from "@/utils/formatTickForGroupBy";
-import getLanguageColor from "@/utils/getLanguageColor";
+import getLanguageColor from "@repo/common/getLanguageColor";
 import { usePeriodStore } from "@/hooks/store/periodStore";
-import useSuspenseQueryPeriodLangChart from "@/hooks/useSuspenseQueryPeriodLangChart";
+import useSuspenseQueryPeriodLangChart from "@/hooks/fetch/useSuspenseQueryPeriodLangChart";
 
 const PeriodLanguagesChart = () => {
   const { pieChartData, barChartData } = useSuspenseQueryPeriodLangChart();

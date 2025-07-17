@@ -11,7 +11,7 @@ import {
   subWeeks,
   subYears,
 } from "date-fns";
-import { ChartConfig } from "@/components/ui/chart";
+import { ChartConfig } from "@repo/ui/components/ui/chart";
 import { FixedArray } from "./types-schemas";
 import { GroupBy } from "@repo/common/types";
 import { Theme } from "@/components/themeProvider";
@@ -73,8 +73,6 @@ export const chartConfig = {
     color: "#FFDC67",
   },
 } satisfies ChartConfig;
-
-export const DEFAULT_COLOR = "HSL(334, 90%, 51%)";
 
 export const PERIODS_CONFIG = {
   "Last 7 days": {

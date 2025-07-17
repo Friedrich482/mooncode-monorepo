@@ -1,4 +1,4 @@
-import languagesAttributes from "@/colors.json";
+import languagesAttributes from "./colors.json";
 
 const getLanguageName = (languageSlug: string) => {
   let languageName: string = "";

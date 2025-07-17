@@ -1,7 +1,7 @@
 import { PERIODS_CONFIG } from "@/constants";
 import { ProjectParamsSchema } from "@/types-schemas";
-import { usePeriodStore } from "./store/periodStore";
-import useSafeParams from "./useSafeParams";
+import { usePeriodStore } from "@/hooks/store/periodStore";
+import useSafeParams from "@/hooks/useSafeParams";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
 

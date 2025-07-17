@@ -4,14 +4,14 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@repo/ui/components/ui/dropdown-menu";
 import { Link, useNavigate } from "react-router";
 import { LogOut, User } from "lucide-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AUTH_DROPDOWN_ITEMS } from "@/constants";
 import GravatarAvatar from "./GravatarAvatar";
-import Icon from "@/components/ui/Icon";
-import { Skeleton } from "@/components/ui/skeleton";
+import Icon from "@repo/ui/components/ui/Icon";
+import { Skeleton } from "@repo/ui/components/ui/skeleton";
 import { useTRPC } from "@/utils/trpc";
 
 const AuthDropDown = () => {
