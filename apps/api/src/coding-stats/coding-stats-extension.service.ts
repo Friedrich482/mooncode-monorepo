@@ -106,6 +106,9 @@ export class CodingStatsExtensionService {
             });
           returningData.languages[updatedLanguageData.languageSlug] =
             updatedLanguageData.timeSpent;
+        } else {
+          returningData.languages[existingLanguageData.languageSlug] =
+            existingLanguageData.timeSpent;
         }
       }
     }

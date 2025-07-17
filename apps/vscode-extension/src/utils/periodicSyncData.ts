@@ -3,6 +3,8 @@ import { SYNC_DATA_KEY } from "../constants";
 import { TRPCClientError } from "@trpc/client";
 import calculateTime from "./calculateTime";
 import getGlobalStateData from "./getGlobalStateData";
+import initializeFiles from "./files/initializeFiles";
+import initializeLanguages from "./languages/initializeLanguages";
 import { isEqual } from "date-fns";
 import setStatusBarItem from "./setStatusBarItem";
 import trpc from "./trpc/client";
@@ -88,17 +90,20 @@ const periodicSyncData = async (
       }
     }
 
-    await trpc.codingStats.upsert.mutate({
+    const { languages } = await trpc.codingStats.upsert.mutate({
       targetedDate: todaysDateString,
       timeSpentOnDay: timeSpentToday,
       timeSpentPerLanguage: timeSpentPerLanguageToday,
     });
 
-    await trpc.filesStats.upsert.mutate({
+    const files = await trpc.filesStats.upsert.mutate({
       filesData: todayFilesData,
       targetedDate: todaysDateString,
       timeSpentPerProject,
     });
+
+    initializeLanguages(languages);
+    initializeFiles(files);
 
     isServerSynced = true;
     lastServerSync = new Date();
@@ -119,7 +124,7 @@ const periodicSyncData = async (
     });
   } catch (error) {
     if (error instanceof TRPCClientError) {
-      vscode.window.showWarningMessage(
+      console.error(
         `tRPC Error during sync: ${error.message}, Cause: ${error.cause}.`,
       );
     } else {
@@ -149,7 +154,7 @@ const periodicSyncData = async (
       });
     } catch (globalStateError) {
       vscode.window.showErrorMessage(
-        `CRITICAL ERROR: Failed to save data to globalState : ${globalStateError}. Please open an issue to the Github repo of MoonCode.`,
+        `CRITICAL ERROR: Failed to save data to globalState : ${globalStateError}. Please open an issue to the GitHub repo of MoonCode.`,
       );
     }
 

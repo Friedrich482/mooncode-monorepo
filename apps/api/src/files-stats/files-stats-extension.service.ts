@@ -41,6 +41,9 @@ export class FilesStatsExtensionService {
     const { userId, filesData, timeSpentPerProject, targetedDate } =
       upsertFilesDto;
 
+    // This returningProjectData object is reused for each file's project,
+    // which means its values will be overwritten in each iteration.
+    // It primarily serves to pass the projectId to the file creation/update.
     const returningProjectData = {
       projectId: "",
       projectName: "",
@@ -57,7 +60,14 @@ export class FilesStatsExtensionService {
       return {};
     }
 
-    const returningData = Object.fromEntries(
+    const returningData: {
+      [path: string]: {
+        languageSlug: string;
+        projectName: string;
+        projectPath: string;
+        timeSpent: number;
+      };
+    } = Object.fromEntries(
       Object.entries(
         await this.filesService.findAllFilesOnDay({
           dailyDataId: dailyDataForDay.id,
@@ -98,11 +108,14 @@ export class FilesStatsExtensionService {
             path: file.projectPath,
             timeSpent: timeSpentPerProject[file.projectPath],
           });
+          returningProjectData.timeSpent =
+            timeSpentPerProject[file.projectPath];
+        } else {
+          returningProjectData.timeSpent = existingProject.timeSpent;
         }
 
         returningProjectData.projectId = existingProject.id;
         returningProjectData.projectName = existingProject.name;
-        returningProjectData.timeSpent = existingProject.timeSpent;
       }
 
       const fileLanguage = await this.languagesService.findOneLanguage({
@@ -154,6 +167,13 @@ export class FilesStatsExtensionService {
             projectName: file.projectName,
             projectPath: file.projectPath,
             timeSpent: file.timeSpent,
+          };
+        } else {
+          returningData[path] = {
+            languageSlug: file.languageSlug,
+            projectName: file.projectName,
+            projectPath: file.projectPath,
+            timeSpent: existingFileData.timeSpent,
           };
         }
       }
