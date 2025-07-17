@@ -10,5 +10,3 @@ export const COOKIE_OR_TOKEN_NOT_FOUND_MESSAGE = "Auth cookie/token missing";
 export const API_URL = "http://localhost:3000/trpc";
 export const DASHBOARD_PORT = 4208;
 export const DASHBOARD_URL = `http://localhost:${DASHBOARD_PORT}`;
-
-export const DEFAULT_COLOR = "HSL(334, 90%, 51%)";
