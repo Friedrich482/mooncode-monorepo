@@ -1,41 +1,48 @@
 import { PERIODS_CONFIG } from "@/constants";
-import getLanguageColor from "@/utils/getLanguageColor";
-import { usePeriodStore } from "./store/periodStore";
+import { ProjectParamsSchema } from "@/types-schemas";
+import getLanguageColor from "@repo/common/getLanguageColor";
+import { usePeriodStore } from "@/hooks/store/periodStore";
+import useSafeParams from "@/hooks/useSafeParams";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
 
-const useSuspenseQueryPeriodLangChart = () => {
+const useSuspenseQueryProjectsLangChart = () => {
+  const { projectName: name } = useSafeParams(ProjectParamsSchema);
+
   const period = usePeriodStore((state) => state.period);
-  const groupBy = usePeriodStore((state) => state.groupBy);
   const customRange = usePeriodStore((state) => state.customRange);
+  const groupBy = usePeriodStore((state) => state.groupBy);
 
   const trpc = useTRPC();
-
   const { data: pieChart } = useSuspenseQuery(
-    trpc.codingStats.getPeriodLanguagesTime.queryOptions(
+    trpc.filesStats.getProjectLanguagesTimeOnPeriod.queryOptions(
       period === "Custom Range"
         ? {
             start: customRange.start,
             end: customRange.end,
+            name,
           }
         : {
             start: PERIODS_CONFIG[period].start,
             end: PERIODS_CONFIG[period].end,
+            name,
           },
     ),
   );
 
   const { data: barChartData } = useSuspenseQuery(
-    trpc.codingStats.getPeriodLanguagesPerDay.queryOptions(
+    trpc.filesStats.getProjectLanguagesPerDayOfPeriod.queryOptions(
       period === "Custom Range"
         ? {
             start: customRange.start,
             end: customRange.end,
-            groupBy: groupBy,
+            name,
+            groupBy,
           }
         : {
             start: PERIODS_CONFIG[period].start,
             end: PERIODS_CONFIG[period].end,
+            name,
             groupBy,
           },
     ),
@@ -49,10 +56,7 @@ const useSuspenseQueryPeriodLangChart = () => {
     };
   });
 
-  return {
-    pieChartData,
-    barChartData,
-  };
+  return { pieChartData, barChartData };
 };
 
-export default useSuspenseQueryPeriodLangChart;
+export default useSuspenseQueryProjectsLangChart;

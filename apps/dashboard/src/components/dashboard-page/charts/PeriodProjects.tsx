@@ -1,5 +1,5 @@
 import { Folder, FolderOpen } from "lucide-react";
-import Icon from "@/components/ui/Icon";
+import Icon from "@repo/ui/components/ui/Icon";
 import { Link } from "react-router";
 import { PERIODS_CONFIG } from "@/constants";
 import formatDuration from "@repo/common/formatDuration";

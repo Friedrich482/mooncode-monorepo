@@ -3,9 +3,9 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
+} from "@repo/ui/components/ui/chart";
 import { PERIODS_CONFIG, chartConfig } from "@/constants";
-import CustomChartToolTip from "../../ui/custom-chart-tool-tip";
+import CustomChartToolTip from "@/components/CustomChartToolTip";
 import GroupByDropDown from "../GroupByDropDown";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { formatTickForGroupBy } from "@/utils/formatTickForGroupBy";

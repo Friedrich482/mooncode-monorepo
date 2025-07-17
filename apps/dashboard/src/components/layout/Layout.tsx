@@ -2,7 +2,7 @@ import { Outlet, useNavigation } from "react-router";
 import { ClipLoader } from "react-spinners";
 import Footer from "./Footer";
 import Header from "./header/Header";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 
 const GlobalSpinner = () => (
   <div className="flex h-dvh items-center justify-center">

@@ -3,8 +3,8 @@ import {
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+} from "@repo/ui/components/ui/dropdown-menu";
+import { Button } from "@repo/ui/components/ui/button";
 import { ChevronDown } from "lucide-react";
 import { Entry } from "@/types-schemas";
 import useLanguagesDropDown from "@/hooks/useLanguagesDropDown";

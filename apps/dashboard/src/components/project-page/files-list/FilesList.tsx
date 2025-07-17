@@ -1,4 +1,4 @@
-import { Checkbox } from "@/components/ui/checkbox";
+import { Checkbox } from "@repo/ui/components/ui/checkbox";
 import { Entry } from "@/types-schemas";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallBack from "@/components/suspense/ErrorFallback";
@@ -6,7 +6,7 @@ import Files from "./Files";
 import LanguagesDropDown from "./LanguagesDropDown";
 import SuspenseBoundary from "@/components/suspense/SuspenseBoundary";
 import { TriangleAlert } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 import { useState } from "react";
 
 const FilesList = () => {

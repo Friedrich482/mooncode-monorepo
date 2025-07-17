@@ -3,9 +3,9 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@repo/ui/components/ui/dropdown-menu";
 import { GROUP_BY_DROPDOWN_ITEMS, PERIODS_CONFIG } from "@/constants";
-import { Button } from "../ui/button";
+import { Button } from "@repo/ui/components/ui/button";
 import { Group } from "lucide-react";
 import getPeriodResolution from "@repo/common/getPeriodResolution";
 import { useMemo } from "react";

@@ -3,13 +3,13 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
+} from "@repo/ui/components/ui/chart";
 import { useMemo, useState } from "react";
 import ChartTitle from "./ChartTitle";
-import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
+import CustomChartToolTip from "@/components/CustomChartToolTip";
 import { chartConfig } from "@/constants";
-import getLanguageColor from "@/utils/getLanguageColor";
-import getLanguageName from "@/utils/getLanguageName";
+import getLanguageColor from "@repo/common/getLanguageColor";
+import getLanguageName from "@repo/common/getLanguageName";
 import getNextDayDate from "@/utils/getNextDayDate";
 import getPrevDayDate from "@/utils/getPreviousDayDate";
 import { useSuspenseQuery } from "@tanstack/react-query";

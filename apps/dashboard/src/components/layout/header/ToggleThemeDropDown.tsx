@@ -3,11 +3,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@repo/ui/components/ui/dropdown-menu";
 import { Moon, Sun } from "lucide-react";
-import Icon from "../../ui/Icon";
+import Icon from "@repo/ui/components/ui/Icon";
 import { THEME_DROPDOWN_ITEMS } from "@/constants";
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 import { useTheme } from "@/components/themeProvider";
 
 const ToggleThemeDropDown = () => {

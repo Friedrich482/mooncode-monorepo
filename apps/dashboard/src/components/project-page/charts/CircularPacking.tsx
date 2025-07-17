@@ -1,6 +1,6 @@
 import { Pause, Play, RotateCcw } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import Icon from "@/components/ui/Icon";
+import Icon from "@repo/ui/components/ui/Icon";
 import { Tree } from "@/types-schemas";
 import { bubblesColors } from "@/constants";
 import formatDuration from "@repo/common/formatDuration";

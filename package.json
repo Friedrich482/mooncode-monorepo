@@ -35,6 +35,7 @@
     "packages/*"
   ],
   "dependencies": {
+    "date-fns": "^4.1.0",
     "superjson": "^2.2.2"
   }
 }

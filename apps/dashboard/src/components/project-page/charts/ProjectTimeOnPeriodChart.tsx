@@ -4,11 +4,11 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/components/ui/chart";
+} from "@repo/ui/components/ui/chart";
 import { PERIODS_CONFIG, chartConfig } from "@/constants";
-import CustomChartToolTip from "@/components/ui/custom-chart-tool-tip";
+import CustomChartToolTip from "@/components/CustomChartToolTip";
 import GroupByDropDown from "@/components/dashboard-page/GroupByDropDown";
-import Icon from "@/components/ui/Icon";
+import Icon from "@repo/ui/components/ui/Icon";
 import { Payload } from "recharts/types/component/DefaultTooltipContent";
 import { ProjectParamsSchema } from "@/types-schemas";
 import { formatTickForGroupBy } from "@/utils/formatTickForGroupBy";

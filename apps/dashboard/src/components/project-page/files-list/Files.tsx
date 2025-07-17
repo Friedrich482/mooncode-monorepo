@@ -1,8 +1,8 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@repo/ui/lib/utils";
 import formatDuration from "@repo/common/formatDuration";
-import getLanguageColor from "@/utils/getLanguageColor";
-import getLanguageName from "@/utils/getLanguageName";
-import useFiles from "@/hooks/useFiles";
+import getLanguageColor from "@repo/common/getLanguageColor";
+import getLanguageName from "@repo/common/getLanguageName";
+import useFiles from "@/hooks/projects/useFiles";
 
 const Files = ({
   languagesToFetch,
