@@ -4,11 +4,17 @@ import getCurrentFileProperties from "./getCurrentFileProperties";
 import getLanguageSlug from "../languages/getLanguageSlug";
 
 const updateCurrentFileObj = (document: vscode.TextDocument | undefined) => {
-  const { absolutePath, projectName, projectPath } =
+  const { absolutePath, projectName, projectPath, fileName } =
     getCurrentFileProperties(document);
   const currentLanguageSlug = getLanguageSlug(document);
 
-  if (!absolutePath || !projectName || !projectPath || !currentLanguageSlug) {
+  if (
+    !absolutePath ||
+    !projectName ||
+    !projectPath ||
+    !currentLanguageSlug ||
+    !fileName
+  ) {
     return;
   }
 
@@ -23,6 +29,7 @@ const updateCurrentFileObj = (document: vscode.TextDocument | undefined) => {
       projectName,
       projectPath,
       languageSlug: currentLanguageSlug,
+      fileName,
     };
   }
 

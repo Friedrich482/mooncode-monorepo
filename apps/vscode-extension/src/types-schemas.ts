@@ -20,6 +20,7 @@ export type FileData = {
   projectName: string;
   projectPath: string;
   languageSlug: string;
+  fileName: string;
 };
 
 export const globalStateInitialDataSchema = z.object({
@@ -44,6 +45,7 @@ export const globalStateInitialDataSchema = z.object({
           projectPath: z.string().min(1),
           languageSlug: z.string().min(1),
           projectName: z.string().min(1),
+          fileName: z.string().min(1),
         }),
       ),
 

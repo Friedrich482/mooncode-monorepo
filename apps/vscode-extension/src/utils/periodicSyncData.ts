@@ -30,8 +30,7 @@ const periodicSyncData = async (
   );
 
   const timeSpentPerProject = Object.entries(getTime().filesData)
-    .map(([filePath, fileData]) => ({
-      filePath,
+    .map(([, fileData]) => ({
       project: fileData.projectPath,
       timeSpent: fileData.elapsedTime,
     }))
@@ -48,13 +47,17 @@ const periodicSyncData = async (
     );
   const todayFilesData = Object.fromEntries(
     Object.entries(getTime().filesData).map(
-      ([filePath, { elapsedTime, languageSlug, projectName, projectPath }]) => [
+      ([
+        filePath,
+        { elapsedTime, languageSlug, projectName, projectPath, fileName },
+      ]) => [
         filePath,
         {
           timeSpent: elapsedTime,
           languageSlug,
           projectName,
           projectPath,
+          fileName,
         },
       ],
     ),

@@ -24,6 +24,7 @@ export const UpsertFilesDto = z.object({
       languageSlug: z.string().min(1),
       projectName: z.string().min(1),
       projectPath: z.string().min(1),
+      fileName: z.string().min(1),
     }),
   ),
   targetedDate: dateStringDto,
