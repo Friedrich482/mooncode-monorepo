@@ -7,33 +7,40 @@ import setLoginContext from "./setLoginContext";
 
 const logout = async () => {
   //!! add a warning to prevent the user that all local data will be lost
-  const context = getExtensionContext();
+  try {
+    const context = getExtensionContext();
 
-  await deleteToken(context);
+    await deleteToken(context);
 
-  await setLoginContext(false);
+    await setLoginContext(false);
 
-  //  purge the local data of the current user
-  Object.keys(languagesData).forEach((key) => {
-    delete languagesData[key];
-  });
+    //  purge the local data of the current user
+    Object.keys(languagesData).forEach((key) => {
+      delete languagesData[key];
+    });
 
-  Object.keys(filesData).forEach((key) => {
-    delete filesData[key];
-  });
+    Object.keys(filesData).forEach((key) => {
+      delete filesData[key];
+    });
 
-  const todaysDateString = new Date().toLocaleDateString();
-  await context.globalState.update(SYNC_DATA_KEY, {
-    lastServerSync: new Date(),
-    dailyData: {
-      [todaysDateString]: {
-        timeSpentOnDay: 0,
-        timeSpentPerLanguage: {},
-        dayFilesData: {},
-        updatedAt: new Date(),
+    const todaysDateString = new Date().toLocaleDateString();
+    await context.globalState.update(SYNC_DATA_KEY, {
+      lastServerSync: new Date(),
+      dailyData: {
+        [todaysDateString]: {
+          timeSpentOnDay: 0,
+          timeSpentPerLanguage: {},
+          dayFilesData: {},
+          updatedAt: new Date(),
+        },
       },
-    },
-  });
+    });
+  } catch (error) {
+    vscode.window.showErrorMessage(
+      `Logout failed: ${error instanceof Error ? error.message : error}`,
+    );
+    return;
+  }
 
   const selection = await vscode.window.showInformationMessage(
     "Logged out",
