@@ -60,6 +60,10 @@
         "title": "MoonCode: Login"
       },
       {
+        "command": "MoonCode.logout",
+        "title": "MoonCode: Logout"
+      },
+      {
         "command": "MoonCode.openDashboard",
         "title": "MoonCode: Open Dashboard"
       }
@@ -69,6 +73,10 @@
         {
           "command": "MoonCode.login",
           "when": "!MoonCode.isLoggedIn"
+        },
+        {
+          "command": "MoonCode.logout",
+          "when": "MoonCode.isLoggedIn"
         }
       ]
     }
