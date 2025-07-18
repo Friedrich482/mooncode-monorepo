@@ -1,4 +1,3 @@
-import { convertToISOFormat } from "@/utils/dates-conversion";
 import { useEffect } from "react";
 import { usePeriodStore } from "./store/periodStore";
 import { useSearchParams } from "react-router";
@@ -22,15 +21,15 @@ const useSynchronizeURL = () => {
 
     if (groupBy && groupBy !== "days") {
       setSearchParams({
-        start: convertToISOFormat(customRange.start),
-        end: convertToISOFormat(customRange.end),
+        start: customRange.start,
+        end: customRange.end,
         groupBy,
       });
       return;
     }
     setSearchParams({
-      start: convertToISOFormat(customRange.start),
-      end: convertToISOFormat(customRange.end),
+      start: customRange.start,
+      end: customRange.end,
     });
   }, [period, customRange.start, customRange.end, groupBy]);
 };

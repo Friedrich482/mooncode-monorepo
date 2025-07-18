@@ -1,7 +1,8 @@
-import { differenceInMonths, endOfMonth, format, startOfMonth } from "date-fns";
+import { differenceInMonths, endOfMonth, startOfMonth } from "date-fns";
 import { CodingStatsDashboardService } from "../coding-stats-dashboard.service";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { NAString } from "src/common/dto";
+import convertToISODate from "@repo/common/convertToISODate";
 import formatDuration from "@repo/common/formatDuration";
 import getDaysOfPeriodStatsGroupByMonths from "./getDaysOfPeriodStatsGroupByMonths";
 import getMostUsedLanguageOnPeriod from "./getMostUsedLanguageOnPeriod";
@@ -35,8 +36,8 @@ const getGeneralStatsOnPeriodGroupByMonths = async (
   const timeSpentOnTodaySMonth = (
     await codingStatsDashboardService.getTimeSpentOnPeriod({
       userId,
-      start: format(startOfMonth(new Date()), "yyyy-MM-dd"),
-      end: format(endOfMonth(new Date()), "yyyy-MM-dd"),
+      start: convertToISODate(startOfMonth(new Date())),
+      end: convertToISODate(endOfMonth(new Date())),
     })
   ).rawTime;
 
@@ -55,7 +56,7 @@ const getGeneralStatsOnPeriodGroupByMonths = async (
       ? "N/A"
       : monthlyDataForPeriod.find(
           (month) => month.timeSpent === maxTimeSpentPerMonth,
-        )?.originalDate || format(new Date(), "yyyy-MM-dd");
+        )?.originalDate || convertToISODate(new Date());
 
   const mostUsedLanguageSlug = await getMostUsedLanguageOnPeriod(
     codingStatsDashboardService,

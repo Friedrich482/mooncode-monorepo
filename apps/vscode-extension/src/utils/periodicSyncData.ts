@@ -3,6 +3,7 @@ import { SYNC_DATA_KEY } from "../constants";
 import { TRPCClientError } from "@trpc/client";
 import calculateTime from "./calculateTime";
 import getGlobalStateData from "./getGlobalStateData";
+import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
 import initializeFiles from "./files/initializeFiles";
 import initializeLanguages from "./languages/initializeLanguages";
 import { isEqual } from "date-fns";
@@ -14,7 +15,7 @@ const periodicSyncData = async (
   statusBarItem: vscode.StatusBarItem,
   getTime: Awaited<ReturnType<typeof calculateTime>>,
 ) => {
-  const todaysDateString = new Date().toLocaleDateString();
+  const todaysDateString = getTodaysLocalDate();
   let lastServerSync = new Date();
   let isServerSynced = false;
 

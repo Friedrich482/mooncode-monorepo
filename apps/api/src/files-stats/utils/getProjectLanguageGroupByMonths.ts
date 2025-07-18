@@ -1,5 +1,7 @@
-import { endOfMonth, format, startOfMonth } from "date-fns";
+import { endOfMonth, startOfMonth } from "date-fns";
 import { ProjectsService } from "src/projects/projects.service";
+import convertToISODate from "@repo/common/convertToISODate";
+import formatShortDate from "src/utils/formatShortDate";
 
 const getProjectLanguageGroupByMonths = (
   data: Awaited<ReturnType<ProjectsService["findProjectByNameOnRange"]>>,
@@ -34,11 +36,11 @@ const getProjectLanguageGroupByMonths = (
     const monthStart = startOfMonth(date);
     monthEnd = endDate < monthEnd ? endDate : monthEnd;
 
-    const monthKey = format(monthStart, "yyyy-MM-dd");
+    const monthKey = convertToISODate(monthStart);
 
     if (!monthlyMap.has(monthKey)) {
       monthlyMap.set(monthKey, {
-        month: `${format(monthStart, "MMM d")} - ${format(monthEnd, "MMM d")}`,
+        month: `${formatShortDate(monthStart)} - ${formatShortDate(monthEnd)}`,
         timeSpent: 0,
         startDate: monthStart,
         endDate: monthEnd,

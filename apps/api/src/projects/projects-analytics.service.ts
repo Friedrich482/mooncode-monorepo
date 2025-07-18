@@ -7,11 +7,12 @@ import {
 } from "./projects.dto";
 import { Inject, Injectable } from "@nestjs/common";
 import { and, between, desc, eq, inArray, sum } from "drizzle-orm";
-import { eachDayOfInterval, format } from "date-fns";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { TRPCError } from "@trpc/server";
+import convertToISODate from "@repo/common/convertToISODate";
 import { dailyData } from "src/drizzle/schema/dailyData";
+import { eachDayOfInterval } from "date-fns";
 import { files } from "src/drizzle/schema/files";
 import { languages } from "src/drizzle/schema/languages";
 import { projects } from "src/drizzle/schema/projects";
@@ -97,7 +98,7 @@ export class ProjectsAnalyticsService {
     );
 
     return dateRange.map((date) => {
-      const formattedDate = format(date, "yyyy-MM-dd");
+      const formattedDate = convertToISODate(date);
       return (
         dataByDate[formattedDate] || {
           timeSpent: 0,

@@ -2,6 +2,7 @@ import * as vscode from "vscode";
 import { SYNC_DATA_KEY, filesData, languagesData } from "../../constants";
 import deleteToken from "./deleteToken";
 import { getExtensionContext } from "../../extension";
+import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
 import login from "./login";
 import setLoginContext from "./setLoginContext";
 
@@ -23,7 +24,7 @@ const logout = async () => {
       delete filesData[key];
     });
 
-    const todaysDateString = new Date().toLocaleDateString();
+    const todaysDateString = getTodaysLocalDate();
     await context.globalState.update(SYNC_DATA_KEY, {
       lastServerSync: new Date(),
       dailyData: {

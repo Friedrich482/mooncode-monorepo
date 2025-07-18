@@ -12,6 +12,7 @@ import {
   subYears,
 } from "date-fns";
 import { ChartConfig } from "@repo/ui/components/ui/chart";
+import { DATE_LOCALE } from "@repo/common/constants";
 import { FixedArray } from "./types-schemas";
 import { GroupBy } from "@repo/common/types";
 import { Theme } from "@/components/themeProvider";
@@ -76,44 +77,46 @@ export const chartConfig = {
 
 export const PERIODS_CONFIG = {
   "Last 7 days": {
-    start: subDays(new Date(), 6).toLocaleDateString(),
-    end: new Date().toLocaleDateString(),
+    start: subDays(new Date(), 6).toLocaleDateString(DATE_LOCALE),
+    end: new Date().toLocaleDateString(DATE_LOCALE),
   },
   "This week": {
-    start: startOfWeek(new Date()).toLocaleDateString(),
-    end: new Date().toLocaleDateString(),
+    start: startOfWeek(new Date()).toLocaleDateString(DATE_LOCALE),
+    end: new Date().toLocaleDateString(DATE_LOCALE),
   },
   "Last week": {
-    start: startOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(),
-    end: endOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(),
+    start: startOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(DATE_LOCALE),
+    end: endOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(DATE_LOCALE),
   },
   "Last 14 days": {
-    start: subDays(new Date(), 13).toLocaleDateString(),
-    end: new Date().toLocaleDateString(),
+    start: subDays(new Date(), 13).toLocaleDateString(DATE_LOCALE),
+    end: new Date().toLocaleDateString(DATE_LOCALE),
   },
   "Last 2 weeks": {
-    start: startOfWeek(subWeeks(new Date(), 2)).toLocaleDateString(),
-    end: endOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(),
+    start: startOfWeek(subWeeks(new Date(), 2)).toLocaleDateString(DATE_LOCALE),
+    end: endOfWeek(subWeeks(new Date(), 1)).toLocaleDateString(DATE_LOCALE),
   },
   "This month": {
-    start: startOfMonth(new Date()).toLocaleDateString(),
-    end: new Date().toLocaleDateString(),
+    start: startOfMonth(new Date()).toLocaleDateString(DATE_LOCALE),
+    end: new Date().toLocaleDateString(DATE_LOCALE),
   },
   "Last month": {
-    start: startOfMonth(subMonths(new Date(), 1)).toLocaleDateString(),
-    end: endOfMonth(subMonths(new Date(), 1)).toLocaleDateString(),
+    start: startOfMonth(subMonths(new Date(), 1)).toLocaleDateString(
+      DATE_LOCALE,
+    ),
+    end: endOfMonth(subMonths(new Date(), 1)).toLocaleDateString(DATE_LOCALE),
   },
   "This year": {
-    start: startOfYear(new Date()).toLocaleDateString(),
-    end: new Date().toLocaleDateString(),
+    start: startOfYear(new Date()).toLocaleDateString(DATE_LOCALE),
+    end: new Date().toLocaleDateString(DATE_LOCALE),
   },
   "Last year": {
-    start: startOfYear(subYears(new Date(), 1)).toLocaleDateString(),
-    end: endOfYear(subYears(new Date(), 1)).toLocaleDateString(),
+    start: startOfYear(subYears(new Date(), 1)).toLocaleDateString(DATE_LOCALE),
+    end: endOfYear(subYears(new Date(), 1)).toLocaleDateString(DATE_LOCALE),
   },
   "Custom Range": {
-    start: new Date().toLocaleDateString(),
-    end: new Date().toLocaleDateString(),
+    start: new Date().toLocaleDateString(DATE_LOCALE),
+    end: new Date().toLocaleDateString(DATE_LOCALE),
   },
 } as const;
 

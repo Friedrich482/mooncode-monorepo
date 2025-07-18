@@ -1,9 +1,12 @@
 import { GroupBy, PeriodResolution } from "@repo/common/types";
-import { IsoDateSchema, Period, PeriodSchema } from "@/types-schemas";
+import { Period, PeriodSchema } from "@/types-schemas";
 import { ZodError, z } from "zod";
+import { DATE_LOCALE } from "@repo/common/constants";
+import { IsoDateSchema } from "@repo/common/schemas";
 import { PERIODS } from "@/constants";
 import { formatZodError } from "@repo/common/formatZodIssues";
 import getPeriodResolution from "@repo/common/getPeriodResolution";
+import getTodaysLocaleDate from "@repo/common/getTodaysLocalDate";
 
 type ReturnType = {
   period: Period;
@@ -20,8 +23,8 @@ export const getPeriodStoreValuesFromURL = (): ReturnType => {
     period: "Last 7 days",
     groupBy: "days",
     customRange: {
-      start: new Date().toLocaleDateString(),
-      end: new Date().toLocaleDateString(),
+      start: getTodaysLocaleDate(),
+      end: getTodaysLocaleDate(),
       periodResolution: "month",
     },
   };
@@ -73,8 +76,8 @@ export const getPeriodStoreValuesFromURL = (): ReturnType => {
         const parsedStart = IsoDateSchema.parse(startParam);
         const parsedEnd = IsoDateSchema.parse(endParam);
 
-        const validStartFromUrl = parsedStart.toLocaleDateString();
-        const validEndFromUrl = parsedEnd.toLocaleDateString();
+        const validStartFromUrl = parsedStart.toLocaleDateString(DATE_LOCALE);
+        const validEndFromUrl = parsedEnd.toLocaleDateString(DATE_LOCALE);
 
         return {
           period: "Custom Range",
