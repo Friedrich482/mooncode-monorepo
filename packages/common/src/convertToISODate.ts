@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 
-const convertToISODate = (date: Date) => {
+const convertToISODate = (date: Date | string) => {
   return format(date, "yyyy-MM-dd");
 };
 
