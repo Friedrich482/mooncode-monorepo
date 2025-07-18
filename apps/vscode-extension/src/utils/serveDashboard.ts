@@ -27,9 +27,7 @@ const serveDashboard = async (context: vscode.ExtensionContext) => {
 
     const server = app
       .listen(availablePort, () => {
-        vscode.window.showInformationMessage(
-          `Dashboard server started on localhost ${availablePort}`,
-        );
+        console.log(`Dashboard server started on localhost ${availablePort}`);
       })
       .on("error", (error) => {
         vscode.window.showErrorMessage(
