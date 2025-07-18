@@ -7,6 +7,7 @@ import initializeLanguages from "./utils/languages/initializeLanguages";
 import periodicSyncData from "./utils/periodicSyncData";
 import registerAuthUriHandler from "./utils/auth/registerAuthUriHandler";
 import serveDashboard from "./utils/serveDashboard";
+import setEnvironmentContext from "./utils/setEnvironmentContext";
 import setStatusBarItem from "./utils/setStatusBarItem";
 import vscode from "vscode";
 
@@ -15,6 +16,8 @@ let dashboardPort: number | undefined;
 
 export async function activate(context: vscode.ExtensionContext) {
   extensionContext = context;
+
+  setEnvironmentContext();
   dashboardPort = await serveDashboard(context);
   registerAuthUriHandler();
 

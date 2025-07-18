@@ -9,6 +9,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Button } from "@repo/ui/components/ui/button";
 import CalendarPopover from "@repo/ui/components/ui/CalendarPopover";
 import { ChevronDown } from "lucide-react";
+import { DATE_LOCALE } from "@repo/common/constants";
 import { DateRange } from "@repo/ui/index";
 import { Period } from "@/types-schemas";
 import getPeriodResolution from "@repo/common/getPeriodResolution";
@@ -26,10 +27,13 @@ const PeriodDropDown = () => {
     from: new Date(),
   });
   const start = useMemo(
-    () => dateRange.from?.toLocaleDateString(),
+    () => dateRange.from?.toLocaleDateString(DATE_LOCALE),
     [dateRange.from],
   );
-  const end = useMemo(() => dateRange.to?.toLocaleDateString(), [dateRange.to]);
+  const end = useMemo(
+    () => dateRange.to?.toLocaleDateString(DATE_LOCALE),
+    [dateRange.to],
+  );
 
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 

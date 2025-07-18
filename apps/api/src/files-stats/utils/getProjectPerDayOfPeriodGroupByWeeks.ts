@@ -1,13 +1,9 @@
-import {
-  endOfMonth,
-  endOfWeek,
-  format,
-  startOfMonth,
-  startOfWeek,
-} from "date-fns";
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { PeriodResolution } from "@repo/common/types";
 import { ProjectsService } from "src/projects/projects.service";
+import convertToISODate from "@repo/common/convertToISODate";
 import formatDuration from "@repo/common/formatDuration";
+import formatShortDate from "src/utils/formatShortDate";
 
 const getProjectPerDayOfPeriodGroupByWeeks = (
   data: Awaited<ReturnType<ProjectsService["findProjectByNameOnRange"]>>,
@@ -63,10 +59,10 @@ const getProjectPerDayOfPeriodGroupByWeeks = (
       weekEnd = index >= data.length - 6 ? endDate : weekEnd;
     }
 
-    const weekKey = format(weekStart, "yyyy-MM-dd");
+    const weekKey = convertToISODate(weekStart);
 
     const existing = weeklyMap.get(weekKey) || {
-      weekRange: `${format(weekStart, "MMM d")} - ${format(weekEnd, "MMM d")}`,
+      weekRange: `${formatShortDate(weekStart)} - ${formatShortDate(weekEnd)}`,
       timeSpent: 0,
       startDate: weekStart,
       endDate: weekEnd,

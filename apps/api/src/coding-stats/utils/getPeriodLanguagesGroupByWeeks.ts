@@ -1,13 +1,9 @@
-import {
-  endOfMonth,
-  endOfWeek,
-  format,
-  startOfMonth,
-  startOfWeek,
-} from "date-fns";
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { LanguagesService } from "src/languages/languages.service";
 import { PeriodResolution } from "@repo/common/types";
+import convertToISODate from "@repo/common/convertToISODate";
+import formatShortDate from "src/utils/formatShortDate";
 
 const getPeriodLanguagesGroupByWeeks = async (
   data: Awaited<ReturnType<DailyDataService["findRangeDailyData"]>>,
@@ -63,11 +59,11 @@ const getPeriodLanguagesGroupByWeeks = async (
       }
     }
 
-    const weekKey = format(weekStart, "yyyy-MM-dd");
+    const weekKey = convertToISODate(weekStart);
 
     if (!weeklyMap.has(weekKey)) {
       weeklyMap.set(weekKey, {
-        weekRange: `${format(weekStart, "MMM d")} - ${format(weekEnd, "MMM d")}`,
+        weekRange: `${formatShortDate(weekStart)} - ${formatShortDate(weekEnd)}`,
         timeSpent: 0,
         startDate: weekStart,
         endDate: weekEnd,

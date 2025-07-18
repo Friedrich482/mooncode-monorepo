@@ -6,10 +6,11 @@ import {
 } from "./daily-data.dto";
 import { Inject, Injectable } from "@nestjs/common";
 import { and, between, eq } from "drizzle-orm";
-import { eachDayOfInterval, format } from "date-fns";
 import { DrizzleAsyncProvider } from "src/drizzle/drizzle.provider";
 import { NodePgDatabase } from "drizzle-orm/node-postgres";
+import convertToISODate from "@repo/common/convertToISODate";
 import { dailyData } from "src/drizzle/schema/dailyData";
+import { eachDayOfInterval } from "date-fns";
 
 @Injectable()
 export class DailyDataService {
@@ -73,7 +74,7 @@ export class DailyDataService {
     );
 
     return dateRange.map((date) => {
-      const formattedDate = format(date, "yyyy-MM-dd");
+      const formattedDate = convertToISODate(date);
       return (
         dataByDate[formattedDate] || {
           id: null,

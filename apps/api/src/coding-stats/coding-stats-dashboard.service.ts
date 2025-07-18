@@ -6,11 +6,13 @@ import {
   GetPeriodLanguagesTimeDtoType,
   GetTimeSpentOnPeriodDtoType,
 } from "./coding-stats.dto";
-import { differenceInDays, format } from "date-fns";
+import { DATE_LOCALE } from "@repo/common/constants";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { Injectable } from "@nestjs/common";
 import { LanguagesService } from "src/languages/languages.service";
 import { NAString } from "src/common/dto";
+import convertToISODate from "@repo/common/convertToISODate";
+import { differenceInDays } from "date-fns";
 import formatDuration from "@repo/common/formatDuration";
 import getDaysOfPeriodStatsGroupByMonths from "./utils/getDaysOfPeriodStatsGroupByMonths";
 import getDaysOfPeriodStatsGroupByWeeks from "src/coding-stats/utils/getDaysOfPeriodStatsGroupByWeeks";
@@ -19,6 +21,8 @@ import getGeneralStatsOnPeriodGroupByWeeks from "./utils/getGeneralStatsOnPeriod
 import getMostUsedLanguageOnPeriod from "./utils/getMostUsedLanguageOnPeriod";
 import getPeriodLanguagesGroupByMonths from "./utils/getPeriodLanguagesGroupByMonths";
 import getPeriodLanguagesGroupByWeeks from "src/coding-stats/utils/getPeriodLanguagesGroupByWeeks";
+import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
+import getWeekDayName from "src/utils/getWeekdayName";
 
 @Injectable()
 export class CodingStatsDashboardService {
@@ -76,7 +80,7 @@ export class CodingStatsDashboardService {
     return dailyDataForPeriod.map(({ timeSpent, date }) => ({
       timeSpentLine: timeSpent,
       originalDate: new Date(date).toDateString(),
-      date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
+      date: getWeekDayName(date),
       timeSpentBar: timeSpent,
       value: formatDuration(timeSpent),
     }));
@@ -166,7 +170,7 @@ export class CodingStatsDashboardService {
 
     return dailyDataForPeriod.map(({ date, timeSpent }, index) => ({
       originalDate: new Date(date).toDateString(),
-      date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
+      date: getWeekDayName(date),
       timeSpent,
       ...allLanguages[index],
     }));
@@ -180,7 +184,7 @@ export class CodingStatsDashboardService {
     const providedDate = new Date(dateString);
 
     const dateLabel =
-      dateString === new Date().toLocaleDateString()
+      dateString === getTodaysLocalDate()
         ? "Today"
         : // yesterday's date
           dateString ===
@@ -188,7 +192,7 @@ export class CodingStatsDashboardService {
               new Date().getFullYear(),
               new Date().getMonth(),
               new Date().getDate() - 1,
-            ).toLocaleDateString()
+            ).toLocaleDateString(DATE_LOCALE)
           ? "Yesterday"
           : providedDate.toDateString();
 
@@ -287,7 +291,7 @@ export class CodingStatsDashboardService {
       (
         await this.dailyDataService.findOneDailyData({
           userId,
-          date: format(new Date(), "yyyy-MM-dd"),
+          date: convertToISODate(new Date()),
         })
       )?.timeSpent || 0;
 
@@ -307,7 +311,7 @@ export class CodingStatsDashboardService {
         : new Date(
             dailyDataForPeriod.find(
               (day) => day.timeSpent === maxTimeSpentPerDay,
-            )?.date || format(new Date(start), "yyyy-MM-dd"),
+            )?.date || convertToISODate(new Date(start)),
           ).toDateString();
 
     const mostUsedLanguageSlug = await getMostUsedLanguageOnPeriod(

@@ -7,10 +7,11 @@ import { SYNC_DATA_KEY } from "../constants";
 import { ZodError } from "zod";
 import { formatZodError } from "@repo/common/formatZodIssues";
 import { getExtensionContext } from "../extension";
+import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
 
 const getGlobalStateData: () => Promise<GlobalStateData> = async () => {
   const context = getExtensionContext();
-  const todaysDateString = new Date().toLocaleDateString();
+  const todaysDateString = getTodaysLocalDate();
 
   try {
     const globalStateData = globalStateInitialDataSchema.parse(

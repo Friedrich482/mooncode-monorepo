@@ -13,6 +13,7 @@ import getProjectLanguageGroupByMonths from "./utils/getProjectLanguageGroupByMo
 import getProjectLanguagesGroupByWeeks from "./utils/getProjectLanguagesGroupByWeeks";
 import getProjectPerDayOfPeriodGroupByMonths from "./utils/getProjectPerDayOfPeriodGroupByMonths";
 import getProjectPerDayOfPeriodGroupByWeeks from "./utils/getProjectPerDayOfPeriodGroupByWeeks";
+import getWeekDayName from "src/utils/getWeekdayName";
 
 @Injectable()
 export class FilesStatsDashboardService {
@@ -97,7 +98,7 @@ export class FilesStatsDashboardService {
       timeSpentArea: timeSpent,
       value: formatDuration(timeSpent),
       originalDate: new Date(date).toDateString(),
-      date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
+      date: getWeekDayName(date),
     }));
   }
 
@@ -195,7 +196,7 @@ export class FilesStatsDashboardService {
     return dailyProjectsForPeriod.map(({ timeSpent, date }) => ({
       timeSpent,
       originalDate: new Date(date).toDateString(),
-      date: new Date(date).toLocaleDateString("en-US", { weekday: "long" }),
+      date: getWeekDayName(date),
       ...(languagesTimesPerDayOfPeriod[date] ?? {}),
     }));
   }

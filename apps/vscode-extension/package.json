@@ -77,6 +77,26 @@
         {
           "command": "MoonCode.logout",
           "when": "MoonCode.isLoggedIn"
+        },
+        {
+          "command": "MoonCode.showInitialLanguagesData",
+          "when": "MoonCode.isDevEnvironment"
+        },
+        {
+          "command": "MoonCode.showCurrentLanguagesData",
+          "when": "MoonCode.isDevEnvironment"
+        },
+        {
+          "command": "MoonCode.showInitialFilesData",
+          "when": "MoonCode.isDevEnvironment"
+        },
+        {
+          "command": "MoonCode.showCurrentFilesData",
+          "when": "MoonCode.isDevEnvironment"
+        },
+        {
+          "command": "MoonCode.showGlobalStateData",
+          "when": "MoonCode.isDevEnvironment"
         }
       ]
     }
@@ -94,6 +114,7 @@
     "test": "node ./out/test/runTest.js"
   },
   "devDependencies": {
+    "@types/dotenv": "^6.1.1",
     "@types/mocha": "^10.0.9",
     "@types/node": "20.x",
     "@types/vscode": "^1.95.0",
@@ -106,10 +127,11 @@
     "typescript": "^5.7.3"
   },
   "dependencies": {
-    "@repo/trpc": "*",
     "@repo/common": "*",
+    "@repo/trpc": "*",
     "@trpc/client": "^11.1.0",
     "@trpc/server": "^11.1.0",
+    "dotenv": "^16.0.3",
     "express": "^4.21.2",
     "get-port": "^7.1.0",
     "zod": "^3.24.2"

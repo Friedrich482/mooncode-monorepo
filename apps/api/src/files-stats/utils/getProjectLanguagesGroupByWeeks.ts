@@ -1,12 +1,8 @@
-import {
-  endOfMonth,
-  endOfWeek,
-  format,
-  startOfMonth,
-  startOfWeek,
-} from "date-fns";
+import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { PeriodResolution } from "@repo/common/types";
 import { ProjectsService } from "src/projects/projects.service";
+import convertToISODate from "@repo/common/convertToISODate";
+import formatShortDate from "src/utils/formatShortDate";
 
 const getProjectLanguagesGroupByWeeks = async (
   data: Awaited<ReturnType<ProjectsService["findProjectByNameOnRange"]>>,
@@ -57,11 +53,11 @@ const getProjectLanguagesGroupByWeeks = async (
       }
     }
 
-    const weekKey = format(weekStart, "yyyy-MM-dd");
+    const weekKey = convertToISODate(weekStart);
 
     if (!weeklyMap.has(weekKey)) {
       weeklyMap.set(weekKey, {
-        weekRange: `${format(weekStart, "MMM d")} - ${format(weekEnd, "MMM d")}`,
+        weekRange: `${formatShortDate(weekStart)} - ${formatShortDate(weekEnd)}`,
         timeSpent: 0,
         startDate: weekStart,
         endDate: weekEnd,

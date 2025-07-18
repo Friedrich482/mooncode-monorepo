@@ -7,6 +7,7 @@ import {
 import { useMemo, useState } from "react";
 import ChartTitle from "./ChartTitle";
 import CustomChartToolTip from "@/components/CustomChartToolTip";
+import { DATE_LOCALE } from "@repo/common/constants";
 import { chartConfig } from "@/constants";
 import getLanguageColor from "@repo/common/getLanguageColor";
 import getLanguageName from "@repo/common/getLanguageName";
@@ -17,7 +18,10 @@ import { useTRPC } from "@/utils/trpc";
 
 const DayLanguagesChart = () => {
   const [date, setDate] = useState(new Date());
-  const dateString = useMemo(() => date.toLocaleDateString(), [date]);
+  const dateString = useMemo(
+    () => date.toLocaleDateString(DATE_LOCALE),
+    [date],
+  );
 
   const handleChevronLeftClick = () => setDate((prev) => getPrevDayDate(prev));
   const handleChevronRightClick = () => setDate((prev) => getNextDayDate(prev));

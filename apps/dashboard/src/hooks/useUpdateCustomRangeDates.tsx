@@ -1,3 +1,4 @@
+import { DATE_LOCALE } from "@repo/common/constants";
 import getPeriodResolution from "@repo/common/getPeriodResolution";
 import { useEffect } from "react";
 import { usePeriodStore } from "./store/periodStore";
@@ -10,7 +11,7 @@ const useUpdateCustomRangeDates = (startDate: Date, endDate: Date) => {
   useEffect(
     () =>
       setCustomRange({
-        start: startDate.toLocaleDateString(),
+        start: startDate.toLocaleDateString(DATE_LOCALE),
         end: customRange.end,
         periodResolution,
       }),
@@ -21,7 +22,7 @@ const useUpdateCustomRangeDates = (startDate: Date, endDate: Date) => {
     () =>
       setCustomRange({
         start: customRange.start,
-        end: endDate.toLocaleDateString(),
+        end: endDate.toLocaleDateString(DATE_LOCALE),
         periodResolution,
       }),
     [endDate],

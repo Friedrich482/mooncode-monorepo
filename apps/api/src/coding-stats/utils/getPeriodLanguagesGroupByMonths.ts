@@ -1,6 +1,8 @@
-import { endOfMonth, format, startOfMonth } from "date-fns";
+import { endOfMonth, startOfMonth } from "date-fns";
 import { DailyDataService } from "src/daily-data/daily-data.service";
 import { LanguagesService } from "src/languages/languages.service";
+import convertToISODate from "@repo/common/convertToISODate";
+import formatShortDate from "src/utils/formatShortDate";
 
 const getPeriodLanguagesGroupByMonths = async (
   data: Awaited<ReturnType<DailyDataService["findRangeDailyData"]>>,
@@ -39,11 +41,11 @@ const getPeriodLanguagesGroupByMonths = async (
     const monthStart = startOfMonth(date);
     monthEnd = endDate < monthEnd ? endDate : monthEnd;
 
-    const monthKey = format(monthStart, "yyyy-MM-dd");
+    const monthKey = convertToISODate(monthStart);
 
     if (!monthlyMap.has(monthKey)) {
       monthlyMap.set(monthKey, {
-        month: `${format(monthStart, "MMM d")} - ${format(monthEnd, "MMM d")}`,
+        month: `${formatShortDate(monthStart)} - ${formatShortDate(monthEnd)}`,
         timeSpent: 0,
         startDate: monthStart,
         endDate: monthEnd,
