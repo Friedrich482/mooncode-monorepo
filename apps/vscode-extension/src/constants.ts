@@ -1,8 +1,8 @@
 import { FileMap, LanguageMap } from "./types-schemas";
 
-export const PROD_API_URL = "https://mooncode-api.fly.dev";
+export const PROD_API_URL = "https://mooncode-api.fly.dev/trpc";
 
-export const MAX_IDLE_TIME = 300; //seconds
+export const MAX_IDLE_TIME = 200; //seconds
 
 export const languageMapping: Record<string, string> = {
   dockercompose: "docker",

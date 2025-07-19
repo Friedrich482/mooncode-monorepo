@@ -1,4 +1,4 @@
-import { JWTDto } from "@repo/common/schemas";
+import { IsoDateStringSchema, JWTDto } from "@repo/common/schemas";
 import z from "zod";
 
 export type LanguageData = {
@@ -33,7 +33,7 @@ export const globalStateInitialDataSchema = z.object({
       .transform((str) => new Date(str)),
   ]),
   dailyData: z.record(
-    z.string().min(1), // the localDateString of the day
+    IsoDateStringSchema, // the localDateString of the day
     z.object({
       timeSpentOnDay: z.number(),
       timeSpentPerLanguage: z.record(z.string().min(1), z.number()),
