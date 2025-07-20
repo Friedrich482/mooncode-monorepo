@@ -30,20 +30,13 @@
     "@repo/trpc": "*",
     "@repo/common": "*",
     "@trpc/server": "^11.1.0",
-    "@types/passport-jwt": "^4.0.1",
     "bcrypt": "^5.1.1",
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.7",
-    "date-fns": "^4.1.0",
     "drizzle-orm": "^0.38.4",
     "module": "^1.2.5",
-    "passport-jwt": "^4.0.1",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.0",
-    "rxjs": "^7.8.1",
-    "ulid": "^2.3.0",
-    "zod": "^3.24.2"
+    "ulid": "^2.3.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
