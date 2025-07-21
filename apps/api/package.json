@@ -27,16 +27,18 @@
     "@nestjs/jwt": "^10.2.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
-    "@repo/trpc": "*",
     "@repo/common": "*",
+    "@repo/trpc": "*",
     "@trpc/server": "^11.1.0",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
+    "date-fns": "^4.1.0",
     "drizzle-orm": "^0.38.4",
     "module": "^1.2.5",
     "pg": "^8.13.1",
     "reflect-metadata": "^0.2.0",
-    "ulid": "^2.3.0"
+    "ulid": "^2.3.0",
+    "zod": "^3.24.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
