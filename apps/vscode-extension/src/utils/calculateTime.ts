@@ -1,16 +1,12 @@
 import * as vscode from "vscode";
-import { FileMap, LanguageMap } from "../types-schemas";
-import { MAX_IDLE_TIME, filesData, languagesData } from "../constants";
+import { MAX_IDLE_TIME, filesData } from "../constants";
+import { FileMap } from "../types-schemas";
 import getCurrentFileProperties from "./files/getCurrentFileProperties";
 import getGlobalStateData from "./getGlobalStateData";
-import getLanguageSlug from "./languages/getLanguageSlug";
 import isNewDayHandler from "./IsNewDayHandler";
 import updateCurrentFileObj from "./files/updateCurrentFileObj";
-import updateCurrentLanguage from "./languages/updateCurrentLanguage";
 
-const calculateTime = async (): Promise<
-  () => { languagesData: LanguageMap; filesData: FileMap }
-> => {
+const calculateTime = async (): Promise<() => FileMap> => {
   const disposables: vscode.Disposable[] = [];
   let { dailyData, lastServerSync } = await getGlobalStateData();
 
@@ -19,9 +15,6 @@ const calculateTime = async (): Promise<
   const runPeriodicCheck = async () => {
     try {
       const now = performance.now();
-      const latestLanguage = getLanguageSlug(
-        vscode.window.activeTextEditor?.document,
-      );
       const latestFile = getCurrentFileProperties(
         vscode.window.activeTextEditor?.document,
       );
@@ -31,47 +24,6 @@ const calculateTime = async (): Promise<
         dailyData = maybeUpdated.dailyData;
         lastServerSync = maybeUpdated.lastServerSync;
       }
-
-      Object.keys(languagesData).forEach((language) => {
-        const languageData = languagesData[language];
-
-        if (!latestLanguage || language !== latestLanguage) {
-          if (!languageData.isFrozen) {
-            languageData.freezeStartTime = now;
-            languageData.isFrozen = true;
-            languageData.frozenTime = Math.floor(
-              (now - languageData.startTime) / 1000,
-            );
-          }
-          return;
-        }
-
-        // Only check idle time for the active language
-        const latestLanguageObj = languagesData[latestLanguage];
-        const idleDuration = Math.floor(
-          (now - latestLanguageObj.lastActivityTime) / 1000,
-        );
-
-        if (idleDuration >= MAX_IDLE_TIME && !latestLanguageObj.isFrozen) {
-          latestLanguageObj.frozenTime = Math.floor(
-            (now - latestLanguageObj.startTime) / 1000,
-          );
-          latestLanguageObj.freezeStartTime = now;
-          latestLanguageObj.isFrozen = true;
-        } else if (
-          idleDuration < MAX_IDLE_TIME &&
-          latestLanguageObj.isFrozen &&
-          latestLanguageObj.freezeStartTime
-        ) {
-          const freezeDuration = Math.floor(
-            (now - latestLanguageObj.freezeStartTime) / 1000,
-          );
-          latestLanguageObj.startTime += Math.floor(freezeDuration * 1000);
-          latestLanguageObj.frozenTime = null;
-          latestLanguageObj.freezeStartTime = null;
-          latestLanguageObj.isFrozen = false;
-        }
-      });
 
       Object.keys(filesData).forEach((file) => {
         const fileData = filesData[file];
@@ -130,7 +82,6 @@ const calculateTime = async (): Promise<
   const activityListeners = [
     vscode.window.onDidChangeActiveTextEditor((editor) => {
       if (editor) {
-        updateCurrentLanguage(editor.document);
         updateCurrentFileObj(editor.document);
       }
     }),
@@ -140,7 +91,6 @@ const calculateTime = async (): Promise<
         vscode.window.activeTextEditor &&
         event.document === vscode.window.activeTextEditor.document
       ) {
-        updateCurrentLanguage(event.document);
         updateCurrentFileObj(event.document);
       }
     }),
@@ -149,27 +99,18 @@ const calculateTime = async (): Promise<
   disposables.push(...activityListeners);
 
   const getTime = () => {
-    // Update all languages times
-    Object.keys(languagesData).forEach((language) => {
-      const languageData = languagesData[language];
-      const now = performance.now();
-      languageData.elapsedTime =
-        languageData.isFrozen && languageData.frozenTime
-          ? languageData.frozenTime
-          : parseInt(((now - languageData.startTime) / 1000).toFixed(0));
-    });
+    const now = performance.now();
 
     // Update all files times
     Object.keys(filesData).forEach((file) => {
       const fileData = filesData[file];
-      const now = performance.now();
       fileData.elapsedTime =
         fileData.isFrozen && fileData.frozenTime
           ? fileData.frozenTime
           : parseInt(((now - fileData.startTime) / 1000).toFixed(0));
     });
 
-    return { languagesData, filesData };
+    return filesData;
   };
 
   (getTime as any).dispose = () => {

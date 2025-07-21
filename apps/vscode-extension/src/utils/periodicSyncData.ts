@@ -5,7 +5,6 @@ import calculateTime from "./calculateTime";
 import getGlobalStateData from "./getGlobalStateData";
 import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
 import initializeFiles from "./files/initializeFiles";
-import initializeLanguages from "./languages/initializeLanguages";
 import { isEqual } from "date-fns";
 import setStatusBarItem from "./setStatusBarItem";
 import trpc from "./trpc/client";
@@ -19,18 +18,22 @@ const periodicSyncData = async (
   let lastServerSync = new Date();
   let isServerSynced = false;
 
-  const timeSpentToday = Object.values(getTime().languagesData).reduce(
+  const filesDataToUpsert = getTime();
+
+  const timeSpentToday = Object.values(filesDataToUpsert).reduce(
     (acc, value) => acc + value.elapsedTime,
     0,
   );
-  const timeSpentPerLanguageToday = Object.fromEntries(
-    Object.entries(getTime().languagesData).map(([key, { elapsedTime }]) => [
-      key,
-      elapsedTime,
-    ]),
+
+  const timeSpentPerLanguageToday = Object.entries(filesDataToUpsert).reduce(
+    (acc, [, { elapsedTime, languageSlug }]) => {
+      acc[languageSlug] = (acc[languageSlug] || 0) + elapsedTime;
+      return acc;
+    },
+    {} as Record<string, number>,
   );
 
-  const timeSpentPerProject = Object.entries(getTime().filesData)
+  const timeSpentPerProject = Object.entries(filesDataToUpsert)
     .map(([, fileData]) => ({
       project: fileData.projectPath,
       timeSpent: fileData.elapsedTime,
@@ -47,7 +50,7 @@ const periodicSyncData = async (
       {} as Record<string, number>,
     );
   const todayFilesData = Object.fromEntries(
-    Object.entries(getTime().filesData).map(
+    Object.entries(filesDataToUpsert).map(
       ([
         filePath,
         { elapsedTime, languageSlug, projectName, projectPath, fileName },
@@ -94,7 +97,7 @@ const periodicSyncData = async (
       }
     }
 
-    const { languages } = await trpc.codingStats.upsert.mutate({
+    await trpc.codingStats.upsert.mutate({
       targetedDate: todaysDateString,
       timeSpentOnDay: timeSpentToday,
       timeSpentPerLanguage: timeSpentPerLanguageToday,
@@ -106,7 +109,6 @@ const periodicSyncData = async (
       timeSpentPerProject,
     });
 
-    initializeLanguages(languages);
     initializeFiles(files);
 
     isServerSynced = true;

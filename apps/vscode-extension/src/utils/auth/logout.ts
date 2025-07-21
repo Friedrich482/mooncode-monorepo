@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { SYNC_DATA_KEY, filesData, languagesData } from "../../constants";
+import { SYNC_DATA_KEY, filesData } from "../../constants";
 import deleteToken from "./deleteToken";
 import { getExtensionContext } from "../../extension";
 import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
@@ -16,9 +16,6 @@ const logout = async () => {
     await setLoginContext(false);
 
     //  purge the local data of the current user
-    Object.keys(languagesData).forEach((key) => {
-      delete languagesData[key];
-    });
 
     Object.keys(filesData).forEach((key) => {
       delete filesData[key];

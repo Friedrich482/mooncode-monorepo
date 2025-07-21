@@ -9,17 +9,15 @@ const fetchInitialData = async () => {
   const dateString = new Date().toLocaleDateString(DATE_LOCALE);
 
   let timeSpentFromGlobalState = 0;
-  let initialLanguagesDataFromGlobalState: Record<string, number> = {};
   let initialFilesDataFromGlobalState: FileDataSync = {};
 
   let timeSpentFromServer = 0;
-  let initialLanguagesDataFromServer: Record<string, number> = {};
   let initialFilesDataFromServer: FileDataSync = {};
 
   let serverDataFetchedSuccessfully = false;
 
   try {
-    const { dayLanguagesTime, timeSpent } =
+    const { timeSpent } =
       await trpc.codingStats.getDailyStatsForExtension.query({
         dateString,
       });
@@ -30,7 +28,6 @@ const fetchInitialData = async () => {
       });
 
     timeSpentFromServer = timeSpent;
-    initialLanguagesDataFromServer = dayLanguagesTime;
     initialFilesDataFromServer = dayFilesData;
 
     serverDataFetchedSuccessfully = true;
@@ -48,15 +45,14 @@ const fetchInitialData = async () => {
 
   const globalStateData = await getGlobalStateData();
 
-  const { timeSpentOnDay, timeSpentPerLanguage, dayFilesData } = globalStateData
-    .dailyData[dateString] ?? {
+  const { timeSpentOnDay, dayFilesData } = globalStateData.dailyData?.[
+    dateString
+  ] ?? {
     timeSpentOnDay: 0,
-    timeSpentPerLanguage: {},
     dayFilesData: {},
   };
 
   timeSpentFromGlobalState = timeSpentOnDay;
-  initialLanguagesDataFromGlobalState = timeSpentPerLanguage;
   initialFilesDataFromGlobalState = dayFilesData;
 
   if (serverDataFetchedSuccessfully) {
@@ -64,7 +60,6 @@ const fetchInitialData = async () => {
       // Server wins
       return {
         timeSpent: timeSpentFromServer,
-        initialLanguagesData: initialLanguagesDataFromServer,
         initialFilesData: initialFilesDataFromServer,
       };
     }
@@ -72,7 +67,6 @@ const fetchInitialData = async () => {
     // Global state wins
     return {
       timeSpent: timeSpentFromGlobalState,
-      initialLanguagesData: initialLanguagesDataFromGlobalState,
       initialFilesData: initialFilesDataFromGlobalState,
     };
   } else {
@@ -83,7 +77,6 @@ const fetchInitialData = async () => {
 
     return {
       timeSpent: timeSpentFromGlobalState,
-      initialLanguagesData: initialLanguagesDataFromGlobalState,
       initialFilesData: initialFilesDataFromGlobalState,
     };
   }

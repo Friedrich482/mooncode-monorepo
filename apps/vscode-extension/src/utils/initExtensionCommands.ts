@@ -9,7 +9,6 @@ import openDashboard from "./openDashboard";
 
 const initExtensionCommands = (
   getTime: Awaited<ReturnType<typeof calculateTime>>,
-  initialLanguagesData: Record<string, number>,
   initialFilesData: FileDataSync,
   statusBarItem: vscode.StatusBarItem,
 ) => {
@@ -18,10 +17,18 @@ const initExtensionCommands = (
   const showCurrentLanguagesDataCommand = vscode.commands.registerCommand(
     "MoonCode.showCurrentLanguagesData",
     () => {
-      const { languagesData } = getTime();
+      const filesData = getTime();
 
-      const formattedData = Object.entries(languagesData)
-        .map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`)
+      const formattedData = Object.entries(
+        Object.entries(filesData).reduce(
+          (acc, [, { elapsedTime, languageSlug }]) => {
+            acc[languageSlug] = (acc[languageSlug] || 0) + elapsedTime;
+            return acc;
+          },
+          {} as Record<string, number>,
+        ),
+      )
+        .map(([key, elapsedTime]) => `${key}: ${elapsedTime} seconds`)
         .join("\n");
       console.log(`Current Languages Data:\n${formattedData}`);
     },
@@ -30,7 +37,15 @@ const initExtensionCommands = (
   const showInitialLanguagesDataCommand = vscode.commands.registerCommand(
     "MoonCode.showInitialLanguagesData",
     () => {
-      const formattedData = Object.entries(initialLanguagesData)
+      const formattedData = Object.entries(
+        Object.entries(initialFilesData).reduce(
+          (acc, [, { timeSpent, languageSlug }]) => {
+            acc[languageSlug] = (acc[languageSlug] || 0) + timeSpent;
+            return acc;
+          },
+          {} as Record<string, number>,
+        ),
+      )
         .map(([key, elapsedTime]) => `${key}: ${elapsedTime} seconds`)
         .join("\n");
       console.log(`Initial Languages Data:\n${formattedData}`);
@@ -40,8 +55,8 @@ const initExtensionCommands = (
   const showCurrentFilesDataCommand = vscode.commands.registerCommand(
     "MoonCode.showCurrentFilesData",
     () => {
-      const { filesData: currentFilesData } = getTime();
-      const formattedData = Object.entries(currentFilesData)
+      const filesData = getTime();
+      const formattedData = Object.entries(filesData)
         .map(([key, { elapsedTime }]) => `${key}: ${elapsedTime} seconds`)
         .join("\n");
       console.log(`Current files data:\n${formattedData}`);
