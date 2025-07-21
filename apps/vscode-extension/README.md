@@ -8,9 +8,11 @@ MoonCode is an extension that tracks your coding time (like Wakatime) and gives 
 <a href="https://marketplace.visualstudio.com/items?itemName=Friedrich482.mooncode">https://marketplace.visualstudio.com/items?itemName=Friedrich482.mooncode</a>  
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.0.5-yellow">  
+  <img src="https://img.shields.io/badge/version-0.0.15-yellow">  
   <img src="https://img.shields.io/badge/LICENSE-MIT-yellow">
 </p>
+
+**⚠️ MoonCode is still in development so breaking changes may happen. But any feedback is welcomed !**
 
 ## Features 🚀
 

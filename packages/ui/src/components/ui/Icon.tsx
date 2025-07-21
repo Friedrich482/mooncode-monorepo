@@ -1,11 +1,11 @@
 import { Button } from "./button";
 import { LucideProps } from "lucide-react";
-import React from "react";
-import { cn } from "../../lib/utils";
+import React, { ButtonHTMLAttributes } from "react";
+import { cn } from "#lib/utils.ts";
 
 const Icon = React.forwardRef<
   HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  ButtonHTMLAttributes<HTMLButtonElement> & {
     Icon: React.ForwardRefExoticComponent<
       Omit<LucideProps, "ref"> & React.RefAttributes<SVGSVGElement>
     >;

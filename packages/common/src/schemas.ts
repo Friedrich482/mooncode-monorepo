@@ -39,7 +39,7 @@ export const dateStringDto = z.string().refine(
   },
 );
 
-export const IsoDateSchema = z
+export const IsoDateStringSchema = z
   .string()
   .regex(
     /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/,
@@ -59,5 +59,8 @@ export const IsoDateSchema = z
       );
     },
     { message: "Invalid date" },
-  )
-  .transform((dateStr) => new Date(dateStr));
+  );
+
+export const IsoDateSchema = IsoDateStringSchema.transform(
+  (dateStr) => new Date(dateStr),
+);

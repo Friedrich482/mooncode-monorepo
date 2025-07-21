@@ -2,8 +2,8 @@ import * as React from "react";
 import { Legend, LegendProps, ResponsiveContainer, Tooltip } from "recharts";
 
 import { Payload } from "recharts/types/component/DefaultLegendContent";
-import { cn } from "../../lib/utils";
-import getLanguageName from "@repo/common/getLanguageName";
+import { cn } from "#lib/utils.ts";
+import getLanguageName from "#utils/getLanguageName.ts";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;

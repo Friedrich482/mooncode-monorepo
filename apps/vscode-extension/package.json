@@ -2,7 +2,7 @@
   "name": "mooncode",
   "displayName": "MoonCode",
   "description": "MoonCode is an extension that tracks your coding time (like Wakatime) and gives you a detailled summary about all your coding statistics. With MoonCode, developers get the full history of their coding activity.",
-  "version": "0.0.5",
+  "version": "0.0.14",
   "icon": "./public/moon.png",
   "publisher": "Friedrich482",
   "author": {
@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Friedrich482/mooncode-monorepo.git"
+    "url": "https://github.com/Friedrich482/mooncode.git"
   },
   "license": "MIT",
   "keywords": [
@@ -131,9 +131,10 @@
     "@repo/trpc": "*",
     "@trpc/client": "^11.1.0",
     "@trpc/server": "^11.1.0",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.0.3",
     "express": "^4.21.2",
     "get-port": "^7.1.0",
-    "zod": "^3.24.2"
+    "zod": "^3.24.3"
   }
 }
