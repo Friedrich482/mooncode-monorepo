@@ -35,7 +35,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const getTime = await calculateTime();
 
   const periodicSyncDataInterval = setInterval(async () => {
-    await periodicSyncData(context, statusBarItem, getTime);
+    await periodicSyncData(statusBarItem, getTime);
   }, 60000);
 
   initExtensionCommands(getTime, initialFilesData, statusBarItem);
