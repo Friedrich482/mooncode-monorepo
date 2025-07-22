@@ -34,25 +34,21 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const getTime = await calculateTime();
 
-  setInterval(async () => {
+  const periodicSyncDataInterval = setInterval(async () => {
     await periodicSyncData(context, statusBarItem, getTime);
   }, 60000);
 
   initExtensionCommands(getTime, initialFilesData, statusBarItem);
+
+  context.subscriptions.push({
+    dispose: () => {
+      clearInterval(periodicSyncDataInterval);
+    },
+  });
 }
 
 export async function deactivate() {
-  const disposables: vscode.Disposable[] = [];
-
-  const getTime = await calculateTime();
-  disposables.push({
-    dispose: () =>
-      ((getTime as any).dispose = () => {
-        disposables.forEach((d) => d.dispose());
-      }),
-  });
-
-  vscode.window.showInformationMessage("MoonCode deactivated");
+  console.log("MoonCode deactivated");
 }
 
 export const getExtensionContext = () => {

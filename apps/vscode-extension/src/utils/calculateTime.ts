@@ -2,12 +2,15 @@ import * as vscode from "vscode";
 import { MAX_IDLE_TIME, filesData } from "../constants";
 import { FileMap } from "../types-schemas";
 import getCurrentFileProperties from "./files/getCurrentFileProperties";
+import { getExtensionContext } from "../extension";
 import getGlobalStateData from "./getGlobalStateData";
 import isNewDayHandler from "./IsNewDayHandler";
 import updateCurrentFileObj from "./files/updateCurrentFileObj";
 
 const calculateTime = async (): Promise<() => FileMap> => {
-  const disposables: vscode.Disposable[] = [];
+  const context = getExtensionContext();
+  const disposables = context.subscriptions;
+
   let { dailyData, lastServerSync } = await getGlobalStateData();
 
   let timeoutId: NodeJS.Timeout | undefined;
@@ -112,10 +115,6 @@ const calculateTime = async (): Promise<() => FileMap> => {
     });
 
     return filesData;
-  };
-
-  (getTime as any).dispose = () => {
-    disposables.forEach((d) => d.dispose());
   };
 
   return getTime;
