@@ -1,7 +1,7 @@
 import type { AppRouter } from "@repo/trpc/router";
 import { filesData } from "@/constants";
 
-const updateFilesDataAfterSync = async (
+const updateFilesDataAfterSync = (
   files: Awaited<ReturnType<AppRouter["filesStats"]["upsert"]>>,
 ) => {
   Object.keys(files).forEach((filePath) => {
