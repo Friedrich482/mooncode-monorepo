@@ -1,4 +1,4 @@
-import { FileMap, LanguageMap } from "./types-schemas";
+import { FileMap } from "./types-schemas";
 
 export const PROD_API_URL = "https://mooncode-api.fly.dev/trpc";
 
@@ -12,7 +12,6 @@ export const languageMapping: Record<string, string> = {
   jsonc: "json",
 };
 
-export let languagesData: LanguageMap = {};
 export let filesData: FileMap = {};
 export const SYNC_DATA_KEY = "mooncodeData";
 

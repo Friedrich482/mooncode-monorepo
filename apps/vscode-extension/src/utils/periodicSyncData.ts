@@ -1,14 +1,13 @@
 import * as vscode from "vscode";
-import { SYNC_DATA_KEY } from "../constants";
 import { TRPCClientError } from "@trpc/client";
 import calculateTime from "./calculateTime";
-import getGlobalStateData from "./getGlobalStateData";
+import getGlobalStateData from "./global-state/getGlobalStateData";
 import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
-import initializeFiles from "./files/initializeFiles";
-import initializeLanguages from "./languages/initializeLanguages";
 import { isEqual } from "date-fns";
 import setStatusBarItem from "./setStatusBarItem";
 import trpc from "./trpc/client";
+import updateFilesDataAfterSync from "./files/updateFilesDataAfterSync";
+import updateGlobalStateData from "./global-state/updateGlobalStateData";
 
 const periodicSyncData = async (
   context: vscode.ExtensionContext,
@@ -18,19 +17,26 @@ const periodicSyncData = async (
   const todaysDateString = getTodaysLocalDate();
   let lastServerSync = new Date();
   let isServerSynced = false;
+  let timeSpentOnDay = 0;
 
-  const timeSpentToday = Object.values(getTime().languagesData).reduce(
+  const filesDataToUpsert = getTime();
+
+  const timeSpentToday = Object.values(filesDataToUpsert).reduce(
     (acc, value) => acc + value.elapsedTime,
     0,
   );
-  const timeSpentPerLanguageToday = Object.fromEntries(
-    Object.entries(getTime().languagesData).map(([key, { elapsedTime }]) => [
-      key,
-      elapsedTime,
-    ]),
+
+  timeSpentOnDay = timeSpentToday;
+
+  const timeSpentPerLanguageToday = Object.entries(filesDataToUpsert).reduce(
+    (acc, [, { elapsedTime, languageSlug }]) => {
+      acc[languageSlug] = (acc[languageSlug] || 0) + elapsedTime;
+      return acc;
+    },
+    {} as Record<string, number>,
   );
 
-  const timeSpentPerProject = Object.entries(getTime().filesData)
+  const timeSpentPerProject = Object.entries(filesDataToUpsert)
     .map(([, fileData]) => ({
       project: fileData.projectPath,
       timeSpent: fileData.elapsedTime,
@@ -47,7 +53,7 @@ const periodicSyncData = async (
       {} as Record<string, number>,
     );
   const todayFilesData = Object.fromEntries(
-    Object.entries(getTime().filesData).map(
+    Object.entries(filesDataToUpsert).map(
       ([
         filePath,
         { elapsedTime, languageSlug, projectName, projectPath, fileName },
@@ -94,20 +100,20 @@ const periodicSyncData = async (
       }
     }
 
-    const { languages } = await trpc.codingStats.upsert.mutate({
+    const upsertedLanguagesData = await trpc.codingStats.upsert.mutate({
       targetedDate: todaysDateString,
       timeSpentOnDay: timeSpentToday,
       timeSpentPerLanguage: timeSpentPerLanguageToday,
     });
+
+    timeSpentOnDay = upsertedLanguagesData.timeSpentOnDay;
 
     const files = await trpc.filesStats.upsert.mutate({
       filesData: todayFilesData,
       targetedDate: todaysDateString,
       timeSpentPerProject,
     });
-
-    initializeLanguages(languages);
-    initializeFiles(files);
+    updateFilesDataAfterSync(files);
 
     isServerSynced = true;
     lastServerSync = new Date();
@@ -115,7 +121,7 @@ const periodicSyncData = async (
     // ! Remove all the data (in the global state) for days previous to today if they exist
     // ! They do exist if the user stays offline and we change day
 
-    await context.globalState.update(SYNC_DATA_KEY, {
+    await updateGlobalStateData({
       lastServerSync,
       dailyData: {
         [todaysDateString]: {
@@ -142,7 +148,7 @@ const periodicSyncData = async (
 
       const globalStateData = await getGlobalStateData();
 
-      await context.globalState.update(SYNC_DATA_KEY, {
+      await updateGlobalStateData({
         lastServerSync: isServerSynced
           ? lastServerSync
           : globalStateData.lastServerSync,
@@ -162,7 +168,7 @@ const periodicSyncData = async (
       );
     }
 
-    setStatusBarItem(timeSpentToday, statusBarItem);
+    setStatusBarItem(timeSpentOnDay, statusBarItem);
   }
 };
 

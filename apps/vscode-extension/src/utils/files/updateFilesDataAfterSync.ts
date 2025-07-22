@@ -1,11 +1,17 @@
-import { FileDataSync } from "@/types-schemas";
+import type { AppRouter } from "@repo/trpc/router";
 import { filesData } from "@/constants";
 
-const initializeFiles = (data: FileDataSync) => {
-  // initialize the time/other metadata for each file found
-  Object.keys(data).forEach((filePath) => {
-    const file = data[filePath];
+const updateFilesDataAfterSync = (
+  files: Awaited<ReturnType<AppRouter["filesStats"]["upsert"]>>,
+) => {
+  Object.keys(files).forEach((filePath) => {
+    const file = files[filePath];
     const now = performance.now();
+
+    if (filesData[filePath]) {
+      filesData[filePath].elapsedTime = file.timeSpent;
+      return;
+    }
 
     filesData[filePath] = {
       elapsedTime: file.timeSpent,
@@ -22,4 +28,4 @@ const initializeFiles = (data: FileDataSync) => {
   });
 };
 
-export default initializeFiles;
+export default updateFilesDataAfterSync;

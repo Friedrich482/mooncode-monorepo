@@ -7,7 +7,7 @@
     "lib": ["ES2022"],
     "sourceMap": true,
     "paths": {
-      "@/*": ["./src/"],
+      "@/*": ["./src/*"],
       "@repo/trpc": ["../../packages/trpc/src"],
       "@repo/common": ["../../packages/common/src"]
     },

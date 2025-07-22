@@ -1,20 +1,15 @@
-import { SYNC_DATA_KEY, filesData, languagesData } from "../constants";
 import { GlobalStateData } from "../types-schemas";
-import { getExtensionContext } from "../extension";
+import { filesData } from "../constants";
 import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
+import updateGlobalStateData from "./global-state/updateGlobalStateData";
 
 const isNewDayHandler = async (
   dailyData: GlobalStateData["dailyData"],
   lastServerSync: Date,
 ) => {
   const todaysDateString = getTodaysLocalDate();
-  const context = getExtensionContext();
 
   if (!Object.hasOwn(dailyData, todaysDateString)) {
-    Object.keys(languagesData).forEach((key) => {
-      delete languagesData[key];
-    });
-
     Object.keys(filesData).forEach((key) => {
       delete filesData[key];
     });
@@ -32,7 +27,7 @@ const isNewDayHandler = async (
       },
     };
 
-    await context.globalState.update(SYNC_DATA_KEY, newGlobalStateData);
+    await updateGlobalStateData(newGlobalStateData);
 
     return newGlobalStateData;
   }

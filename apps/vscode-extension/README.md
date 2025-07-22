@@ -4,12 +4,12 @@
 <h1 align="center">MoonCode</h1>
 </p>
 <p align="center">
-MoonCode is an extension that tracks your coding time (like Wakatime) and gives you a detailled summary about all your coding statistics. With MoonCode, developers get the full history of their coding activity.
+MoonCode is an extension that tracks your coding time (like Wakatime) and gives you a detailed summary about all your coding statistics. With MoonCode, developers get the full history of their coding activity.
 <a href="https://marketplace.visualstudio.com/items?itemName=Friedrich482.mooncode">https://marketplace.visualstudio.com/items?itemName=Friedrich482.mooncode</a>  
 </p>
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.0.15-yellow">  
-  <img src="https://img.shields.io/badge/LICENSE-MIT-yellow">
+  <img src="https://img.shields.io/badge/version-0.0.17-yellow" alt="Extension version 0.0.17">  
+  <img src="https://img.shields.io/badge/LICENSE-MIT-yellow" alt="MIT License">
 </p>
 
 **⚠️ MoonCode is still in development so breaking changes may happen. But any feedback is welcomed !**
@@ -19,8 +19,8 @@ MoonCode is an extension that tracks your coding time (like Wakatime) and gives 
 - Summary of coding time per day, week, month, year,... and any custom period
 - Support for most languages/files extensions
 - Breakdown of coding activity per project
-- Local dashboard to visualize your data, with extensive filters for a more detailled summary
-- All parts (vscode-extension, api, dashboard) of the project are self-hostable
+- Local dashboard to visualize your data, with extensive filters for a more detailed summary
+- All parts (vscode-extension, api, dashboard) of the project can be self-hosted
 - Works offline 🔌
 
 ## Demo 🖥️

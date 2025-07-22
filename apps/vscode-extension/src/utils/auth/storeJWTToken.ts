@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { z } from "zod";
+
 const storeJWTToken = async (
   context: vscode.ExtensionContext,
   token: string,

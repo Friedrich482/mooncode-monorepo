@@ -13,6 +13,9 @@ node_modules/
 .npm/
 .yarn/
 
+# Environment files
+.env*
+
 # Build artifacts
 *.tsbuildinfo
 .nyc_output/

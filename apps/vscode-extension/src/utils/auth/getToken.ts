@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { getExtensionContext } from "../../extension";
+import { getExtensionContext } from "@/extension";
 import login from "./login";
 import parseJwtPayload from "./parseJwtPayload";
 import setLoginContext from "./setLoginContext";

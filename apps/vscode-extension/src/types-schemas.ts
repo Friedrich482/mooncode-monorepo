@@ -1,15 +1,6 @@
 import { IsoDateStringSchema, JWTDto } from "@repo/common/schemas";
 import z from "zod";
 
-export type LanguageData = {
-  elapsedTime: number;
-  startTime: number;
-  lastActivityTime: number;
-  frozenTime: number | null; // this is an accumulator of time to track the elapsedTime when the language is frozen
-  freezeStartTime: number | null;
-  isFrozen: boolean;
-};
-
 export type FileData = {
   elapsedTime: number;
   startTime: number;
@@ -60,7 +51,6 @@ export const globalStateInitialDataSchema = z.object({
     }),
   ),
 });
-export type LanguageMap = Record<string, LanguageData>;
 export type FileMap = Record<string, FileData>;
 export type GlobalStateData = z.infer<typeof globalStateInitialDataSchema>;
 export type FileDataSync = GlobalStateData["dailyData"][string]["dayFilesData"];

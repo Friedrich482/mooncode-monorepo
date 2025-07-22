@@ -3,7 +3,6 @@ import calculateTime from "./utils/calculateTime";
 import fetchInitialData from "./utils/fetchInitialData";
 import initExtensionCommands from "./utils/initExtensionCommands";
 import initializeFiles from "./utils/files/initializeFiles";
-import initializeLanguages from "./utils/languages/initializeLanguages";
 import periodicSyncData from "./utils/periodicSyncData";
 import registerAuthUriHandler from "./utils/auth/registerAuthUriHandler";
 import serveDashboard from "./utils/serveDashboard";
@@ -27,40 +26,29 @@ export async function activate(context: vscode.ExtensionContext) {
 
   const statusBarItem = addStatusBarItem();
 
-  const { timeSpent, initialLanguagesData, initialFilesData } =
-    await fetchInitialData();
+  const { timeSpent, initialFilesData } = await fetchInitialData();
 
   setStatusBarItem(timeSpent, statusBarItem);
 
-  initializeLanguages(initialLanguagesData);
   initializeFiles(initialFilesData);
 
   const getTime = await calculateTime();
 
-  setInterval(async () => {
+  const periodicSyncDataInterval = setInterval(async () => {
     await periodicSyncData(context, statusBarItem, getTime);
   }, 60000);
 
-  initExtensionCommands(
-    getTime,
-    initialLanguagesData,
-    initialFilesData,
-    statusBarItem,
-  );
+  initExtensionCommands(getTime, initialFilesData, statusBarItem);
+
+  context.subscriptions.push({
+    dispose: () => {
+      clearInterval(periodicSyncDataInterval);
+    },
+  });
 }
 
 export async function deactivate() {
-  const disposables: vscode.Disposable[] = [];
-
-  const getTime = await calculateTime();
-  disposables.push({
-    dispose: () =>
-      ((getTime as any).dispose = () => {
-        disposables.forEach((d) => d.dispose());
-      }),
-  });
-
-  vscode.window.showInformationMessage("MoonCode deactivated");
+  console.log("MoonCode deactivated");
 }
 
 export const getExtensionContext = () => {

@@ -1,4 +1,4 @@
-import { getExtensionContext } from "../../extension";
+import { getExtensionContext } from "@/extension";
 import setLoginContext from "./setLoginContext";
 import storeJWTToken from "./storeJWTToken";
 import vscode from "vscode";

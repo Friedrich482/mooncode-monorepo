@@ -1,6 +1,6 @@
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import type { AppRouter } from "@repo/trpc/router";
-import { PROD_API_URL } from "../../constants";
+import { PROD_API_URL } from "@/constants";
 import dotenv from "dotenv";
 import getToken from "../auth/getToken";
 import path from "path";
