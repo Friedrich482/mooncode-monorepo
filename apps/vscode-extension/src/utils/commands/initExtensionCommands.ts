@@ -1,11 +1,11 @@
 import * as vscode from "vscode";
 import { FileDataSync } from "@/types-schemas";
-import calculateTime from "./calculateTime";
+import calculateTime from "../time/calculateTime";
 import { getExtensionContext } from "@/extension";
-import getGlobalStateData from "./global-state/getGlobalStateData";
-import login from "./auth/login";
-import logout from "./auth/logout";
-import openDashboard from "./openDashboard";
+import getGlobalStateData from "../global-state/getGlobalStateData";
+import login from "../auth/login";
+import logout from "../auth/logout";
+import openDashboard from "../dashboard/openDashboard";
 
 const initExtensionCommands = (
   getTime: Awaited<ReturnType<typeof calculateTime>>,
@@ -93,9 +93,7 @@ const initExtensionCommands = (
 
   const logoutCommand = vscode.commands.registerCommand(
     "MoonCode.logout",
-    async () => {
-      await logout();
-    },
+    logout,
   );
 
   const openDashboardCommand = vscode.commands.registerCommand(

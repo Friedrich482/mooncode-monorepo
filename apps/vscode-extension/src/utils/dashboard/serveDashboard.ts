@@ -6,7 +6,7 @@ import getPort from "get-port";
 
 const serveDashboard = async (context: vscode.ExtensionContext) => {
   const app = express();
-  const pathToFrontendDist = path.join(context.extensionPath, "dashboard");
+  const pathToFrontendDist = path.join(context.extensionPath, "_dashboard");
 
   if (!require("fs").existsSync(pathToFrontendDist)) {
     vscode.window.showErrorMessage(

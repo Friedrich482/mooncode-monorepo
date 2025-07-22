@@ -1,7 +1,7 @@
-import { GlobalStateData } from "../types-schemas";
-import { filesData } from "../constants";
+import { GlobalStateData } from "@/types-schemas";
+import { filesData } from "@/constants";
 import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
-import updateGlobalStateData from "./global-state/updateGlobalStateData";
+import updateGlobalStateData from "../global-state/updateGlobalStateData";
 
 const isNewDayHandler = async (
   dailyData: GlobalStateData["dailyData"],
