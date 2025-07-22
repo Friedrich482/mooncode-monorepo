@@ -4,10 +4,10 @@ import { TRPCClientError } from "@trpc/client";
 import calculateTime from "./calculateTime";
 import getGlobalStateData from "./getGlobalStateData";
 import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
-import initializeFiles from "./files/initializeFiles";
 import { isEqual } from "date-fns";
 import setStatusBarItem from "./setStatusBarItem";
 import trpc from "./trpc/client";
+import updateFilesDataAfterSync from "./files/updateFilesDataAfterSync";
 
 const periodicSyncData = async (
   context: vscode.ExtensionContext,
@@ -108,8 +108,7 @@ const periodicSyncData = async (
       targetedDate: todaysDateString,
       timeSpentPerProject,
     });
-
-    initializeFiles(files);
+    updateFilesDataAfterSync(files);
 
     isServerSynced = true;
     lastServerSync = new Date();

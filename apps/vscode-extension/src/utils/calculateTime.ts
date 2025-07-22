@@ -14,16 +14,17 @@ const calculateTime = async (): Promise<() => FileMap> => {
 
   const runPeriodicCheck = async () => {
     try {
-      const now = performance.now();
-      const latestFile = getCurrentFileProperties(
-        vscode.window.activeTextEditor?.document,
-      );
-
       const maybeUpdated = await isNewDayHandler(dailyData, lastServerSync);
       if (maybeUpdated) {
         dailyData = maybeUpdated.dailyData;
         lastServerSync = maybeUpdated.lastServerSync;
       }
+
+      const latestFile = getCurrentFileProperties(
+        vscode.window.activeTextEditor?.document,
+      );
+
+      const now = performance.now();
 
       Object.keys(filesData).forEach((file) => {
         const fileData = filesData[file];
@@ -107,7 +108,7 @@ const calculateTime = async (): Promise<() => FileMap> => {
       fileData.elapsedTime =
         fileData.isFrozen && fileData.frozenTime
           ? fileData.frozenTime
-          : parseInt(((now - fileData.startTime) / 1000).toFixed(0));
+          : Math.floor((now - fileData.startTime) / 1000);
     });
 
     return filesData;
