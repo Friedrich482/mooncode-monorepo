@@ -13,7 +13,7 @@ const watch = process.argv.includes("--watch");
  */
 async function copyDashboard() {
   const sourcePath = path.resolve(__dirname, "../dashboard/dist");
-  const destPath = path.resolve(__dirname, "dashboard");
+  const destPath = path.resolve(__dirname, "_dashboard");
 
   console.log("[dashboard] Copying dashboard files...");
 

@@ -1,11 +1,11 @@
-import * as vscode from "vscode";
+import deleteFilesDataContent from "../files/deleteFilesDataContent";
 import deleteToken from "./deleteToken";
-import { filesData } from "@/constants";
 import { getExtensionContext } from "@/extension";
 import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
 import login from "./login";
 import setLoginContext from "./setLoginContext";
 import updateGlobalStateData from "@/utils/global-state/updateGlobalStateData";
+import vscode from "vscode";
 
 const logout = async () => {
   //!! add a warning to prevent the user that all local data will be lost
@@ -18,9 +18,7 @@ const logout = async () => {
 
     //  purge the local data of the current user
 
-    Object.keys(filesData).forEach((key) => {
-      delete filesData[key];
-    });
+    deleteFilesDataContent();
 
     const todaysDateString = getTodaysLocalDate();
     await updateGlobalStateData({

@@ -1,7 +1,7 @@
-import { GlobalStateData } from "../types-schemas";
-import { filesData } from "../constants";
+import { GlobalStateData } from "@/types-schemas";
+import deleteFilesDataContent from "../files/deleteFilesDataContent";
 import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
-import updateGlobalStateData from "./global-state/updateGlobalStateData";
+import updateGlobalStateData from "../global-state/updateGlobalStateData";
 
 const isNewDayHandler = async (
   dailyData: GlobalStateData["dailyData"],
@@ -10,9 +10,7 @@ const isNewDayHandler = async (
   const todaysDateString = getTodaysLocalDate();
 
   if (!Object.hasOwn(dailyData, todaysDateString)) {
-    Object.keys(filesData).forEach((key) => {
-      delete filesData[key];
-    });
+    deleteFilesDataContent();
 
     const newGlobalStateData = {
       lastServerSync,

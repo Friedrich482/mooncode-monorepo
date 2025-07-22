@@ -1,13 +1,13 @@
-import addStatusBarItem from "./utils/addStatusBarItem";
-import calculateTime from "./utils/calculateTime";
+import addStatusBarItem from "./utils/status-bar/addStatusBarItem";
+import calculateTime from "@/utils/time/calculateTime";
 import fetchInitialData from "./utils/fetchInitialData";
-import initExtensionCommands from "./utils/initExtensionCommands";
+import initExtensionCommands from "./utils/commands/initExtensionCommands";
 import initializeFiles from "./utils/files/initializeFiles";
 import periodicSyncData from "./utils/periodicSyncData";
 import registerAuthUriHandler from "./utils/auth/registerAuthUriHandler";
-import serveDashboard from "./utils/serveDashboard";
-import setEnvironmentContext from "./utils/setEnvironmentContext";
-import setStatusBarItem from "./utils/setStatusBarItem";
+import serveDashboard from "./utils/dashboard/serveDashboard";
+import setEnvironmentContext from "./utils/env/setEnvironmentContext";
+import setStatusBarItem from "./utils/status-bar/setStatusBarItem";
 import vscode from "vscode";
 
 let extensionContext: vscode.ExtensionContext;
@@ -35,7 +35,7 @@ export async function activate(context: vscode.ExtensionContext) {
   const getTime = await calculateTime();
 
   const periodicSyncDataInterval = setInterval(async () => {
-    await periodicSyncData(context, statusBarItem, getTime);
+    await periodicSyncData(statusBarItem, getTime);
   }, 60000);
 
   initExtensionCommands(getTime, initialFilesData, statusBarItem);

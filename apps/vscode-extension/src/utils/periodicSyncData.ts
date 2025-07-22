@@ -1,16 +1,15 @@
 import * as vscode from "vscode";
 import { TRPCClientError } from "@trpc/client";
-import calculateTime from "./calculateTime";
+import calculateTime from "./time/calculateTime";
 import getGlobalStateData from "./global-state/getGlobalStateData";
 import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
 import { isEqual } from "date-fns";
-import setStatusBarItem from "./setStatusBarItem";
+import setStatusBarItem from "./status-bar/setStatusBarItem";
 import trpc from "./trpc/client";
 import updateFilesDataAfterSync from "./files/updateFilesDataAfterSync";
 import updateGlobalStateData from "./global-state/updateGlobalStateData";
 
 const periodicSyncData = async (
-  context: vscode.ExtensionContext,
   statusBarItem: vscode.StatusBarItem,
   getTime: Awaited<ReturnType<typeof calculateTime>>,
 ) => {
