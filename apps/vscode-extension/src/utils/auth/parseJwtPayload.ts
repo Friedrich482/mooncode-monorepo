@@ -1,5 +1,5 @@
 import { JWTDto } from "@repo/common/schemas";
-import { JwtPayloadType } from "../../types-schemas";
+import { JwtPayloadType } from "@/types-schemas";
 import { SafeParseSuccess } from "zod";
 
 const parseJwtPayload = (

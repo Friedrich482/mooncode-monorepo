@@ -1,10 +1,11 @@
 import * as vscode from "vscode";
-import { SYNC_DATA_KEY, filesData } from "../../constants";
 import deleteToken from "./deleteToken";
-import { getExtensionContext } from "../../extension";
+import { filesData } from "@/constants";
+import { getExtensionContext } from "@/extension";
 import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
 import login from "./login";
 import setLoginContext from "./setLoginContext";
+import updateGlobalStateData from "@/utils/global-state/updateGlobalStateData";
 
 const logout = async () => {
   //!! add a warning to prevent the user that all local data will be lost
@@ -22,7 +23,7 @@ const logout = async () => {
     });
 
     const todaysDateString = getTodaysLocalDate();
-    await context.globalState.update(SYNC_DATA_KEY, {
+    await updateGlobalStateData({
       lastServerSync: new Date(),
       dailyData: {
         [todaysDateString]: {

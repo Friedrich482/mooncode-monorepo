@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { FileDataSync } from "../types-schemas";
+import { FileDataSync } from "@/types-schemas";
 import calculateTime from "./calculateTime";
-import { getExtensionContext } from "../extension";
-import getGlobalStateData from "./getGlobalStateData";
+import { getExtensionContext } from "@/extension";
+import getGlobalStateData from "./global-state/getGlobalStateData";
 import login from "./auth/login";
 import logout from "./auth/logout";
 import openDashboard from "./openDashboard";

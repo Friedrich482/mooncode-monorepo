@@ -1,9 +1,9 @@
 import * as vscode from "vscode";
-import { MAX_IDLE_TIME, filesData } from "../constants";
-import { FileMap } from "../types-schemas";
+import { MAX_IDLE_TIME, filesData } from "@/constants";
+import { FileMap } from "@/types-schemas";
 import getCurrentFileProperties from "./files/getCurrentFileProperties";
-import { getExtensionContext } from "../extension";
-import getGlobalStateData from "./getGlobalStateData";
+import { getExtensionContext } from "@/extension";
+import getGlobalStateData from "./global-state/getGlobalStateData";
 import isNewDayHandler from "./IsNewDayHandler";
 import updateCurrentFileObj from "./files/updateCurrentFileObj";
 

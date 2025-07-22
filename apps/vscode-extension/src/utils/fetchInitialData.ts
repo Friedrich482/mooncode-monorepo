@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import { DATE_LOCALE } from "@repo/common/constants";
-import { FileDataSync } from "../types-schemas";
+import { FileDataSync } from "@/types-schemas";
 import { TRPCClientError } from "@trpc/client";
-import getGlobalStateData from "./getGlobalStateData";
+import getGlobalStateData from "./global-state/getGlobalStateData";
 import trpc from "./trpc/client";
 
 const fetchInitialData = async () => {

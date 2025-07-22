@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { getDashboardPort, getExtensionContext } from "../../extension";
+import { getDashboardPort, getExtensionContext } from "@/extension";
 import crypto from "crypto";
 
 const login = async () => {

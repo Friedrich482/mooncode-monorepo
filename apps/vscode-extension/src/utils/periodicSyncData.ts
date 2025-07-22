@@ -1,13 +1,13 @@
 import * as vscode from "vscode";
-import { SYNC_DATA_KEY } from "../constants";
 import { TRPCClientError } from "@trpc/client";
 import calculateTime from "./calculateTime";
-import getGlobalStateData from "./getGlobalStateData";
+import getGlobalStateData from "./global-state/getGlobalStateData";
 import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
 import { isEqual } from "date-fns";
 import setStatusBarItem from "./setStatusBarItem";
 import trpc from "./trpc/client";
 import updateFilesDataAfterSync from "./files/updateFilesDataAfterSync";
+import updateGlobalStateData from "./global-state/updateGlobalStateData";
 
 const periodicSyncData = async (
   context: vscode.ExtensionContext,
@@ -17,6 +17,7 @@ const periodicSyncData = async (
   const todaysDateString = getTodaysLocalDate();
   let lastServerSync = new Date();
   let isServerSynced = false;
+  let timeSpentOnDay = 0;
 
   const filesDataToUpsert = getTime();
 
@@ -24,6 +25,8 @@ const periodicSyncData = async (
     (acc, value) => acc + value.elapsedTime,
     0,
   );
+
+  timeSpentOnDay = timeSpentToday;
 
   const timeSpentPerLanguageToday = Object.entries(filesDataToUpsert).reduce(
     (acc, [, { elapsedTime, languageSlug }]) => {
@@ -97,11 +100,13 @@ const periodicSyncData = async (
       }
     }
 
-    await trpc.codingStats.upsert.mutate({
+    const upsertedLanguagesData = await trpc.codingStats.upsert.mutate({
       targetedDate: todaysDateString,
       timeSpentOnDay: timeSpentToday,
       timeSpentPerLanguage: timeSpentPerLanguageToday,
     });
+
+    timeSpentOnDay = upsertedLanguagesData.timeSpentOnDay;
 
     const files = await trpc.filesStats.upsert.mutate({
       filesData: todayFilesData,
@@ -116,7 +121,7 @@ const periodicSyncData = async (
     // ! Remove all the data (in the global state) for days previous to today if they exist
     // ! They do exist if the user stays offline and we change day
 
-    await context.globalState.update(SYNC_DATA_KEY, {
+    await updateGlobalStateData({
       lastServerSync,
       dailyData: {
         [todaysDateString]: {
@@ -143,7 +148,7 @@ const periodicSyncData = async (
 
       const globalStateData = await getGlobalStateData();
 
-      await context.globalState.update(SYNC_DATA_KEY, {
+      await updateGlobalStateData({
         lastServerSync: isServerSynced
           ? lastServerSync
           : globalStateData.lastServerSync,
@@ -163,7 +168,7 @@ const periodicSyncData = async (
       );
     }
 
-    setStatusBarItem(timeSpentToday, statusBarItem);
+    setStatusBarItem(timeSpentOnDay, statusBarItem);
   }
 };
 

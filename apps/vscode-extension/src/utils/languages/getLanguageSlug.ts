@@ -1,4 +1,4 @@
-import { knownLanguages, languageMapping } from "../../constants";
+import { knownLanguages, languageMapping } from "@/constants";
 import vscode from "vscode";
 
 const getLanguageSlug = (document: vscode.TextDocument | undefined) => {

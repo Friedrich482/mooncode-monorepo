@@ -1,4 +1,5 @@
 import vscode from "vscode";
+
 const addStatusBarItem = () => {
   const statusBarItem = vscode.window.createStatusBarItem(
     vscode.StatusBarAlignment.Left,

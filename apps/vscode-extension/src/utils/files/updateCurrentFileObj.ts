@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { filesData } from "../../constants";
+import { filesData } from "@/constants";
 import getCurrentFileProperties from "./getCurrentFileProperties";
 import getLanguageSlug from "../languages/getLanguageSlug";
 

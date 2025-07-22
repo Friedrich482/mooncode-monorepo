@@ -1,4 +1,4 @@
-import { getExtensionContext } from "../extension";
+import { getExtensionContext } from "@/extension";
 import vscode from "vscode";
 
 const setEnvironmentContext = () => {

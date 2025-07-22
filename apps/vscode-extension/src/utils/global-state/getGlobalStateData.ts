@@ -1,12 +1,9 @@
 import * as vscode from "vscode";
-import {
-  GlobalStateData,
-  globalStateInitialDataSchema,
-} from "../types-schemas";
-import { SYNC_DATA_KEY } from "../constants";
+import { GlobalStateData, globalStateInitialDataSchema } from "@/types-schemas";
+import { SYNC_DATA_KEY } from "@/constants";
 import { ZodError } from "zod";
 import { formatZodError } from "@repo/common/formatZodIssues";
-import { getExtensionContext } from "../extension";
+import { getExtensionContext } from "@/extension";
 import getTodaysLocalDate from "@repo/common/getTodaysLocalDate";
 
 const getGlobalStateData: () => Promise<GlobalStateData> = async () => {
