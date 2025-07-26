@@ -1,1 +1,8 @@
 @import "../../../packages/ui/src/globals.css";
+
+#root {
+  height: 100%;
+  padding-top: 4rem;
+  display: flex;
+  flex-direction: column;
+}

@@ -63,7 +63,7 @@ const GeneralStatsChart = () => {
       <TwoStatsWrapper>
         <StatWrapper>
           <p>Average time per {groupBy?.slice(0, -1)}</p>
-          <p className="font-bold text-moon/85">{avgTime}</p>
+          <p className="font-bold text-primary/85">{avgTime}</p>
         </StatWrapper>
 
         <StatWrapper>
@@ -83,7 +83,7 @@ const GeneralStatsChart = () => {
       <TwoStatsWrapper>
         <StatWrapper>
           <p>Most active {groupBy?.slice(0, -1)}</p>
-          <p className="font-bold text-moon/85">{mostActiveDate}</p>
+          <p className="font-bold text-primary/85">{mostActiveDate}</p>
         </StatWrapper>
 
         <StatWrapper>
@@ -95,7 +95,7 @@ const GeneralStatsChart = () => {
                 backgroundColor: mostUsedLanguageColor,
               }}
             />
-            <p className="font-bold text-moon/85">{mostUsedLanguageName}</p>
+            <p className="font-bold text-primary/85">{mostUsedLanguageName}</p>
           </div>
         </StatWrapper>
       </TwoStatsWrapper>

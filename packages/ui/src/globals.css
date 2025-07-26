@@ -109,6 +109,11 @@
   }
 }
 
+body {
+  font-family: "Inter Variable", sans-serif;
+  height: 100dvh;
+}
+
 ::-webkit-scrollbar {
   width: 0.5rem;
 }
