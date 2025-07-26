@@ -12,7 +12,7 @@ import SuspenseBoundary from "../suspense/SuspenseBoundary";
 const Dashboard = () => {
   document.title = "MoonCode | Dashboard";
   return (
-    <main className="flex flex-col gap-x-10 gap-y-12 px-14 pb-4 text-black dark:text-white">
+    <main className="flex flex-col gap-x-10 gap-y-12 px-14 pb-4">
       <DashboardTitle />
 
       <ChartGroupWrapper>
