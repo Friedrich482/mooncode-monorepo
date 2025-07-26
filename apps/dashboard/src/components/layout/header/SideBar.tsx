@@ -14,7 +14,7 @@ const SideBar = ({
 }) => (
   <nav
     className={cn(
-      "absolute left-0 top-0 hidden h-dvh w-64 -translate-x-64 flex-col items-center justify-start gap-10 border-r border-r-neutral-700 bg-neutral-100 px-3 py-6 transition duration-300 ease-in-out dark:bg-neutral-950 max-small:flex",
+      "absolute left-0 top-0 hidden h-dvh w-64 -translate-x-64 flex-col items-center justify-start gap-10 border-r bg-background px-3 py-6 transition duration-300 ease-in-out max-small:flex",
       isOpen && "translate-x-0",
     )}
   >

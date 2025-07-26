@@ -43,7 +43,7 @@ const ProjectLanguagesTimeOnPeriodChart = () => {
         onClick={handleClick}
       />
 
-      <div className="flex min-h-96 flex-col rounded-md border border-neutral-600/50">
+      <div className="flex min-h-96 flex-col rounded-md border">
         <h2 className="text-center text-2xl font-bold">Languages</h2>
         <ChartContainer
           config={chartConfig}

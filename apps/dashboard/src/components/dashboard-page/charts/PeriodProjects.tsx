@@ -28,7 +28,7 @@ const PeriodProjects = () => {
   );
 
   return (
-    <div className="flex min-h-96 w-full flex-col gap-y-6 self-center rounded-md border border-neutral-600/50 p-3 text-2xl">
+    <div className="flex min-h-96 w-full flex-col gap-y-6 self-center rounded-md border p-3 text-2xl">
       <h2 className="text-center text-2xl font-bold">Projects</h2>
       {data.length === 0 ? (
         <p className="text-center text-xl">
@@ -47,7 +47,7 @@ const PeriodProjects = () => {
         <div className="grid grid-cols-[repeat(auto-fit,minmax(12rem,0.5fr))] gap-4 max-[42rem]:grid-cols-[repeat(auto-fit,minmax(8rem,1fr))] max-[42rem]:gap-8">
           {data.map((entry) => (
             <Link key={entry.path} to={`/dashboard/${entry.name}`}>
-              <div className="group relative flex min-h-40 origin-bottom-right cursor-pointer flex-col items-center justify-center gap-4 rounded-md border border-neutral-600/50 p-3 transition-transform duration-150 hover:border-primary/85">
+              <div className="group relative flex min-h-40 origin-bottom-right cursor-pointer flex-col items-center justify-center gap-4 rounded-md border p-3 transition-transform duration-150 hover:border-primary/85">
                 <Icon
                   Icon={Folder}
                   className="absolute -top-8 left-0 block hover:bg-transparent group-hover:hidden"

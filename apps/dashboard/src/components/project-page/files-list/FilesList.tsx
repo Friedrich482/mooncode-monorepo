@@ -19,7 +19,7 @@ const FilesList = () => {
       : undefined;
 
   return (
-    <div className="flex min-h-96 w-full flex-col gap-y-6 self-center rounded-md border border-neutral-600/50 p-3 text-2xl">
+    <div className="flex min-h-96 w-full flex-col gap-y-6 self-center rounded-md border p-3 text-2xl">
       <h2 className="text-center text-2xl font-bold">Files List</h2>
       <div className="flex flex-wrap items-center gap-x-10 gap-y-5">
         <ErrorBoundary

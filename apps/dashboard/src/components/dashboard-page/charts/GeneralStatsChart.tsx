@@ -7,7 +7,7 @@ import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/utils/trpc";
 
 const StatWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="flex w-1/2 flex-col justify-center gap-1 rounded-md border border-neutral-600/50 px-2 text-center max-[28.125rem]:min-w-full max-[28.125rem]:py-2">
+  <div className="flex w-1/2 flex-col justify-center gap-1 rounded-md border px-2 text-center max-[28.125rem]:min-w-full max-[28.125rem]:py-2">
     {children}
   </div>
 );
@@ -57,7 +57,7 @@ const GeneralStatsChart = () => {
   const mostUsedLanguageName = getLanguageName(mostUsedLanguageSlug);
 
   return (
-    <div className="flex min-h-96 w-[45%] flex-col gap-y-3 rounded-md border border-neutral-600/50 p-3 text-2xl max-chart:w-full max-[28.125rem]:justify-between max-[28.125rem]:gap-0">
+    <div className="flex min-h-96 w-[45%] flex-col gap-y-3 rounded-md border p-3 text-2xl max-chart:w-full max-[28.125rem]:justify-between max-[28.125rem]:gap-0">
       <h2 className="text-center text-2xl font-bold">General stats</h2>
 
       <TwoStatsWrapper>
@@ -72,7 +72,7 @@ const GeneralStatsChart = () => {
             className={cn(
               "font-bold",
               percentageToAvg >= 0 && "text-green-600",
-              percentageToAvg < 0 && "text-red-600",
+              percentageToAvg < 0 && "text-destructive",
             )}
           >
             {percentageToAvg < 0 ? percentageToAvg : `+${percentageToAvg}`}%
